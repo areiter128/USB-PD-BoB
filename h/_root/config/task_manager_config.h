@@ -195,7 +195,7 @@
  * ***********************************************************************************************/
 
 #if __DEBUG
-#define USE_TASK_MANAGER_TIMING_DEBUG_ARRAYS 2
+#define USE_TASK_MANAGER_TIMING_DEBUG_ARRAYS 1
 #else
 #define USE_TASK_MANAGER_TIMING_DEBUG_ARRAYS 0
 #endif
