@@ -28,9 +28,6 @@
 
 volatile uint16_t init_gpio(void) {
     
-    // Initialize debugging functions
-    DBGLED_INIT_OUTPUT; // DEBUG-LED - visible master core heartbeat
-    
     // UART1 for debug messages
     UART_TX_INIT_OUTPUT;
     UART_RX_INIT_INPUT;

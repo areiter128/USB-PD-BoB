@@ -104,8 +104,6 @@ typedef enum {
     TASK_INIT_DSP, // Task initializing the digital signal controller
         
     // Board level initialization
-    TASK_INIT_DebugLED,          // initialize DebugLED task
-    TASK_DGBLED,               // run DebugLED task
 
     // Add System function / Special function initialization
 

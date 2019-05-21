@@ -38,11 +38,7 @@
             </sourceRootList>
             <confList>
                 <confElem>
-                    <name>10889_P33CH_R10</name>
-                    <type>2</type>
-                </confElem>
-                <confElem>
-                    <name>10888_P33CK_R30</name>
+                    <name>00173_USB_PD_BOB_R20</name>
                     <type>2</type>
                 </confElem>
             </confList>

@@ -144,7 +144,9 @@ void DefaultTrapHandler(TRAP_ID_e trap_id) {
         for( i=500000; i>0; i-- );
         for( i=500000; i>0; i-- );
 
+        #ifdef DBGLED_TOGGLE
         DBGLED_TOGGLE;
+        #endif
     }
     /* ToDo: EXPERIMENTAL TEST CODE END */
     
