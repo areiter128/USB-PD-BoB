@@ -65,22 +65,20 @@ typedef struct {
     volatile bool boot:1;           // Bit #0: Operation mode during device start-up and peripheral configuration
     volatile bool device_startup;   // Bit #1: On-chip peripherals start-up period (self-check, soft-start, etc.)
     volatile bool system_startup;   // Bit #2: Power converter start-up period (self-check, soft-start, etc.)
-//    volatile uint16_t normal;       // Bit #3: Normal operation mode => has been replaced by AC_SUPPLY, BATTERY_BYPASS, BATTERY_BLENDING and IDLE
-    volatile bool ac_supply;        // Bit #3: SDB board is powered by AC adapter, motherboard is powered by ADB board, batteries are charged
-    volatile bool battery_bypass;   // Bit #4: SDB board is powered by battery, motherboard is powered by one battery
-    volatile bool battery_blending; // Bit #5: SDB board is powered by battery, motherboard is powered by two batteries
-    volatile bool fault;            // Bit #6: Fault mode will be entered when a critical fault condition has been detected
-    volatile bool standby;          // Bit #7: During standby mode the converter is disabled
-    
-    volatile unsigned :1; // Bit #8: (reserved)
-    volatile unsigned :1; // Bit #9: (reserved)
-    volatile unsigned :1; // Bit #10: (reserved)
-    volatile unsigned :1; // Bit #11: (reserved)
-    volatile unsigned :1; // Bit #12: (reserved)
-    volatile unsigned :1; // Bit #13: (reserved)
-    volatile unsigned :1; // Bit #14: (reserved)
-    volatile unsigned :1; // Bit #15: (reserved)
-    volatile unsigned :1; // Bit #16: (reserved)
+    volatile bool idle;             // Bit #3: Idle operation mode is the generic fall-back op-mode when no other op-mode applies to current conditions
+    volatile bool normal;           // Bit #4: Normal operation mode is set when system performs the desired default function (whatever this may be needs to be defined)
+    volatile unsigned :1;           // Bit #5: (reserved)
+    volatile unsigned :1;           // Bit #6: (reserved)
+    volatile unsigned :1;           // Bit #7: (reserved)
+
+    volatile unsigned :1;           // Bit #8: (reserved)
+    volatile unsigned :1;           // Bit #9: (reserved)
+    volatile unsigned :1;           // Bit #10: (reserved)
+    volatile unsigned :1;           // Bit #11: (reserved)
+    volatile unsigned :1;           // Bit #12: (reserved)
+    volatile unsigned :1;           // Bit #13: (reserved)
+    volatile bool fault;            // Bit #14: Fault mode will be entered when a critical fault condition has been detected
+    volatile bool standby;          // Bit #15: During standby mode the converter is disabled
 } SYSTEM_OPERATION_MODE_FLAGS_BIT_FIELD_t;
 
 typedef union 
@@ -89,9 +87,7 @@ typedef union
 	volatile SYSTEM_OPERATION_MODE_FLAGS_BIT_FIELD_t flags;
 }system_operation_mode_t;
 
-
 typedef struct {
-
     volatile uint32_t ticks; // Counter for CPU load measurement
     volatile uint16_t load; // CPU load result
     volatile uint16_t load_max_buffer; // CPU load maximum is tracked and logged
@@ -117,6 +113,16 @@ typedef struct {
     volatile uint16_t maximum; // Task time meter maximum is tracked and logged
 } __attribute__((packed))task_control_t;
 
+typedef enum {
+    EXEC_STAT_FAULT_OVERRIDE        = 0b0000000000000001, // Some fault condition is overriding task settings and actions
+    EXEC_STAT_START_COMPLETE        = 0b0000000000000010, // Firmware has passed startup sequence
+    EXEC_STAT_QUEUE_SWITCH          = 0b0000000000000100, // Task manager has just switched task queues
+        
+    EXEC_STAT_NOTIFICATION_PENDING  = 0b0010000000000000, // Some condition raised a notification flag
+    EXEC_STAT_WARNING_PENDING       = 0b0100000000000000, // Some condition raised a warning flag
+    EXEC_STAT_FAULT_PENDING         = 0b1000000000000000  // Some condition raised a critical fault flag
+}TASK_MANAGER_STATUS_e;
+
 typedef struct {
     volatile bool fault_override :1; // Bit #0: Flag bit indicating that all other operating modes are overridden by the FAULT_HANDLER
     volatile bool startup_sequence_complete:1; // Bit #1: Flag bit indicating that device and system startup has been completed
@@ -139,7 +145,7 @@ typedef struct {
 
 typedef union 
 {
-	volatile uint16_t value; // buffer for 16-bit word read/write operations
+	volatile TASK_MANAGER_STATUS_e value; // buffer for 16-bit word read/write operations
 	volatile TASK_MANAGER_STATUS_FLAGS_t flags; // data structure for single bit addressing operations
 } task_manager_status_t;
 
