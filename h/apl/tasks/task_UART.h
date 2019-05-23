@@ -42,8 +42,8 @@
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
-#include "hal.h"
-#include "mcal.h"
+#include "hal/hal.h"
+#include "mcal/mcal.h"
 
 /* ***********************************************************************************************
  * DECLARATIONS
@@ -151,9 +151,9 @@ extern volatile SMPS_UART_OBJECT_t smps_uart;
 /* ***********************************************************************************************
  * PROTOTYPES
  * ***********************************************************************************************/
-extern volatile uint16_t init_TaskUART(void);
-extern volatile uint16_t exec_TaskUART(void);
-
+extern volatile uint16_t init_DebugUART(void);
+extern volatile uint16_t exec_DebugUART(void);
+volatile inline int16_t  dispose_DebugUART(void);
 
 #endif	/* _APL_TASK_SMPS_UART_H_ */
 

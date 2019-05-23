@@ -49,8 +49,9 @@ extern "C" {
  * INCLUDES
  * ***********************************************************************************************/
 /* generic drivers */
-#include "../../../plib/p33SMPS_mcal.X/p33SMPS_plib.h"  //"../../../plib/p33SMPS_mcal.X/p33SMPS_plib.h"
-
+//#include "../../../plib/p33SMPS_mcal.X/p33SMPS_plib.h"  //"../../../plib/p33SMPS_mcal.X/p33SMPS_plib.h"
+#include "../../../plib/p33SMPS_mcal.X/p33SMPS_plib.h"
+    
 /* ***********************************************************************************************
  * Define a macro in the project properties as filter for hardware specific pin mapping
  * ***********************************************************************************************/

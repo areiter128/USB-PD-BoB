@@ -100,14 +100,18 @@ typedef struct
 volatile SMPS_UART_DATA_HANDLER_t UART_RxTx;
 
 /* private prototypes */
-volatile inline int16_t  task_UARTsend(void);
-volatile inline uint16_t task_UARTreceive(void);
-volatile inline uint16_t task_DecodeFrame(void);
+volatile inline int16_t  init_DebugUART(void);
+volatile inline int16_t  exec_DebugUART(void);
+volatile inline int16_t  dispose_DebugUART(void);
+
+volatile inline int16_t  task_DebugUARTsend(void);
+volatile inline uint16_t task_DebugUARTreceive(void);
+volatile inline uint16_t task_DebugDecodeFrame(void);
 volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint16_t data_len);
 
-/*@@exec_TaskUART
+/*@@exec_DebugUART
  *****************************************************************************
- * Function:	 uint16_t init_uart(void)
+ * Function:	 uint16_t exec_DebugUART(void)
  * Arguments:	 (none)
  * Return Value: 1: success, 2: failure)
  *
@@ -125,7 +129,7 @@ volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint
  * 
  *****************************************************************************/
 
-volatile uint16_t exec_TaskUART(void) {
+volatile uint16_t exec_DebugUART(void) {
 
     volatile uint16_t fres=0, i=0;
 
@@ -136,11 +140,11 @@ volatile uint16_t exec_TaskUART(void) {
     // Check if a receive buffer is ready to be processed in every scheduler call cycle
     if(UART_RxTx.status.flag.RXFrameReady)
     {
-        fres = task_UARTreceive();
+        fres = task_DebugUARTreceive();
         
         if(fres)
         {  
-            task_DecodeFrame();
+            task_DebugDecodeFrame();
 
             UART_RxTx.UARTRXComplete = 0;
             smps_uart.RXBytes.id = 0; // reset ID after it was executed
@@ -201,7 +205,7 @@ volatile uint16_t exec_TaskUART(void) {
         if(send_int_cnt++ == SMPS_UART_SEND_INT_CNT)
         {
             send_int_cnt = 0;
-            task_UARTsend();
+            task_DebugUARTsend();
         }
 
     }
@@ -209,9 +213,9 @@ volatile uint16_t exec_TaskUART(void) {
     return (fres);
 }
 
-/*@@init_TaskUART
+/*@@init_DebugUART
  *****************************************************************************
- * Function:	 uint16_t init_TaskUART(void)
+ * Function:	 uint16_t init_DebugUART(void)
  * Arguments:	 (none)
  * Return Value: 1: success, 2: failure)
  *
@@ -229,7 +233,7 @@ volatile uint16_t exec_TaskUART(void) {
  * 
  *****************************************************************************/
 
-volatile uint16_t init_TaskUART(void) {
+volatile uint16_t init_DebugUART(void) {
     
     volatile uint16_t fres = 0, i = 0;
 
@@ -283,7 +287,7 @@ volatile uint16_t init_TaskUART(void) {
  * 
  *****************************************************************************/
 
-volatile inline int16_t task_UARTsend(void) 
+volatile inline int16_t task_DebugUARTsend(void) 
 {
     volatile uint16_t fres=1, timeout=0;
  
@@ -331,7 +335,7 @@ volatile inline int16_t task_UARTsend(void)
  *****************************************************************************/
 
 
-volatile inline uint16_t task_UARTreceive(void) {
+volatile inline uint16_t task_DebugUARTreceive(void) {
 
     volatile uint16_t crc_buffer=0;
 
@@ -369,7 +373,7 @@ volatile inline uint16_t task_UARTreceive(void) {
  * 
  *****************************************************************************/
 
-volatile inline uint16_t task_DecodeFrame(void) {
+volatile inline uint16_t task_DebugDecodeFrame(void) {
 
 //    volatile uint16_t value16 = 0;
 
