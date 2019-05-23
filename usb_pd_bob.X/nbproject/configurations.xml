@@ -27,6 +27,7 @@
           <itemPath>../h/apl/tasks/task_FaultHandler.h</itemPath>
           <itemPath>../h/apl/tasks/task_Idle.h</itemPath>
           <itemPath>../h/apl/tasks/task_SystemStatus.h</itemPath>
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/h/apl/tasks/task_UART.h</itemPath>
         </logicalFolder>
         <itemPath>../h/apl/apl.h</itemPath>
       </logicalFolder>
@@ -96,6 +97,7 @@
           <itemPath>../src/apl/tasks/task_FaultHandler.c</itemPath>
           <itemPath>../src/apl/tasks/task_Idle.c</itemPath>
           <itemPath>../src/apl/tasks/task_SystemStatus.c</itemPath>
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/src/apl/tasks/task_UART.c</itemPath>
         </logicalFolder>
         <itemPath>../src/apl/apl.c</itemPath>
       </logicalFolder>
@@ -173,7 +175,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>RealICEPlatformTool</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.36</languageToolchainVersion>
+        <languageToolchainVersion>1.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
