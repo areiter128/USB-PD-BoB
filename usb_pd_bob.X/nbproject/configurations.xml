@@ -22,11 +22,13 @@
           <itemPath>../h/apl/config/application.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
+          <itemPath>../h/apl/resources/fdrv_FunctionPDStack.h</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../h/apl/tasks/task_FaultHandler.h</itemPath>
           <itemPath>../h/apl/tasks/task_Idle.h</itemPath>
           <itemPath>../h/apl/tasks/task_SystemStatus.h</itemPath>
+          <itemPath>../h/apl/tasks/task_PDStack.h</itemPath>
         </logicalFolder>
         <itemPath>../h/apl/apl.h</itemPath>
       </logicalFolder>
@@ -96,6 +98,7 @@
           <itemPath>../src/apl/tasks/task_FaultHandler.c</itemPath>
           <itemPath>../src/apl/tasks/task_Idle.c</itemPath>
           <itemPath>../src/apl/tasks/task_SystemStatus.c</itemPath>
+          <itemPath>../src/apl/tasks/task_PDStack.c</itemPath>
         </logicalFolder>
         <itemPath>../src/apl/apl.c</itemPath>
       </logicalFolder>

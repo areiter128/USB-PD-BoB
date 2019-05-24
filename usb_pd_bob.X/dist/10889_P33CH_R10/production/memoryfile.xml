@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+  <executable name="dist/10889_P33CH_R10/production/usb_pd_bob.X.production.elf">
+    <memory name="data">
+      <units>bytes</units>
+      <length>49152</length>
+      <used>322</used>
+      <free>48830</free>
+    </memory>
+    <memory name="program">
+      <units>bytes</units>
+      <length>539520</length>
+      <used>13278</used>
+      <free>526242</free>
+    </memory>
+  </executable>
+</project>
