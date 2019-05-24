@@ -80,7 +80,8 @@ volatile uint16_t (*Task_Table[])(void) = {
     // Board level initialization
             
     // Add System function / Special function initialization
-
+    init_taskPDStack,
+    task_PDStack,
     
     /* ===== END OF USER FUNCTIONS ===== */
 
@@ -166,7 +167,7 @@ volatile uint16_t task_queue_device_startup_size = (sizeof(task_queue_device_sta
 
 volatile uint16_t task_queue_system_startup[] = {
     TASK_IDLE, // Step #1
-    TASK_IDLE   // empty task used as task list execution time buffer 
+    TASK_INIT_PDSTACK        
 };
 volatile uint16_t task_queue_system_startup_size = (sizeof(task_queue_system_startup)/sizeof(task_queue_system_startup[0]));
 
@@ -184,7 +185,7 @@ volatile uint16_t task_queue_system_startup_size = (sizeof(task_queue_system_sta
 
 volatile uint16_t task_queue_idle[] = {
     TASK_IDLE, // Step #0
-    TASK_IDLE   // empty task used as task list execution time buffer 
+    TASK_PDSTACK
 };
 volatile uint16_t task_queue_idle_size = (sizeof(task_queue_idle)/sizeof(task_queue_idle[0]));
 volatile uint16_t task_queue_init_idle(void)
@@ -235,7 +236,7 @@ volatile uint16_t task_queue_normal_size = (sizeof(task_queue_normal)/sizeof(tas
 
 volatile uint16_t task_queue_normal[] = {
     TASK_IDLE, // Step #0
-    TASK_IDLE   // empty task used as task list execution time buffer 
+    TASK_PDSTACK
 };
 volatile uint16_t task_queue_normal_size = (sizeof(task_queue_normal)/sizeof(task_queue_normal[0]));
 volatile uint16_t task_queue_init_normal(void)

@@ -106,7 +106,9 @@ typedef enum {
     // Board level initialization
 
     // Add System function / Special function initialization
-
+    TASK_INIT_PDSTACK,          // initialize PD Stack task
+    TASK_PDSTACK,               // run PD Stack task
+      
             
     /* ===== END OF USER FUNCTIONS ===== */
 

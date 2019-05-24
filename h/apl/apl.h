@@ -42,6 +42,7 @@
 #include "../h/apl/tasks/task_Idle.h"
 #include "../h/apl/tasks/task_DebugLED.h"
 #include "../h/apl/tasks/task_SystemStatus.h"
+#include "../h/apl/tasks/task_PDStack.h"
 
 /* ***********************************************************************************************
  * GLOBAL APPLICATION LAYER USER OPTIONS
