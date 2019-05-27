@@ -22,8 +22,10 @@ void PWM_Initialize (void);
 
 volatile uint16_t initialize_pwm(void) {
     
-    PWM_Initialize();
+    volatile uint16_t fres = 0;
     
+    PWM_Initialize();
+
 //    start_pwm();                        // Enable PWM1, PWM5 modules and run soft-start 
     
     // Setting up ADC Trigger 1 events 
@@ -41,9 +43,13 @@ volatile uint16_t initialize_pwm(void) {
     ADTRIG2Lbits.TRGSRC9   = 0x04;  // PWM1 trigger is enabled for AN9  
     ADTRIG4Hbits.TRGSRC18  = 0x0C;  // PWM5 trigger is enabled for AN18
 
+    fres &= hspwm_enable_pwm(BUCKH1_PGx_CHANNEL, true);
+    fres &= hspwm_enable_pwm(BOOSTH1_PGx_CHANNEL, true);
+    fres &= hspwm_enable_pwm(BUCKH2_PGx_CHANNEL, true);
+    fres &= hspwm_enable_pwm(BOOSTH2_PGx_CHANNEL, true);
 
     
-    return(1); // ToDo: need function execution success validation
+    return(fres); // ToDo: need function execution success validation
     
 }
 
@@ -367,35 +373,35 @@ void PWM_Initialize (void)
     
     // Configuring and enabling PWM1 interrupt ->  used for soft-start timing and also to enable PWM5 as well as PWM7
     PG1EVTHbits.IEVTSEL = 0b01;     // Trig A compare event interrupts CPU 
-    IPC16bits.PWM1IP    = 5;        // Setting PWM1 interrupt priority
+    BUCKH2_PWM_IP    = 5;           // Setting PWM1 interrupt priority
       
     
     // Write configuration
     PG1TRIGA    = TRIGA_LEVEL;              // This should ensure approx. 50% shift between 4SWBB_12 and 4SWBB_57      
     
-    PG1DTH      = DEAD_TIME_RISING_EDGE;
-    PG1DTL      = DEAD_TIME_FALLING_EDGE;
-    PG1PER      = PWM_PERIOD;
-    PG1PHASE    = PWM_PHASE_1;
-    PG1DC       = MIN_DUTY_CYCLE;
+    BUCKH2_PGx_DTH      = DEAD_TIME_RISING_EDGE;
+    BUCKH2_PGx_DTL      = DEAD_TIME_FALLING_EDGE;
+    BUCKH2_PGx_PER      = SWITCHING_PERIOD;
+    BUCKH2_PGx_PHASE    = PWM_PHASE_1;
+    BUCKH2_PGx_DC       = MIN_DUTY_CYCLE;
     
-    PG5DTH      = DEAD_TIME_RISING_EDGE;
-    PG5DTL      = DEAD_TIME_FALLING_EDGE;
-    PG5PER      = PWM_PERIOD;
-    PG5PHASE    = PWM_PHASE_5;
-    PG5DC       = MIN_DUTY_CYCLE;
+    BUCKH1_PGx_DTH      = DEAD_TIME_RISING_EDGE;
+    BUCKH1_PGx_DTL      = DEAD_TIME_FALLING_EDGE;
+    BUCKH1_PGx_PER      = SWITCHING_PERIOD;
+    BUCKH1_PGx_PHASE    = PWM_PHASE_5;
+    BUCKH1_PGx_DC       = MIN_DUTY_CYCLE;
         
-    PG2DTH      = DEAD_TIME_RISING_EDGE;
-    PG2DTL      = DEAD_TIME_FALLING_EDGE;
-    PG2PER      = PWM_PERIOD;
-    PG2PHASE    = PWM_PHASE_2;
-    PG2DC       = DUTY_CYCLE_2;
+    BOOSTH2_PGx_DTH      = DEAD_TIME_RISING_EDGE;
+    BOOSTH2_PGx_DTL      = DEAD_TIME_FALLING_EDGE;
+    BOOSTH2_PGx_PER      = SWITCHING_PERIOD;
+    BOOSTH2_PGx_PHASE    = PWM_PHASE_2;
+    BOOSTH2_PGx_DC       = DUTY_CYCLE_2;
     
-    PG7DTH      = DEAD_TIME_RISING_EDGE;
-    PG7DTL      = DEAD_TIME_FALLING_EDGE;
-    PG7PER      = PWM_PERIOD;
-    PG7PHASE    = PWM_PHASE_7;
-    PG7DC       = DUTY_CYCLE_7;
+    BOOSTH1_PGx_DTH      = DEAD_TIME_RISING_EDGE;
+    BOOSTH1_PGx_DTL      = DEAD_TIME_FALLING_EDGE;
+    BOOSTH1_PGx_PER      = SWITCHING_PERIOD;
+    BOOSTH1_PGx_PHASE    = PWM_PHASE_7;
+    BOOSTH1_PGx_DC       = DUTY_CYCLE_7;
    
     // Clamping duty cycle values
     if (PG1DC < MIN_DUTY_CYCLE)             PG1DC = MIN_DUTY_CYCLE;

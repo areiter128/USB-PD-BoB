@@ -31,5 +31,6 @@ volatile uint16_t init_PowerControl(void) {
     fres &= initialize_adc();
     fres &= initialize_pwm();
     
+    
     return (fres);
 }

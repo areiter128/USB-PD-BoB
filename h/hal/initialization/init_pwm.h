@@ -62,7 +62,8 @@ typedef enum
 #define MAX_DUTY_CYCLE             1200
 
 /* PWM Settings */
-#define PWM_PERIOD                1390     // 360 kHz switching frequency
+//#define PWM_PERIOD                1390     // 360 kHz switching frequency
+
 #define PWM_PHASE_1                  0     // Phase Shift for PWM1 - Increasing phase limits the available range for duty cycle!
 #define PWM_PHASE_5                  0     // Phase Shift for PWM5 - Increasing phase limits the available range for duty cycle!
 #define PWM_PHASE_2                  0     // Phase Shift for PWM2 - Increasing phase limits the available range for duty cycle!
