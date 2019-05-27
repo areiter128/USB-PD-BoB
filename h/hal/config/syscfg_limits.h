@@ -65,9 +65,11 @@
 #define IOUT_4SWBB_TRIP_CONV2   1.100       // [A] Upper boost switch threshold for output current - PWM5&PWM7 Buck-Boost leg
 #define IOUT_4SWBB_RESET_CONV2  0.900       // [A] Lower boost switch threshold for output current - PWM5&PWM7 Buck-Boost leg
 
-#define DUTY_RATIO_MIN          0.010       // Minimum duty ration 
-#define DUTY_RATIO_MAX          0.800       // maximum duty ratio
-#define DUTY_RATIO_INIT         0.010       // maximum duty ratio
+#define DUTY_RATIO_MIN          0.060       // Minimum duty ration 
+#define DUTY_RATIO_MAX          0.900       // maximum duty ratio
+
+#define DUTY_RATIO_BUCK_LEG_INIT  0.060       // Initial duty ratio of buck leg at PWM start
+#define DUTY_RATIO_BOOST_LEG_INIT 0.110       // Initial duty ratio of boost leg at PWM start
 
 
 /*!System Configuration Limits
@@ -103,9 +105,10 @@
 #define IOUT_4SWBB_UTH_CONV2    (uint16_t)((((float)IOUT_4SWBB_TRIP_CONV2 * (float)IOUT_SCALER_RATIO_I2V)) * (float)ADC_SCALER) // Output voltage sense ADC ticks
 #define IOUT_4SWBB_LTH_CONV2    (uint16_t)((((float)IOUT_4SWBB_RESET_CONV2 * (float)IOUT_SCALER_RATIO_I2V)) * (float)ADC_SCALER) // Output voltage sense ADC ticks
 
-#define DUTY_RATIO_MIN_REG (uint16_t)((float)DUTY_RATIO_MIN * (float)SWITCHING_PERIOD)
-#define DUTY_RATIO_MAX_REG (uint16_t)((float)DUTY_RATIO_MAX * (float)SWITCHING_PERIOD)
-#define DUTY_RATIO_INIT_REG (uint16_t)((float)DUTY_RATIO_INIT * (float)SWITCHING_PERIOD)
+#define DUTY_RATIO_MIN_REG          (uint16_t)((float)DUTY_RATIO_MIN * (float)SWITCHING_PERIOD)
+#define DUTY_RATIO_MAX_REG          (uint16_t)((float)DUTY_RATIO_MAX * (float)SWITCHING_PERIOD)
+#define DUTY_RATIO_INIT_BUCK_REG    (uint16_t)((float)DUTY_RATIO_BUCK_LEG_INIT * (float)SWITCHING_PERIOD)
+#define DUTY_RATIO_INIT_BOOST_REG   (uint16_t)((float)DUTY_RATIO_BOOST_LEG_INIT * (float)SWITCHING_PERIOD)
 
 
 

@@ -377,41 +377,41 @@ void PWM_Initialize (void)
       
     
     // Write configuration
-    PG1TRIGA    = TRIGA_LEVEL;              // This should ensure approx. 50% shift between 4SWBB_12 and 4SWBB_57      
+    BUCKH2_PGxTRIGA     = TRIGA_LEVEL;              // This should ensure approx. 50% shift between 4SWBB_12 and 4SWBB_57      
     
     BUCKH2_PGx_DTH      = DEAD_TIME_RISING_EDGE;
     BUCKH2_PGx_DTL      = DEAD_TIME_FALLING_EDGE;
     BUCKH2_PGx_PER      = SWITCHING_PERIOD;
     BUCKH2_PGx_PHASE    = PWM_PHASE_1;
-    BUCKH2_PGx_DC       = MIN_DUTY_CYCLE;
+    BUCKH2_PGx_DC       = DUTY_RATIO_BUCK_LEG_INIT;
     
     BUCKH1_PGx_DTH      = DEAD_TIME_RISING_EDGE;
     BUCKH1_PGx_DTL      = DEAD_TIME_FALLING_EDGE;
     BUCKH1_PGx_PER      = SWITCHING_PERIOD;
     BUCKH1_PGx_PHASE    = PWM_PHASE_5;
-    BUCKH1_PGx_DC       = MIN_DUTY_CYCLE;
+    BUCKH1_PGx_DC       = DUTY_RATIO_BUCK_LEG_INIT;
         
     BOOSTH2_PGx_DTH      = DEAD_TIME_RISING_EDGE;
     BOOSTH2_PGx_DTL      = DEAD_TIME_FALLING_EDGE;
     BOOSTH2_PGx_PER      = SWITCHING_PERIOD;
     BOOSTH2_PGx_PHASE    = PWM_PHASE_2;
-    BOOSTH2_PGx_DC       = DUTY_CYCLE_2;
+    BOOSTH2_PGx_DC       = DUTY_RATIO_BOOST_LEG_INIT;
     
     BOOSTH1_PGx_DTH      = DEAD_TIME_RISING_EDGE;
     BOOSTH1_PGx_DTL      = DEAD_TIME_FALLING_EDGE;
     BOOSTH1_PGx_PER      = SWITCHING_PERIOD;
     BOOSTH1_PGx_PHASE    = PWM_PHASE_7;
-    BOOSTH1_PGx_DC       = DUTY_CYCLE_7;
+    BOOSTH1_PGx_DC       = DUTY_RATIO_BOOST_LEG_INIT;
    
     // Clamping duty cycle values
-    if (BUCKH2_PGx_DC < MIN_DUTY_CYCLE)             BUCKH2_PGx_DC = MIN_DUTY_CYCLE;
-    if (BUCKH2_PGx_DC > MAX_DUTY_CYCLE_PWM1_SST)    BUCKH2_PGx_DC = MAX_DUTY_CYCLE_PWM1_SST;
-    if (BUCKH1_PGx_DC < MIN_DUTY_CYCLE)             BUCKH1_PGx_DC = MIN_DUTY_CYCLE;
-    if (BUCKH1_PGx_DC > MAX_DUTY_CYCLE_PWM1_SST)    BUCKH1_PGx_DC = MAX_DUTY_CYCLE_PWM1_SST;
+    if (BUCKH2_PGx_DC < DUTY_RATIO_MIN_REG)     BUCKH2_PGx_DC = DUTY_RATIO_MIN_REG;
+    if (BUCKH2_PGx_DC > DUTY_RATIO_MAX_REG)     BUCKH2_PGx_DC = DUTY_RATIO_MAX_REG;
+    if (BUCKH1_PGx_DC < DUTY_RATIO_MIN_REG)     BUCKH1_PGx_DC = DUTY_RATIO_MIN_REG;
+    if (BUCKH1_PGx_DC > DUTY_RATIO_MAX_REG)     BUCKH1_PGx_DC = DUTY_RATIO_MAX_REG;
     
-    if (BOOSTH2_PGx_DC < MIN_DUTY_CYCLE)             BOOSTH2_PGx_DC = MIN_DUTY_CYCLE;
+    if (BOOSTH2_PGx_DC < DUTY_RATIO_MIN_REG)    BOOSTH2_PGx_DC = DUTY_RATIO_MIN_REG;
     //if (BOOSTH2_PGx_DC > MAX_DUTY_CYCLE_PWM2_SST)    BOOSTH2_PGx_DC = MAX_DUTY_CYCLE_PWM2_SST;
-    if (BOOSTH1_PGx_DC < MIN_DUTY_CYCLE)             BOOSTH1_PGx_DC = MIN_DUTY_CYCLE;
+    if (BOOSTH1_PGx_DC < DUTY_RATIO_MIN_REG)    BOOSTH1_PGx_DC = DUTY_RATIO_MIN_REG;
     //if (BOOSTH1_PGx_DC > MAX_DUTY_CYCLE_PWM2_SST)    BOOSTH1_PGx_DC = MAX_DUTY_CYCLE_PWM2_SST;
     
     // HREN enabled; MODSEL Variable Phase; TRGCNT 1; CLKSEL Master clock; ON disabled; 
@@ -438,7 +438,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _BUCKH2_PWM_Interrupt(void)
     if ( (++softstart_counter == SST_PERIOD) && PWM5_enabled )
     {
         softstart_counter = 0;
-        if (BUCKH2_PGx_DC <= MAX_DUTY_CYCLE_PWM1_SST) {
+        if (BUCKH2_PGx_DC <= DUTY_RATIO_BUCK_LEG_INIT) {
             BUCKH2_PGx_DC++;
             BUCKH2_PGx_DC++; 
         }

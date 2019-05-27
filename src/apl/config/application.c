@@ -97,13 +97,13 @@ volatile uint16_t init_ApplicationSettings(void) {
     application.system_status.flags.dummy_bit = STAT_BIT_DUMMY_1;
     
     /* SDB AIC power converter default settings */
-    application.timing.period = SWITCHING_PERIOD; // n x 250 ps (e.g. 20,000 = ~250 kHz)
-    application.timing.duty_ratio_init = DUTY_RATIO_INIT_REG; // n x 250 ps (e.g. 1% x 20,000 = 200 ticks)
-    application.timing.duty_ratio_min = DUTY_RATIO_MIN_REG + (PWM_DEAD_TIME_LE + PWM_DEAD_TIME_FE); // n x 250 ps (e.g. 1% x 20,000 = 200 ticks)
-    application.timing.duty_ratio_max = DUTY_RATIO_MAX_REG; // n x 250 ps (e.g. 1% x 20,000 = 200 ticks)
-    application.timing.dead_time_rising = PWM_DEAD_TIME_LE; // n x 250 ps (e.g. 200 = 50 ns)
-    application.timing.dead_time_falling = PWM_DEAD_TIME_FE; // n x 250 ps (e.g. 320 = 80 ns)
-    
+//    application.timing.period = SWITCHING_PERIOD; // n x 250 ps (e.g. 20,000 = ~250 kHz)
+//    application.timing.duty_ratio_init = DUTY_RATIO_INIT_REG; // n x 250 ps (e.g. 1% x 20,000 = 200 ticks)
+//    application.timing.duty_ratio_min = DUTY_RATIO_MIN_REG + (PWM_DEAD_TIME_LE + PWM_DEAD_TIME_FE); // n x 250 ps (e.g. 1% x 20,000 = 200 ticks)
+//    application.timing.duty_ratio_max = DUTY_RATIO_MAX_REG; // n x 250 ps (e.g. 1% x 20,000 = 200 ticks)
+//    application.timing.dead_time_rising = PWM_DEAD_TIME_LE; // n x 250 ps (e.g. 200 = 50 ns)
+//    application.timing.dead_time_falling = PWM_DEAD_TIME_FE; // n x 250 ps (e.g. 320 = 80 ns)
+//    
     /* power supply converter default settings */
 
     

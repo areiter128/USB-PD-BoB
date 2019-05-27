@@ -55,8 +55,8 @@ typedef enum
 #define TRIGA_LEVEL                 555     // 555 Trigger A Compare level used to provide pace for soft-start and create offset between the two buck-boost channels
 
 #define SST_PERIOD                  6       // Update PWM cycle period during soft-start in terms of PWM1 interrupts (in this case "ADC Trigger 1" -> 2 PWM1 cycles = 5.5us) 
-#define MIN_DUTY_CYCLE              80      // 80 -> around 100 ns width
-#define MAX_DUTY_CYCLE_PWM1_SST     600     // Maximum buck-leg pulse width for soft-start. This should yield around 40% duty cycle @ Fsw = 360kHz.
+//#define MIN_DUTY_CYCLE              80      // 80 -> around 100 ns width
+//#define MAX_DUTY_CYCLE_PWM1_SST     600     // Maximum buck-leg pulse width for soft-start. This should yield around 40% duty cycle @ Fsw = 360kHz.
 //#define MAX_DUTY_CYCLE_PWM2_SST     150     // Maximum boost-leg pulse width for soft-start. This should yield around 10$ duty cycle @ Fsw = 360kHz.
 
 #define MAX_DUTY_CYCLE             1200
