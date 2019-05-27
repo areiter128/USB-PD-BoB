@@ -299,19 +299,19 @@ void PWM_Initialize (void)
     // PHASE 0; 
     PG7PHASE = 0x00;
     // DC 554; 
-    PG1DC = 0x22A;
+    BUCKH2_PGx_DC = 0x22A;
     // DC 135; 
     PG2DC = 0x87;
     // DC 554; 
-    PG5DC = 0x22A;
+    BUCKH1_PGx_DC = 0x22A;
     // DC 137; 
-    PG7DC = 0x89;
+    BOOSTH1_PGx_DC = 0x89;
     // DCA 0; 
     PG1DCA = 0x00;
     // DCA 0; 
     PG2DCA = 0x00;
     // DCA 0; 
-    PG5DCA = 0x00;
+    BUCKH1_PGx_DCA = 0x00;
     // DCA 0; 
     PG7DCA = 0x00;
     // PER 1388; 
@@ -404,15 +404,15 @@ void PWM_Initialize (void)
     BOOSTH1_PGx_DC       = DUTY_CYCLE_7;
    
     // Clamping duty cycle values
-    if (PG1DC < MIN_DUTY_CYCLE)             PG1DC = MIN_DUTY_CYCLE;
-    if (PG1DC > MAX_DUTY_CYCLE_PWM1_SST)    PG1DC = MAX_DUTY_CYCLE_PWM1_SST;
-    if (PG5DC < MIN_DUTY_CYCLE)             PG5DC = MIN_DUTY_CYCLE;
-    if (PG5DC > MAX_DUTY_CYCLE_PWM1_SST)    PG5DC = MAX_DUTY_CYCLE_PWM1_SST;
+    if (BUCKH2_PGx_DC < MIN_DUTY_CYCLE)             BUCKH2_PGx_DC = MIN_DUTY_CYCLE;
+    if (BUCKH2_PGx_DC > MAX_DUTY_CYCLE_PWM1_SST)    BUCKH2_PGx_DC = MAX_DUTY_CYCLE_PWM1_SST;
+    if (BUCKH1_PGx_DC < MIN_DUTY_CYCLE)             BUCKH1_PGx_DC = MIN_DUTY_CYCLE;
+    if (BUCKH1_PGx_DC > MAX_DUTY_CYCLE_PWM1_SST)    BUCKH1_PGx_DC = MAX_DUTY_CYCLE_PWM1_SST;
     
-    if (PG2DC < MIN_DUTY_CYCLE)             PG2DC = MIN_DUTY_CYCLE;
-    //if (PG2DC > MAX_DUTY_CYCLE_PWM2_SST)    PG2DC = MAX_DUTY_CYCLE_PWM2_SST;
-    if (PG7DC < MIN_DUTY_CYCLE)             PG7DC = MIN_DUTY_CYCLE;
-    //if (PG7DC > MAX_DUTY_CYCLE_PWM2_SST)    PG7DC = MAX_DUTY_CYCLE_PWM2_SST;
+    if (BOOSTH2_PGx_DC < MIN_DUTY_CYCLE)             BOOSTH2_PGx_DC = MIN_DUTY_CYCLE;
+    //if (BOOSTH2_PGx_DC > MAX_DUTY_CYCLE_PWM2_SST)    BOOSTH2_PGx_DC = MAX_DUTY_CYCLE_PWM2_SST;
+    if (BOOSTH1_PGx_DC < MIN_DUTY_CYCLE)             BOOSTH1_PGx_DC = MIN_DUTY_CYCLE;
+    //if (BOOSTH1_PGx_DC > MAX_DUTY_CYCLE_PWM2_SST)    BOOSTH1_PGx_DC = MAX_DUTY_CYCLE_PWM2_SST;
     
     // HREN enabled; MODSEL Variable Phase; TRGCNT 1; CLKSEL Master clock; ON disabled; 
     PG1CONL = 0x89;
