@@ -379,26 +379,26 @@ void PWM_Initialize (void)
     // Write configuration
     BUCKH2_PGxTRIGA     = TRIGA_LEVEL;              // This should ensure approx. 50% shift between 4SWBB_12 and 4SWBB_57      
     
-    BUCKH2_PGx_DTH      = DEAD_TIME_RISING_EDGE;
-    BUCKH2_PGx_DTL      = DEAD_TIME_FALLING_EDGE;
+    BUCKH2_PGx_DTH      = PWM_DEAD_TIME_LE;
+    BUCKH2_PGx_DTL      = PWM_DEAD_TIME_FE;
     BUCKH2_PGx_PER      = SWITCHING_PERIOD;
     BUCKH2_PGx_PHASE    = PWM_PHASE_1;
     BUCKH2_PGx_DC       = DUTY_RATIO_BUCK_LEG_INIT;
     
-    BUCKH1_PGx_DTH      = DEAD_TIME_RISING_EDGE;
-    BUCKH1_PGx_DTL      = DEAD_TIME_FALLING_EDGE;
+    BUCKH1_PGx_DTH      = PWM_DEAD_TIME_LE;
+    BUCKH1_PGx_DTL      = PWM_DEAD_TIME_FE;
     BUCKH1_PGx_PER      = SWITCHING_PERIOD;
     BUCKH1_PGx_PHASE    = PWM_PHASE_5;
     BUCKH1_PGx_DC       = DUTY_RATIO_BUCK_LEG_INIT;
         
-    BOOSTH2_PGx_DTH      = DEAD_TIME_RISING_EDGE;
-    BOOSTH2_PGx_DTL      = DEAD_TIME_FALLING_EDGE;
+    BOOSTH2_PGx_DTH      = PWM_DEAD_TIME_LE;
+    BOOSTH2_PGx_DTL      = PWM_DEAD_TIME_FE;
     BOOSTH2_PGx_PER      = SWITCHING_PERIOD;
     BOOSTH2_PGx_PHASE    = PWM_PHASE_2;
     BOOSTH2_PGx_DC       = DUTY_RATIO_BOOST_LEG_INIT;
     
-    BOOSTH1_PGx_DTH      = DEAD_TIME_RISING_EDGE;
-    BOOSTH1_PGx_DTL      = DEAD_TIME_FALLING_EDGE;
+    BOOSTH1_PGx_DTH      = PWM_DEAD_TIME_LE;
+    BOOSTH1_PGx_DTL      = PWM_DEAD_TIME_FE;
     BOOSTH1_PGx_PER      = SWITCHING_PERIOD;
     BOOSTH1_PGx_PHASE    = PWM_PHASE_7;
     BOOSTH1_PGx_DC       = DUTY_RATIO_BOOST_LEG_INIT;
@@ -428,24 +428,26 @@ void __attribute__((__interrupt__, no_auto_psv)) _BUCKH2_PWM_Interrupt(void)
 {
            
     // ToDo: Questionable code... when PWM not enabled this ISR will never be triggered
-    if (!PWM5_enabled)
+    if (PWM5_enabled)
+    {
+        if (++softstart_counter == SST_PERIOD)
+        {
+            softstart_counter = 0;
+            if (BUCKH2_PGx_DC <= DUTY_RATIO_BUCK_LEG_INIT) {
+                BUCKH2_PGx_DC++;
+                BUCKH2_PGx_DC++; 
+            }
+            else {
+                BUCKH2_PWM_IE      = 0;    // Disabling PWM1 interrupt when MAX_DUTY_CYCLE_PWM1_SST is reached
+                SoftStartFinished  = 1; 
+            }
+        }
+    } 
+    else
     {
         PG5CONLbits.ON = 0b1;  // PWM5 (buck) Module is enabled
         PG7CONLbits.ON = 0b1;  // PWM7 (boost) Module is enabled
         PWM5_enabled = 1;  
-    } 
-    
-    if ( (++softstart_counter == SST_PERIOD) && PWM5_enabled )
-    {
-        softstart_counter = 0;
-        if (BUCKH2_PGx_DC <= DUTY_RATIO_BUCK_LEG_INIT) {
-            BUCKH2_PGx_DC++;
-            BUCKH2_PGx_DC++; 
-        }
-        else {
-            BUCKH2_PWM_IE      = 0;    // Disabling PWM1 interrupt when MAX_DUTY_CYCLE_PWM1_SST is reached
-            SoftStartFinished  = 1; 
-        }
     }
     
     BUCKH2_PWM_IF     = 0;                // Clearing PWM1 interrupt flag

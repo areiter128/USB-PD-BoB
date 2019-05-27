@@ -37,14 +37,6 @@
 #include "hal/hal.h"
 #include "mcal/mcal.h"
 
-typedef enum 
-{
-    PWM_GENERATOR_1 =  1,       
-    PWM_GENERATOR_2 =  2,       
-    PWM_GENERATOR_5 =  5,       
-    PWM_GENERATOR_7 =  7,       
-} PWM_GENERATOR;
-
 /* ******************************************************************
    Defines for PWM initialization 
  
@@ -59,7 +51,7 @@ typedef enum
 //#define MAX_DUTY_CYCLE_PWM1_SST     600     // Maximum buck-leg pulse width for soft-start. This should yield around 40% duty cycle @ Fsw = 360kHz.
 //#define MAX_DUTY_CYCLE_PWM2_SST     150     // Maximum boost-leg pulse width for soft-start. This should yield around 10$ duty cycle @ Fsw = 360kHz.
 
-#define MAX_DUTY_CYCLE             1200
+//#define MAX_DUTY_CYCLE             1200
 
 /* PWM Settings */
 //#define PWM_PERIOD                1390     // 360 kHz switching frequency
@@ -68,10 +60,10 @@ typedef enum
 #define PWM_PHASE_5                  0     // Phase Shift for PWM5 - Increasing phase limits the available range for duty cycle!
 #define PWM_PHASE_2                  0     // Phase Shift for PWM2 - Increasing phase limits the available range for duty cycle!
 #define PWM_PHASE_7                  0     // Phase Shift for PWM7 - Increasing phase limits the available range for duty cycle!
-#define DUTY_CYCLE_2               150     // Boost-leg duty cycle (PWM2 at the boost-leg has no soft-start, this is its initial duty cycle after soft-start for the buck-legs has finished)
-#define DUTY_CYCLE_7               150     // Boost-leg duty cycle (PWM7 at the boost-leg has no soft-start, this is its initial duty cycle after soft-start for the buck-legs has finished)
-#define DEAD_TIME_RISING_EDGE       25     // ~X*2ns rising edge dead time 
-#define DEAD_TIME_FALLING_EDGE      30     // ~X*2ns falling edge dead time
+//#define DUTY_CYCLE_2               150     // Boost-leg duty cycle (PWM2 at the boost-leg has no soft-start, this is its initial duty cycle after soft-start for the buck-legs has finished)
+//#define DUTY_CYCLE_7               150     // Boost-leg duty cycle (PWM7 at the boost-leg has no soft-start, this is its initial duty cycle after soft-start for the buck-legs has finished)
+//#define DEAD_TIME_RISING_EDGE       25     // ~X*2ns rising edge dead time 
+//#define DEAD_TIME_FALLING_EDGE      30     // ~X*2ns falling edge dead time
 
 #define TRIGA1_IOUT                 0    // TRIGA level for output current sampling on the buck-boost leg driven by PWM1 & PWM2
 #define TRIGA5_IOUT                 0    // TRIGA level for output current sampling on the buck-boost leg driven by PWM5 & PWM7

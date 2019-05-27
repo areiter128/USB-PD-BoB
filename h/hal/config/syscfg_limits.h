@@ -71,7 +71,6 @@
 #define DUTY_RATIO_BUCK_LEG_INIT  0.060       // Initial duty ratio of buck leg at PWM start
 #define DUTY_RATIO_BOOST_LEG_INIT 0.110       // Initial duty ratio of boost leg at PWM start
 
-
 /*!System Configuration Limits
  * ************************************************************************************************
  * Summary:
