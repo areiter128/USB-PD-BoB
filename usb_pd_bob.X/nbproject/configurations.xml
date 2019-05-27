@@ -27,6 +27,7 @@
           <itemPath>../h/apl/tasks/task_FaultHandler.h</itemPath>
           <itemPath>../h/apl/tasks/task_Idle.h</itemPath>
           <itemPath>../h/apl/tasks/task_SystemStatus.h</itemPath>
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/h/apl/tasks/task_PowerControl.h</itemPath>
         </logicalFolder>
         <itemPath>../h/apl/apl.h</itemPath>
       </logicalFolder>
@@ -45,6 +46,7 @@
           <itemPath>../h/hal/initialization/init_timer.h</itemPath>
           <itemPath>../h/hal/initialization/init_irq.h</itemPath>
           <itemPath>../h/hal/initialization/init_dsp.h</itemPath>
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/h/hal/initialization/init_adc.h</itemPath>
         </logicalFolder>
         <itemPath>../h/hal/hal.h</itemPath>
       </logicalFolder>
@@ -96,6 +98,7 @@
           <itemPath>../src/apl/tasks/task_FaultHandler.c</itemPath>
           <itemPath>../src/apl/tasks/task_Idle.c</itemPath>
           <itemPath>../src/apl/tasks/task_SystemStatus.c</itemPath>
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/src/apl/tasks/task_PowerControl.c</itemPath>
         </logicalFolder>
         <itemPath>../src/apl/apl.c</itemPath>
       </logicalFolder>

@@ -80,7 +80,9 @@ volatile uint16_t (*Task_Table[])(void) = {
     // Board level initialization
             
     // Add System function / Special function initialization
-//    init_debugUART,
+    init_PowerControl,      // Initializing the power controller engine
+    exec_PowerControl,      // execute the power controller engine
+
     
     /* ===== END OF USER FUNCTIONS ===== */
 
@@ -141,7 +143,7 @@ volatile uint16_t task_queue_boot_size = (sizeof(task_queue_boot)/sizeof(task_qu
  * *********************************************************************************************** */
 
 volatile uint16_t task_queue_device_startup[] = {
-    TASK_IDLE,                   // Step #1
+    INIT_POWER_CONTROL, // Step #1
     TASK_IDLE   // empty task used as task list execution time buffer 
 };
 volatile uint16_t task_queue_device_startup_size = (sizeof(task_queue_device_startup)/sizeof(task_queue_device_startup[0]));

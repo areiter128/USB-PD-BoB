@@ -106,7 +106,8 @@ typedef enum {
     // Board level initialization
 
     // Add System function / Special function initialization
-
+    INIT_POWER_CONTROL,
+    EXEC_POWER_CONTROL,
             
     /* ===== END OF USER FUNCTIONS ===== */
 

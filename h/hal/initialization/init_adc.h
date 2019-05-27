@@ -19,43 +19,24 @@
  * MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE 
  * TERMS. 
  * ***************************************************************************/
-/*!apl.h
- * ****************************************************************************
- * File:   apl.h
- * Author: M91406
- * Comments:
- * Revision history: 
- * ****************************************************************************/
+/*!init_dsp.h
+ * *************************************************************************** 
+ * File:   init_adc.h
+ * Author: m91406
+ *
+ * Created on March 8, 2019
+ * ***************************************************************************/
 
-// This is a guard condition so that contents of this file are not included
-// more than once.  
-#ifndef APPLICATION_LAYER_H
-#define	APPLICATION_LAYER_H
+#ifndef _HAL_INIT_ADC_H_
+#define	_HAL_INIT_ADC_H_
 
-#include <xc.h> // include processor files - each processor file is guarded.  
-#include <stdint.h>
-
-#include "config/application.h"
-
-//Remove: #include "task_ConverterStateControl.h"
-#include "../h/apl/tasks/task_Idle.h"
-#include "../h/apl/tasks/task_FaultHandler.h"
-#include "../h/apl/tasks/task_SystemStatus.h"
-#include "../h/apl/tasks/task_PowerControl.h"
-
-/* ***********************************************************************************************
- * GLOBAL APPLICATION LAYER USER OPTIONS
- * ***********************************************************************************************/
-
+#include "hal/hal.h"
+#include "mcal/mcal.h"
 
 /* ***********************************************************************************************
  * PROTOTYPES
  * ***********************************************************************************************/
+extern volatile uint16_t initialize_adc(void); 
 
-extern inline uint16_t OS_Initialize(void);
-extern inline uint16_t CLOCK_Initialize(void);
-extern inline uint16_t Device_Reset(void);
-extern inline uint16_t APPLICATION_Initialize(void);
-
-#endif	/* APPLICATION_LAYER_H */
+#endif	/* _HAL_DSP_H_ */
 

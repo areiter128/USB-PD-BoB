@@ -12,14 +12,18 @@
 #include "hal/hal.h"
 
 
-#define SAMPLING_TIME               10     // X*TAD sampling time for the shared core ADC
-
-
+// local defines
 #define TRIGA1_IOUT                 0    // TRIGA level for output current sampling on the buck-boost leg driven by PWM1 & PWM2
 #define TRIGA5_IOUT                 0    // TRIGA level for output current sampling on the buck-boost leg driven by PWM5 & PWM7
 
+#define SAMPLING_TIME               10     // X*TAD sampling time for the shared core ADC
 
-void initialize_adc(void) {
+// local variables
+volatile uint16_t UTH_ADCAN9_TRIPPED, LTH_ADCAN9_TRIPPED;
+volatile uint16_t UTH_ADCAN18_TRIPPED, LTH_ADCAN18_TRIPPED;
+
+
+volatile uint16_t initialize_adc(void) {
     
     // Configure the I/O pins to be used as analog inputs.
     ANSELAbits.ANSELA2  = 1; TRISAbits.TRISA2  = 1; // AN9/RA2 connected the shared core
@@ -78,15 +82,10 @@ void initialize_adc(void) {
     while (ADCON5Lbits.SHRRDY !=1)  // Polling the Shared ADC analog circuit until it's ready
     ADCON3Hbits.SHREN       = 1;    // Enabling Shared ADC Core digital circuits
     
+    return(1); // ToDo: need function execution success validation
+    
 }
-// Calculating scaled current threshold values
-//const uint16_t UTH_ADCAN9_INT   =   (uint16_t) ( (0.2*UTH_IOUT_4SWBB_12 + 1.6475) / ADC_VREF * 4095);
-//const uint16_t UTH_ADCAN18_INT  =   (uint16_t) ( (0.2*UTH_IOUT_4SWBB_57 + 1.6475) / ADC_VREF * 4095);
-//const uint16_t LTH_ADCAN9_INT   =   (uint16_t) ( (0.2*LTH_IOUT_4SWBB_12 + 1.6475) / ADC_VREF * 4095);
-//const uint16_t LTH_ADCAN18_INT  =   (uint16_t) ( (0.2*LTH_IOUT_4SWBB_57 + 1.6475) / ADC_VREF * 4095);
 
-volatile uint16_t UTH_ADCAN9_TRIPPED, LTH_ADCAN9_TRIPPED;
-volatile uint16_t UTH_ADCAN18_TRIPPED, LTH_ADCAN18_TRIPPED;
 
 void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _ADCAN9Interrupt ( void )
 {
