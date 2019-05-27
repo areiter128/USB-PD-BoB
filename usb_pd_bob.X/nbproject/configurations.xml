@@ -47,6 +47,7 @@
           <itemPath>../h/hal/initialization/init_irq.h</itemPath>
           <itemPath>../h/hal/initialization/init_dsp.h</itemPath>
           <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/h/hal/initialization/init_adc.h</itemPath>
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/h/hal/initialization/init_pwm.h</itemPath>
         </logicalFolder>
         <itemPath>../h/hal/hal.h</itemPath>
       </logicalFolder>
@@ -114,6 +115,7 @@
           <itemPath>../src/hal/initialization/init_irq.c</itemPath>
           <itemPath>../src/hal/initialization/init_dsp.c</itemPath>
           <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/src/hal/initialization/init_adc.c</itemPath>
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/src/hal/initialization/init_pwm.c</itemPath>
         </logicalFolder>
         <itemPath>../src/hal/hal.c</itemPath>
       </logicalFolder>
@@ -177,7 +179,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>RealICEPlatformTool</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.40</languageToolchainVersion>
+        <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>

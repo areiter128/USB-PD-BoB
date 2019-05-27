@@ -3,8 +3,8 @@
  * Author:      M91406                                                                         
  * Comments:    Hardware abstraction layer device pinout descriptor                                
  * Board ID:    00173_USB_PD_BoB                                                                       
- * Date:        05/22/2019                                                                             
- * Build:       0007                                                                       
+ * Date:        05/27/2019                                                                             
+ * Build:       0011                                                                       
  *                                                                                                 
  * Description:                                                                                    
  * This is a header file template adding signal labels for the hardware abstraction layer          
@@ -137,6 +137,10 @@
 #define BUCKH2_PGxTRIGA     PG1TRIGA // PWM channel ADC trigger A register
 #define BUCKH2_PGxTRIGB     PG1TRIGB // PWM channel ADC trigger A register
 #define BUCKH2_PGxTRIGC     PG1TRIGC // PWM channel ADC trigger A register
+#define BUCKH2_PWM_IF       _PWM1IF // interrupt flag bit
+#define BUCKH2_PWM_IE       _PWM1IE // interrupt enable bit
+#define BUCKH2_PWM_IP       _PWM1IP // interrupt priority for this analog input
+#define _BUCKH2_PWM_Interrupt _PWM1Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #2 is RB15
 #define BUCKL2_TRIS    TRISBbits.TRISB15 // GPIO direction register bit
@@ -195,6 +199,10 @@
 #define HUB_RST_PGxTRIGA     PG8TRIGA // PWM channel ADC trigger A register
 #define HUB_RST_PGxTRIGB     PG8TRIGB // PWM channel ADC trigger A register
 #define HUB_RST_PGxTRIGC     PG8TRIGC // PWM channel ADC trigger A register
+#define HUB_RST_PWM_IF       _PWM8IF // interrupt flag bit
+#define HUB_RST_PWM_IE       _PWM8IE // interrupt enable bit
+#define HUB_RST_PWM_IP       _PWM8IP // interrupt priority for this analog input
+#define _HUB_RST_PWM_Interrupt _PWM8Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #4 is RC13
 #define HUB_PRTPWR2_TRIS    TRISCbits.TRISC13 // GPIO direction register bit
@@ -911,6 +919,10 @@
 #define SCL2_PGxTRIGA     PG6TRIGA // PWM channel ADC trigger A register
 #define SCL2_PGxTRIGB     PG6TRIGB // PWM channel ADC trigger A register
 #define SCL2_PGxTRIGC     PG6TRIGC // PWM channel ADC trigger A register
+#define SCL2_PWM_IF       _PWM6IF // interrupt flag bit
+#define SCL2_PWM_IE       _PWM6IE // interrupt enable bit
+#define SCL2_PWM_IP       _PWM6IP // interrupt priority for this analog input
+#define _SCL2_PWM_Interrupt _PWM6Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #35 is RB7
 #define SPI_CS1_TRIS    TRISBbits.TRISB7 // GPIO direction register bit
@@ -1036,6 +1048,10 @@
 #define BUCKH1_PGxTRIGA     PG5TRIGA // PWM channel ADC trigger A register
 #define BUCKH1_PGxTRIGB     PG5TRIGB // PWM channel ADC trigger A register
 #define BUCKH1_PGxTRIGC     PG5TRIGC // PWM channel ADC trigger A register
+#define BUCKH1_PWM_IF       _PWM5IF // interrupt flag bit
+#define BUCKH1_PWM_IE       _PWM5IE // interrupt enable bit
+#define BUCKH1_PWM_IP       _PWM5IP // interrupt priority for this analog input
+#define _BUCKH1_PWM_Interrupt _PWM5Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #39 is RC5
 #define BUCKL1_TRIS    TRISCbits.TRISC5 // GPIO direction register bit
@@ -1094,6 +1110,10 @@
 #define BOOSTH1_PGxTRIGA     PG7TRIGA // PWM channel ADC trigger A register
 #define BOOSTH1_PGxTRIGB     PG7TRIGB // PWM channel ADC trigger A register
 #define BOOSTH1_PGxTRIGC     PG7TRIGC // PWM channel ADC trigger A register
+#define BOOSTH1_PWM_IF       _PWM7IF // interrupt flag bit
+#define BOOSTH1_PWM_IE       _PWM7IE // interrupt enable bit
+#define BOOSTH1_PWM_IP       _PWM7IP // interrupt priority for this analog input
+#define _BOOSTH1_PWM_Interrupt _PWM7Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #41 is RC11
 #define BOOSTL1_TRIS    TRISCbits.TRISC11 // GPIO direction register bit
@@ -1156,6 +1176,10 @@
 #define PPC_IRQ1_PGxTRIGA     PG4TRIGA // PWM channel ADC trigger A register
 #define PPC_IRQ1_PGxTRIGB     PG4TRIGB // PWM channel ADC trigger A register
 #define PPC_IRQ1_PGxTRIGC     PG4TRIGC // PWM channel ADC trigger A register
+#define PPC_IRQ1_PWM_IF       _PWM4IF // interrupt flag bit
+#define PPC_IRQ1_PWM_IE       _PWM4IE // interrupt enable bit
+#define PPC_IRQ1_PWM_IP       _PWM4IP // interrupt priority for this analog input
+#define _PPC_IRQ1_PWM_Interrupt _PWM4Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #45 is RB10
 #define PPC_RST1_TRIS    TRISBbits.TRISB10 // GPIO direction register bit
@@ -1185,6 +1209,10 @@
 #define PPC_RST1_PGxTRIGA     PG3TRIGA // PWM channel ADC trigger A register
 #define PPC_RST1_PGxTRIGB     PG3TRIGB // PWM channel ADC trigger A register
 #define PPC_RST1_PGxTRIGC     PG3TRIGC // PWM channel ADC trigger A register
+#define PPC_RST1_PWM_IF       _PWM3IF // interrupt flag bit
+#define PPC_RST1_PWM_IE       _PWM3IE // interrupt enable bit
+#define PPC_RST1_PWM_IP       _PWM3IP // interrupt priority for this analog input
+#define _PPC_RST1_PWM_Interrupt _PWM3Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #46 is RB11
 #define HUB_PRTPWR1_TRIS    TRISBbits.TRISB11 // GPIO direction register bit
@@ -1243,6 +1271,10 @@
 #define BOOSTH2_PGxTRIGA     PG2TRIGA // PWM channel ADC trigger A register
 #define BOOSTH2_PGxTRIGB     PG2TRIGB // PWM channel ADC trigger A register
 #define BOOSTH2_PGxTRIGC     PG2TRIGC // PWM channel ADC trigger A register
+#define BOOSTH2_PWM_IF       _PWM2IF // interrupt flag bit
+#define BOOSTH2_PWM_IE       _PWM2IE // interrupt enable bit
+#define BOOSTH2_PWM_IP       _PWM2IP // interrupt priority for this analog input
+#define _BOOSTH2_PWM_Interrupt _PWM2Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #48 is RB13
 #define POOSTL2_TRIS    TRISBbits.TRISB13 // GPIO direction register bit

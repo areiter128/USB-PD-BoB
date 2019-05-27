@@ -40,17 +40,17 @@
     #define DEVICE_VDD                  3.300       // Device bias voltage in [V]
 
     // Inductance of the main inductor
-    #define INDUCTANCE                  4.700       // Inductance in [µH]
-    #define CAPACITANCE                 300e-6      // Output Capacity
+    #define INDUCTANCE                  5.600       // Inductance in [µH]
+    #define CAPACITANCE                 150e-6      // Output Capacity
 
     // Feedback Scaling
-    #define VIN_DIVIDER_R1              18000       // Resitance of upper voltage divider resistor in Ohm
-    #define VIN_DIVIDER_R2              2000        // Resitance of lower voltage divider resistor in Ohm
+    #define VIN_DIVIDER_R1              36000       // Resitance of upper voltage divider resistor in Ohm
+    #define VIN_DIVIDER_R2              2870        // Resitance of lower voltage divider resistor in Ohm
     #define VIN_AMP_GAIN                1.000       // Gain factor or additional op-amp (set to 1.0 if none is used)
     #define VIN_FEEDBACK_OFFSET         0.000       // Input voltage sense offset
 
-    #define VOUT_DIVIDER_R1             8200        // Resitance of upper voltage divider resistor in Ohm
-    #define VOUT_DIVIDER_R2             2050        // Resitance of lower voltage divider resistor in Ohm
+    #define VOUT_DIVIDER_R1             18000       // Resitance of upper voltage divider resistor in Ohm
+    #define VOUT_DIVIDER_R2             2870        // Resitance of lower voltage divider resistor in Ohm
     #define VOUT_AMP_GAIN               1.000       // Gain factor or additional op-amp (set to 1.0 if none is used)
     #define VOUT_SENSE_OFFSET           0.000       // Output voltage sense offset
 

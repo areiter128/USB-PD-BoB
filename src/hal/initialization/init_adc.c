@@ -64,13 +64,13 @@ volatile uint16_t initialize_adc(void) {
     ADEIEHbits.EIEN18    = 1;    // Enabling early interrupt for AN18
     ADCON2Lbits.SHREISEL = 0x7;  // Shared core ADC interrupts are triggered 8 TAD clock ahead of completion
     
-    IPC25bits.ADCAN9IP  = 5;    // Setting priority level to 5 
-    IFS6bits.ADCAN9IF   = 0;    // Clearing ADCAN9 interrupt flag.
-    IEC6bits.ADCAN9IE   = 1;    // Enabling interrupt for ADCAN9
+    FB_IOUT2_ADC_IP = 5;    // Setting priority level to 5 
+    FB_IOUT2_ADC_IF = 0;    // Clearing ADCAN9 interrupt flag.
+    FB_IOUT2_ADC_IE = 1;    // Enabling interrupt for ADCAN9
     
-    IPC27bits.ADCAN18IP = 5;    // Setting priority level to 5 
-    IFS6bits.ADCAN18IF  = 0;    // Clearing ADCAN18 interrupt flag
-    IEC6bits.ADCAN18IE  = 1;    // Enabling interrupt for ADCAN18
+    FB_IOUT1_ADC_IP = 5;    // Setting priority level to 5 
+    FB_IOUT1_ADC_IF = 0;    // Clearing ADCAN18 interrupt flag
+    FB_IOUT1_ADC_IE = 1;    // Enabling interrupt for ADCAN18
     
     /* Set the ADON bit in the ADCON1L register to enable the module and set the
      * WARMTIME<3:0> bits in the ADCON5H register to provide at least 10 us for the initialization  */ 
@@ -87,7 +87,7 @@ volatile uint16_t initialize_adc(void) {
 }
 
 
-void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _ADCAN9Interrupt ( void )
+void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_IOUT2_ADC_Interrupt ( void )
 {
     static volatile uint16_t counter = 0;
     static volatile uint16_t accADCAN9 =0;
@@ -102,21 +102,17 @@ void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _ADCAN9Interrupt ( 
         
         if (avgADCAN9 >= IOUT_4SWBB_UTH_CONV1) {
             // Enable PWM2 
+            hspwm_ovr_release(BOOSTH1_PGx_CHANNEL);
+            
             PG2CONLbits.ON = 0b1;           // PWM2 Module is enabled
 //            UTH_ADCAN9_TRIPPED  = 1; 
 //            LTH_ADCAN9_TRIPPED  = 0;
-        #ifdef CK_DP_PIM 
-            LATDbits.LATD8 = 1;
-        #endif
         }
         if (avgADCAN9 <= IOUT_4SWBB_LTH_CONV1) {
             // Disable PWM2 
             PG2CONLbits.ON      = 0b0;     // PWM2 Module is disabled 
 //            UTH_ADCAN9_TRIPPED  = 0; 
 //            LTH_ADCAN9_TRIPPED  = 1;
-        #ifdef CK_DP_PIM 
-            LATDbits.LATD8 = 0;
-        #endif  
         }
         counter = 0;
         accADCAN9 = 0;
@@ -124,12 +120,12 @@ void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _ADCAN9Interrupt ( 
     else {
         accADCAN9 += valADCAN9;
     }
-    IFS6bits.ADCAN9IF = 0;  // Clear the ADCAN9 interrupt flag 
+    FB_IOUT2_ADC_IF = 0;  // Clear the ADCAN9 interrupt flag 
 }
 
 
 
-void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _ADCAN18Interrupt ( void )
+void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_IOUT1_ADC_Interrupt ( void )
 {
     static volatile uint16_t counter = 0;
     static volatile uint16_t accADCAN18 =0;
@@ -142,22 +138,20 @@ void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _ADCAN18Interrupt (
         avgADCAN18  = accADCAN18 >> 3;
         
         if (avgADCAN18 >= IOUT_4SWBB_UTH_CONV2) {
-            // Enable PWM7 
-            PG7CONLbits.ON = 0b1;           // PWM7 Module is enabled
-//            UTH_ADCAN18_TRIPPED = 1; 
-//            LTH_ADCAN18_TRIPPED = 0; 
-        #ifdef CK_DP_PIM 
-            LATDbits.LATD13 = 1;
-        #endif
+            // Enable PWM7 outputs
+            hspwm_ovr_release(BOOSTH1_PGx_CHANNEL);
+            
+// Remove:            PG7CONLbits.ON = 0b1;           // PWM7 Module is enabled
+// Remove:            UTH_ADCAN18_TRIPPED = 1; 
+// Remove:            LTH_ADCAN18_TRIPPED = 0; 
         }
         if (avgADCAN18 <= IOUT_4SWBB_LTH_CONV2) {
-            // Disable PWM7 
-            PG7CONLbits.ON      = 0b0;     // PWM7 Module is disabled 
-//            UTH_ADCAN18_TRIPPED = 0; 
-//            LTH_ADCAN18_TRIPPED = 1; 
-        #ifdef CK_DP_PIM
-            LATDbits.LATD13 = 0;
-        #endif
+            // Disable PWM7 outputs
+            hspwm_ovr_hold(BOOSTH1_PGx_CHANNEL);
+
+// Remove:            PG7CONLbits.ON      = 0b0;     // PWM7 Module is disabled 
+// Remove:            UTH_ADCAN18_TRIPPED = 0; 
+// Remove:            LTH_ADCAN18_TRIPPED = 1; 
         }
         
         counter = 0;
@@ -166,5 +160,5 @@ void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _ADCAN18Interrupt (
     else {
         accADCAN18 += valADCAN18;
     }
-    IFS6bits.ADCAN18IF = 0;  // Clear the ADCAN18 interrupt flag 
+    FB_IOUT1_ADC_IF = 0;  // Clear the ADCAN18 interrupt flag 
 }

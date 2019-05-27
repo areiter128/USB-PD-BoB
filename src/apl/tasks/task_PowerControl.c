@@ -11,6 +11,10 @@
 #include "mcal/mcal.h"
 #include "hal/hal.h"
 
+// ToDo: original flag used by init_pwm. Remove while reworking soft start
+volatile uint16_t SoftStartFinished;
+
+
 volatile uint16_t exec_PowerControl(void) {
 
     Nop();
@@ -25,6 +29,7 @@ volatile uint16_t init_PowerControl(void) {
     volatile uint16_t fres = 1;
     
     fres &= initialize_adc();
+    fres &= initialize_pwm();
     
     return (fres);
 }

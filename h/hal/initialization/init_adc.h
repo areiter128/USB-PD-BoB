@@ -30,6 +30,10 @@
 #ifndef _HAL_INIT_ADC_H_
 #define	_HAL_INIT_ADC_H_
 
+#include <xc.h>
+#include <stdint.h>
+#include <stdbool.h>
+
 #include "hal/hal.h"
 #include "mcal/mcal.h"
 
@@ -38,5 +42,5 @@
  * ***********************************************************************************************/
 extern volatile uint16_t initialize_adc(void); 
 
-#endif	/* _HAL_DSP_H_ */
+#endif	/* _HAL_INIT_ADC_H_ */
 
