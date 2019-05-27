@@ -110,6 +110,7 @@
           <itemPath>../src/hal/initialization/init_timer.c</itemPath>
           <itemPath>../src/hal/initialization/init_irq.c</itemPath>
           <itemPath>../src/hal/initialization/init_dsp.c</itemPath>
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/src/hal/initialization/init_adc.c</itemPath>
         </logicalFolder>
         <itemPath>../src/hal/hal.c</itemPath>
       </logicalFolder>
