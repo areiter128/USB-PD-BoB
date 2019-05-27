@@ -44,41 +44,71 @@
 
 #define VIN_MINIMUM             9.000       // input voltage minimum (Under-Voltage-Lockout-Level)
 #define VIN_MINIMUM_HYST        0.500        // input voltage minimum (Under-Voltage-Lockout Hysteresis Level)
-#define VIN_UVLO_TRIP           (uint16_t)(VIN_MINIMUM * VIN_DIVIDER_RATIO * ADC_SCALER) // Input voltage sense ADC ticks
-#define VIN_UVLO_RELEASE        (uint16_t)((VIN_MINIMUM + VIN_MINIMUM_HYST) * VIN_DIVIDER_RATIO * ADC_SCALER) // Input voltage sense ADC ticks
 
 #define VIN_NOMINAL             13.800       // Nominal input voltage in [V]
-#define VIN_FB_REF_ADC          (uint16_t)((float)VIN_DIVIDER_RATIO * (float)VIN_NOMINAL * ADC_SCALER)   // Input voltage feedback in ADC ticks
 
 #define VIN_MAXIMUM             18.000      // input voltage maximum (Under-Voltage-Lockout-Level)
 #define VIN_MAXIMUM_HYST        0.500       // input voltage maximum (Under-Voltage-Lockout Hysteresis Level)
-#define VIN_OVLO_TRIP           (uint16_t)((float)VIN_MAXIMUM * (float)VIN_DIVIDER_RATIO * (float)ADC_SCALER) // Input voltage sense ADC ticks
-#define VIN_OVLO_RELEASE        (uint16_t)(((float)VIN_MAXIMUM - (float)VIN_MAXIMUM_HYST) * (float)VIN_DIVIDER_RATIO * (float)ADC_SCALER) // Input voltage sense ADC ticks
 
 #define VOUT_MINIMUM            4.000       // input voltage minimum (Under-Voltage-Lockout-Level)
 #define VOUT_MINIMUM_HYST       0.500       // input voltage minimum (Under-Voltage-Lockout Hysteresis Level)
-#define VOUT_UVLO_TRIP          (uint16_t)(VOUT_MINIMUM * VOUT_DIVIDER_RATIO * ADC_SCALER) // Input voltage sense ADC ticks
-#define VOUT_UVLO_RELEASE       (uint16_t)((VOUT_MINIMUM + VOUT_MINIMUM_HYST) * VOUT_DIVIDER_RATIO * ADC_SCALER) // Input voltage sense ADC ticks
 
 #define VOUT_NOMINAL            5.000       // Nominal input voltage in [V]
-#define VOUT_FB_REF_ADC         (uint16_t)((float)VOUT_DIVIDER_RATIO * (float)VOUT_NOMINAL * ADC_SCALER)   // Input voltage feedback in ADC ticks
 
 #define VOUT_MAXIMUM            22.000      // output voltage maximum (Under-Voltage-Lockout-Level)
 #define VOUT_MAXIMUM_HYST       0.500       // output voltage maximum (Under-Voltage-Lockout Hysteresis Level)
+
+#define IOUT_MAXIMUM            3.500       // absolute maximum average output current during normal operation
+    
+#define IOUT_4SWBB_TRIP_CONV1   1.100       // [A] Upper boost switch threshold for output current - PWM1&PWM2 Buck-Boost leg
+#define IOUT_4SWBB_RESET_CONV1  0.900       // [A] Lower boost switch threshold for output current - PWM1&PWM2 Buck-Boost leg
+#define IOUT_4SWBB_TRIP_CONV2   1.100       // [A] Upper boost switch threshold for output current - PWM5&PWM7 Buck-Boost leg
+#define IOUT_4SWBB_RESET_CONV2  0.900       // [A] Lower boost switch threshold for output current - PWM5&PWM7 Buck-Boost leg
+
+#define DUTY_RATIO_MIN          0.010       // Minimum duty ration 
+#define DUTY_RATIO_MAX          0.800       // maximum duty ratio
+#define DUTY_RATIO_INIT         0.010       // maximum duty ratio
+
+
+/*!System Configuration Limits
+ * ************************************************************************************************
+ * Summary:
+ * Set of defines and marcos for easy hardware migration/changes
+ *
+ * Description:
+ * The following macros translate physical values from defines above to 
+ * integer values which can be written to registers.
+ * 
+ * See also:
+ * ************************************************************************************************/
+
+#define VIN_UVLO_TRIP           (uint16_t)(VIN_MINIMUM * VIN_DIVIDER_RATIO * ADC_SCALER) // Input voltage sense ADC ticks
+#define VIN_UVLO_RELEASE        (uint16_t)((VIN_MINIMUM + VIN_MINIMUM_HYST) * VIN_DIVIDER_RATIO * ADC_SCALER) // Input voltage sense ADC ticks
+#define VIN_FB_REF_ADC          (uint16_t)((float)VIN_DIVIDER_RATIO * (float)VIN_NOMINAL * ADC_SCALER)   // Input voltage feedback in ADC ticks
+#define VIN_OVLO_TRIP           (uint16_t)((float)VIN_MAXIMUM * (float)VIN_DIVIDER_RATIO * (float)ADC_SCALER) // Input voltage sense ADC ticks
+#define VIN_OVLO_RELEASE        (uint16_t)(((float)VIN_MAXIMUM - (float)VIN_MAXIMUM_HYST) * (float)VIN_DIVIDER_RATIO * (float)ADC_SCALER) // Input voltage sense ADC ticks
+
+#define VOUT_UVLO_TRIP          (uint16_t)(VOUT_MINIMUM * VOUT_DIVIDER_RATIO * ADC_SCALER) // Input voltage sense ADC ticks
+#define VOUT_UVLO_RELEASE       (uint16_t)((VOUT_MINIMUM + VOUT_MINIMUM_HYST) * VOUT_DIVIDER_RATIO * ADC_SCALER) // Input voltage sense ADC ticks
+#define VOUT_FB_REF_ADC         (uint16_t)((float)VOUT_DIVIDER_RATIO * (float)VOUT_NOMINAL * ADC_SCALER)   // Input voltage feedback in ADC ticks
 #define VOUT_OVP_TRIP           (uint16_t)((float)VOUT_MAXIMUM * (float)VOUT_DIVIDER_RATIO * (float)ADC_SCALER) // Output voltage sense ADC ticks
 #define VOUT_OVP_RELEASE        (uint16_t)(((float)VOUT_MAXIMUM - (float)VOUT_MAXIMUM_HYST) * (float)VOUT_DIVIDER_RATIO * (float)ADC_SCALER) // Input voltage sense ADC ticks
 
-#define IOUT_MAXIMUM            3.500   // absolute maximum average output current during normal operation
 #define IOUT_OCL_TRIP           (uint16_t)((((float)IOUT_MAXIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)ADC_SCALER) // Output voltage sense ADC ticks
-    
 
-#define DUTY_RATIO_MIN      0.01    // Minimum duty ration 
-#define DUTY_RATIO_MAX      0.80    // maximum duty ratio
-#define DUTY_RATIO_INIT     0.01    // maximum duty ratio
+// 4-Switch Buck/Boost operation PWM-leg control
+
+#define IOUT_4SWBB_UTH_CONV1    (uint16_t)((((float)IOUT_4SWBB_TRIP_CONV1 * (float)IOUT_SCALER_RATIO_I2V)) * (float)ADC_SCALER) // Output voltage sense ADC ticks
+#define IOUT_4SWBB_LTH_CONV1    (uint16_t)((((float)IOUT_4SWBB_RESET_CONV1 * (float)IOUT_SCALER_RATIO_I2V)) * (float)ADC_SCALER) // Output voltage sense ADC ticks
+#define IOUT_4SWBB_UTH_CONV2    (uint16_t)((((float)IOUT_4SWBB_TRIP_CONV2 * (float)IOUT_SCALER_RATIO_I2V)) * (float)ADC_SCALER) // Output voltage sense ADC ticks
+#define IOUT_4SWBB_LTH_CONV2    (uint16_t)((((float)IOUT_4SWBB_RESET_CONV2 * (float)IOUT_SCALER_RATIO_I2V)) * (float)ADC_SCALER) // Output voltage sense ADC ticks
 
 #define DUTY_RATIO_MIN_REG (uint16_t)((float)DUTY_RATIO_MIN * (float)SWITCHING_PERIOD)
 #define DUTY_RATIO_MAX_REG (uint16_t)((float)DUTY_RATIO_MAX * (float)SWITCHING_PERIOD)
 #define DUTY_RATIO_INIT_REG (uint16_t)((float)DUTY_RATIO_INIT * (float)SWITCHING_PERIOD)
+
+
+
 
 #endif	/* __SYSTEM_DESIGN_LIMITS_H__ */
 

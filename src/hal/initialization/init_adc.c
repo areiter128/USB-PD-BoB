@@ -14,10 +14,6 @@
 
 #define SAMPLING_TIME               10     // X*TAD sampling time for the shared core ADC
 
-#define UTH_IOUT_4SWBB_12           1.1    // [A] Upper boost switch threshold for output current - PWM1&PWM2 Buck-Boost leg
-#define LTH_IOUT_4SWBB_12           0.9    // [A] Lower boost switch threshold for output current - PWM1&PWM2 Buck-Boost leg
-#define UTH_IOUT_4SWBB_57           1.1    // [A] Upper boost switch threshold for output current - PWM5&PWM7 Buck-Boost leg
-#define LTH_IOUT_4SWBB_57           0.9    // [A] Lower boost switch threshold for output current - PWM5&PWM7 Buck-Boost leg
 
 #define TRIGA1_IOUT                 0    // TRIGA level for output current sampling on the buck-boost leg driven by PWM1 & PWM2
 #define TRIGA5_IOUT                 0    // TRIGA level for output current sampling on the buck-boost leg driven by PWM5 & PWM7
@@ -84,10 +80,10 @@ void initialize_adc(void) {
     
 }
 // Calculating scaled current threshold values
-const uint16_t UTH_ADCAN9_INT   =   (uint16_t) ( (0.2*UTH_IOUT_4SWBB_12 + 1.6475) / ADC_VREF * 4095);
-const uint16_t UTH_ADCAN18_INT  =   (uint16_t) ( (0.2*UTH_IOUT_4SWBB_57 + 1.6475) / ADC_VREF * 4095);
-const uint16_t LTH_ADCAN9_INT   =   (uint16_t) ( (0.2*LTH_IOUT_4SWBB_12 + 1.6475) / ADC_VREF * 4095);
-const uint16_t LTH_ADCAN18_INT  =   (uint16_t) ( (0.2*LTH_IOUT_4SWBB_57 + 1.6475) / ADC_VREF * 4095);
+//const uint16_t UTH_ADCAN9_INT   =   (uint16_t) ( (0.2*UTH_IOUT_4SWBB_12 + 1.6475) / ADC_VREF * 4095);
+//const uint16_t UTH_ADCAN18_INT  =   (uint16_t) ( (0.2*UTH_IOUT_4SWBB_57 + 1.6475) / ADC_VREF * 4095);
+//const uint16_t LTH_ADCAN9_INT   =   (uint16_t) ( (0.2*LTH_IOUT_4SWBB_12 + 1.6475) / ADC_VREF * 4095);
+//const uint16_t LTH_ADCAN18_INT  =   (uint16_t) ( (0.2*LTH_IOUT_4SWBB_57 + 1.6475) / ADC_VREF * 4095);
 
 volatile uint16_t UTH_ADCAN9_TRIPPED, LTH_ADCAN9_TRIPPED;
 volatile uint16_t UTH_ADCAN18_TRIPPED, LTH_ADCAN18_TRIPPED;
@@ -105,7 +101,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _ADCAN9Interrupt ( 
         accADCAN9 += valADCAN9;
         avgADCAN9  = accADCAN9 >> 3;
         
-        if (avgADCAN9 >= UTH_ADCAN9_INT) {
+        if (avgADCAN9 >= IOUT_4SWBB_UTH_CONV1) {
             // Enable PWM2 
             PG2CONLbits.ON = 0b1;           // PWM2 Module is enabled
 //            UTH_ADCAN9_TRIPPED  = 1; 
@@ -114,7 +110,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _ADCAN9Interrupt ( 
             LATDbits.LATD8 = 1;
         #endif
         }
-        if (avgADCAN9 <= LTH_ADCAN9_INT) {
+        if (avgADCAN9 <= IOUT_4SWBB_LTH_CONV1) {
             // Disable PWM2 
             PG2CONLbits.ON      = 0b0;     // PWM2 Module is disabled 
 //            UTH_ADCAN9_TRIPPED  = 0; 
@@ -146,7 +142,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _ADCAN18Interrupt (
         accADCAN18 += valADCAN18;
         avgADCAN18  = accADCAN18 >> 3;
         
-        if (avgADCAN18 >= UTH_ADCAN18_INT) {
+        if (avgADCAN18 >= IOUT_4SWBB_UTH_CONV2) {
             // Enable PWM7 
             PG7CONLbits.ON = 0b1;           // PWM7 Module is enabled
 //            UTH_ADCAN18_TRIPPED = 1; 
@@ -155,7 +151,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _ADCAN18Interrupt (
             LATDbits.LATD13 = 1;
         #endif
         }
-        if (avgADCAN18 <= LTH_ADCAN18_INT) {
+        if (avgADCAN18 <= IOUT_4SWBB_LTH_CONV2) {
             // Disable PWM7 
             PG7CONLbits.ON      = 0b0;     // PWM7 Module is disabled 
 //            UTH_ADCAN18_TRIPPED = 0; 
