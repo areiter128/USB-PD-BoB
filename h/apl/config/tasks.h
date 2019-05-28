@@ -56,18 +56,60 @@
  * ***********************************************************************************************/
 #include "apl/apl.h"
 
-/* *****************************************************************************************************
- * Prototypes of external function used in task lists
+/*!User Task Rules
  * *****************************************************************************************************
- * Functions which should be used in task flow lists can be prototyped here. The functions can
+ * Prototypes of external functions used in task queues
+ * *****************************************************************************************************
+ * Functions which should be used in task queues can be prototyped here. The functions can
  * come from any source and are usually located in external C-files.
  * 
  * Limitations:
- *   - function has to be of the type int ... (void)
- *   - The function must return an integer value
+ *   - function has to be of the type volatile uint16_t ... (void)
+ *   - The function must return a volatile unsigned integer value of 16 bit data length
  *   - The function cannot take specific parameters
- *   - Specific parameters have to be derived from global or private data structures
+ *   - Specific parameters have to be derived from or exchanged through semaphores (e.g. global data structures)
  *
+ * Architecture:
+ * User tasks are encapsulated state machines. The highest level of the state machine needs to provide
+ * standard functions for initialization and execution. The recommended naming conventions use the 
+ * pre-label "init_" and "exec_" to distinguish between the these two functions.
+ * 
+ * Example:
+ * There is a task called MyTask which describes some clear defined feature (e.g. communication, 
+ * power converter control, system management, etc.). This task may consist of many files, internal
+ * function drivers and libraries. However simple or complex this task may be, it should always provide 
+ * the two basic function calls which can be used by the task manager to integrate this feature.
+ * 
+ *   - volatile uint16_t init_MyTask(void)
+ * 
+ *     This function is used to initialize required peripherals, variables and data structures and 
+ *     basically everything that needs to be done before the state machine can be executed.
+ *     This function will only be called once. A return value indicating an unsuccessful initialization
+ *     should be declared as critical fault to prevent the firmware to run with malfunctioning tasks.
+ * 
+ *   - volatile uint16_t exec_MyTask(void)
+ * 
+ *     This function will be called periodically by the task scheduler. The call frequency will depend
+ *     on the heartbeat frequency of the scheduler and number of tasks in the active task queue. Default
+ *     values for the scheduler heartbeat is 100 usec. With three tasks in one task queue exec_MyTask
+ *     will be called every 300 usec.
+ *
+ *     The state machine executed by exec_MYTask has to be 100% self organized and should not depend on
+ *     other functions outside of MyTask. Data and status information from other tasks which may be 
+ *     required should be exchanged through proper semaphores (global data structures and variables.
+ *
+ *     Silicon specific settings or registers contents should use the generic labels declared in 
+ *     the Microcontroller Abstraction Layer (MCAL). 
+ *  
+ *   - volatile uint16_t dispose_MyTask(void)       (optional)
+ * 
+ *     Some features may require to load and unload tasks on-the-fly at runtime. In this particular
+ *     case it is also recommended to create a third function call named dispose_MyTask in which
+ *     all used resources are given back (e.g. Special Function Registers (SFR) need to be reset, 
+ *     data structures need to be reset to default, port pins need to be reset to the default state 
+ *     (high impedance input) and power to peripheral modules no longer in use should be turned off
+ *     by setting the appropriate PMD register bit (if available)
+ * 
  * *****************************************************************************************************/
 
 /* Prototypes of additional initialization task functions */
