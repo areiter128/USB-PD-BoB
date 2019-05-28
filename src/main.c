@@ -46,7 +46,7 @@
 
 #include "_root/generic/task_scheduler.h"
 
-volatile uint16_t main(void) {
+int main(void) {
 
     volatile uint16_t fres = 0;
     
