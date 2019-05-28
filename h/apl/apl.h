@@ -34,6 +34,7 @@
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "config/application.h"
 
