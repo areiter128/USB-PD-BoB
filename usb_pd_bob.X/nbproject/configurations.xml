@@ -27,6 +27,7 @@
           <itemPath>../h/apl/tasks/task_FaultHandler.h</itemPath>
           <itemPath>../h/apl/tasks/task_Idle.h</itemPath>
           <itemPath>../h/apl/tasks/task_SystemStatus.h</itemPath>
+          <itemPath>../h/apl/tasks/task_UART.h</itemPath>
         </logicalFolder>
         <itemPath>../h/apl/apl.h</itemPath>
       </logicalFolder>
@@ -96,6 +97,7 @@
           <itemPath>../src/apl/tasks/task_FaultHandler.c</itemPath>
           <itemPath>../src/apl/tasks/task_Idle.c</itemPath>
           <itemPath>../src/apl/tasks/task_SystemStatus.c</itemPath>
+          <itemPath>../src/apl/tasks/task_UART.c</itemPath>
         </logicalFolder>
         <itemPath>../src/apl/apl.c</itemPath>
       </logicalFolder>
@@ -173,7 +175,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>RealICEPlatformTool</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.40</languageToolchainVersion>
+        <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -186,7 +188,7 @@
               <makeArtifact PL="../../plib/p33SMPS_mcal.X"
                             CT="3"
                             CN="__P33SMPS_CK__"
-                            AC="false"
+                            AC="true"
                             BL="true"
                             WD="../../plib/p33SMPS_mcal.X"
                             BC="${MAKE}  -f Makefile CONF=__P33SMPS_CK__"
