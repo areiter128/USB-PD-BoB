@@ -19,7 +19,7 @@
  * MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE 
  * TERMS. 
  * ***************************************************************************/
-/*@@task_UART.h
+/*!task_UART.h
  * ***************************************************************************
  * File:   task_UART.h
  * Author: M91406
@@ -80,7 +80,7 @@
     #define _CVRT_UxEIF         _U1EIF
 #endif
 
-/*@@SMPS_UART_STATUS_BIT_FIELD_t
+/*!SMPS_UART_STATUS_BIT_FIELD_t
  *****************************************************************************
  * 
  * Summary:
@@ -182,9 +182,9 @@ extern volatile SMPS_UART_OBJECT_t smps_uart;
 /* ***********************************************************************************************
  * PROTOTYPES
  * ***********************************************************************************************/
-extern volatile uint16_t init_DebugUART(void);
-extern volatile uint16_t exec_DebugUART(void);
-volatile inline int16_t  dispose_DebugUART(void);
+extern volatile inline uint16_t init_DebugUART(void);
+extern volatile inline uint16_t exec_DebugUART(void);
+extern volatile inline int16_t  dispose_DebugUART(void);
 
 #endif	/* _APL_TASK_SMPS_UART_H_ */
 
