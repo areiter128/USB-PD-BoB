@@ -260,6 +260,18 @@ volatile uint16_t init_DebugUART(void) {
     UART_RxTx.TXBytes[FRAME_TOTAL_TX_LENGTH - 1] = 0x0D; // pre-charge STOP OF FRAME code
 
     // Initialize UART peripheral
+	
+    // UARTx for debug messages
+    UART_TX_INIT_OUTPUT;
+    UART_RX_INIT_INPUT;
+
+    // Set PPS for UART
+    pps_UnlockIO();
+    pps_RemapInput(UART_RX_RP, PPSIN_U1RX);
+    pps_RemapOutput(UART_TX_RP, PPSOUT_U1TX);
+    pps_LockIO();
+	
+	// Configure UART peripheral
     fres = init_smps_uart();
 
     // set DATA TRANSMISSION COMPLETE flag to enable new transmissions
