@@ -14,8 +14,11 @@
  * Created on July 24, 2018, 09:32 PM
  ******************************************************************************/
 
+#include "mcal/mcal.h"
+
 // Configuration bits for dsPIC33CK Dual Core devices
-#if defined (__dsPIC33CK256MP506__)
+//#if defined (__dsPIC33CK256MP506__)
+#if defined (__P33SMPS_CK__)
 
 // FICD
 #pragma config ICS = PGD2    // ICD Communication Channel Select bits->Communicate on PGEC1 and PGED1
