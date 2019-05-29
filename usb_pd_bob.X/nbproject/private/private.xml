@@ -16,6 +16,13 @@
             <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/apl/resources/zeus_stack/hook_functions.c</file>
             <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/apl/resources/zeus_stack/portable/dsPIC/ZeusStackConfig.h</file>
             <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/apl/resources/zeus_stack/pd/generic_timer.c</file>
+            <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/apl/resources/zeus_stack/pd/policy_engine.c</file>
+            <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/apl/resources/zeus_stack/pd/pd_main.c</file>
+            <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/apl/resources/zeus_stack/thermal_power_management.h</file>
+            <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/apl/resources/zeus_stack/thermal_power_management.c</file>
+            <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/apl/resources/pd_timer/upd_timer.c</file>
+            <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/sfl/isr/isr_timer.c</file>
+            <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/hal/initialization/init_timer.c</file>
         </group>
     </open-files>
 </project-private>
