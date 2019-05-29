@@ -78,6 +78,7 @@
 
 uint8_t PD_TMR_Initialize (void)
 {
+#if 0    
     //TMR1 0; 
     TMR1 = 0x0;
     //Period = 0.0009999168 s; Frequency = 69093750 Hz; PR1 8636; 
@@ -94,6 +95,53 @@ uint8_t PD_TMR_Initialize (void)
 
     /* Start the Timer */
     T1CONbits.TON = 1;
+#endif // 0
+    // CCPON enabled; MOD 16-Bit/32-Bit Timer; CCSEL disabled; CCPSIDL disabled; TMR32 16 Bit; CCPSLP disabled; TMRPS 1:64; CLKSEL FOSC/2; TMRSYNC disabled; 
+    CCP1CON1L = (0x80C0 & 0x7FFF); //Disabling CCPON bit
+    //RTRGEN disabled; ALTSYNC disabled; ONESHOT disabled; TRIGEN disabled; IOPS Each Time Base Period Match; SYNC None; OPSRC Timer Interrupt Event; 
+    CCP1CON1H = 0x00;
+    //ASDGM disabled; SSDG disabled; ASDG 0; PWMRSEN disabled; 
+    CCP1CON2L = 0x00;
+    //ICGSM Level-Sensitive mode; ICSEL IC1; AUXOUT Disabled; OCAEN disabled; OENSYNC disabled; 
+    CCP1CON2H = 0x00;
+    //OETRIG disabled; OSCNT None; POLACE disabled; PSSACE Tri-state; 
+    CCP1CON3H = 0x00;
+    //ICDIS disabled; SCEVT disabled; TRSET disabled; ICOV disabled; ASEVT disabled; TRIG disabled; TRCLR disabled; 
+    CCP1STATL = 0x00;
+    //TMR 0; 
+    CCP1TMRL = 0x00;
+    //TMR 0; 
+    CCP1TMRH = 0x00;
+    //PR 1562; 
+    CCP1PRL = 0x61A; //1ms
+    //PR 0; 
+    CCP1PRH = 0x00;
+    //CMP 0; 
+    CCP1RAL = 0x00;
+    //CMP 0; 
+    CCP1RBL = 0x00;
+    //BUF 0; 
+    CCP1BUFL = 0x00;
+    //BUF 0; 
+    CCP1BUFH = 0x00;
+
+    CCP1CON1Lbits.CCPON = 0x1; //Enabling CCP
+
+    IFS0bits.CCP1IF = 0;
+
+    IFS0bits.CCT1IF = 0;
+      
+    IPC1bits.CCT1IP = 4;   // Set Interrupt Priority
+
+    // Enabling SCCP1 interrupt.
+    //IEC0bits.CCP1IE = 1;
+
+    // Enabling SCCP1 interrupt.
+    IEC0bits.CCT1IE = 1;
+    
+   /* Start the Timer */
+    CCP1CON1Lbits.CCPON = true;
+
 
     return(1);
 }
@@ -120,17 +168,20 @@ uint8_t PD_TMR_expired (upd_timer_t *timer)
 }
  */
 
-void __attribute__ ( ( interrupt, no_auto_psv ) ) _T1Interrupt (  )
+void __attribute__ ( ( interrupt, no_auto_psv ) ) _CCT1Interrupt ( void )
 {
     /* Check if the Timer Interrupt/Status is set */
-    
-    //***User Area Begin
-    // Call the PD Stack timer interrupt handler function
-    PDTimer_InterruptHandler();
-    //***User Area End
-    IFS0bits.T1IF = false;
+    if(IFS0bits.CCT1IF)
+    {         
+    //    LATCbits.LATC5 ^= 1;
+        
+        //***User Area Begin
+        // Call the PD Stack timer interrupt handler function
+        PDTimer_InterruptHandler();
+        //***User Area End
+        IFS0bits.CCT1IF = 0;
+    }
 }
-
 
 
 /**

@@ -361,7 +361,7 @@ void updreset_init(void)
     LATBbits.LATB10 = 0;
     LATAbits.LATA1 = 0;
     
-    __delay_ms(100);
+    // TODO: how_to_do_delay_function? __delay_ms(100);
     
     //Make the gpio line high as default
     LATBbits.LATB10 = 1;
@@ -374,7 +374,7 @@ void updreset_thru_gpio(void)
     LATBbits.LATB10 = 0;
     LATAbits.LATA1 = 0;
      
-    __delay_ms(100);
+    // TODO: how_to_do_delay_function? __delay_ms(100);
     
     //Make the gpio line high as default
     LATBbits.LATB10 = 1;

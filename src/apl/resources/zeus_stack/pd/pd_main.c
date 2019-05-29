@@ -137,7 +137,7 @@ UINT8 PD_Init(void)
 
 void PD_Run()
 {
-	power_management_state_machine();
+	thermal_power_management_state_machine();
     
     for (UINT8 u8PortNum = 0; u8PortNum < CONFIG_PD_PORT_COUNT; u8PortNum++)
   	{
