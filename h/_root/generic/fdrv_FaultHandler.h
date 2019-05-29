@@ -242,10 +242,10 @@ extern uint16_t fltobj_list_size;
  * Description:
  * The following function prototypes are publicly accessible.
  * ***********************************************************************************************/
-extern inline uint16_t CheckCPUResetRootCause(void);
+extern uint16_t CheckCPUResetRootCause(void);
 
-extern inline uint16_t exec_FaultCheckAll(void);
-extern inline uint16_t exec_FaultCheckSequential(void);
+extern uint16_t exec_FaultCheckAll(void);
+extern uint16_t exec_FaultCheckSequential(void);
 
 #endif	/* _APPLLICAITON_LAYER_FAULT_HANDLER_H_ */
 
