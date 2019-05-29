@@ -9,13 +9,10 @@
             <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/apl/tasks/task_FaultHandler.c</file>
             <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/apl/config/tasks.c</file>
             <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/h/apl/config/tasks.h</file>
-            <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/h/apl/tasks/task_PDStack.h</file>
             <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/hal/initialization/init_dsp.c</file>
             <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/h/apl/apl.h</file>
-            <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/h/apl/resources/fdrv_FunctionPDStack.h</file>
             <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/sfl/isr/isr_timer.c</file>
             <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/hal/initialization/init_timer.c</file>
-            <file>file:/C:/PROJECTS/USB_PD_Demo_board/working/pd_project/src/apl/resources/zeus_stack/hook_functions.c</file>
         </group>
     </open-files>
 </project-private>
