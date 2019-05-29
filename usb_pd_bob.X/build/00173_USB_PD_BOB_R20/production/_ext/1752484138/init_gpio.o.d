@@ -40,18 +40,16 @@ build/00173_USB_PD_BOB_R20/production/_ext/1752484138/init_gpio.o:  \
 ../h/apl/config/tasks.h  \
  ../h/apl/apl.h  \
 ../h/apl/config/application.h  \
- ../h/../h/apl/tasks/task_FaultHandler.h  \
-../h/../h/_root/config/globals.h  \
- ../h/_root/generic/fdrv_FaultHandler.h  \
-../h/_root/config/globals.h  \
- ../h/_root/generic/fdrv_TrapHandler.h  \
-../h/_root/generic/task_manager.h  \
- ../h/_root/generic/task_scheduler.h  \
-../h/sfl/sfl.h  \
  ../h/../h/apl/tasks/task_Idle.h  \
-../h/../h/apl/tasks/task_DebugLED.h  \
- ../h/apl/resources/fdrv_FunctionLED.h  \
- ../h/../h/apl/tasks/task_SystemStatus.h  \
+../h/../h/apl/tasks/task_FaultHandler.h  \
+ ../h/../h/_root/config/globals.h  \
+../h/_root/generic/fdrv_FaultHandler.h  \
+ ../h/_root/config/globals.h  \
+../h/_root/generic/fdrv_TrapHandler.h  \
+ ../h/_root/generic/task_manager.h  \
+../h/_root/generic/task_scheduler.h  \
+ ../h/sfl/sfl.h  \
+../h/../h/apl/tasks/task_SystemStatus.h  \
  ../h/../h/apl/tasks/task_PDStack.h  \
  ../h/apl/resources/fdrv_FunctionPDStack.h  \
  ../h/hal/initialization/init_gpio.h  \
