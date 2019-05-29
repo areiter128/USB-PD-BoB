@@ -52,7 +52,7 @@
 
 /*===== DEMO_BOARD_TEST =====*/
 #define LOG_PRINT(x,y) // define away LOG_PRINTs
-#define Read_Temp() 30  // Set the temperature to 30C
+#define Read_Temp() 30  // Set the temperature to 30C to keep the thermal management inactive
 /*===== DEMO_BOARD_TEST =====*/
 
 thermal_mgmt_state_t thermal_mgmt_state = THERM_ST_INIT;

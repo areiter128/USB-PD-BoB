@@ -37,16 +37,37 @@
  * ***************************************************************************/
 
 #include <xc.h>
+#include <stdio.h>
 #include "apl/resources/fdrv_FunctionPDStack.h"
 #include "apl/tasks/task_PDStack.h"
 
 volatile FUNCTION_PD_STACK_CONFIG_t taskPDStack_config;
 
+/*===== DEMO_BOARD_TEST =====*/
+#define LOG_PRINT(x,y) // define away LOG_PRINTs for now
+/*===== DEMO_BOARD_TEST =====*/
 // Private prototypes
 
 
 volatile uint16_t task_PDStack(void)
 {
+    uint8_t index;
+    
+    if (taskPDStack_config.status.flags.enable)
+    {
+            // Handle Interrupts from the ports
+        for(index = 0; index < CONFIG_PD_PORT_COUNT; index++)
+        {
+            if (upd_irq_asserted(index))
+            {
+                // Port[index] has asserted an interrupt.  Handle it.
+                UPDIntr_AlertHandler (index);
+            }
+        }
+        
+        // Call the main PD Stack state machine
+        PD_Run();
+    }
     
    
     return(taskPDStack_config.status.value);
@@ -54,8 +75,32 @@ volatile uint16_t task_PDStack(void)
 
 volatile uint16_t init_taskPDStack(void)
 {
+    uint16_t reg_data_16;
+    char debug_string[20];
+    
+    PD_Init();
+    LOG_PRINT(LOG_INFO, "Init TASK PD Stack done\r\n");
+
+    // Configure UPD350 gpio pins for functions used outside of the stack
+    configure_upd350_gpio();
+    
+    UPD_RegisterRead(0, 0x0004, (uint8_t *)&reg_data_16, 2);
+    sprintf(debug_string, "VID 1: %04X\r\n", reg_data_16);
+    LOG_PRINT(LOG_DEBUG, debug_string);
+    UPD_RegisterRead(0, 0x0006, (uint8_t *)&reg_data_16, 2);
+    sprintf(debug_string, "PID 1: %04X\r\n", reg_data_16);
+    LOG_PRINT(LOG_DEBUG, debug_string);
+
+    UPD_RegisterRead(1, 0x0004, (uint8_t *)&reg_data_16, 2);
+    sprintf(debug_string, "VID 2: %04X\r\n", reg_data_16);
+    LOG_PRINT(LOG_DEBUG, debug_string);
+    UPD_RegisterRead(1, 0x0006, (uint8_t *)&reg_data_16, 2);
+    sprintf(debug_string, "PID 2: %04X\r\n", reg_data_16);
+    LOG_PRINT(LOG_DEBUG, debug_string);
+    
+    // Set the flag in the structure to indicate that the stack has been initialized.
     taskPDStack_config.status.flags.enable = PDSTACK_ENABLED;
-    //TODO: PD Stack Initialization
+    
     return(true);
 }
 
