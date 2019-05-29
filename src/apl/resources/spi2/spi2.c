@@ -111,11 +111,11 @@ void SPI2_Initialize (void)
     RPOR12bits.RP56R = 0x0009;   //RC8->SPI2:SCK2;
     
     // PORT 0
-    TRISCbits.TRISC13 = 0;    // RC13 to output for SPI SS under software control
-    LATCbits.LATC13 = 1;
+    TRISBbits.TRISB7 = 0;    // RB7 to output for SPI SS under software control
+    LATBbits.LATB7 = 1;
     // PORT 1
-    TRISCbits.TRISC12 = 0;    // RC12 to output for SPI SS under software control
-    LATCbits.LATC12 = 1;
+    TRISDbits.TRISD13 = 0;    // RD13 to output for SPI SS under software control
+    LATDbits.LATD13 = 1;
     
     /*  
         Note from SPI Reference Manual:

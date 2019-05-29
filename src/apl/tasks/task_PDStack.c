@@ -52,6 +52,25 @@ volatile FUNCTION_PD_STACK_CONFIG_t taskPDStack_config;
 volatile uint16_t task_PDStack(void)
 {
     uint8_t index;
+    static uint8_t test_counter = 0;
+    static uint8_t upd_led_toggle = 0;
+    
+    if (test_counter++ > 500)
+    {
+        // Blink LEDS on UPD350s at the telemetry transmit interval
+        if (upd_led_toggle++ & 0x01)
+        {
+            UPD_GPIOSetClearOutput(0, UPD_PIO9, UPD_GPIO_SET);
+            UPD_GPIOSetClearOutput(1, UPD_PIO9, UPD_GPIO_SET);
+        }
+        else
+        {
+            UPD_GPIOSetClearOutput(0, UPD_PIO9, UPD_GPIO_CLEAR);
+            UPD_GPIOSetClearOutput(1, UPD_PIO9, UPD_GPIO_CLEAR);
+        }
+
+    }
+    
     
     if (taskPDStack_config.status.flags.enable)
     {
@@ -77,6 +96,8 @@ volatile uint16_t init_taskPDStack(void)
 {
     uint16_t reg_data_16;
     char debug_string[20];
+    
+    
     
     PD_Init();
     LOG_PRINT(LOG_INFO, "Init TASK PD Stack done\r\n");
