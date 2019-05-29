@@ -40,10 +40,7 @@
 
 //Remove: #include "task_ConverterStateControl.h"
 #include "../h/apl/tasks/task_Idle.h"
-<<<<<<< HEAD
-=======
 #include "../h/apl/tasks/task_FaultHandler.h"
->>>>>>> develop
 #include "../h/apl/tasks/task_SystemStatus.h"
 
 /* ***********************************************************************************************
