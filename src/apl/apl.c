@@ -140,7 +140,7 @@ uint16_t OS_Initialize(void) {
  * 
  * ***********************************************************************************************/
 
-uint16_t APPLICATION_Initialize(void) {
+inline volatile uint16_t APPLICATION_Initialize(void) {
 
     volatile uint16_t fres = 0;
 
@@ -176,8 +176,8 @@ uint16_t APPLICATION_Initialize(void) {
  * peripherals to fail.
  * 
  * ***********************************************************************************************/
-
-uint16_t Device_Reset(void){
+#if (EXECUTE_MCC_SYSTEM_INITIALIZE == 0)
+inline volatile uint16_t Device_Reset(void){
 
     /* this routine can be used to replace the operation mode OP_MODE_BOOT */
 
@@ -190,3 +190,4 @@ uint16_t Device_Reset(void){
     return(fres);
     
 }
+#endif

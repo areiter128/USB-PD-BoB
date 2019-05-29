@@ -53,10 +53,10 @@
  * PROTOTYPES
  * ***********************************************************************************************/
 
-extern inline uint16_t OS_Initialize(void);
-extern inline uint16_t CLOCK_Initialize(void);
-extern inline uint16_t Device_Reset(void);
-extern inline uint16_t APPLICATION_Initialize(void);
+#if (EXECUTE_MCC_SYSTEM_INITIALIZE == 0)
+extern volatile uint16_t Device_Reset(void);         // Declare prototype if MCC option is disabled
+#endif
+extern volatile uint16_t APPLICATION_Initialize(void);
 
 #endif	/* APPLICATION_LAYER_H */
 

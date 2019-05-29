@@ -188,9 +188,9 @@ extern volatile task_manager_settings_t task_mgr; // Declare a data structure ho
 
 
 // Public Task Manager Function Prototypes
-extern inline uint16_t init_TaskManager(void);
-extern inline uint16_t task_manager_tick(void);
-extern inline uint16_t task_CheckOperationModeStatus(void);
+extern uint16_t init_TaskManager(void);
+extern uint16_t task_manager_tick(void);
+extern uint16_t task_CheckOperationModeStatus(void);
 
 
 #endif	/* _ROOT_TASK_MANAGER_H_ */
