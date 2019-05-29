@@ -92,7 +92,7 @@ extern volatile uint16_t cpu_time_buffer[];
  * ***********************************************************************************************/
     
     
-extern inline volatile uint16_t exec_scheduler(void);
+extern volatile uint16_t exec_scheduler(void);
 
 
 #ifdef	__cplusplus
