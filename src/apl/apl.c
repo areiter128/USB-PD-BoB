@@ -177,7 +177,7 @@ inline volatile uint16_t APPLICATION_Initialize(void) {
  * 
  * ***********************************************************************************************/
 #if (EXECUTE_MCC_SYSTEM_INITIALIZE == 0)
-inline volatile uint16_t Device_Reset(void){
+inline volatile uint16_t DEVICE_Reset(void){
 
     /* this routine can be used to replace the operation mode OP_MODE_BOOT */
 
