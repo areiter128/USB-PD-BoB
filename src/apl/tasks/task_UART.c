@@ -42,7 +42,7 @@
 #include <xc.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "task_UART.h"
+
 
 #include "apl/apl.h"
 #include "hal/hal.h"
@@ -276,18 +276,19 @@ volatile inline uint16_t init_DebugUART(void) {
     //return (fres);
     
     
-    /****************************************************************************
-     * Set the PPS
-     ***************************************************************************/
+    // Initialize UART peripheral
+
+    // UARTx for debug messages
     UART_TX_INIT_OUTPUT;
     UART_RX_INIT_INPUT;
-    
-    __builtin_write_RPCON(0x0000); // unlock PPS
 
-    RPINR18bits.U1RXR = 0x0044;    //RD4->UART1:U1RX
-    RPOR17bits.RP67R = 0x0001;    //RD3->UART1:U1TX
+    // Set PPS for UART
+    pps_UnlockIO();
+    pps_RemapInput(UART_RX_RP, PPSIN_U1RX);
+    pps_RemapOutput(UART_TX_RP, PPSOUT_U1TX);
+    pps_LockIO();
 
-    __builtin_write_RPCON(0x0800); // lock PPS
+	// Configure UART peripheral
     
      // URXEN disabled; RXBIMD RXBKIF flag when Break makes low-to-high transition after being low for at least 23/11 bit periods; UARTEN enabled; MOD Asynchronous 8-bit UART; UTXBRK disabled; BRKOVR TX line driven by shifter; UTXEN disabled; USIDL disabled; WAKE disabled; ABAUD disabled; BRGH enabled; 
     // Data Bits = 8; Parity = None; Stop Bits = 1 Stop bit sent, 1 checked at RX;
