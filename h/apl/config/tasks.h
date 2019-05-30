@@ -102,6 +102,8 @@ typedef enum {
     TASK_INIT_GPIO, // Task initializing the chip GPIOs
     TASK_INIT_IRQ, // Task initializing the interrupt controller
     TASK_INIT_DSP, // Task initializing the digital signal controller
+    TASK_INIT_UART,
+    TASK_EXEC_UART,        
         
     // Board level initialization
 

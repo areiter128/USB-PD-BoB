@@ -235,37 +235,95 @@ volatile uint16_t exec_DebugUART(void) {
 
 volatile uint16_t init_DebugUART(void) {
     
-    volatile uint16_t fres = 0, i = 0;
-
-    // copy essential port setting into data structure
-    smps_uart.port_index = CVRT_UART_IDX;
-    smps_uart.baudrate = CVRT_UART_BAUDRATE;
-
-    // reset private variables
-    UART_RxTx.UartRecCounter = 0; // reset RX buffer counter
-    UART_RxTx.UartSendCounter = 0; // reset TX buffer counter
-
-    // clear receive data frame
-    for (i = 0; i < FRAME_TOTAL_RX_LENGTH; i++) {
-        UART_RxTx.RXBytes[i] = 0;
-    }
-
-    // clear transmit data frame
-    for (i = 0; i < FRAME_TOTAL_TX_LENGTH; i++) {
-        UART_RxTx.TXBytes[i] = 0;
-    }
-
-    // reset transmit buffer 
-    UART_RxTx.TXBytes[0] = 0xAA; // pre-charge START OF FRAME code
-    UART_RxTx.TXBytes[FRAME_TOTAL_TX_LENGTH - 1] = 0x0D; // pre-charge STOP OF FRAME code
-
-    // Initialize UART peripheral
-    fres = init_smps_uart();
-
-    // set DATA TRANSMISSION COMPLETE flag to enable new transmissions
-    UART_RxTx.UartTXSendDone = 1;   
+//    volatile UxMODE_CONTROL_REGISTER_t uxmode;
+//    volatile uint16_t fres = 0, i = 0;
+//
+//    // copy essential port setting into data structure
+//    smps_uart.port_index = 1;
+//    smps_uart.baudrate = 9600;
+//
+//    // reset private variables
+//    UART_RxTx.UartRecCounter = 0; // reset RX buffer counter
+//    UART_RxTx.UartSendCounter = 0; // reset TX buffer counter
+//
+//    // clear receive data frame
+//    for (i = 0; i < FRAME_TOTAL_RX_LENGTH; i++) {
+//        UART_RxTx.RXBytes[i] = 0;
+//    }
+//
+//    // clear transmit data frame
+//    for (i = 0; i < FRAME_TOTAL_TX_LENGTH; i++) {
+//        UART_RxTx.TXBytes[i] = 0;
+//    }
+//
+//    // reset transmit buffer 
+//    UART_RxTx.TXBytes[0] = 0xAA; // pre-charge START OF FRAME code
+//    UART_RxTx.TXBytes[FRAME_TOTAL_TX_LENGTH - 1] = 0x0D; // pre-charge STOP OF FRAME code
+//
+//    uxmode.flags.abaud = ABAUD_DISABLED;
+//    // Initialize UART peripheral
+//    fres = smps_uart_init(1, UxMODE_CONTROL_REGISTER_t regUxMODE, UxSTA_CONTROL_REGISTER_t regUxSTA)();
+//
+//    // set DATA TRANSMISSION COMPLETE flag to enable new transmissions
+//    UART_RxTx.UartTXSendDone = 1;   
     
-    return (fres);
+    //return (fres);
+    
+    
+    /****************************************************************************
+     * Set the PPS
+     ***************************************************************************/
+    UART_TX_INIT_OUTPUT;
+    UART_RX_INIT_INPUT;
+    
+    __builtin_write_RPCON(0x0000); // unlock PPS
+
+    RPINR18bits.U1RXR = 0x0044;    //RD4->UART1:U1RX
+    RPOR17bits.RP67R = 0x0001;    //RD3->UART1:U1TX
+
+    __builtin_write_RPCON(0x0800); // lock PPS
+    
+     // URXEN disabled; RXBIMD RXBKIF flag when Break makes low-to-high transition after being low for at least 23/11 bit periods; UARTEN enabled; MOD Asynchronous 8-bit UART; UTXBRK disabled; BRKOVR TX line driven by shifter; UTXEN disabled; USIDL disabled; WAKE disabled; ABAUD disabled; BRGH enabled; 
+    // Data Bits = 8; Parity = None; Stop Bits = 1 Stop bit sent, 1 checked at RX;
+    U1MODE = (0x8080 & ~(1<<15));  // disabling UARTEN bit
+    // STSEL 1 Stop bit sent, 1 checked at RX; BCLKMOD disabled; SLPEN disabled; FLO Off; BCLKSEL FOSC/2; C0EN disabled; RUNOVF disabled; UTXINV disabled; URXINV disabled; HALFDPLX disabled; 
+    U1MODEH = 0x00;
+    // OERIE disabled; RXBKIF disabled; RXBKIE disabled; ABDOVF disabled; OERR disabled; TXCIE disabled; TXCIF disabled; FERIE disabled; TXMTIE disabled; ABDOVE disabled; CERIE disabled; CERIF disabled; PERIE disabled; 
+    U1STA = 0x00;
+    // URXISEL RX_ONE_WORD; UTXBE enabled; UTXISEL TX_BUF_EMPTY; URXBE enabled; STPMD disabled; TXWRE disabled; 
+    U1STAH = 0x22;
+	// BaudRate = 115200; Frequency = 100000000 Hz; BRG 216; 
+    U1BRG = 0xD8;
+    // BRG 0; 
+    U1BRGH = 0x00;
+    // P1 0; 
+    U1P1 = 0x00;
+    // P2 0; 
+    U1P2 = 0x00;
+    // P3 0; 
+    U1P3 = 0x00;
+    // P3H 0; 
+    U1P3H = 0x00;
+    // TXCHK 0; 
+    U1TXCHK = 0x00;
+    // RXCHK 0; 
+    U1RXCHK = 0x00;
+    // T0PD 1 ETU; PTRCL disabled; TXRPT Retransmit the error byte once; CONV Direct logic; 
+    U1SCCON = 0x00;
+    // TXRPTIF disabled; TXRPTIE disabled; WTCIF disabled; WTCIE disabled; BTCIE disabled; BTCIF disabled; GTCIF disabled; GTCIE disabled; RXRPTIE disabled; RXRPTIF disabled; 
+    U1SCINT = 0x00;
+    // ABDIF disabled; WUIF disabled; ABDIE disabled; 
+    U1INT = 0x00;
+
+    IEC0bits.U1RXIE = 1;
+    
+     //Make sure to set LAT bit corresponding to TxPin as high before UART initialization
+    U1MODEbits.UARTEN = 1;
+    U1MODEbits.UTXEN = 1; 
+    U1MODEbits.URXEN = 1;
+    
+    
+    return (1); // ToDo: Migrate UART initialization to plib
 }
 
 /*@@task_UARTsendFrame

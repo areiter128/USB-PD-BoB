@@ -41,6 +41,10 @@
                     <name>00173_USB_PD_BOB_R20</name>
                     <type>2</type>
                 </confElem>
+                <confElem>
+                    <name>MA330048_P33CK</name>
+                    <type>2</type>
+                </confElem>
             </confList>
             <formatting>
                 <project-formatting-style>false</project-formatting-style>

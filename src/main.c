@@ -47,8 +47,18 @@
 #include "_root/generic/task_scheduler.h"
 
 int main(void) {
-
+    
+    volatile uint32_t dummy;
+    //dummy = FCY;
+    dummy = UART_UxBRGL(9600);
+    Nop();
+    Nop();
+    Nop();
     volatile uint16_t fres = 0;
+    
+    smps_uart_open_port(uint16_t index, 
+    UART_BAUDRATE_SETTING_e baud, UART_DATA_BIT_SETTING_e data_bits, UART_PARITY_SETTING_e parity, UART_STOP_BIT_SETTING_e stop_bits, 
+    UART_ISR_PRIORITY_e isr_priority);
     
 #if __DEBUG
 // In debug mode these NOPs can be used to place a breakpoint before
