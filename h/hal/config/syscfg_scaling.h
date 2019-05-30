@@ -34,7 +34,7 @@
 #include <dsp.h>
 #include <math.h>
 
-#ifdef __00173_USB_PD_BOB_R20__
+#if defined (__00173_USB_PD_BOB_R20__) || defined (__MA330048_P33CK_R30_USB_PD_BOB__)
 
     // DSC bias voltage
     #define DEVICE_VDD                  3.300       // Device bias voltage in [V]

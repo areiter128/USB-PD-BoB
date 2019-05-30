@@ -3,8 +3,9 @@
  * Author:      M91406                                                                         
  * Comments:    Hardware abstraction layer device pinout descriptor                                
  * Board ID:    00173_USB_PD_BoB                                                                       
- * Date:        05/27/2019                                                                             
- * Build:       0013                                                                       
+ * HW Revision: R20                                                                   
+ * Date:        05/30/2019                                                                             
+ * Build:       0017                                                                       
  *                                                                                                 
  * Description:                                                                                    
  * This is a header file template adding signal labels for the hardware abstraction layer          
@@ -69,10 +70,10 @@
  * Description:
  * This flag is a user defined flag helping to provide version information about the
  * pinmap file. This string can be used universally across the firmware to identify the
- * hardware version this firmaware was written for.
+ * hardware version this firmware was written for.
  *
  * Please Note:
- * His label is not connected to the generic macro specified in the compiler settings
+ * This label is not connected to the generic macro specified in the compiler settings
  * and need to maintained by the designer independently.
  * ***********************************************************************************************/
 
