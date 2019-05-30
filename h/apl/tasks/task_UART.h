@@ -19,7 +19,7 @@
  * MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE 
  * TERMS. 
  * ***************************************************************************/
-/*@@task_UART.h
+/*!task_UART.h
  * ***************************************************************************
  * File:   task_UART.h
  * Author: M91406
@@ -49,7 +49,38 @@
  * DECLARATIONS
  * ***********************************************************************************************/
 
-/*@@SMPS_UART_STATUS_BIT_FIELD_t
+/* ToDo: the following declarations starting with CVRT_xxx need to be pushed into the hardware abstraction layer */
+
+#define CVRT_UART_IDX           1                       // Index of UART module for control and monitoring
+#define CVRT_UART_BAUDRATE      UART_BAUDRATE_57600		// Baudrate
+#define CVRT_UART_DATA_BITS     UART_DATA_BITS_8        // Number of data bits
+#define CVRT_UART_PARITY        UART_PARITY_NONE        // Parity setting of the UART 
+#define CVRT_UART_STOP_BITS     UART_STOP_BITS_1        // Number of stop bits
+#define CVRT_UART_IRS_PRIORITY  UART_ISR_PRIORITY_1     // Priority of the UART interrupts
+
+#define CVRT_UART_RX_PPS_NO     PPSI_RC15
+#define CVRT_UART_RX_PPS        PPSIN_U1RX
+#define CVRT_UART_TX_PPS_NO     PPSO_RB4
+#define CVRT_UART_TX_PPS        PPSOUT_U1TX
+
+#define CVRT_UxRXBUF_SIZE       (32)
+#define CVRT_UxTXBUF_SIZE       (32)
+
+#if (CVRT_UART_IDX == 1)
+    #define _CVRT_UxRXInterrupt _U1RXInterrupt
+    #define _CVRT_UxRXIF        _U1RXIF
+    #define CVRT_UxRXREG        U1RXREG
+
+    #define _CVRT_UxTXInterrupt _U1TXInterrupt
+    #define _CVRT_UxTXIF        _U1TXIF
+    #define CVRT_UxTXREG        U1TXREG
+    #define _CVRT_UxTXBF        U1STAbits.UTXBF
+
+    #define _CVRT_UxEInterrupt  _U1ErrInterrupt
+    #define _CVRT_UxEIF         _U1EIF
+#endif
+
+/*!SMPS_UART_STATUS_BIT_FIELD_t
  *****************************************************************************
  * 
  * Summary:
@@ -151,9 +182,9 @@ extern volatile SMPS_UART_OBJECT_t smps_uart;
 /* ***********************************************************************************************
  * PROTOTYPES
  * ***********************************************************************************************/
-extern volatile uint16_t init_DebugUART(void);
-extern volatile uint16_t exec_DebugUART(void);
-volatile inline int16_t  dispose_DebugUART(void);
+extern volatile inline uint16_t init_DebugUART(void);
+extern volatile inline uint16_t exec_DebugUART(void);
+extern volatile inline int16_t  dispose_DebugUART(void);
 
 #endif	/* _APL_TASK_SMPS_UART_H_ */
 

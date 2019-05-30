@@ -19,7 +19,7 @@
  * MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE 
  * TERMS. 
  * ***************************************************************************/
-/*@@task_Switch.h
+/*!task_Switch.h
  * ***************************************************************************
  * File:   task_Switch.h
  * Author: M91406
@@ -40,7 +40,13 @@
 
 
 #include <xc.h>
+#include <stdint.h>
+#include <stdbool.h>
 #include "task_UART.h"
+
+#include "apl/apl.h"
+#include "hal/hal.h"
+#include "mcal/mcal.h"
 
 /* global variables */
 volatile SMPS_UART_OBJECT_t smps_uart;
@@ -109,7 +115,7 @@ volatile inline uint16_t task_DebugUARTreceive(void);
 volatile inline uint16_t task_DebugDecodeFrame(void);
 volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint16_t data_len);
 
-/*@@exec_DebugUART
+/*!exec_DebugUART
  *****************************************************************************
  * Function:	 uint16_t exec_DebugUART(void)
  * Arguments:	 (none)
@@ -129,7 +135,7 @@ volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint
  * 
  *****************************************************************************/
 
-volatile uint16_t exec_DebugUART(void) {
+volatile inline uint16_t exec_DebugUART(void) {
 
     volatile uint16_t fres=0, i=0;
 
@@ -213,7 +219,7 @@ volatile uint16_t exec_DebugUART(void) {
     return (fres);
 }
 
-/*@@init_DebugUART
+/*!init_DebugUART
  *****************************************************************************
  * Function:	 uint16_t init_DebugUART(void)
  * Arguments:	 (none)
@@ -233,7 +239,7 @@ volatile uint16_t exec_DebugUART(void) {
  * 
  *****************************************************************************/
 
-volatile uint16_t init_DebugUART(void) {
+volatile inline uint16_t init_DebugUART(void) {
     
 //    volatile UxMODE_CONTROL_REGISTER_t uxmode;
 //    volatile uint16_t fres = 0, i = 0;
@@ -266,7 +272,7 @@ volatile uint16_t init_DebugUART(void) {
 //
 //    // set DATA TRANSMISSION COMPLETE flag to enable new transmissions
 //    UART_RxTx.UartTXSendDone = 1;   
-    
+
     //return (fres);
     
     
@@ -326,7 +332,33 @@ volatile uint16_t init_DebugUART(void) {
     return (1); // ToDo: Migrate UART initialization to plib
 }
 
-/*@@task_UARTsendFrame
+/*!dispose_DebugUART
+ *****************************************************************************
+ * Function:	 uint16_t dispose_DebugUART(void)
+ * Arguments:	 (none)
+ * Return Value: 1: success, 2: failure
+ *
+ * Summary:
+ * Resets the UART driver and used peripherals
+ *
+ * Description:	
+ * This routine resets all data structures, closes the UART, resets the 
+ * peripheral configuration, disables all interrupts and resets used to
+ * default (high impedance input).
+ *
+ * See also:
+ * (none)
+ * 
+ *****************************************************************************/
+
+volatile inline int16_t  dispose_DebugUART(void) {
+    
+    // ToDo: Add DISPOSE code here (see description above)
+    
+    return (1);
+}
+
+/*!task_UARTsendFrame
  *****************************************************************************
  * Function:	 int16_t task_UARTsendFrame(void)
  * Arguments:	 (none)
@@ -373,7 +405,7 @@ volatile inline int16_t task_DebugUARTsend(void)
     return(fres);
 }
 
-/*@@task_UARTsend
+/*!task_UARTsend
  *****************************************************************************
  * Function:	 int16_t task_UARTsend(void)
  * Arguments:	 (none)
@@ -413,7 +445,7 @@ volatile inline uint16_t task_DebugUARTreceive(void) {
     return (UART_RxTx.UARTRXComplete);
 }
 
-/*@@task_DecodeFrame
+/*!task_DecodeFrame
  *****************************************************************************
  * Function:	 int16_t task_DecodeFrame(void)
  * Arguments:	 (none)
@@ -449,7 +481,7 @@ volatile inline uint16_t task_DebugDecodeFrame(void) {
 
 }
 
-/*@@smpsuart_get_crc
+/*!smpsuart_get_crc
  *****************************************************************************
  * Function:	 int16_t smpsuart_get_crc(void)
  * Arguments:	 (none)
@@ -494,7 +526,7 @@ volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint
     return(result);
 }
 
-/*@@_CVRT_UxRXInterrupt
+/*!_CVRT_UxRXInterrupt
  *****************************************************************************
  * Function:	 void __attribute__((__interrupt__, no_auto_psv)) _CVRT_UxRXInterrupt(void)
  * Arguments:	 (none)
@@ -579,7 +611,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _CVRT_UxRXInterrupt()
 }
 
 
-/*@@_CVRT_UxTXInterrupt
+/*!_CVRT_UxTXInterrupt
  *****************************************************************************
  * Function:	 void __attribute__((__interrupt__, no_auto_psv)) _CVRT_UxTXInterrupt(void)
  * Arguments:	 (none)

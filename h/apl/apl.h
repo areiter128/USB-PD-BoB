@@ -34,16 +34,14 @@
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
-#include <stdbool.h>
 
 #include "config/application.h"
 
 //Remove: #include "task_ConverterStateControl.h"
-#include "../h/apl/tasks/task_Idle.h"
 #include "../h/apl/tasks/task_FaultHandler.h"
+#include "../h/apl/tasks/task_Idle.h"
 #include "../h/apl/tasks/task_SystemStatus.h"
 #include "../h/apl/tasks/task_UART.h"
-
 
 /* ***********************************************************************************************
  * GLOBAL APPLICATION LAYER USER OPTIONS
@@ -54,16 +52,10 @@
  * PROTOTYPES
  * ***********************************************************************************************/
 
-#if (EXECUTE_MCC_SYSTEM_INITIALIZE == 0)
-extern volatile uint16_t DEVICE_Reset(void);         // Declare prototype if MCC option is disabled
-#endif
-#if (EXECUTE_MCC_SYSTEM_INITIALIZE == 0)
-extern uint16_t CLOCK_Initialize(void);     // Declare prototype if MCC option is disabled
-#endif
-#if (EXECUTE_USER_STARTUP_CODE == 1)
-    extern volatile uint16_t ExecuteUserStartupCode(void);  // Declare prototype if Startup Code option is enabled
-#endif
-extern volatile uint16_t APPLICATION_Initialize(void);
+extern inline uint16_t OS_Initialize(void);
+extern inline uint16_t CLOCK_Initialize(void);
+extern inline uint16_t Device_Reset(void);
+extern inline uint16_t APPLICATION_Initialize(void);
 
 #endif	/* APPLICATION_LAYER_H */
 

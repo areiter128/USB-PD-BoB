@@ -188,7 +188,7 @@
               <makeArtifact PL="../../plib/p33SMPS_mcal.X"
                             CT="3"
                             CN="__P33SMPS_CK__"
-                            AC="false"
+                            AC="true"
                             BL="true"
                             WD="../../plib/p33SMPS_mcal.X"
                             BC="${MAKE}  -f Makefile CONF=__P33SMPS_CK__"
