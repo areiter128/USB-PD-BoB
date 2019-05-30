@@ -52,11 +52,12 @@ volatile FUNCTION_PD_STACK_CONFIG_t taskPDStack_config;
 volatile uint16_t task_PDStack(void)
 {
     uint8_t index;
-    static uint8_t test_counter = 0;
+    static uint16_t test_counter = 0;
     static uint8_t upd_led_toggle = 0;
     
-    if (test_counter++ > 500)
+    if (test_counter++ > 1000)
     {
+        test_counter = 0;
         // Blink LEDS on UPD350s at the telemetry transmit interval
         if (upd_led_toggle++ & 0x01)
         {

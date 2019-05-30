@@ -118,6 +118,7 @@ volatile uint16_t task_queue_boot[] = {
     TASK_INIT_GPIO,         // Step #0
     TASK_INIT_APPLICATION_SETTINGS, // Step #1
     TASK_INIT_FAULT_OBJECTS, // Step #2
+    TASK_INIT_IRQ,
 //    TASK_INIT_DBGLED,      // Step #4
     TASK_IDLE   // empty task used as task list execution time buffer 
 };
