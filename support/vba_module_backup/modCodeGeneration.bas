@@ -7,6 +7,7 @@ Private Const FILE_COMMENT_START As String = _
     " * Author:      %USERNAME%                                                                         " & vbCrLf & _
     " * Comments:    Hardware abstraction layer device pinout descriptor                                " & vbCrLf & _
     " * Board ID:    %BOARD_NAME%                                                                       " & vbCrLf & _
+    " * HW Revision: %PINMAP_VERSION%                                                                   " & vbCrLf & _
     " * Date:        %DATE%                                                                             " & vbCrLf & _
     " * Build:       %FILE_BUILD%                                                                       " & vbCrLf
 
@@ -84,10 +85,10 @@ Private Const PINMAP_VERSION_COMMENT As String = _
     " * Description:" & vbCrLf & _
     " * This flag is a user defined flag helping to provide version information about the" & vbCrLf & _
     " * pinmap file. This string can be used universally across the firmware to identify the" & vbCrLf & _
-    " * hardware version this firmaware was written for." & vbCrLf & _
+    " * hardware version this firmware was written for." & vbCrLf & _
     " *" & vbCrLf & _
     " * Please Note:" & vbCrLf & _
-    " * His label is not connected to the generic macro specified in the compiler settings" & vbCrLf & _
+    " * This label is not connected to the generic macro specified in the compiler settings" & vbCrLf & _
     " * and need to maintained by the designer independently." & vbCrLf & _
     " * ***********************************************************************************************/" & vbCrLf & _
     vbCrLf
@@ -317,6 +318,7 @@ Dim strBoardLabel As String
     
     strOut = Replace(strOut, "%USERNAME%", CONTRIBUTOR, 1, -1, vbTextCompare)
     strOut = Replace(strOut, "%BOARD_NAME%", BOARD_NAME, 1, -1, vbTextCompare)
+    strOut = Replace(strOut, "%PINMAP_VERSION%", PINMAP_VERSION, 1, -1, vbTextCompare)
     strOut = Replace(strOut, "%BOARD_LABEL%", BOARD_LABEL, 1, -1, vbTextCompare)
     strOut = Replace(strOut, "%DATE%", Format(Now, "mm/dd/yyyy"), 1, -1, vbTextCompare)
     strOut = Replace(strOut, "%FILE_BUILD%", FILE_BUILD, 1, -1, vbTextCompare)
