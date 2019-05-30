@@ -45,7 +45,7 @@ inline volatile uint16_t exec_scheduler(void) {
 
     // Initialize essential chip features and peripheral modules to boot up system
     #if (EXECUTE_MCC_SYSTEM_INITIALIZE == 0)
-    fres &= Device_Reset();
+    fres &= DEVICE_Reset();
     #endif
 
     // The User Startup Code might be required in some designs to enable 
