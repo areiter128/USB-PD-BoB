@@ -1029,7 +1029,7 @@
     <conf name="MA330048_P33CK_R30" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>dsPIC33CK64MP505</targetDevice>
+        <targetDevice>dsPIC33CK256MP506</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
         <platformTool>RealICEPlatformTool</platformTool>
@@ -1209,6 +1209,7 @@
         <property key="preserve-file" value=""/>
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
+        <appendMe value="-std=gnu99 -finline-functions"/>
       </C30Global>
       <ICD3PlatformTool>
         <property key="firmware.download.all" value="false"/>
@@ -1393,6 +1394,7 @@
         <property key="PG6" value="true"/>
         <property key="PG7" value="true"/>
         <property key="PG8" value="true"/>
+        <property key="PMP" value="true"/>
         <property key="PTGFRZ" value="true"/>
         <property key="QEI1" value="true"/>
         <property key="QEI2" value="true"/>

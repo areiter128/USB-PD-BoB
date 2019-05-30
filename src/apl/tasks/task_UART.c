@@ -105,13 +105,13 @@ typedef struct
 volatile SMPS_UART_DATA_HANDLER_t UART_RxTx;
 
 /* private prototypes */
-volatile inline int16_t  init_DebugUART(void);
-volatile inline int16_t  exec_DebugUART(void);
-volatile inline int16_t  dispose_DebugUART(void);
+volatile uint16_t  init_DebugUART(void);
+volatile uint16_t  exec_DebugUART(void);
+volatile uint16_t  dispose_DebugUART(void);
 
-volatile inline int16_t  task_DebugUARTsend(void);
-volatile inline uint16_t task_DebugUARTreceive(void);
-volatile inline uint16_t task_DebugDecodeFrame(void);
+inline volatile int16_t  task_DebugUARTsend(void);
+inline volatile uint16_t task_DebugUARTreceive(void);
+inline volatile uint16_t task_DebugDecodeFrame(void);
 volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint16_t data_len);
 
 /*!exec_DebugUART
@@ -134,7 +134,7 @@ volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint
  * 
  *****************************************************************************/
 
-volatile inline uint16_t exec_DebugUART(void) {
+inline volatile uint16_t exec_DebugUART(void) {
 
     volatile uint16_t fres=0, i=0;
 
@@ -238,7 +238,7 @@ volatile inline uint16_t exec_DebugUART(void) {
  * 
  *****************************************************************************/
 
-volatile inline uint16_t init_DebugUART(void) {
+volatile uint16_t init_DebugUART(void) {
     
     volatile uint16_t fres = 0, i = 0;
 
@@ -277,7 +277,7 @@ volatile inline uint16_t init_DebugUART(void) {
     pps_LockIO();
 	
 	// Configure UART peripheral
-    fres = init_smps_uart();
+    fres = init_DebugUART();
 
     // set DATA TRANSMISSION COMPLETE flag to enable new transmissions
     UART_RxTx.UartTXSendDone = 1;   
@@ -304,7 +304,7 @@ volatile inline uint16_t init_DebugUART(void) {
  * 
  *****************************************************************************/
 
-volatile inline int16_t  dispose_DebugUART(void) {
+volatile uint16_t  dispose_DebugUART(void) {
     
     // ToDo: Add DISPOSE code here (see description above)
     
@@ -330,7 +330,7 @@ volatile inline int16_t  dispose_DebugUART(void) {
  * 
  *****************************************************************************/
 
-volatile inline int16_t task_DebugUARTsend(void) 
+volatile int16_t task_DebugUARTsend(void) 
 {
     volatile uint16_t fres=1, timeout=0;
  
@@ -378,7 +378,7 @@ volatile inline int16_t task_DebugUARTsend(void)
  *****************************************************************************/
 
 
-volatile inline uint16_t task_DebugUARTreceive(void) {
+inline volatile uint16_t task_DebugUARTreceive(void) {
 
     volatile uint16_t crc_buffer=0;
 
@@ -416,14 +416,14 @@ volatile inline uint16_t task_DebugUARTreceive(void) {
  * 
  *****************************************************************************/
 
-volatile inline uint16_t task_DebugDecodeFrame(void) {
+inline volatile uint16_t task_DebugDecodeFrame(void) {
 
 //    volatile uint16_t value16 = 0;
 
     switch (smps_uart.RXBytes.id) 
     {
         case (0x01DD):  // toggles a test-pin when the command has successfully been received 
-            TSTOUT_WR ^= 1;
+            TESTPOINT_WR ^= 1;
             break;
             
         default: // unknown command
