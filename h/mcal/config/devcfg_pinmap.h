@@ -48,6 +48,9 @@ extern "C" {
     #ifdef __10888_P33CK_R30__
         #include "10888_P33CK_R30_pinmap.h"
     #endif
+    #ifdef __MA330048_P33CK_R30__
+        #include "MA330048_P33CK_R30_pinmap.h"
+    #endif
     
 #ifdef	__cplusplus
 }
