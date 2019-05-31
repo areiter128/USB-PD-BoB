@@ -170,10 +170,10 @@
     <conf name="00173_USB_PD_BOB_R20" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>dsPIC33CK256MP506</targetDevice>
+        <targetDevice>dsPIC33CK64MP505</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>Simulator</platformTool>
+        <platformTool>RealICEPlatformTool</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>3</platform>
@@ -350,6 +350,7 @@
         <property key="preserve-file" value=""/>
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
+        <appendMe value="-std=gnu99 -finline-functions"/>
       </C30Global>
       <ICD3PlatformTool>
         <property key="firmware.download.all" value="false"/>
@@ -866,8 +867,6 @@
                   value="report"/>
         <property key="warningmessagebreakoptions.W0243_ADC_INVALID_TAD" value="report"/>
         <property key="warningmessagebreakoptions.W0244_ADC_CONVERSION_ABORTED"
-                  value="report"/>
-        <property key="warningmessagebreakoptions.W0245_ADC_BUFREGEN_NOT_ALLOWED"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0400_PWM_PWM_FASTER_THAN_FOSC"
                   value="report"/>
@@ -1027,13 +1026,13 @@
         <property key="warningmessagebreakoptions.warningmessages" value="holdstate"/>
       </Simulator>
     </conf>
-    <conf name="MA330048_P33CK" type="2">
+    <conf name="MA330048_P33CK_R30" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>dsPIC33CK64MP505</targetDevice>
+        <targetDevice>dsPIC33CK256MP506</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>Simulator</platformTool>
+        <platformTool>RealICEPlatformTool</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>3</platform>
@@ -1048,7 +1047,7 @@
               <makeArtifact PL="../../plib/p33SMPS_mcal.X"
                             CT="3"
                             CN="__P33SMPS_CK__"
-                            AC="false"
+                            AC="true"
                             BL="true"
                             WD="../../plib/p33SMPS_mcal.X"
                             BC="${MAKE}  -f Makefile CONF=__P33SMPS_CK__"
@@ -1204,12 +1203,13 @@
         <property key="legacy-libc" value="true"/>
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros"
-                  value="__MA330048_P33CK_R30__;__CODE_OPT_LEVEL_3__"/>
+                  value="__MA330048_P33CK_R30_USB_PD_BOB__;__CODE_OPT_LEVEL_3__"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
+        <appendMe value="-std=gnu99 -finline-functions"/>
       </C30Global>
       <ICD3PlatformTool>
         <property key="firmware.download.all" value="false"/>
@@ -1394,6 +1394,7 @@
         <property key="PG6" value="true"/>
         <property key="PG7" value="true"/>
         <property key="PG8" value="true"/>
+        <property key="PMP" value="true"/>
         <property key="PTGFRZ" value="true"/>
         <property key="QEI1" value="true"/>
         <property key="QEI2" value="true"/>
@@ -1726,8 +1727,6 @@
                   value="report"/>
         <property key="warningmessagebreakoptions.W0243_ADC_INVALID_TAD" value="report"/>
         <property key="warningmessagebreakoptions.W0244_ADC_CONVERSION_ABORTED"
-                  value="report"/>
-        <property key="warningmessagebreakoptions.W0245_ADC_BUFREGEN_NOT_ALLOWED"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0400_PWM_PWM_FASTER_THAN_FOSC"
                   value="report"/>
