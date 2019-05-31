@@ -167,8 +167,8 @@ volatile uint16_t task_queue_device_startup_size = (sizeof(task_queue_device_sta
  * *********************************************************************************************** */
 
 volatile uint16_t task_queue_system_startup[] = {
-    TASK_IDLE, // Step #1
-    TASK_INIT_PDSTACK        
+    TASK_INIT_PDSTACK, // Step #1
+    TASK_IDLE
 };
 volatile uint16_t task_queue_system_startup_size = (sizeof(task_queue_system_startup)/sizeof(task_queue_system_startup[0]));
 
@@ -185,8 +185,8 @@ volatile uint16_t task_queue_system_startup_size = (sizeof(task_queue_system_sta
  * *********************************************************************************************** */
 
 volatile uint16_t task_queue_idle[] = {
-    TASK_IDLE, // Step #0
-    TASK_PDSTACK
+    TASK_PDSTACK, // Step #0
+    TASK_IDLE
 };
 volatile uint16_t task_queue_idle_size = (sizeof(task_queue_idle)/sizeof(task_queue_idle[0]));
 volatile uint16_t task_queue_init_idle(void)
@@ -236,8 +236,8 @@ volatile uint16_t task_queue_normal_size = (sizeof(task_queue_normal)/sizeof(tas
  * *********************************************************************************************** */
 
 volatile uint16_t task_queue_normal[] = {
-    TASK_IDLE, // Step #0
-    TASK_PDSTACK
+    TASK_PDSTACK, // Step #0
+    TASK_IDLE
 };
 volatile uint16_t task_queue_normal_size = (sizeof(task_queue_normal)/sizeof(task_queue_normal[0]));
 volatile uint16_t task_queue_init_normal(void)
