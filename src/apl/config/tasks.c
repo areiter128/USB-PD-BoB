@@ -76,7 +76,8 @@ volatile uint16_t (*Task_Table[])(void) = {
     init_gpio,              // task initializing all used GPIOs in accordance to their application specific function
     init_irq,               // task initializing the interrupt controller
     initialize_dsp,         // task initializing all digital signal controller
-
+    init_DebugUART,         // task initializing UART 
+    exec_DebugUART, 
     // Board level initialization
             
     // Add System function / Special function initialization
