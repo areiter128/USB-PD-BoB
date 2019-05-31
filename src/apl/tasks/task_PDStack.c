@@ -57,7 +57,7 @@ volatile uint16_t task_PDStack(void)
     static uint16_t test_counter = 0;
     static uint8_t upd_led_toggle = 0;
     
-    if (test_counter++ > 1000)
+    if (test_counter++ > 4000)
     {
         test_counter = 0;
         // Blink LEDS on UPD350s at the telemetry transmit interval
@@ -71,7 +71,6 @@ volatile uint16_t task_PDStack(void)
             UPD_GPIOSetClearOutput(0, UPD_PIO9, UPD_GPIO_CLEAR);
             UPD_GPIOSetClearOutput(1, UPD_PIO9, UPD_GPIO_CLEAR);
         }
-        LOG_PRINT(0, "TOGGLE LED\r\n");
 
     }
     

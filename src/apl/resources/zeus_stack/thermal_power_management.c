@@ -44,14 +44,15 @@
 #include "thermal_power_management.h"
 //#include "buck.h"
 
-//#include "debug_uart.h"
+#include "debug_uart.h"
 //#include "system_log.h"
 #include "cfg_globals.h"
 #include "int_globals.h"
 #include <libpic30.h>
 
 /*===== DEMO_BOARD_TEST =====*/
-#define LOG_PRINT(x,y) // define away LOG_PRINTs
+// TODO: MOdify LOG_PRINT calls to use another logging technique.
+#define LOG_PRINT(x,y) DEBUG_print(y); /* define away LOG_PRINTs */
 #define Read_Temp() 30  // Set the temperature to 30C to keep the thermal management inactive
 /*===== DEMO_BOARD_TEST =====*/
 

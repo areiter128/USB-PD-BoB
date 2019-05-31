@@ -44,7 +44,7 @@
 
 // #include "buck.h"
 // #include "spi2.h"
-// #include "debug_uart.h"
+#include "debug_uart.h"
 // #include "system_log.h"
 #include <libpic30.h>
 
@@ -63,6 +63,7 @@ void configure_upd350_gpio (void)
     uint8_t port_number;
 
     // DEMO_BOARD_TEST (modified to hard initialize GPIO ports)
+    // TODO: Update UPD350 GPIO initialization for operation under the framework.
     for (port_number = 0; port_number < CONFIG_PD_PORT_COUNT; port_number++)
     {
         // Set up PIO9 as output to TP8/TP13 on each port.
@@ -98,9 +99,10 @@ void configure_upd350_gpio (void)
 // *****************************************************************************
 void hw_portpower_init(void)
 {
+#if 0 // DEMO_BOARD_TEST                
     uint8_t port_number;
 //    uint32_t reg_data;
-#if 0 // DEMO_BOARD_TEST                
+// TODO: Update port power control initialization for DEMO BOARD     
         
     // Configure the UPD GPIO pins to be used for discharge
     // and port power switch enable set the pins low to disable the discharge circuit
@@ -132,6 +134,7 @@ void hw_portpower_init(void)
 
 void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
 {
+    // TODO: Implement the power supply API to control the supply under the framework
 #if 0  // DEMO_BOARD_TEST   
     void (*fp_buck_off)(void);
     void (*fp_buck_set_vout)(unsigned int);
@@ -235,6 +238,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
 
 void hw_portpower_enab_dis_VBUSDischarge(uint8_t u8PortNum, uint8_t u8EnableDisable)
 {
+    // TODO: Implement VBUS Discharge enable/disable hook function
 #if 0  // DEMO_BOARD_TEST   
         switch(u8EnableDisable)
         {
@@ -265,20 +269,12 @@ void hw_portpower_enab_dis_VBUSDischarge(uint8_t u8PortNum, uint8_t u8EnableDisa
         
 void CRITICAL_SECTION_ENTER(void)
 {
-//   //Disable global interrupts
-//    IEC1bits.INT1IE = 0;    // Ext interrupt disable PORT 0
-//#if (CONFIG_PD_PORT_COUNT > 1)
-//    IEC1bits.INT2IE = 0;    // Ext interrupt disable PORT 1
-//#endif // CONFIG_PD_PORT_COUNT > 1    
+    // UPD350 is polled so no critical section needed
 }
 
 void CRITICAL_SECTION_EXIT(void)
 {
-//    // Enable Global Interrupts
-//    IEC1bits.INT1IE = 1;    // Ext interrupt enable PORT 0
-//#if (CONFIG_PD_PORT_COUNT > 1)
-//    IEC1bits.INT2IE = 1;    // Ext interrupt enable PORT 1
-//#endif // CONFIG_PD_PORT_COUNT > 1 
+    // UPD350 is polled so no critical section needed
 }
 
 
@@ -292,6 +288,8 @@ void updalert_init(uint8_t *p_port_disable)
         TRISDbits.TRISD1 = 1;  // INT1 for UPD350 IRQ
         //ANSELCbits.ANSC7 = 0;
         CNPUDbits.CNPUD1 = 1;
+ 
+        // Do not use interrupts for UPD350 IRQ.  Process in main task loop.
         //RPINR0bits.INT1R = 52;  // RP52 INT1 external interrupt input, pin RC4
 
         //IFS1bits.INT1IF = 0;
@@ -307,6 +305,8 @@ void updalert_init(uint8_t *p_port_disable)
         TRISCbits.TRISC0 = 1;  // INT2 for UPD350 IRQ
         //ANSELCbits.ANSC6 = 0;
         CNPUCbits.CNPUC0 = 1;
+        
+        // Do not use interrupts for UPD350 IRQ.  Process in main task loop.
         //RPINR1bits.INT2R = 60;  // RP60 INT2 external interrupt input, pin RC12
 
         //IFS1bits.INT2IF = 0;
@@ -350,10 +350,8 @@ void updreset_init(void)
 {
     //Initialization of MCU GPIOs connected to UPD350 reset lines
     //PORT 0
-    //ANSELCbits.ANSC11 = 0;     // Disable Analog functionality on AN3 (RB0)
     TRISBbits.TRISB10 = 0;
     //PORT 1
-    //ANSELCbits.ANSC12 = 0;    // Disable Analog functionality on AN12 (RC11)
     TRISAbits.TRISA1 = 0;
     
 

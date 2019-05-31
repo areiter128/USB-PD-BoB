@@ -96,6 +96,9 @@
 //#endif  /* Config bits for dsPIC33CK Single Core Devices */
 #elif defined (__dsPIC33CK64MP505__)
 
+// TODO: Verify these settings.  Is this the proper place to put these settings or should they be in
+//       a different file.
+
 // FICD
 #pragma config ICS = PGD2    // ICD Communication Channel Select bits->Communicate on PGEC1 and PGED1
 #pragma config JTAGEN = OFF    // JTAG Enable bit->JTAG is disabled
