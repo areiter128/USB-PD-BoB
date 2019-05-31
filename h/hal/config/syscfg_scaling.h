@@ -34,14 +34,14 @@
 #include <dsp.h>
 #include <math.h>
 
-#ifdef __00173_USB_PD_BOB_R20__
+#if defined (__00173_USB_PD_BOB_R20__) || defined (__MA330048_P33CK_R30_USB_PD_BOB__)
 
     // DSC bias voltage
     #define DEVICE_VDD                  3.300       // Device bias voltage in [V]
 
     // Inductance of the main inductor
-    #define INDUCTANCE                  4.700       // Inductance in [µH]
-    #define CAPACITANCE                 300e-6      // Output Capacity
+    #define INDUCTANCE                  5.600       // Inductance in [µH]
+    #define CAPACITANCE                 120e-6      // Output Capacity
 
     // Feedback Scaling
     #define VIN_DIVIDER_R1              18000       // Resitance of upper voltage divider resistor in Ohm
@@ -79,95 +79,6 @@
 
 #endif
 
-#ifdef __10888_P33CK_R30__
-
-    // DSC bias voltage
-    #define DEVICE_VDD                  3.300       // Device bias voltage in [V]
-
-    // Inductance of the main inductor
-    #define INDUCTANCE                  4.700       // Inductance in [µH]
-    #define CAPACITANCE                 300e-6      // Output Capacity
-
-    // Feedback Scaling
-    #define VIN_DIVIDER_R1              18000       // Resitance of upper voltage divider resistor in Ohm
-    #define VIN_DIVIDER_R2              2000        // Resitance of lower voltage divider resistor in Ohm
-    #define VIN_AMP_GAIN                1.000       // Gain factor or additional op-amp (set to 1.0 if none is used)
-    #define VIN_FEEDBACK_OFFSET         0.000       // Input voltage sense offset
-
-    #define VOUT_DIVIDER_R1             8200        // Resitance of upper voltage divider resistor in Ohm
-    #define VOUT_DIVIDER_R2             2050        // Resitance of lower voltage divider resistor in Ohm
-    #define VOUT_AMP_GAIN               1.000       // Gain factor or additional op-amp (set to 1.0 if none is used)
-    #define VOUT_SENSE_OFFSET           0.000       // Output voltage sense offset
-
-    #define VIN2VOUT_NORMALIZATION      0x7fff      //(int16_t)(ceiling(log(VOUT_DIVIDER_RATIO/VIN_DIVIDER_RATIO)))
-    #define VIN2VOUT_NORM_BSFT          1
-
-    #define CS_AMP_GAIN                 20.000      // Current sense amplifier gain in [V/V]
-    #define CS_SHUNT_RESISTANCE         10.0e-3     // Current sense resistor value in [Ohm]
-    #define CS_PROPAGATION_DELAY        560.0e-9    // signal phase shift for accurate triggering
-    #define CS_COMMON_MODE_V_MIN        2.500       // Common mode minimum voltage at which the amplifier starts to provide an output signal
-
-    #define IOUT_IS_BI_DIRECTIONAL      false       // Current sens is (0=uni-directional, 1=bi-directional)
-    #define IOUT_FEEDBACK_OFFSET        0.000       // Current sense zero offset 
-
-    // System Settings
-    #define SWITCHING_FREQUENCY         300e+3      // Nominal switching frequency per converter phase in [Hz]
-    #define PWM_DEAD_TIME_RISING        20e-9       // Nominal dead time at the leading edge in [ns]
-    #define PWM_DEAD_TIME_FALLING       60e-9       // Nominal dead time at the falling edge in [ns]
-    #define LEADING_EDGE_BLANKING_PER   150e-9		// Leading Edge Blanking period in nanoseconds
-    #define ADC_TRIGGER_OFFSET          120e-9      // ADC trigger offset compensating for propagat6ion delays
-
-    // PWM time base Settings
-    #define f_ACLK                      4e+9        // 4 GHz PWM tick rate
-    #define T_ACLK                      250e-12     // 250 ps PWM resolution
-    #define PWM_PCLKDIV_PRIMARY         1           // PWM Input Clock Divider
-
-#endif
-
-#ifdef __10889_P33CH_R10__
-
-    // DSC bias voltage
-    #define DEVICE_VDD                  3.300       // Device bias voltage in [V]
-
-    // Inductance of the main inductor
-    #define INDUCTANCE                  4.700       // Inductance in [µH]
-    #define CAPACITANCE                 300e-6      // Output Capacity
-
-    // Feedback Scaling
-    #define VIN_DIVIDER_R1              18000       // Resitance of upper voltage divider resistor in Ohm
-    #define VIN_DIVIDER_R2              2000        // Resitance of lower voltage divider resistor in Ohm
-    #define VIN_AMP_GAIN                1.000       // Gain factor or additional op-amp (set to 1.0 if none is used)
-    #define VIN_FEEDBACK_OFFSET         0.000       // Input voltage sense offset
-
-    #define VOUT_DIVIDER_R1             8200        // Resitance of upper voltage divider resistor in Ohm
-    #define VOUT_DIVIDER_R2             2050        // Resitance of lower voltage divider resistor in Ohm
-    #define VOUT_AMP_GAIN               1.000       // Gain factor or additional op-amp (set to 1.0 if none is used)
-    #define VOUT_SENSE_OFFSET           0.000       // Output voltage sense offset
-
-    #define VIN2VOUT_NORMALIZATION      0x7fff      //(int16_t)(ceiling(log(VOUT_DIVIDER_RATIO/VIN_DIVIDER_RATIO)))
-    #define VIN2VOUT_NORM_BSFT          1
-
-    #define CS_AMP_GAIN                 20.000      // Current sense amplifier gain in [V/V]
-    #define CS_SHUNT_RESISTANCE         10.0e-3     // Current sense resistor value in [Ohm]
-    #define CS_PROPAGATION_DELAY        560.0e-9    // signal phase shift for accurate triggering
-    #define CS_COMMON_MODE_V_MIN        2.500       // Common mode minimum voltage at which the amplifier starts to provide an output signal
-
-    #define IOUT_IS_BI_DIRECTIONAL      false       // Current sens is (0=uni-directional, 1=bi-directional)
-    #define IOUT_FEEDBACK_OFFSET        0.000       // Current sense zero offset 
-
-    // System Settings
-    #define SWITCHING_FREQUENCY         300e+3      // Nominal switching frequency per converter phase in [Hz]
-    #define PWM_DEAD_TIME_RISING        20e-9       // Nominal dead time at the leading edge in [ns]
-    #define PWM_DEAD_TIME_FALLING       60e-9       // Nominal dead time at the falling edge in [ns]
-    #define LEADING_EDGE_BLANKING_PER   150e-9		// Leading Edge Blanking period in nanoseconds
-    #define ADC_TRIGGER_OFFSET          120e-9      // ADC trigger offset compensating for propagat6ion delays
-
-    // PWM time base Settings
-    #define f_ACLK                      4e+9        // 4 GHz PWM tick rate
-    #define T_ACLK                      250e-12     // 250 ps PWM resolution
-    #define PWM_PCLKDIV_PRIMARY         1           // PWM Input Clock Divider
-
-#endif
 
 
 /*!System Configuration Scaling
