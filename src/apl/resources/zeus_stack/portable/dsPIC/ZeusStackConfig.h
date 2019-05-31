@@ -956,7 +956,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: DEBUG MESSAGES CONFIGURATION
 // *****************************************************************************
 // *****************************************************************************
-#define CONFIG_HOOK_DEBUG_MSG 0
+#define CONFIG_HOOK_DEBUG_MSG 1
 
 #if CONFIG_HOOK_DEBUG_MSG
         /***********************************************************************

@@ -40,11 +40,13 @@
 #include <stdio.h>
 #include "apl/resources/fdrv_FunctionPDStack.h"
 #include "apl/tasks/task_PDStack.h"
+#include "debug_uart.h"
 
 volatile FUNCTION_PD_STACK_CONFIG_t taskPDStack_config;
 
 /*===== DEMO_BOARD_TEST =====*/
-#define LOG_PRINT(x,y) // define away LOG_PRINTs for now
+// TODO: MOdify LOG_PRINT calls to use another logging technique.
+#define LOG_PRINT(x,y) DEBUG_print(y) /* define LOG_PRINT() to send to the secondary UART for now */
 /*===== DEMO_BOARD_TEST =====*/
 // Private prototypes
 
@@ -69,6 +71,7 @@ volatile uint16_t task_PDStack(void)
             UPD_GPIOSetClearOutput(0, UPD_PIO9, UPD_GPIO_CLEAR);
             UPD_GPIOSetClearOutput(1, UPD_PIO9, UPD_GPIO_CLEAR);
         }
+        LOG_PRINT(0, "TOGGLE LED\r\n");
 
     }
     
@@ -89,6 +92,7 @@ volatile uint16_t task_PDStack(void)
         PD_Run();
     }
     
+    debug_uart_tx();
    
     return(taskPDStack_config.status.value);
 }
@@ -98,7 +102,8 @@ volatile uint16_t init_taskPDStack(void)
     uint16_t reg_data_16;
     char debug_string[20];
     
-    
+    // Set up the secondary UART for use by the PD stack
+    DEBUG_init();
     
     PD_Init();
     LOG_PRINT(LOG_INFO, "Init TASK PD Stack done\r\n");
@@ -122,6 +127,8 @@ volatile uint16_t init_taskPDStack(void)
     
     // Set the flag in the structure to indicate that the stack has been initialized.
     taskPDStack_config.status.flags.enable = PDSTACK_ENABLED;
+    
+    debug_uart_tx_flush();
     
     return(true);
 }
