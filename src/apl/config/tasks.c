@@ -80,7 +80,7 @@ volatile uint16_t (*Task_Table[])(void) = {
     exec_DebugUART,         // 
 
     // Board level initialization
-            
+    
     // Add System function / Special function initialization
 //    init_debugUART,
     

@@ -74,7 +74,7 @@
     #define _CVRT_UxTXInterrupt _U1TXInterrupt
     #define _CVRT_UxTXIF        _U1TXIF
     #define CVRT_UxTXREG        U1TXREG
-    #define _CVRT_UxTXBF        U1STAbits.UTXBF
+    #define _CVRT_UxTXBF        U1STAHbits.UTXBF
 
     #define _CVRT_UxEInterrupt  _U1ErrInterrupt
     #define _CVRT_UxEIF         _U1EIF
@@ -182,9 +182,9 @@ extern volatile SMPS_UART_OBJECT_t smps_uart;
 /* ***********************************************************************************************
  * PROTOTYPES
  * ***********************************************************************************************/
-extern volatile inline uint16_t init_DebugUART(void);
-extern volatile inline uint16_t exec_DebugUART(void);
-extern volatile inline int16_t  dispose_DebugUART(void);
+extern volatile uint16_t init_DebugUART(void);
+extern volatile uint16_t exec_DebugUART(void);
+extern volatile uint16_t dispose_DebugUART(void);
 
 #endif	/* _APL_TASK_SMPS_UART_H_ */
 

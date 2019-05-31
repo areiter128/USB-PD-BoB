@@ -56,7 +56,7 @@ volatile uint16_t init_oscillator(void) {
     
     volatile uint16_t fres = 0;
 
-    fres = init_FRCCLK_Defaults(CPU_SPEED_90_MIPS);
+    fres = init_FRCCLK_Defaults(CPU_SPEED_100_MIPS);
 
     return(fres);
 }

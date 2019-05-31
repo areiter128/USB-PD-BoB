@@ -55,11 +55,7 @@ int main(void) {
     Nop();
     Nop();
     volatile uint16_t fres = 0;
-    
-    smps_uart_open_port(uint16_t index, 
-    UART_BAUDRATE_SETTING_e baud, UART_DATA_BIT_SETTING_e data_bits, UART_PARITY_SETTING_e parity, UART_STOP_BIT_SETTING_e stop_bits, 
-    UART_ISR_PRIORITY_e isr_priority);
-    
+        
 #if __DEBUG
 // In debug mode these NOPs can be used to place a breakpoint before
 // the start of the main task scheduler

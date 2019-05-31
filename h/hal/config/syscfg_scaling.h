@@ -73,8 +73,8 @@
     #define ADC_TRIGGER_OFFSET          120e-9      // ADC trigger offset compensating for propagat6ion delays
 
     // PWM time base Settings
-    #define f_ACLK                      4e+9        // 4 GHz PWM tick rate
-    #define T_ACLK                      250e-12     // 250 ps PWM resolution
+//    #define f_ACLK                      4e+9        // 4 GHz PWM tick rate
+//    #define T_ACLK                      250e-12     // 250 ps PWM resolution
     #define PWM_PCLKDIV_PRIMARY         1           // PWM Input Clock Divider
 
 #endif
