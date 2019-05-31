@@ -34,12 +34,15 @@
 #include <dsp.h>
 #include <math.h>
 
+    // Define CPU speed that will be used by PLIB also to set UARD baudrate etc.
+    #define FCY                         100000000   // CPU FCY
+
 #if defined (__00173_USB_PD_BOB_R20__) || defined (__MA330048_P33CK_R30_USB_PD_BOB__)
 
     // DSC bias voltage
     #define DEVICE_VDD                  3.300       // Device bias voltage in [V]
 
-    // Inductance of the main inductor
+// Inductance of the main inductor
     #define INDUCTANCE                  4.700       // Inductance in [µH]
     #define CAPACITANCE                 300e-6      // Output Capacity
 
