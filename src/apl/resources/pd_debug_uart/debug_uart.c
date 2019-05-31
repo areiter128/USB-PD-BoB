@@ -8,8 +8,6 @@
                                         // Mask work correctly
 #define UART_BUFFER_MASK      0x01FF    // Mask that is AND-ed with the buffer count
                                         // to provide the wrap-around function
-char debug_string[64];
-
 uint16_t tx_buffer_head = 0;
 uint16_t tx_buffer_tail = 0;
 uint8_t debug_tx_buffer[UART_TX_BUFFER_LENGTH] ;
