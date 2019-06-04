@@ -130,9 +130,9 @@ volatile uint16_t  init_DebugUART(void);
 volatile uint16_t  exec_DebugUART(void);
 volatile uint16_t  dispose_DebugUART(void);
 
-inline volatile int16_t  task_DebugUARTsend(void);
-inline volatile uint16_t task_DebugUARTreceive(void);
-inline volatile uint16_t task_DebugDecodeFrame(void);
+//inline volatile int16_t  task_DebugUARTsend(void);
+//inline volatile uint16_t task_DebugUARTreceive(void);
+//inline volatile uint16_t task_DebugDecodeFrame(void);
 volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint16_t data_len);
 
 /*!exec_DebugUART
@@ -379,25 +379,25 @@ volatile int16_t task_DebugUARTsend(void)
  *****************************************************************************/
 
 
-inline volatile uint16_t task_DebugUARTreceive(void) {
-
-    volatile uint16_t crc_buffer=0;
-
-    // calculate 16-bit CRC of data content
-    crc_buffer = smpsuart_get_crc((volatile uint8_t *)&smps_uart.RXBytes.data[0], smps_uart.RXBytes.data_len);
-
-    // if CRC matches transmitted CRC code, then the data frame is considered to be valid
-    // if (UART_RxTx.UartCRCBuffer == smps_uart.RXBytes.crc) 
-    if (crc_buffer == smps_uart.RXBytes.crc) 
-    {
-        UART_RxTx.status.flag.RXFrameReady = 0;
-        UART_RxTx.UARTRXComplete = 1;
-        smps_uart.status.flags = UART_RxTx.status.flags;
-    }
-
-    // return the RXComplete-Flag
-    return (UART_RxTx.UARTRXComplete);
-}
+//inline volatile uint16_t task_DebugUARTreceive(void) {
+//
+//    volatile uint16_t crc_buffer=0;
+//
+//    // calculate 16-bit CRC of data content
+//    crc_buffer = smpsuart_get_crc((volatile uint8_t *)&smps_uart.RXBytes.data[0], smps_uart.RXBytes.data_len);
+//
+//    // if CRC matches transmitted CRC code, then the data frame is considered to be valid
+//    // if (UART_RxTx.UartCRCBuffer == smps_uart.RXBytes.crc) 
+//    if (crc_buffer == smps_uart.RXBytes.crc) 
+//    {
+//        UART_RxTx.status.flag.RXFrameReady = 0;
+//        UART_RxTx.UARTRXComplete = 1;
+//        smps_uart.status.flags = UART_RxTx.status.flags;
+//    }
+//
+//    // return the RXComplete-Flag
+//    return (UART_RxTx.UARTRXComplete);
+//}
 
 /*!task_DecodeFrame
  *****************************************************************************
@@ -455,7 +455,7 @@ inline volatile uint16_t task_DebugDecodeFrame(void) {
  *****************************************************************************/
 
 
-volatile uint16_t smpsuart_get_crc(uint8_t *ptrDataFrame, uint16_t data_len)
+volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame,volatile uint16_t data_len)
 {
     uint16_t cnt1,cnt2,crc=0;
     

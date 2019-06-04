@@ -76,7 +76,7 @@
     #define CVRT_UxTXREG        U1TXREG
     #define _CVRT_UxTXBF        U1STAbits.UTXBF
 
-    #define _CVRT_UxEInterrupt  _U1ErrInterrupt
+    #define _CVRT_UxEInterrupt  _U1EInterrupt
     #define _CVRT_UxEIF         _U1EIF
     #define _CVRT_OERR          U1STAbits.OERR
 #endif
@@ -91,7 +91,7 @@
     #define CVRT_UxTXREG        U2TXREG
     #define _CVRT_UxTXBF        U2STAbits.UTXBF
 
-    #define _CVRT_UxEInterrupt  _U2ErrInterrupt
+    #define _CVRT_UxEInterrupt  _U2EInterrupt
     #define _CVRT_UxEIF         _U2EIF
     #define _CVRT_OERR          U2STAbits.OERR
 
