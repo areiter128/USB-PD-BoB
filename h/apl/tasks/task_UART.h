@@ -78,6 +78,7 @@
 
     #define _CVRT_UxEInterrupt  _U1ErrInterrupt
     #define _CVRT_UxEIF         _U1EIF
+    #define _CVRT_OERR          U1STAbits.OERR
 #endif
 
 #if (CVRT_UART_IDX == 2)
@@ -92,6 +93,8 @@
 
     #define _CVRT_UxEInterrupt  _U2ErrInterrupt
     #define _CVRT_UxEIF         _U2EIF
+    #define _CVRT_OERR          U2STAbits.OERR
+
 #endif
 
 /*!SMPS_UART_STATUS_BIT_FIELD_t

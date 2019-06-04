@@ -537,6 +537,18 @@ void __attribute__((__interrupt__, no_auto_psv)) _CVRT_UxRXInterrupt()
     _CVRT_UxRXIF = false;
 }
     
+void __attribute__ ( ( interrupt, no_auto_psv ) ) _CVRT_UxEInterrupt( void )
+{
+    if ((_CVRT_OERR == 1))
+    {
+        _CVRT_OERR = 0;
+        UART_RxTx.UartRecCounter = 0;
+        UART_RxTx.Sof = 0;
+    }
+
+    _CVRT_UxEIF = false;
+}
+
 
 
 /*!_CVRT_UxTXInterrupt
@@ -561,31 +573,16 @@ void __attribute__((__interrupt__, no_auto_psv)) _CVRT_UxRXInterrupt()
 void __attribute__((__interrupt__, no_auto_psv)) _CVRT_UxTXInterrupt() 
 {
 
-    Nop();
-    Nop();
-    Nop();
-
-    if(!UART_RxTx.status.flag.TXFrameReady)
+    if(UART_RxTx.UartSendCounter<=(UART_RxTx.UartSendLength + 7)) // Mettere una define
     {
-        return;
-    }
-    if(UART_RxTx.UartSendCounter < (UART_RxTx.UartSendLength + FRAME_TOTAL_OVERHEAD))
-    {
-        CVRT_UxRXREG = UART_RxTx.TXBytes[UART_RxTx.UartSendCounter++];
-//        gsuart_write(smps_uart.port_index, UART_RxTx.TXBytes[UART_RxTx.UartSendCounter++]);
+        CVRT_UxTXREG=UART_RxTx.TXBytes[UART_RxTx.UartSendCounter++];
     }
     else
     {
-        UART_RxTx.UartSendCounter = 0;
-        UART_RxTx.status.flag.TXFrameReady = 0;
-        UART_RxTx.UartTXSendDone = 1;
-        smps_uart.status.flags = UART_RxTx.status.flags;
+        UART_RxTx.TXSendDone = 1;
     }
-
     _CVRT_UxTXIF = 0;
-
     return;
-    
 }
 
 
