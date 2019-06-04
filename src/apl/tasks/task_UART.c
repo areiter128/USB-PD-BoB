@@ -453,32 +453,26 @@ inline volatile uint16_t task_DebugDecodeFrame(void) {
  * (none)
  * 
  *****************************************************************************/
-volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint16_t data_len)
-{
-    volatile uint16_t result=0;
-    volatile uint16_t i=0;
-    volatile uint16_t byte_index;
-    volatile uint8_t CHECK=0;
 
-    // calculate 16-bit CRC of data content
-    for (byte_index = 0; byte_index < data_len; byte_index++) 
+
+volatile uint16_t smpsuart_get_crc(uint8_t *ptrDataFrame, uint16_t data_len)
+{
+    uint16_t cnt1,cnt2,crc=0;
+    
+    for (cnt1 = 0; cnt1 < (data_len + 5); cnt1++)
     {
-        CHECK = *ptrDataFrame;
-        
-        result ^= *ptrDataFrame;
-        ptrDataFrame++;
-        
-        for (i = 0; i < 8; ++i) 
+        crc ^= ptrDataFrame[cnt1];
+        for (cnt2 = 0; cnt2 < 8; ++cnt2)
         {
-            if ((result & 1) == 1)
-                result = (result >> 1) ^ 0xA001;
+            if ((crc & 1) == 1)
+                crc = (crc >> 1) ^ 0xA001;
             else
-                result = (result >> 1);
+                crc = (crc >> 1);
         }
     }
-
-    return(result);
+    return(crc);
 }
+
 
 /*!_CVRT_UxRXInterrupt
  *****************************************************************************
