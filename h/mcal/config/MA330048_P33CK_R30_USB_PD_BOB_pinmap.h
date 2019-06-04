@@ -1509,7 +1509,7 @@
 #define UART_TX_CNSTAT  CNSTATDbits.CNSTATD3 // GPIO port change notification Status register bit
 #define UART_TX_CNEN1   CNEN1Dbits.CNEN1D3 // GPIO port change notification Edge Select Enable register bit
 #define UART_TX_CNF     CNFDbits.CNFD3 // GPIO port change notification flag bit register bit
-#define UART_TX_RP      67 // Number of Remappable Pin
+#define UART_TX_RP      PPS_RPO67  // Number of Remappable Pin
 #define UART_TX_SET     { asm volatile ("bset _LATD, #3 \n"); }
 #define UART_TX_CLEAR   { asm volatile ("bclr _LATD, #3 \n"); }
 #define UART_TX_TOGGLE  { asm volatile ("btg  _LATD, #3 \n"); }

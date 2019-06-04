@@ -51,7 +51,7 @@
 
 /* ToDo: the following declarations starting with CVRT_xxx need to be pushed into the hardware abstraction layer */
 
-#define CVRT_UART_IDX           1                       // Index of UART module for control and monitoring
+#define CVRT_UART_IDX           2                       // Index of UART module for control and monitoring
 #define CVRT_UART_BAUDRATE      UART_BAUDRATE_57600		// Baudrate
 #define CVRT_UART_DATA_BITS     UART_DATA_BITS_8        // Number of data bits
 #define CVRT_UART_PARITY        UART_PARITY_NONE        // Parity setting of the UART 
@@ -78,6 +78,20 @@
 
     #define _CVRT_UxEInterrupt  _U1ErrInterrupt
     #define _CVRT_UxEIF         _U1EIF
+#endif
+
+#if (CVRT_UART_IDX == 2)
+    #define _CVRT_UxRXInterrupt _U2RXInterrupt
+    #define _CVRT_UxRXIF        _U2RXIF
+    #define CVRT_UxRXREG        U2RXREG
+
+    #define _CVRT_UxTXInterrupt _U2TXInterrupt
+    #define _CVRT_UxTXIF        _U2TXIF
+    #define CVRT_UxTXREG        U2TXREG
+    #define _CVRT_UxTXBF        U2STAbits.UTXBF
+
+    #define _CVRT_UxEInterrupt  _U2ErrInterrupt
+    #define _CVRT_UxEIF         _U2EIF
 #endif
 
 /*!SMPS_UART_STATUS_BIT_FIELD_t

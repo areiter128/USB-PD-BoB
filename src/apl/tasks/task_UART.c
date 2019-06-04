@@ -137,83 +137,91 @@ volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint
 inline volatile uint16_t exec_DebugUART(void) {
 
     volatile uint16_t fres=0, i=0;
+    static test=0;
 
     Nop();
     Nop();
     Nop();
+    
+    test++;
+    if(test>50)
+    {
+        U2TXREG='A';
+        test=0;
+    }
 
     // Check if a receive buffer is ready to be processed in every scheduler call cycle
-    if(UART_RxTx.status.flag.RXFrameReady)
-    {
-        fres = task_DebugUARTreceive();
-        
-        if(fres)
-        {  
-            task_DebugDecodeFrame();
-
-            UART_RxTx.UARTRXComplete = 0;
-            smps_uart.RXBytes.id = 0; // reset ID after it was executed
-            
-        }
-        else
-        { return(1); }
-    }
-    // send status frame when the send-tick-timer interval SMPS_UART_FRMUPDT_INT_CNT has expired
-    if((frm_update_int_cnt++ == SMPS_UART_FRMUPDT_INT_CNT) && 
-        (UART_RxTx.UartTXSendDone = 1))
-    {
-        
-        frm_update_int_cnt = 0;
-        UART_RxTx.status.flag.TXFrameReady = 0;
-
-        // build data frame
-        smps_uart.TXBytes.id = 0x434C;
-        smps_uart.TXBytes.data_len = 4;
-        smps_uart.TXBytes.data[0] = (task_mgr.cpu_load.load >> 8);
-        smps_uart.TXBytes.data[1] = (task_mgr.cpu_load.load & 0x00FF);
-        smps_uart.TXBytes.data[2] = (msg_cnt >> 8);
-        smps_uart.TXBytes.data[3] = (msg_cnt & 0x00FF);
-
-        smps_uart.TXBytes.crc = smpsuart_get_crc((uint8_t *)&smps_uart.TXBytes.data[0], smps_uart.TXBytes.data_len);
-        
-        // copy global data frame into buffer frame
-        UART_RxTx.TXBytes[0] = FRM_START;
-        UART_RxTx.TXBytes[1] = (smps_uart.TXBytes.id >> 8);    // CID high byte
-        UART_RxTx.TXBytes[2] = (smps_uart.TXBytes.id & 0x00FF);    // CID low byte
-
-        UART_RxTx.TXBytes[3] = (smps_uart.TXBytes.data_len >> 8);    // data length high byte
-        UART_RxTx.TXBytes[4] = (smps_uart.TXBytes.data_len & 0x00FF);    // data length low byte
-        
-        for(i=0; i<smps_uart.TXBytes.data_len; i++)
-        {
-            UART_RxTx.TXBytes[FRAME_START_OVERHEAD + i] = smps_uart.TXBytes.data[i]; // copy data byte #n
-        }
-
-        UART_RxTx.TXBytes[smps_uart.TXBytes.data_len + FRAME_START_OVERHEAD + 0] = (smps_uart.TXBytes.crc >> 8);    // CRC high byte
-        UART_RxTx.TXBytes[smps_uart.TXBytes.data_len + FRAME_START_OVERHEAD + 1] = (smps_uart.TXBytes.crc & 0x00FF);    // CRC low byte
-        UART_RxTx.TXBytes[smps_uart.TXBytes.data_len + FRAME_START_OVERHEAD + 2] = FRM_STOP;
-        
-        UART_RxTx.UartSendLength = _UART_TX_DLEN;
-        UART_RxTx.UartSendCounter = 0;
-        UART_RxTx.UartTXSendDone = 0;
-        
-        UART_RxTx.status.flag.TXFrameReady = 1;
-        msg_cnt++;
+//    if(UART_RxTx.status.flag.RXFrameReady)
+//    {
+//        fres = task_DebugUARTreceive();
 //        
-//UART_RxTx.UartSendCounter = 1;
-//CVRT_UxRXREG = 0xAA;
-
-    }
-    
-    if ((UART_RxTx.status.flag.TXFrameReady) && (!UART_RxTx.UartTXSendDone))
-    {
-        if(send_int_cnt++ == SMPS_UART_SEND_INT_CNT)
-        {
-            send_int_cnt = 0;
-            task_DebugUARTsend();
-        }
-
-    }
+//        if(fres)
+//        {  
+//            task_DebugDecodeFrame();
+//
+//            UART_RxTx.UARTRXComplete = 0;
+//            smps_uart.RXBytes.id = 0; // reset ID after it was executed
+//            
+//        }
+//        else
+//        { return(1); }
+//    }
+//    // send status frame when the send-tick-timer interval SMPS_UART_FRMUPDT_INT_CNT has expired
+//    if((frm_update_int_cnt++ == SMPS_UART_FRMUPDT_INT_CNT) && 
+//        (UART_RxTx.UartTXSendDone = 1))
+//    {
+//        
+//        frm_update_int_cnt = 0;
+//        UART_RxTx.status.flag.TXFrameReady = 0;
+//
+//        // build data frame
+//        smps_uart.TXBytes.id = 0x434C;
+//        smps_uart.TXBytes.data_len = 4;
+//        smps_uart.TXBytes.data[0] = (task_mgr.cpu_load.load >> 8);
+//        smps_uart.TXBytes.data[1] = (task_mgr.cpu_load.load & 0x00FF);
+//        smps_uart.TXBytes.data[2] = (msg_cnt >> 8);
+//        smps_uart.TXBytes.data[3] = (msg_cnt & 0x00FF);
+//
+//        smps_uart.TXBytes.crc = smpsuart_get_crc((uint8_t *)&smps_uart.TXBytes.data[0], smps_uart.TXBytes.data_len);
+//        
+//        // copy global data frame into buffer frame
+//        UART_RxTx.TXBytes[0] = FRM_START;
+//        UART_RxTx.TXBytes[1] = (smps_uart.TXBytes.id >> 8);    // CID high byte
+//        UART_RxTx.TXBytes[2] = (smps_uart.TXBytes.id & 0x00FF);    // CID low byte
+//
+//        UART_RxTx.TXBytes[3] = (smps_uart.TXBytes.data_len >> 8);    // data length high byte
+//        UART_RxTx.TXBytes[4] = (smps_uart.TXBytes.data_len & 0x00FF);    // data length low byte
+//        
+//        for(i=0; i<smps_uart.TXBytes.data_len; i++)
+//        {
+//            UART_RxTx.TXBytes[FRAME_START_OVERHEAD + i] = smps_uart.TXBytes.data[i]; // copy data byte #n
+//        }
+//
+//        UART_RxTx.TXBytes[smps_uart.TXBytes.data_len + FRAME_START_OVERHEAD + 0] = (smps_uart.TXBytes.crc >> 8);    // CRC high byte
+//        UART_RxTx.TXBytes[smps_uart.TXBytes.data_len + FRAME_START_OVERHEAD + 1] = (smps_uart.TXBytes.crc & 0x00FF);    // CRC low byte
+//        UART_RxTx.TXBytes[smps_uart.TXBytes.data_len + FRAME_START_OVERHEAD + 2] = FRM_STOP;
+//        
+//        UART_RxTx.UartSendLength = _UART_TX_DLEN;
+//        UART_RxTx.UartSendCounter = 0;
+//        UART_RxTx.UartTXSendDone = 0;
+//        
+//        UART_RxTx.status.flag.TXFrameReady = 1;
+//        msg_cnt++;
+////        
+////UART_RxTx.UartSendCounter = 1;
+////CVRT_UxRXREG = 0xAA;
+//
+//    }
+//    
+//    if ((UART_RxTx.status.flag.TXFrameReady) && (!UART_RxTx.UartTXSendDone))
+//    {
+//        if(send_int_cnt++ == SMPS_UART_SEND_INT_CNT)
+//        {
+//            send_int_cnt = 0;
+//            task_DebugUARTsend();
+//        }
+//
+//    }
 
     return (fres);
 }
@@ -240,48 +248,20 @@ inline volatile uint16_t exec_DebugUART(void) {
 
 volatile uint16_t init_DebugUART(void) {
     
-    volatile uint16_t fres = 0, i = 0;
+    volatile uint16_t fres = 0;
 
-    // copy essential port setting into data structure
-    smps_uart.port_index = CVRT_UART_IDX;
-    smps_uart.baudrate = CVRT_UART_BAUDRATE;
-
-    // reset private variables
-    UART_RxTx.UartRecCounter = 0; // reset RX buffer counter
-    UART_RxTx.UartSendCounter = 0; // reset TX buffer counter
-
-    // clear receive data frame
-    for (i = 0; i < FRAME_TOTAL_RX_LENGTH; i++) {
-        UART_RxTx.RXBytes[i] = 0;
-    }
-
-    // clear transmit data frame
-    for (i = 0; i < FRAME_TOTAL_TX_LENGTH; i++) {
-        UART_RxTx.TXBytes[i] = 0;
-    }
-
-    // reset transmit buffer 
-    UART_RxTx.TXBytes[0] = 0xAA; // pre-charge START OF FRAME code
-    UART_RxTx.TXBytes[FRAME_TOTAL_TX_LENGTH - 1] = 0x0D; // pre-charge STOP OF FRAME code
-
-    // Initialize UART peripheral
-	
-    // UARTx for debug messages
     UART_TX_INIT_OUTPUT;
     UART_RX_INIT_INPUT;
 
     // Set PPS for UART
     pps_UnlockIO();
-    pps_RemapInput(UART_RX_RP, PPSIN_U1RX);
-    pps_RemapOutput(UART_TX_RP, PPSOUT_U1TX);
+    pps_RemapInput(UART_RX_RP, PPSIN_U2RX);
+    pps_RemapOutput(UART_TX_RP, PPSOUT_U2TX);
     pps_LockIO();
-	
-	// Configure UART peripheral
-    fres = init_DebugUART();
-
-    // set DATA TRANSMISSION COMPLETE flag to enable new transmissions
-    UART_RxTx.UartTXSendDone = 1;   
     
+    // Configure UART peripheral
+    fres=smps_uart_open_port(CVRT_UART_IDX,CVRT_UART_BAUDRATE, CVRT_UART_DATA_BITS, CVRT_UART_PARITY, CVRT_UART_STOP_BITS,CVRT_UART_IRS_PRIORITY);
+
     return (fres);
 }
 
@@ -335,25 +315,25 @@ volatile int16_t task_DebugUARTsend(void)
     volatile uint16_t fres=1, timeout=0;
  
     // send byte
-    while((_CVRT_UxTXBF) && (timeout++ < UART_IO_TIMEOUT));
-    if(timeout < UART_IO_TIMEOUT) 
-    {
-        // send test code A, B, C, D, E, ... in the size of the recent transmit buffer 
-        // by direct write to the UART Transmit Buffer Register
-        // CVRT_UxTXREG = 0x041 + UART_RxTx.UartSendCounter++; // UART_RxTx.TXBytes[UART_RxTx.UartSendCounter++];
-        
-        // call library function to send byte via UART
-        fres &= gsuart_write_byte(smps_uart.port_index, UART_RxTx.TXBytes[UART_RxTx.UartSendCounter++]);
-    
-        // when all bytes of a data frame has been sent, reset flags and counter
-        if(UART_RxTx.UartSendCounter > (_UART_TX_DLEN + FRAME_TOTAL_OVERHEAD))
-        {
-            UART_RxTx.UartSendCounter = 0;
-            UART_RxTx.status.flag.TXFrameReady = 0;
-            UART_RxTx.UartTXSendDone = 1;
-        }
-    }
-    else { fres = 0; }
+//    while((_CVRT_UxTXBF) && (timeout++ < UART_IO_TIMEOUT));
+//    if(timeout < UART_IO_TIMEOUT) 
+//    {
+//        // send test code A, B, C, D, E, ... in the size of the recent transmit buffer 
+//        // by direct write to the UART Transmit Buffer Register
+//        // CVRT_UxTXREG = 0x041 + UART_RxTx.UartSendCounter++; // UART_RxTx.TXBytes[UART_RxTx.UartSendCounter++];
+//        
+//        // call library function to send byte via UART
+//        fres &= gsuart_write_byte(smps_uart.port_index, UART_RxTx.TXBytes[UART_RxTx.UartSendCounter++]);
+//    
+//        // when all bytes of a data frame has been sent, reset flags and counter
+//        if(UART_RxTx.UartSendCounter > (_UART_TX_DLEN + FRAME_TOTAL_OVERHEAD))
+//        {
+//            UART_RxTx.UartSendCounter = 0;
+//            UART_RxTx.status.flag.TXFrameReady = 0;
+//            UART_RxTx.UartTXSendDone = 1;
+//        }
+//    }
+//    else { fres = 0; }
     
     return(fres);
 }

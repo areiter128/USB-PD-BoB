@@ -1032,7 +1032,7 @@
         <targetDevice>dsPIC33CK256MP506</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>RealICEPlatformTool</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>3</platform>
@@ -1228,6 +1228,7 @@
         <property key="Freeze All Other Peripherals" value="true"/>
         <property key="I2C 1" value="true"/>
         <property key="I2C 2" value="true"/>
+        <property key="I2C 3" value="true"/>
         <property key="MCCP/SCCP 1" value="true"/>
         <property key="MCCP/SCCP 2" value="true"/>
         <property key="MCCP/SCCP 3" value="true"/>
@@ -1236,17 +1237,25 @@
         <property key="MCCP/SCCP 6" value="true"/>
         <property key="MCCP/SCCP 7" value="true"/>
         <property key="MCCP/SCCP 8" value="true"/>
+        <property key="MCCP/SCCP 9" value="true"/>
         <property key="PG1" value="true"/>
         <property key="PG2" value="true"/>
         <property key="PG3" value="true"/>
         <property key="PG4" value="true"/>
+        <property key="PG5" value="true"/>
+        <property key="PG6" value="true"/>
+        <property key="PG7" value="true"/>
+        <property key="PG8" value="true"/>
+        <property key="PMP" value="true"/>
         <property key="PTGFRZ" value="true"/>
         <property key="QEI1" value="true"/>
+        <property key="QEI2" value="true"/>
         <property key="REFO" value="true"/>
         <property key="SENT1" value="true"/>
         <property key="SENT2" value="true"/>
         <property key="SPI 1" value="true"/>
         <property key="SPI 2" value="true"/>
+        <property key="SPI 3" value="true"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
         <property key="TIMER1" value="true"/>
         <property key="ToolFirmwareFilePath"

@@ -167,7 +167,7 @@
  * See also:
  * CLKOUT_WR
  * ***********************************************************************************************/
-#define USE_TASK_EXECUTION_CLOCKOUT_PIN     1   // Enable/Disable Task Scheduler Clock Output
+#define USE_TASK_EXECUTION_CLOCKOUT_PIN     0   // Enable/Disable Task Scheduler Clock Output
 
 #if (USE_TASK_EXECUTION_CLOCKOUT_PIN == 1)
     #define TS_CLOCKOUT_PIN_WR              TESTPOINT_WR   // Specify Clock Output Pin port latch register
