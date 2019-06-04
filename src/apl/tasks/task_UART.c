@@ -160,14 +160,12 @@ inline volatile uint16_t exec_DebugUART(void) {
     volatile uint16_t fres=0, i=0;
     static test=0;
 
-    Nop();
-    Nop();
-    Nop();
+    
     
     test++;
     if(test>50)
     {
-        U2TXREG='A';
+        //U2TXREG='A';
         test=0;
     }
 

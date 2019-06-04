@@ -52,7 +52,7 @@
 /* ToDo: the following declarations starting with CVRT_xxx need to be pushed into the hardware abstraction layer */
 
 #define CVRT_UART_IDX           2                       // Index of UART module for control and monitoring
-#define CVRT_UART_BAUDRATE      UART_BAUDRATE_57600		// Baudrate
+#define CVRT_UART_BAUDRATE      UART_BAUDRATE_115200	// Baudrate
 #define CVRT_UART_DATA_BITS     UART_DATA_BITS_8        // Number of data bits
 #define CVRT_UART_PARITY        UART_PARITY_NONE        // Parity setting of the UART 
 #define CVRT_UART_STOP_BITS     UART_STOP_BITS_1        // Number of stop bits
@@ -63,7 +63,7 @@
 #define CVRT_UART_TX_PPS_NO     PPSO_RB4
 #define CVRT_UART_TX_PPS        PPSOUT_U1TX
 
-#define CVRT_UxRXBUF_SIZE       (32)
+#define CVRT_UxRXBUF_SIZE       (64)
 #define CVRT_UxTXBUF_SIZE       (32)
 
 #if (CVRT_UART_IDX == 1)
