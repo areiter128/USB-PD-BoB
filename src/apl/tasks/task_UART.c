@@ -62,10 +62,10 @@ volatile uint16_t msg_cnt = 0;
 
 #define UART_IO_TIMEOUT 5000
 
-#define FRM_START       0xAA    // start-byte
+#define FRM_START       0x55    // start-byte
 #define FRM_STOP        0x0D    // stop-byte
 
-#define FRAME_START     1   // one start byte = 0xAA
+#define FRAME_START     1   // one start byte = 0x55
 #define FRAME_CID       2   // two bytes command ID
 #define FRAME_DATA_LEN  2   // two bytes data length definition
 #define FRAME_CRC       2   // two bytes for 16-bit CRC
@@ -84,23 +84,44 @@ volatile uint16_t msg_cnt = 0;
 #define _UART_RX_CRC            (uint16_t)((uint16_t)(UART_RxTx.RXBytes[FRAME_START_OVERHEAD + _UART_RX_DLEN] << 8) | (uint16_t)UART_RxTx.RXBytes[FRAME_START_OVERHEAD + _UART_RX_DLEN + 1])
 
 // private receive and transmit buffers
-typedef struct 
-{
-    volatile SMPS_UART_STATUS_FLAGS_t status;   // UART transmission status bits
-    
-    volatile uint8_t RXBytes[FRAME_TOTAL_RX_LENGTH];
-    volatile uint16_t UartRecLength;    // private receive data length for on-going transmissions
-    volatile uint16_t UartRecCounter;   // private receive byte counter for on-going transmissions
-    volatile uint16_t UartRecActionID;  // Copy of the command-ID
-    
-    volatile uint8_t TXBytes[FRAME_TOTAL_TX_LENGTH];
-    volatile uint16_t UartSendLength;   // private transmit data length for on-going transmissions
-    volatile uint16_t UartSendCounter;  // private transmit byte counter for on-going transmissions
+typedef struct
+  {
+      unsigned RXFrameReady : 1;
+      unsigned TXFrameReady : 1;
+      unsigned TXSendDone : 1;
+      unsigned Sof : 1;
 
-//    volatile uint16_t UartCRCBuffer;    // private CRC buffer for on-going calculations
-    volatile uint16_t UARTRXComplete;   // rECEIVE Complete flag
-    volatile uint16_t UartTXSendDone;   // Transmit Complete flag
-}SMPS_UART_DATA_HANDLER_t;
+      unsigned not_used: 12;
+
+      volatile uint8_t RXBytes[FRAME_TOTAL_RX_LENGTH];;
+      volatile uint16_t UartRecCounter;
+      volatile uint16_t UartRecActionID;
+      volatile uint16_t UartRecLength;
+
+      volatile uint8_t TXBytes[FRAME_TOTAL_TX_LENGTH];
+      volatile uint16_t UartSendCounter;
+      volatile uint16_t UartSendLength;
+
+      volatile uint16_t CRC;
+  } SMPS_UART_DATA_HANDLER_t;
+
+//typedef struct 
+//{
+//    volatile SMPS_UART_STATUS_FLAGS_t status;   // UART transmission status bits
+//    
+//    volatile uint8_t RXBytes[FRAME_TOTAL_RX_LENGTH];
+//    volatile uint16_t UartRecLength;    // private receive data length for on-going transmissions
+//    volatile uint16_t UartRecCounter;   // private receive byte counter for on-going transmissions
+//    volatile uint16_t UartRecActionID;  // Copy of the command-ID
+//    
+//    volatile uint8_t TXBytes[FRAME_TOTAL_TX_LENGTH];
+//    volatile uint16_t UartSendLength;   // private transmit data length for on-going transmissions
+//    volatile uint16_t UartSendCounter;  // private transmit byte counter for on-going transmissions
+//
+////    volatile uint16_t UartCRCBuffer;    // private CRC buffer for on-going calculations
+//    volatile uint16_t UARTRXComplete;   // rECEIVE Complete flag
+//    volatile uint16_t UartTXSendDone;   // Transmit Complete flag
+//}SMPS_UART_DATA_HANDLER_t;
 
 volatile SMPS_UART_DATA_HANDLER_t UART_RxTx;
 
@@ -480,68 +501,42 @@ volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint
 void __attribute__((__interrupt__, no_auto_psv)) _CVRT_UxRXInterrupt() 
 {
 
-    volatile uint8_t rec_buf=0;
-    volatile uint16_t i=0;
+    unsigned short rx_tmp;
     
-    rec_buf = CVRT_UxRXREG; // read receive buffer in a buffer variable
-    
-    // Sync up with START-OF-FRAME
-    if ((rec_buf == FRM_START) && (!UART_RxTx.status.flag.SOF))
+    rx_tmp = CVRT_UxRXREG;
+    if (( rx_tmp == FRM_START) &&(!UART_RxTx.Sof))
     {
-        UART_RxTx.status.flag.RXFrameReady = 0;
+        UART_RxTx.RXBytes[0]=rx_tmp;
         UART_RxTx.UartRecCounter = 1;
-        UART_RxTx.status.flag.SOF = 1;
-        UART_RxTx.UartRecLength = 0;
-        UART_RxTx.RXBytes[0] = rec_buf; 
-    }
-
-    // Receiving command ID and data length
-    else if (UART_RxTx.status.flag.SOF)
+        UART_RxTx.Sof = 1;
+    } 
+    else
     {
-
-        // Receive transmission bytes adding them to the data array
-        UART_RxTx.RXBytes[UART_RxTx.UartRecCounter++] = rec_buf;
-
-        // when START, CID and DLEN has been received, update data length setting
-        if (UART_RxTx.UartRecCounter == FRAME_START_OVERHEAD) 
-        { UART_RxTx.UartRecLength = _UART_RX_DLEN; }
-
-        // if data-length, STOP and SOF flag bit adds up, the frame is perceived to be complete
-        // (no CRC check yet)
-        if ((rec_buf == FRM_STOP) && 
-            (UART_RxTx.UartRecCounter > (UART_RxTx.UartRecLength + FRAME_START_OVERHEAD)) && 
-            (UART_RxTx.status.flag.SOF))
-        {
-            // copy received frame in global data structure
-            smps_uart.RXBytes.start = UART_RxTx.RXBytes[0];
-            smps_uart.RXBytes.id = _UART_RX_CID;
-            smps_uart.RXBytes.data_len = _UART_RX_DLEN;
-                
-            for(i=FRAME_START_OVERHEAD; i<(UART_RxTx.UartRecLength + FRAME_START_OVERHEAD); i++)
-            {
-                smps_uart.RXBytes.data[i-FRAME_START_OVERHEAD] = UART_RxTx.RXBytes[i];
-            }
-            
-            smps_uart.RXBytes.crc = _UART_RX_CRC;       // copy CRC code into global data structure
-            smps_uart.RXBytes.stop = rec_buf;           // copy STOP into global data structure
-
-            // set/clear status flags
-            UART_RxTx.status.flag.RXFrameReady = 1;    // set FRAME READY flag
-            UART_RxTx.status.flag.RXComplete = 0;      // clear RX COMPLETE flag (requires validated CRC to be set)
-            UART_RxTx.status.flag.SOF = 0;             // clear START-OF-FRAME flag
-
-            // copy status flags into global UART object
-            smps_uart.status.flags = UART_RxTx.status.flags;
-                
-        }
-
+        UART_RxTx.RXBytes[UART_RxTx.UartRecCounter++] = rx_tmp;
     }
 
-    _CVRT_UxRXIF = 0;
-    
-    return;
-    
+    if (UART_RxTx.UartRecCounter == 5) // Mettere una define
+    {
+        UART_RxTx.UartRecLength = (UART_RxTx.RXBytes[3] << 8) | UART_RxTx.RXBytes[4];
+    }
+
+    if(UART_RxTx.UartRecCounter >(UART_RxTx.UartRecLength + 7)) // Mettere una define
+    {
+        if ((rx_tmp == 0x0D) && (UART_RxTx.Sof))
+        {
+            UART_RxTx.RXFrameReady = 1;
+            UART_RxTx.UartRecActionID = (UART_RxTx.RXBytes[1] << 8) | UART_RxTx.RXBytes[2];
+            UART_RxTx.Sof = 0;
+        }
+        else
+        {
+            UART_RxTx.UartRecCounter=0;
+            UART_RxTx.Sof=0;
+        }
+    }
+    _CVRT_UxRXIF = false;
 }
+    
 
 
 /*!_CVRT_UxTXInterrupt
