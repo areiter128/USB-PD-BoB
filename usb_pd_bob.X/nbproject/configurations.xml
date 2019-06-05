@@ -144,6 +144,8 @@
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
+      <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/h/hal/config/cvmc_cha.dcld</itemPath>
+      <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/h/hal/config/cacmc_cha.dcld</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceFolderFilter></sourceFolderFilter>

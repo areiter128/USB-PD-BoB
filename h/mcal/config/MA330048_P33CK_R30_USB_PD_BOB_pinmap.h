@@ -5,7 +5,7 @@
  * Board ID:    MA330048_P33CK_USB_PD_BOB                                                                       
  * HW Revision: R30                                                                   
  * Date:        05/30/2019                                                                             
- * Build:       0018                                                                       
+ * Build:       0019                                                                       
  *                                                                                                 
  * Description:                                                                                    
  * This is a header file template adding signal labels for the hardware abstraction layer          
@@ -57,8 +57,8 @@
  * ***********************************************************************************************/    
 // This is a guard condition so that contents of this file are not included
 // more than once.
-#ifndef __MA330048_P33CK_R30_USB_PD_BOB_PINMAP_H__
-#define __MA330048_P33CK_R30_USB_PD_BOB_PINMAP_H__
+#ifndef __MA330048_P33CK_USB_PD_BOB_R30_PINMAP_H__
+#define __MA330048_P33CK_USB_PD_BOB_R30_PINMAP_H__
 
 #include <xc.h> // include processor files - each processor file is guarded 
 #include <stdint.h> // Include standard integer types                       
