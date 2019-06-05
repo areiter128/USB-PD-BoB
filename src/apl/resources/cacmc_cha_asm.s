@@ -2,7 +2,7 @@
 ; **********************************************************************************
 ;  SDK Version: z-Domain Control Loop Designer v0.9.0.58
 ;  Author:      M91406
-;  Date/Time:   06/04/19 10:03:12 PM
+;  Date/Time:   06/05/19 9:04:27 AM
 ; **********************************************************************************
 ;  2P2Z Control Library File (Dual Bitshift-Scaliing Mode)
 ; **********************************************************************************
@@ -55,15 +55,15 @@
 ; This function calls the z-domain controller processing the latest data point input
 ;------------------------------------------------------------------------------
 	
-	.global _cacmc_bata_Update
-_cacmc_bata_Update:    ; provide global scope to routine
+	.global _cacmc_cha_Update
+_cacmc_cha_Update:    ; provide global scope to routine
 	push w12    ; save working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------
 ; Check status word for Enable/Disable flag and bypass computation, if disabled
 	mov [w0 + #offStatus], w12
 	btss w12, #NPMZ16_STATUS_ENABLE
-	bra CACMC_BATA_BYPASS_LOOP
+	bra CACMC_CHA_BYPASS_LOOP
 	
 ;------------------------------------------------------------------------------
 ; Setup pointers to A-Term data arrays
@@ -131,24 +131,24 @@ _cacmc_bata_Update:    ; provide global scope to routine
 ; Check for upper limit violation
 	mov [w0 + #offMaxOutput], w6    ; load upper limit value
 	cpslt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output < upper limit)
-	bra CACMC_BATA_CLAMP_MAX_OVERRIDE    ; jump to override label if control output > upper limit
+	bra CACMC_CHA_CLAMP_MAX_OVERRIDE    ; jump to override label if control output > upper limit
 	bclr w12, #NPMZ16_STATUS_USAT    ; clear upper limit saturation flag bit
-	bra CACMC_BATA_CLAMP_MAX_EXIT    ; jump to exit
-	CACMC_BATA_CLAMP_MAX_OVERRIDE:
+	bra CACMC_CHA_CLAMP_MAX_EXIT    ; jump to exit
+	CACMC_CHA_CLAMP_MAX_OVERRIDE:
 	mov w6, w4    ; override controller output
 	bset w12, #NPMZ16_STATUS_USAT    ; set upper limit saturation flag bit
-	CACMC_BATA_CLAMP_MAX_EXIT:
+	CACMC_CHA_CLAMP_MAX_EXIT:
 	
 ; Check for lower limit violation
 	mov [w0 + #offMinOutput], w6    ; load lower limit value
 	cpsgt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output > upper limit)
-	bra CACMC_BATA_CLAMP_MIN_OVERRIDE    ; jump to override label if control output < lower limit
+	bra CACMC_CHA_CLAMP_MIN_OVERRIDE    ; jump to override label if control output < lower limit
 	bclr w12, #NPMZ16_STATUS_LSAT    ; clear lower limit saturation flag bit
-	bra CACMC_BATA_CLAMP_MIN_EXIT    ; jump to exit
-	CACMC_BATA_CLAMP_MIN_OVERRIDE:
+	bra CACMC_CHA_CLAMP_MIN_EXIT    ; jump to exit
+	CACMC_CHA_CLAMP_MIN_OVERRIDE:
 	mov w6, w4    ; override controller output
 	bset w12, #NPMZ16_STATUS_LSAT    ; set lower limit saturation flag bit
-	CACMC_BATA_CLAMP_MIN_EXIT:
+	CACMC_CHA_CLAMP_MIN_EXIT:
 	
 ;------------------------------------------------------------------------------
 ; Write control output value to target
@@ -179,7 +179,7 @@ _cacmc_bata_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Enable/Disable bypass branch target
-	CACMC_BATA_BYPASS_LOOP:
+	CACMC_CHA_BYPASS_LOOP:
 	pop w12    ; restore working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------
@@ -188,12 +188,12 @@ _cacmc_bata_Update:    ; provide global scope to routine
 ;------------------------------------------------------------------------------
 	
 ;------------------------------------------------------------------------------
-; Global function declaration _cacmc_bata_Reset
+; Global function declaration _cacmc_cha_Reset
 ; This function clears control and error histories enforcing a reset
 ;------------------------------------------------------------------------------
 	
-	.global _cacmc_bata_Reset
-_cacmc_bata_Reset:
+	.global _cacmc_cha_Reset
+_cacmc_cha_Reset:
 	
 ;------------------------------------------------------------------------------
 ; Clear control history array
@@ -218,12 +218,12 @@ _cacmc_bata_Reset:
 ;------------------------------------------------------------------------------
 	
 ;------------------------------------------------------------------------------
-; Global function declaration _cacmc_bata_Precharge
+; Global function declaration _cacmc_cha_Precharge
 ; This function loads user-defined default values into control and error histories
 ;------------------------------------------------------------------------------
 	
-	.global _cacmc_bata_Precharge
-_cacmc_bata_Precharge:
+	.global _cacmc_cha_Precharge
+_cacmc_cha_Precharge:
 	
 ;------------------------------------------------------------------------------
 ; Charge error history array with defined value

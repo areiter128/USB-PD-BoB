@@ -1,6 +1,6 @@
 [GUI]
 CreateDate=10/16/18 10:55:24 AM
-SaveDate=06/04/19 10:36:17 PM
+SaveDate=06/05/19 9:04:34 AM
 Name=z-Domain Control Loop Designer
 Version=0.9.0.58
 WindoWState=Maximized
@@ -32,7 +32,7 @@ FixedPointErrorMsg=0.5
 FixedPointErrorWarning=0.1
 BiDirectionalFeedback=1
 [AssemblyGenerator]
-UserPrefix1=cacmc_bata
+UserPrefix1=cacmc_cha
 UserPrefix2=
 UseUserPrefix=1
 UseUserPrefixVar=1
@@ -59,10 +59,10 @@ ExportCSource=1
 ExportCHeader=1
 ExportCLib=1
 EnableOneClickExport=1
-ASMSourcePath=..\src\apl\resources\
-CSourcePath=..\src\apl\resources\
-CHeaderPath=..\h\apl\resources\
-CLibPath=..\h\apl\resources\
+ASMSourcePath=..\..\..\src\apl\resources\
+CSourcePath=..\..\..\src\apl\resources\
+CHeaderPath=..\..\apl\resources\
+CLibPath=..\..\apl\resources\
 IncludeCHeaderPathInCSource=1
 IncludeCLibPathInCHeader=1
 [TimingGraph]

@@ -22,6 +22,9 @@
           <itemPath>../h/apl/config/application.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/h/apl/resources/cacmc_cha.h</itemPath>
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/h/apl/resources/cvmc_cha.h</itemPath>
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/h/apl/resources/soft_start.h</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../h/apl/tasks/task_FaultHandler.h</itemPath>
@@ -94,6 +97,11 @@
           <itemPath>../src/apl/config/application.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/src/apl/resources/soft_start.c</itemPath>
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/src/apl/resources/cacmc_cha.c</itemPath>
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/src/apl/resources/cacmc_cha_asm.s</itemPath>
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/src/apl/resources/cvmc_cha.c</itemPath>
+          <itemPath>C:/_dsmps/USB_PD_RefDesign/firmware/project/src/apl/resources/cvmc_cha_asm.s</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../src/apl/tasks/task_FaultHandler.c</itemPath>

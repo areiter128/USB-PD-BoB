@@ -1,6 +1,6 @@
 [GUI]
 CreateDate=10/16/18 10:55:24 AM
-SaveDate=06/04/19 10:31:56 PM
+SaveDate=06/05/19 9:02:42 AM
 Name=z-Domain Control Loop Designer
 Version=0.9.0.58
 WindoWState=Maximized
@@ -32,7 +32,7 @@ FixedPointErrorMsg=0.5
 FixedPointErrorWarning=0.1
 BiDirectionalFeedback=0
 [AssemblyGenerator]
-UserPrefix1=cvmc_bata
+UserPrefix1=cvmc_cha
 UserPrefix2=
 UseUserPrefix=1
 UseUserPrefixVar=1

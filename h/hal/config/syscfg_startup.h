@@ -37,18 +37,15 @@
 #include "_root/config/task_manager_config.h"
 #include "apl/config/tasks.h"
 
-// Soft-Start Timing
+// Power COnverter Soft-Start Timing
 #define POWER_ON_DELAY   300.0e-3  // Power On Delay in [sec]
-#define RAMP_UP_PERIOD   50.0e-3  // Voltage Ramp-Up Period in [sec]
+#define POWER_UP_RAMP_PERIOD   50.0e-3  // Voltage Ramp-Up Period in [sec]
 #define POWER_GOOD_DELAY 100.0e-3  // Power Good Delay in [sec]
 
-//#define POWER_ON_DELAY_TICKS    (uint16_t)(((float)POWER_ON_DELAY / (float)TASK_MGR_TIME_STEP)/ ((float)(task_queue_system_startup_size)))
-//#define RAMP_UP_PERIOD_TICKS    (uint16_t)(((float)RAMP_UP_PERIOD / (float)TASK_MGR_TIME_STEP) / ((float)(task_queue_system_startup_size)))
-//#define POWER_GOOD_DELAY_TICKS  (uint16_t)(((float)POWER_GOOD_DELAY / (float)TASK_MGR_TIME_STEP) / ((float)(task_queue_system_startup_size)))
 
-#define POWER_ON_DELAY_TICKS    (uint16_t)(((float)POWER_ON_DELAY / (float)TASK_MGR_TIME_STEP)/ ((float)(task_queue_ac_supply_size)))
-#define RAMP_UP_PERIOD_TICKS    (uint16_t)(((float)RAMP_UP_PERIOD / (float)TASK_MGR_TIME_STEP) / ((float)(task_queue_ac_supply_size)))
-#define POWER_GOOD_DELAY_TICKS  (uint16_t)(((float)POWER_GOOD_DELAY / (float)TASK_MGR_TIME_STEP) / ((float)(task_queue_ac_supply_size)))
+#define POWER_ON_DELAY_TICKS        (uint16_t)(((float)POWER_ON_DELAY / (float)TASK_MGR_TIME_STEP)/ ((float)(task_queue_normal_size)))
+#define POWER_UP_RAMP_PERIOD_TICKS  (uint16_t)(((float)POWER_UP_RAMP_PERIOD / (float)TASK_MGR_TIME_STEP) / ((float)(task_queue_normal_size)))
+#define POWER_GOOD_DELAY_TICKS      (uint16_t)(((float)POWER_GOOD_DELAY / (float)TASK_MGR_TIME_STEP) / ((float)(task_queue_normal_size)))
 
 
 #endif	/* _HARDWARE_ABSTRACTION_LAYER_SYSTEM_STARTUP_H_ */
