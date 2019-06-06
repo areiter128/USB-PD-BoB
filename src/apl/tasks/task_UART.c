@@ -507,14 +507,14 @@ void __attribute__((__interrupt__, no_auto_psv)) _CVRT_UxRXInterrupt()
         UART_RxTx.RXBytes[UART_RxTx.UartRecCounter++] = rx_tmp;
     }
 
-    if (UART_RxTx.UartRecCounter == 5) // Mettere una define
+    if (UART_RxTx.UartRecCounter == FRAME_START_OVERHEAD) 
     {
         UART_RxTx.UartRecLength = (UART_RxTx.RXBytes[3] << 8) | UART_RxTx.RXBytes[4];
     }
 
-    if(UART_RxTx.UartRecCounter >(UART_RxTx.UartRecLength + 7)) // Mettere una define
+    if(UART_RxTx.UartRecCounter >(UART_RxTx.UartRecLength + FRAME_START_OVERHEAD + FRAME_CRC)) 
     {
-        if ((rx_tmp == 0x0D) && (UART_RxTx.Sof))
+        if ((rx_tmp == FRM_STOP) && (UART_RxTx.Sof))
         {
             UART_RxTx.RXFrameReady = 1;
             UART_RxTx.UartRecActionID = (UART_RxTx.RXBytes[1] << 8) | UART_RxTx.RXBytes[2];
