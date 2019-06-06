@@ -53,14 +53,10 @@
 /* private scheduler variables */
 
 #define SMPS_UART_FRMUPDT_INT_CNT 416   // number of scheduler cycles until data update
-#define SMPS_UART_SEND_INT_CNT   1    // number of scheduler cycles until sending frame (e.g. 416=2500ms)
-volatile uint16_t send_int_cnt = 0;
-volatile uint16_t frm_update_int_cnt = 0;
-volatile uint16_t msg_cnt = 0;
+#define SMPS_UART_SEND_INT_CNT   1      // number of scheduler cycles until sending frame (e.g. 416=2500ms)
+
 
 /* UART data frame definitions and private variables */
-
-#define UART_IO_TIMEOUT 5000
 
 #define FRM_START       0x55    // start-byte
 #define FRM_STOP        0x0D    // stop-byte
@@ -114,9 +110,9 @@ volatile uint16_t msg_cnt = 0;
 
 #define TX_VIN_INDEX            FRAME_START_OVERHEAD
 #define TX_VOUT_CH1_INDEX       FRAME_START_OVERHEAD+2
-#define TX_CONVERTER_STATUS     FRAME_START_OVERHEAD+4
-#define TX_CONVERTER_FAULT      FRAME_START_OVERHEAD+6
-#define TX_IOUT_CH1_INDEX       FRAME_START_OVERHEAD+8
+#define TX_IOUT_CH1_INDEX       FRAME_START_OVERHEAD+4
+#define TX_CONVERTER_STATUS     FRAME_START_OVERHEAD+6
+#define TX_CONVERTER_FAULT      FRAME_START_OVERHEAD+8
 #define TX_VOUT_CH2_INDEX       FRAME_START_OVERHEAD+10
 #define TX_IOUT_CH2_INDEX       FRAME_START_OVERHEAD+12
 #define TX_TEMPERATURE_INDEX    FRAME_START_OVERHEAD+14
@@ -163,7 +159,7 @@ volatile uint16_t  dispose_DebugUART(void);
 
 volatile uint16_t  task_DebugUARTsend_ID0100(void);
 volatile uint16_t task_DebugUARTreceive(void);
-//volatile uint16_t task_DebugDecodeFrame(void);
+volatile uint16_t task_DebugDecodeFrame(void);
 volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint16_t data_len);
 
 /*!exec_DebugUART
@@ -189,6 +185,7 @@ volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint
 volatile uint16_t exec_DebugUART(void) 
 {
     volatile uint16_t fres = 1;
+    static task_cycles_counter=0;
     
     if (1==UART_RxTx.RXFrameReady)
     {
@@ -196,6 +193,18 @@ volatile uint16_t exec_DebugUART(void)
       fres=task_DebugUARTreceive();
     }
             
+    
+    // For protocol debug only
+    // TODO decide how to trigger buffer transmission
+    
+    task_cycles_counter++;
+    if(task_cycles_counter>50)
+    {
+        UART_RxTx.TXFrameReady=1;
+        task_cycles_counter=0;
+    }
+        
+    
     if(1==UART_RxTx.TXSendDone && 1==UART_RxTx.TXFrameReady)
     {
         fres=task_DebugUARTsend_ID0100();
@@ -240,6 +249,7 @@ volatile uint16_t init_DebugUART(void) {
     // Configure UART peripheral
     fres=smps_uart_open_port(CVRT_UART_IDX,CVRT_UART_BAUDRATE, CVRT_UART_DATA_BITS, CVRT_UART_PARITY, CVRT_UART_STOP_BITS,CVRT_UART_IRS_PRIORITY);
 
+    UART_RxTx.TXSendDone=1; //
     return (fres);
 }
 
@@ -269,101 +279,15 @@ volatile uint16_t  dispose_DebugUART(void) {
     return (1);
 }
 
-/*!task_UARTsendFrame
- *****************************************************************************
- * Function:	 int16_t task_UARTsendFrame(void)
- * Arguments:	 (none)
- * Return Value: 1: success, 2: failure
- *
- * Summary:
- * Sends pre-charged data frame over UART
- *
- * Description:	
- * This routine sends a pre-charged data frame over UART. The 16-bit CRC 
- * needs to be calculated and its result be placed in the data frame in 
- * advance.
- *
- * See also:
- * (none)
- * 
- *****************************************************************************/
-
-volatile int16_t task_DebugUARTsend(void) 
-{
-    volatile uint16_t fres=1, timeout=0;
- 
-    // send byte
-//    while((_CVRT_UxTXBF) && (timeout++ < UART_IO_TIMEOUT));
-//    if(timeout < UART_IO_TIMEOUT) 
-//    {
-//        // send test code A, B, C, D, E, ... in the size of the recent transmit buffer 
-//        // by direct write to the UART Transmit Buffer Register
-//        // CVRT_UxTXREG = 0x041 + UART_RxTx.UartSendCounter++; // UART_RxTx.TXBytes[UART_RxTx.UartSendCounter++];
-//        
-//        // call library function to send byte via UART
-//        fres &= gsuart_write_byte(smps_uart.port_index, UART_RxTx.TXBytes[UART_RxTx.UartSendCounter++]);
-//    
-//        // when all bytes of a data frame has been sent, reset flags and counter
-//        if(UART_RxTx.UartSendCounter > (_UART_TX_DLEN + FRAME_TOTAL_OVERHEAD))
-//        {
-//            UART_RxTx.UartSendCounter = 0;
-//            UART_RxTx.status.flag.TXFrameReady = 0;
-//            UART_RxTx.UartTXSendDone = 1;
-//        }
-//    }
-//    else { fres = 0; }
-    
-    return(fres);
-}
-
-/*!task_UARTsend
- *****************************************************************************
- * Function:	 int16_t task_UARTsend(void)
- * Arguments:	 (none)
- * Return Value: 1: success, 2: failure
- *
- * Summary:
- * Sends a single byte over UART
- *
- * Description:	
- * This routine sends a single byte from the data frame over UART and processes 
- * the 16-bit CRC in parallel, which will be added to the end of the communication 
- * frame.
- *
- * See also:
- * (none)
- * 
- *****************************************************************************/
-
-
-//inline volatile uint16_t task_DebugUARTreceive(void) {
-//
-//    volatile uint16_t crc_buffer=0;
-//
-//    // calculate 16-bit CRC of data content
-//    crc_buffer = smpsuart_get_crc((volatile uint8_t *)&smps_uart.RXBytes.data[0], smps_uart.RXBytes.data_len);
-//
-//    // if CRC matches transmitted CRC code, then the data frame is considered to be valid
-//    // if (UART_RxTx.UartCRCBuffer == smps_uart.RXBytes.crc) 
-//    if (crc_buffer == smps_uart.RXBytes.crc) 
-//    {
-//        UART_RxTx.status.flag.RXFrameReady = 0;
-//        UART_RxTx.UARTRXComplete = 1;
-//        smps_uart.status.flags = UART_RxTx.status.flags;
-//    }
-//
-//    // return the RXComplete-Flag
-//    return (UART_RxTx.UARTRXComplete);
-//}
 
 /*!task_DecodeFrame
  *****************************************************************************
  * Function:	 int16_t task_DecodeFrame(void)
  * Arguments:	 (none)
- * Return Value: 1: success, 2: failure
+ * Return Value: 1: success, 0: failure
  *
  * Summary:
- * Decodes a comm frame once it has been received
+ * Decodes a UART frame once it has been received and CRC verified
  *
  * Description:	
  * In this routine a comm-frame is decoded once it has been completely received.
@@ -374,22 +298,32 @@ volatile int16_t task_DebugUARTsend(void)
  * 
  *****************************************************************************/
 
-inline volatile uint16_t task_DebugDecodeFrame(void) {
-
-//    volatile uint16_t value16 = 0;
-
-//    switch (smps_uart.RXBytes.id) 
-//    {
-//        case (0x01DD):  // toggles a test-pin when the command has successfully been received 
-//            TESTPOINT_WR ^= 1;
-//            break;
-//            
-//        default: // unknown command
-//            return (0);
-//    }
-
+inline volatile uint16_t task_DebugDecodeFrame(void) 
+{
+    switch(UART_RxTx.UartRecActionID)
+        {
+            case GUI_ID_0100:
+            {
+                // Recover 1/10 once the GUI will send correct data
+//                tmpf=(float)(UART_RxTx.RXBytes[VSETP_INDEX]*256+UART_RxTx.RXBytes[VSETP_INDEX+1])*K_VDCOUT_TO_VDCOUTBIT/10.0;
+//                gui_vsetp=(unsigned short)tmpf;
+//                tmpf=(float)(UART_RxTx.RXBytes[IMAX_INDEX]*256+UART_RxTx.RXBytes[IMAX_INDEX+1])*(K_I_TO_IBIT*0.9/10.0); // Average value in bit
+//                gui_imax=(unsigned short)tmpf;
+//                if(gui_imax>PFC_MAX_INPUT_CURRENT)
+//                {
+//                    gui_imax=PFC_MAX_INPUT_CURRENT; 
+//                }
+//                gui_config_bits.converter_conf_bits=UART_RxTx.RXBytes[BITS_INDEX]*256+UART_RxTx.RXBytes[BITS_INDEX+1];
+                
+                break;
+            }
+            default:
+            {
+                
+            }
+        }
+        UART_RxTx.UartRecActionID = 0;  
     return (1);
-
 }
 
 /*!smpsuart_get_crc
@@ -524,7 +458,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _CVRT_UxEInterrupt( void )
 void __attribute__((__interrupt__, no_auto_psv)) _CVRT_UxTXInterrupt() 
 {
 
-    if(UART_RxTx.UartSendCounter<=(UART_RxTx.UartSendLength + FRAME_START_OVERHEAD)) 
+    if(UART_RxTx.UartSendCounter<=(UART_RxTx.UartSendLength + FRAME_START_OVERHEAD+FRAME_STOP_OVERHEAD)) 
     {
         CVRT_UxTXREG=UART_RxTx.TXBytes[UART_RxTx.UartSendCounter++];
     }
@@ -572,7 +506,7 @@ volatile uint16_t task_DebugUARTreceive(void)
                 
             }
         }
-      UART_RxTx.UartRecActionID = 0;  
+        UART_RxTx.UartRecActionID = 0;  
     } 
     else
     {
@@ -581,7 +515,24 @@ volatile uint16_t task_DebugUARTreceive(void)
     return(fres);
 }
 
-
+/*!task_DebugUARTsend_ID0100
+ *****************************************************************************
+ * Function:	 int16_t task_DebugUARTsend_ID0100(void)
+ * Arguments:	 (none)
+ * Return Value: 1: success, 0: failure
+ *
+ * Summary:
+ * Sends pre-charged data frame over UART for protocol ID 0x0100
+ *
+ * Description:	
+ * This routine sends data frame over UART. 
+ * The 16-bit CRC is calculated befor sending data
+ *
+ *
+ * See also:
+ * (none)
+ * 
+ *****************************************************************************/
 
 volatile uint16_t task_DebugUARTsend_ID0100(void)
 {   
@@ -598,56 +549,83 @@ volatile uint16_t task_DebugUARTsend_ID0100(void)
     UART_RxTx.TXBytes[3] = (unsigned char)(((CVRT_UxTXBUF_SIZE_ID0100) & 0xFF00)>>8);
     UART_RxTx.TXBytes[4] = (unsigned char)(((CVRT_UxTXBUF_SIZE_ID0100) & 0x00FF));
     
+ 
     
+    //tmpf=10*(float)Voutavg1/K_VDCOUT_TO_VDCOUTBIT;
+    //tmps=(unsigned short)tmpf;
+    tmps=123;
+    UART_RxTx.TXBytes[TX_VIN_INDEX]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_VIN_INDEX+1]=(unsigned char)(tmps&0xff);
+    
+    tmps=51;
+    UART_RxTx.TXBytes[TX_VOUT_CH1_INDEX]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_VOUT_CH1_INDEX+1]=(unsigned char)(tmps&0xff);
+    
+    tmps=151;
+    UART_RxTx.TXBytes[TX_IOUT_CH1_INDEX]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_IOUT_CH1_INDEX+1]=(unsigned char)(tmps&0xff);
+    
+    tmps=0x001f;
+    UART_RxTx.TXBytes[TX_CONVERTER_STATUS]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_CONVERTER_STATUS+1]=(unsigned char)(tmps&0xff);
 
+    tmps=0x1;
+    UART_RxTx.TXBytes[TX_CONVERTER_FAULT]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_CONVERTER_FAULT+1]=(unsigned char)(tmps&0xff);
+
+    tmps=49;
+    UART_RxTx.TXBytes[TX_VOUT_CH2_INDEX]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_VOUT_CH2_INDEX+1]=(unsigned char)(tmps&0xff);
     
-//    tmpf=10*(float)Voutavg1/K_VDCOUT_TO_VDCOUTBIT;
-//    tmps=(unsigned short)tmpf;
-//    UART_RxTx.TXBytes[VOUT_CH1_INDEX]=(unsigned char)(tmps>>8);
-//    UART_RxTx.TXBytes[VOUT_CH1_INDEX+1]=(unsigned char)(tmps&0xff);
-//    
-//    tmpf=100*(float)Iph1avg*1.111/K_I_TO_IBIT; // Convert Avg to RMS (pi/2*sqrt(2))
-//    tmps=(unsigned short)tmpf;
-//    UART_RxTx.TXBytes[I1_INDEX]=(unsigned char)(tmps>>8);
-//    UART_RxTx.TXBytes[I1_INDEX+1]=(unsigned char)(tmps); 
-//    iin=tmps;
-//    
-//    tmpf=100*(float)Iph2avg*1.111/K_I_TO_IBIT; // Convert Avg to RMS (pi/2*sqrt(2))
-//    tmps=(unsigned short)tmpf;
-//    UART_RxTx.TXBytes[I2_INDEX]=(unsigned char)(tmps>>8);
-//    UART_RxTx.TXBytes[I2_INDEX+1]=(unsigned char)(tmps); 
-//    iin+=tmps;
+    tmps=290;
+    UART_RxTx.TXBytes[TX_IOUT_CH2_INDEX]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_IOUT_CH2_INDEX+1]=(unsigned char)(tmps&0xff);
     
-//    UART_RxTx.TXBytes[IIN_INDEX]=(unsigned char)(iin>>8);
-//    UART_RxTx.TXBytes[IIN_INDEX+1]=(unsigned char)(iin); 
-//    
-//    tmpf=10*(float)Vinavg*1.111/K_VACIN_TO_VACINBIT; // Convert Avg to RMS (pi/2*sqrt(2))
-//    tmps=(unsigned short)tmpf+14;               // 14 is the voltage drop (10x1.V) on input diode bridge
-//    UART_RxTx.TXBytes[VIN_INDEX]=(unsigned char)(tmps>>8);
-//    UART_RxTx.TXBytes[VIN_INDEX+1]=(unsigned char)(tmps); 
-//    
-//    tmpf=10*(((float)(Temperature_lpf>>4)*3.3/4096.0)-0.5)*100;
-//    tmps=(unsigned short)tmpf;
-//    UART_RxTx.TXBytes[TEMPERATURE_INDEX]=(unsigned char)(tmps>>8);
-//    UART_RxTx.TXBytes[TEMPERATURE_INDEX+1]=(unsigned char)(tmps); 
-//    
-//    // TODO bit meaning to be defined
-//    tmps=1;
-//    UART_RxTx.TXBytes[STATUS_INDEX]=(unsigned char)(tmps>>8);
-//    UART_RxTx.TXBytes[STATUS_INDEX+1]=(unsigned char)(tmps);
-//    
-//    // TODO bit meaning to be defined
-//    tmps=1;
-//    UART_RxTx.TXBytes[FAULT_INDEX]=(unsigned char)(tmps>>8);
-//    UART_RxTx.TXBytes[FAULT_INDEX+1]=(unsigned char)(tmps);
+    tmps=350;
+    UART_RxTx.TXBytes[TX_TEMPERATURE_INDEX]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_TEMPERATURE_INDEX+1]=(unsigned char)(tmps&0xff);
+    
+    tmps=1;
+    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID0]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID0+1]=(unsigned char)(tmps&0xff);
+    
+    tmps=2;
+    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID1]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID1+1]=(unsigned char)(tmps&0xff);
+    
+    tmps=3;
+    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID2]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID2+1]=(unsigned char)(tmps&0xff);
+    
+    tmps=4;
+    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID3]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID3+1]=(unsigned char)(tmps&0xff);
+    
+    tmps=5;
+    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID0]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID0+1]=(unsigned char)(tmps&0xff);
+    
+    tmps=6;
+    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID1]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID1+1]=(unsigned char)(tmps&0xff);
+    
+    tmps=6;
+    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID2]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID2+1]=(unsigned char)(tmps&0xff);
+    
+    tmps=8;
+    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID3]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID3+1]=(unsigned char)(tmps&0xff);
     
     UART_RxTx.CRC=smpsuart_get_crc(UART_RxTx.TXBytes,CVRT_UxTXBUF_SIZE_ID0100);
     UART_RxTx.TXBytes[CRCH_POS_ID0100]=(unsigned char)((UART_RxTx.CRC & 0xff00)>>8);
     UART_RxTx.TXBytes[CRCL_POS_ID0100]=(unsigned char)((UART_RxTx.CRC & 0x00ff));
-
+    
     UART_RxTx.TXBytes[UART_RxTx.UartSendLength + 7] = FRM_STOP;
     UART_RxTx.UartSendCounter=1;
     UART_RxTx.TXSendDone = 0;
+    UART_RxTx.TXFrameReady = 0;
+    
     CVRT_UxTXREG=UART_RxTx.TXBytes[0]; // It starts transmission managed by UART TX interrupt
     return(fres);
 }
