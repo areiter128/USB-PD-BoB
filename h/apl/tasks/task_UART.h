@@ -63,8 +63,6 @@
 #define CVRT_UART_TX_PPS_NO     PPSO_RB4
 #define CVRT_UART_TX_PPS        PPSOUT_U1TX
 
-#define CVRT_UxRXBUF_SIZE       (64)
-#define CVRT_UxTXBUF_SIZE       (32)
 
 #if (CVRT_UART_IDX == 1)
     #define _CVRT_UxRXInterrupt _U1RXInterrupt
@@ -132,44 +130,44 @@ typedef struct{
 	volatile unsigned enable:1;	// Bit #15: flag bit to enable/disable (suspend) the communication 
 } __attribute__((packed))SMPS_UART_STATUS_BIT_FIELD_t;
 
-typedef union 
-{
-	volatile uint16_t flags; // buffer for 16-bit word read/write operations
-	volatile SMPS_UART_STATUS_BIT_FIELD_t flag; // data structure for single bit addressing operations
-}SMPS_UART_STATUS_FLAGS_t;
-
-typedef struct{
-    
-    volatile uint8_t  start;    // start-byte (always 0xAA)
-    volatile uint16_t id;       // Command-ID
-    volatile uint16_t data_len; // data length of the data content
-    volatile uint8_t  data[CVRT_UxRXBUF_SIZE]; // data content
-    volatile uint16_t crc;      // CRC16 result over id, data-length and data content
-    volatile uint8_t  stop;     // start-byte (always 0x0D)
-} __attribute__((packed))SMPS_UART_RX_COMM_FRAME_t;
-
-typedef struct{
-    
-    volatile uint8_t  start;    // start-byte (always 0xAA)
-    volatile uint16_t id;       // Command-ID
-    volatile uint16_t data_len; // data length of the data content
-    volatile uint8_t  data[CVRT_UxTXBUF_SIZE]; // data content
-    volatile uint16_t crc;      // CRC16 result over id, data-length and data content
-    volatile uint8_t  stop;     // start-byte (always 0x0D)
-} __attribute__((packed))SMPS_UART_TX_COMM_FRAME_t;
-
-
-typedef struct
-{
-    volatile SMPS_UART_STATUS_FLAGS_t status;
-    
-    volatile uint32_t baudrate;
-    volatile uint16_t port_index;
-    
-    volatile SMPS_UART_RX_COMM_FRAME_t RXBytes;
-    volatile SMPS_UART_TX_COMM_FRAME_t TXBytes;
-
-}__attribute__((packed))SMPS_UART_OBJECT_t;
+//typedef union 
+//{
+//	volatile uint16_t flags; // buffer for 16-bit word read/write operations
+//	volatile SMPS_UART_STATUS_BIT_FIELD_t flag; // data structure for single bit addressing operations
+//}SMPS_UART_STATUS_FLAGS_t;
+//
+//typedef struct{
+//    
+//    volatile uint8_t  start;    // start-byte (always 0xAA)
+//    volatile uint16_t id;       // Command-ID
+//    volatile uint16_t data_len; // data length of the data content
+//    volatile uint8_t  data[CVRT_UxRXBUF_SIZE_ID0100]; // data content
+//    volatile uint16_t crc;      // CRC16 result over id, data-length and data content
+//    volatile uint8_t  stop;     // start-byte (always 0x0D)
+//} __attribute__((packed))SMPS_UART_RX_COMM_FRAME_t;
+//
+//typedef struct{
+//    
+//    volatile uint8_t  start;    // start-byte (always 0xAA)
+//    volatile uint16_t id;       // Command-ID
+//    volatile uint16_t data_len; // data length of the data content
+//    volatile uint8_t  data[CVRT_UxTXBUF_SIZE_ID0100]; // data content
+//    volatile uint16_t crc;      // CRC16 result over id, data-length and data content
+//    volatile uint8_t  stop;     // start-byte (always 0x0D)
+//} __attribute__((packed))SMPS_UART_TX_COMM_FRAME_t;
+//
+//
+//typedef struct
+//{
+//    volatile SMPS_UART_STATUS_FLAGS_t status;
+//    
+//    volatile uint32_t baudrate;
+//    volatile uint16_t port_index;
+//    
+//    volatile SMPS_UART_RX_COMM_FRAME_t RXBytes;
+//    volatile SMPS_UART_TX_COMM_FRAME_t TXBytes;
+//
+//}__attribute__((packed))SMPS_UART_OBJECT_t;
 
 /** UART Driver Hardware Flags
 
@@ -193,7 +191,7 @@ typedef enum
     UART_TX_FULL = (1 << 9) // Indicates that Transmit buffer is full 
 }UART_STATUS_e;
 
-extern volatile SMPS_UART_OBJECT_t smps_uart;
+//extern volatile SMPS_UART_OBJECT_t smps_uart;
 
 
 /* ***********************************************************************************************
