@@ -4,9 +4,9 @@
 #include <string.h>
 #include "debug_uart.h"
 
-#define UART_TX_BUFFER_LENGTH 512       // This needs to be a power of 2 to make the
+#define UART_TX_BUFFER_LENGTH 1024       // This needs to be a power of 2 to make the
                                         // Mask work correctly
-#define UART_BUFFER_MASK      0x01FF    // Mask that is AND-ed with the buffer count
+#define UART_BUFFER_MASK      0x03FF    // Mask that is AND-ed with the buffer count
                                         // to provide the wrap-around function
 uint16_t tx_buffer_head = 0;
 uint16_t tx_buffer_tail = 0;
@@ -15,31 +15,18 @@ uint8_t debug_tx_buffer[UART_TX_BUFFER_LENGTH] ;
 void DEBUG_init(void)
 {
     unsigned int i = 0;
-///**    
-//     Set the UART1 module to the options selected in the user interface.
-//     Make sure to set LAT bit corresponding to TxPin as high before UART initialization
-//*/
-//    // STSEL 1; IREN disabled; PDSEL 8N; UARTEN enabled; RTSMD disabled; USIDL disabled; WAKE disabled; ABAUD disabled; LPBACK disabled; BRGH enabled; URXINV disabled; UEN TX_RX; 
-//    DEBUG_UART_MODE = (0x8008 & ~(1<<15));  // disabling UARTEN bit
-//    // UTXISEL0 TX_ONE_CHAR; UTXINV disabled; OERR NO_ERROR_cleared; URXISEL RX_ONE_CHAR; UTXBRK COMPLETED; UTXEN enabled; ADDEN disabled; 
-//    DEBUG_UART_STA = 0x0000;
-//    
-//    // BaudRate = 115200; Frequency = 1842500 Hz; 
-//    DEBUG_UART_BRG = 0x004B; //0x0097;
-//    
-//    DEBUG_UART_UARTEN = 1;
-//    DEBUG_UART_UTXEN = 1;
-//
-    DEBUG_UART_TRIS = 0;
+
+    // Set up the TX pin as an output
+    PD_DEBUG_UART_TX_TRIS = 0;
     
     //Set PPS to put the UART TX pin on the configured pin
-    DEBUG_UART_PPS_OUTPUT_REG = DEBUG_UART_PPS_OUTPUT_SELECT;  
+    PD_DEBUG_UART_PPS_OUTPUT_REG = PD_DEBUG_UART_PPS_OUTPUT_SELECT;  
 
 #ifdef INCLUDE_DEBUG_UART_RX
     // Set up RX Pin as an input
-    TRISCbits.TRISC2 = 1;    
+    PD_DEBUG_UART_RX_TRIS = 1;    
     //Set PPS to put the UART RX pin on the configured pin
-    DEBUG_UART_PPS_INPUT_REG = DEBUG_UART_PPS_INPUT_SELECT;
+    PD_DEBUG_UART_PPS_INPUT_REG = PD_DEBUG_UART_PPS_INPUT_SELECT;
 #endif // INCLUDE_DEBUG_UART_RX    
 
 /**    
@@ -48,42 +35,43 @@ void DEBUG_init(void)
 */
     // URXEN disabled; RXBIMD RXBKIF flag when Break makes low-to-high transition after being low for at least 23/11 bit periods; UARTEN enabled; MOD Asynchronous 8-bit UART; UTXBRK disabled; BRKOVR TX line driven by shifter; UTXEN disabled; USIDL disabled; WAKE disabled; ABAUD disabled; BRGH enabled; 
     // Data Bits = 8; Parity = None; Stop Bits = 1 Stop bit sent, 1 checked at RX;
-    U1MODE = (0x8080 & ~(1<<15));  // disabling UARTEN bit
+    PD_DEBUG_UART_MODE = (0x8080 & ~(1<<15));  // disabling UARTEN bit
+    
     // STSEL 1 Stop bit sent, 1 checked at RX; BCLKMOD disabled; SLPEN disabled; FLO Off; BCLKSEL FOSC/2; C0EN disabled; RUNOVF disabled; UTXINV disabled; URXINV disabled; HALFDPLX disabled; 
-    U1MODEH = 0x00;
+    PD_DEBUG_UART_MODEH = 0x00;
     // OERIE disabled; RXBKIF disabled; RXBKIE disabled; ABDOVF disabled; OERR disabled; TXCIE disabled; TXCIF disabled; FERIE disabled; TXMTIE disabled; ABDOVE disabled; CERIE disabled; CERIF disabled; PERIE disabled; 
-    U1STA = 0x00;
+    PD_DEBUG_UART_STA = 0x00;
     // URXISEL RX_ONE_WORD; UTXBE enabled; UTXISEL TX_BUF_EMPTY; URXBE enabled; STPMD disabled; TXWRE disabled; 
-    U1STAH = 0x22;
+    PD_DEBUG_UART_STAH = 0x22;
     // BaudRate = 230400; Frequency = 100000000 Hz; BRG 108; 
     // U1BRG = 0x6C; // For 200 MIPS clock setting
-    U1BRG = 0x61; // For 180 MIPS clock setting
+    PD_DEBUG_UART_BRG = 0x61;
     // BRG 0; 
-    U1BRGH = 0x00;
+    PD_DEBUG_UART_BRGH = 0x00;
     // P1 0; 
-    U1P1 = 0x00;
+    PD_DEBUG_UART_P1 = 0x00;
     // P2 0; 
-    U1P2 = 0x00;
+    PD_DEBUG_UART_P2 = 0x00;
     // P3 0; 
-    U1P3 = 0x00;
+    PD_DEBUG_UART_P3 = 0x00;
     // P3H 0; 
-    U1P3H = 0x00;
+    PD_DEBUG_UART_P3H = 0x00;
     // TXCHK 0; 
-    U1TXCHK = 0x00;
+    PD_DEBUG_UART_TXCHK = 0x00;
     // RXCHK 0; 
-    U1RXCHK = 0x00;
+    PD_DEBUG_UART_RXCHK = 0x00;
     // T0PD 1 ETU; PTRCL disabled; TXRPT Retransmit the error byte once; CONV Direct logic; 
-    U1SCCON = 0x00;
+    PD_DEBUG_UART_SCCON = 0x00;
     // TXRPTIF disabled; TXRPTIE disabled; WTCIF disabled; WTCIE disabled; BTCIE disabled; BTCIF disabled; GTCIF disabled; GTCIE disabled; RXRPTIE disabled; RXRPTIF disabled; 
-    U1SCINT = 0x00;
+    PD_DEBUG_UART_SCINT = 0x00;
     // ABDIF disabled; WUIF disabled; ABDIE disabled; 
-    U1INT = 0x00;
+    PD_DEBUG_UART_INT = 0x00;
     
-    U1MODEbits.UARTEN = 1;  // enabling UARTEN bit
-    U1MODEbits.UTXEN = 1;
+    PD_DEBUG_UART_UARTEN_BIT = 1;  // enabling UARTEN bit
+    PD_DEBUG_UART_UTXEN_BIT = 1;
 
 #ifdef INCLUDE_DEBUG_UART_RX
-    U1MODEbits.URXEN = 1; 
+    PD_DEBUG_UART_URXEN_BIT = 1; 
 #endif // INCLUDE_DEBUG_UART_RX
     
     // Wait before running UART
@@ -96,14 +84,14 @@ void DEBUG_init(void)
 #ifdef INCLUDE_DEBUG_UART_RX
 uint8_t DEBUG_read(void)
 {
-    if (U1STAHbits.URXBE == 1)
+    if (PD_DEBUG_UART_URXBE_BIT == 1)
     {
         /* Receive buffer empty...return '0'*/
         return (0);
     }
     else
     {
-        return (DEBUG_UART_RXREG);        
+        return (PD_DEBUG_UART_RXREG);        
     }
 }
 #endif // INCLUDE_DEBUG_UART_RX
@@ -150,11 +138,11 @@ void DEBUG_print(char *message)
 void debug_uart_tx(void)
 {
     while ((tx_buffer_head != tx_buffer_tail) &&
-           (U1STAHbits.UTXBF == 0))
+           (PD_DEBUG_UART_UTXBF == 0))
     {
         // We have data to send and the buffer is not full.
         // Load up the FIFO
-        DEBUG_UART_TXREG = debug_tx_buffer[tx_buffer_tail];    // Write the data byte to the USART.
+        PD_DEBUG_UART_TXREG = debug_tx_buffer[tx_buffer_tail];    // Write the data byte to the USART.
         tx_buffer_tail = (tx_buffer_tail + 1) & UART_BUFFER_MASK;
     }
 }
@@ -166,9 +154,9 @@ void debug_uart_tx_flush(void)
 {
     while (tx_buffer_head != tx_buffer_tail)
     {
-        while (U1STAHbits.UTXBF == 1)
+        while (PD_DEBUG_UART_UTXBF == 1)
             ;
-        DEBUG_UART_TXREG = debug_tx_buffer[tx_buffer_tail];    // Write the data byte to the USART.
+        PD_DEBUG_UART_TXREG = debug_tx_buffer[tx_buffer_tail];    // Write the data byte to the USART.
         tx_buffer_tail = (tx_buffer_tail + 1) & UART_BUFFER_MASK;
     }
 }

@@ -22,34 +22,51 @@
  */
 // Define the name of the PPS output select register for the debug UART
 //#define DEBUG_UART_PPS_OUTPUT_REG        RPOR6bits.RP44R
-#define DEBUG_UART_PPS_OUTPUT_REG        RPOR8bits.RP49R 
+#define PD_DEBUG_UART_PPS_OUTPUT_REG        RPOR8bits.RP49R 
 // Define the output selection for the PPS output select register for the 
 // debug UART that will be written to the PPS output select reg above
-#define DEBUG_UART_PPS_OUTPUT_SELECT    0x01
+#define PD_DEBUG_UART_PPS_OUTPUT_SELECT    0x01
+
+#define PD_DEBUG_UART_TX_TRIS TRISCbits.TRISC1
 
 #ifdef INCLUDE_DEBUG_UART_RX
 // Define the name of the PPS input select register for the debug UART
-#define DEBUG_UART_PPS_INPUT_REG        RPINR18bits.U1RXR  
+#define PD_DEBUG_UART_PPS_INPUT_REG        RPINR18bits.U1RXR  
 // Define the output selection for the PPS output select register for the 
 // debug UART that will be written to the PPS output select reg above
-#define DEBUG_UART_PPS_INPUT_SELECT    50 //53
+#define PD_DEBUG_UART_PPS_INPUT_SELECT    50
+#define PD_DEBUG_UART_RX_TRIS TRISCbits.TRISC2
 #endif // INCLUDE_DEBUG_UART_RX
         
-#define DEBUG_UART_TRIS TRISCbits.TRISC1
         
 // Define the debug UART registers
+#define PD_DEBUG_UART               U1
 
-#define DEBUG_UART_MODE             U1MODE
-#define DEBUG_UART_STA              U1STA
-#define DEBUG_UART_BRG              U1BRG
-#define DEBUG_UART_UARTEN           U1MODEbits.UARTEN
-#define DEBUG_UART_UTXEN            U1STAbits.UTXEN
-#define DEBUG_UART_URXDA            U1STAbits.URXDA
-#define DEBUG_UART_OERR             U1STAbits.OERR
-#define DEBUG_UART_RXREG            U1RXREG
-#define DEBUG_UART_UTXBF            U1STAbits.UTXBF
-#define DEBUG_UART_TXREG            U1TXREG     
-#define DEBUG_UART_RXREG            U1RXREG        
+#define PD_DEBUG_UART_MODE             U1MODE
+#define PD_DEBUG_UART_MODEH            U1MODEH
+#define PD_DEBUG_UART_STA              U1STA
+#define PD_DEBUG_UART_STAH             U1STAH
+#define PD_DEBUG_UART_BRG              U1BRG
+#define PD_DEBUG_UART_BRGH             U1BRGH
+#define PD_DEBUG_UART_P1               U1P1
+#define PD_DEBUG_UART_P2               U1P2
+#define PD_DEBUG_UART_P3               U1P3
+#define PD_DEBUG_UART_P3H              U1P3H
+#define PD_DEBUG_UART_TXCHK            U1TXCHK
+#define PD_DEBUG_UART_RXCHK            U1RXCHK
+#define PD_DEBUG_UART_SCCON            U1SCCON        
+#define PD_DEBUG_UART_SCINT            U1SCINT
+#define PD_DEBUG_UART_INT              U1INT        
+#define PD_DEBUG_UART_UARTEN_BIT       U1MODEbits.UARTEN
+#define PD_DEBUG_UART_UTXEN_BIT        U1MODEbits.UTXEN
+#define PD_DEBUG_UART_URXEN_BIT        U1MODEbits.URXEN
+#define PD_DEBUG_UART_URXDA            U1STAbits.URXDA
+#define PD_DEBUG_UART_OERR             U1STAbits.OERR
+#define PD_DEBUG_UART_URXBE_BIT        U1STAHbits.URXBE
+#define PD_DEBUG_UART_RXREG            U1RXREG
+#define PD_DEBUG_UART_UTXBF            U1STAHbits.UTXBF
+#define PD_DEBUG_UART_TXREG            U1TXREG     
+#define PD_DEBUG_UART_RXREG            U1RXREG        
         
         
 /**

@@ -492,7 +492,7 @@ uint8_t dsPIC_HandlePowerFault(uint8_t u8PortNum, uint8_t u8PwrFaultSts)
 }
 #endif
 
-void hook_policy_engine_pre_process(UINT8 u8PortNum , UINT8 *u8DataBuf , UINT8 u8SOPType ,UINT32 u32Header)
+void hook_policy_engine_pre_process(uint8_t u8PortNum, uint8_t *u8DataBuf, uint8_t u8SOPType, uint8_t u32Header)
 {
     /* Run operations that occur before running the Policy Engine state machine */
     

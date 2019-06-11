@@ -35,6 +35,10 @@ void hw_spi_cs_high(uint8_t u8Portnum);
 void SPI_Write(uint8_t *pu8WriteBuffer, uint16_t u16Writelength);
 void SPI_Read(uint8_t *pu8ReadBuffer, uint16_t u16Writelength);
 
+void hook_policy_engine_pre_process(uint8_t u8PortNum, uint8_t *u8DataBuf, uint8_t u8SOPType, uint8_t u32Header);
+uint8_t hook_pdo_request_post_process_valid(uint8_t port_num, uint16_t max_current, uint8_t pdo_requested);
+void hook_notify_pd_events_cb(uint8_t port_num, uint8_t event);
+
 uint8_t dsPIC_HandlePowerFault(uint8_t u8PortNum, uint8_t u8PwrFaultSts);
 
 void hook_debug_print_string (char *str);
