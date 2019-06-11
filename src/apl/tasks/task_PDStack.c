@@ -44,10 +44,6 @@
 
 volatile FUNCTION_PD_STACK_CONFIG_t taskPDStack_config;
 
-/*===== DEMO_BOARD_TEST =====*/
-// TODO: MOdify LOG_PRINT calls to use another logging technique.
-#define LOG_PRINT(x,y) DEBUG_print(y) /* define LOG_PRINT() to send to the secondary UART for now */
-/*===== DEMO_BOARD_TEST =====*/
 // Private prototypes
 
 
@@ -99,7 +95,7 @@ volatile uint16_t task_PDStack(void)
 volatile uint16_t init_taskPDStack(void)
 {
     uint16_t reg_data_16;
-    char debug_string[20];
+    //char debug_string[20];
     
     // Set up the secondary UART for use by the PD stack
     DEBUG_init();
@@ -111,18 +107,13 @@ volatile uint16_t init_taskPDStack(void)
     configure_upd350_gpio();
     
     UPD_RegisterRead(0, 0x0004, (uint8_t *)&reg_data_16, 2);
-    sprintf(debug_string, "VID 1: %04X\r\n", reg_data_16);
-    LOG_PRINT(LOG_DEBUG, debug_string);
+    LOG_PRINT1(LOG_DEBUG, "VID 1: %04X\r\n", reg_data_16);
     UPD_RegisterRead(0, 0x0006, (uint8_t *)&reg_data_16, 2);
-    sprintf(debug_string, "PID 1: %04X\r\n", reg_data_16);
-    LOG_PRINT(LOG_DEBUG, debug_string);
-
+    LOG_PRINT1(LOG_DEBUG, "PID 1: %04X\r\n", reg_data_16);
     UPD_RegisterRead(1, 0x0004, (uint8_t *)&reg_data_16, 2);
-    sprintf(debug_string, "VID 2: %04X\r\n", reg_data_16);
-    LOG_PRINT(LOG_DEBUG, debug_string);
+    LOG_PRINT1(LOG_DEBUG, "VID 2: %04X\r\n", reg_data_16);
     UPD_RegisterRead(1, 0x0006, (uint8_t *)&reg_data_16, 2);
-    sprintf(debug_string, "PID 2: %04X\r\n", reg_data_16);
-    LOG_PRINT(LOG_DEBUG, debug_string);
+    LOG_PRINT1(LOG_DEBUG, "PID 2: %04X\r\n", reg_data_16);
     
     // Set the flag in the structure to indicate that the stack has been initialized.
     taskPDStack_config.status.flags.enable = PDSTACK_ENABLED;

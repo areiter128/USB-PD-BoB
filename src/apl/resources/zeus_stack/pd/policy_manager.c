@@ -87,7 +87,7 @@ void DPM_StateMachine (UINT8 u8PortNum)
     
     /*Run Policy engine State machine*/
     PE_RunStateMachine(u8PortNum);
-
+	
 	/* Power Fault hanling*/
 	#if INCLUDE_POWER_FAULT_HANDLING
 		DPM_PowerFaultHandler(u8PortNum);

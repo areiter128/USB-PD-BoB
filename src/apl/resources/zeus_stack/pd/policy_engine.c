@@ -786,7 +786,9 @@ void PE_RunCommonStateMachine(UINT8 u8PortNum , UINT8 *pu8DataBuf , UINT8 u8SOPT
     PRLTxCallback Transmit_cb = NULL;
     UINT32 u32Transmit_TmrID_TxSt= SET_TO_ZERO;
     UINT8 u8IsTransmit= FALSE;
+#if (FALSE != INCLUDE_PDFU)
     static UINT8 u8TempRespBuffer[3];
+#endif 
     switch (gasPolicy_Engine[u8PortNum].ePEState)
     {
 

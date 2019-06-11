@@ -48,6 +48,8 @@
 // #include "system_log.h"
 #include <libpic30.h>
 
+#include "thermal_power_management.h"
+
 //#include "../Compensator/Compensation.h"
 
 //volatile uint8_t port0_interrupt_flag = 0;
@@ -500,11 +502,7 @@ void hook_policy_engine_pre_process(uint8_t u8PortNum, uint8_t *u8DataBuf, uint8
 
 uint8_t hook_pdo_request_post_process_valid(uint8_t port_num, uint16_t max_current, uint8_t pdo_requested)
 {
-#if 0 // DEMO_BOARD_TEST    
     return (check_power_budget(port_num, max_current, pdo_requested));
-#else
-    return(true);
-#endif     
 }
 
 void hook_notify_pd_events_cb(uint8_t port_num, uint8_t event)

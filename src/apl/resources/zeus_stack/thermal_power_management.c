@@ -52,7 +52,6 @@
 
 /*===== DEMO_BOARD_TEST =====*/
 // TODO: MOdify LOG_PRINT calls to use another logging technique.
-#define LOG_PRINT(x,y) DEBUG_print(y); /* define away LOG_PRINTs */
 #define Read_Temp() 30  // Set the temperature to 30C to keep the thermal management inactive
 /*===== DEMO_BOARD_TEST =====*/
 
@@ -61,6 +60,69 @@ power_substate_t thermal_mgmt_substate = SUBSTATE_IDLE;
 uint8_t thermal_shutdown_active = false;
 
 uint8_t port_pdo_update_required[CONFIG_PD_PORT_COUNT];
+
+uint32_t port_max_power[CONFIG_PD_PORT_COUNT];
+
+uint8_t check_power_budget(uint8_t port_num, uint16_t max_current_requested, uint8_t pdo_requested)
+{
+    uint8_t power_budget_met = 0;
+    uint8_t index;
+    uint32_t used_power_mw = 0;
+    uint32_t requested_port_power_mw;
+    uint32_t remaining_power_mw;
+    uint32_t pdo_calculated_current;
+    
+    for (index = 0; index < CONFIG_PD_PORT_COUNT; index++)
+    {
+        if (index != port_num)
+        {
+            used_power_mw += port_max_power[index];
+        }
+    }
+    
+    requested_port_power_mw = ((uint32_t)DPM_GET_VOLTAGE_FROM_PDO_MILLI_V(gasPortConfigurationData[port_num].u32PDO[pdo_requested-1]) *
+                           (uint32_t) max_current_requested) / 100;
+    debug_uart_tx_flush();
+    LOG_PRINT2(LOG_DEBUG, "CHECK_POWER: Port %d requested %ld mW\r\n", port_num, requested_port_power_mw);
+            
+    if ((used_power_mw + requested_port_power_mw) > (POWER_BUDGET_WATTS * 1000))
+    {
+        /* This will put us over the power budget.  Update the PDOs for this port and 
+         * mark the request invalid
+         */
+        remaining_power_mw = (POWER_BUDGET_WATTS * 1000) - used_power_mw;
+        LOG_PRINT2(LOG_DEBUG, "CHECK_POWER: Port %d Remaining %ld mW\r\n", port_num, remaining_power_mw);
+        for (index = 0; index < gasPortConfigurationData[port_num].u8PDOCnt; index++)
+        {
+            if ((((uint32_t)DPM_GET_VOLTAGE_FROM_PDO_MILLI_V(gasPortConfigurationData[port_num].u32PDO[index])) * 
+                 ((uint32_t)DPM_GET_CURRENT_FROM_PDO_MILLI_A(gasPortConfigurationData[port_num].u32PDO[index]))) >
+                remaining_power_mw)
+            {
+                /* The power for this PDO is greater than the remaining power in the budget.  Reduce the 
+                 * current to the level required to fit in the budget 
+                 */
+                LOG_PRINT1(LOG_DEBUG, "CHECK_POWER: V %ld mV\r\n", ((uint32_t)DPM_GET_VOLTAGE_FROM_PDO_MILLI_V(gasPortConfigurationData[port_num].u32PDO[index])));
+        
+                pdo_calculated_current = (remaining_power_mw * 1000) / ((uint32_t)DPM_GET_VOLTAGE_FROM_PDO_MILLI_V(gasPortConfigurationData[port_num].u32PDO[index]));
+                LOG_PRINT2(LOG_DEBUG, "CHECK_POWER: Port %d new current is %ld mA\r\n", port_num, pdo_calculated_current);
+               
+                gasPortConfigurationData[port_num].u32PDO[index] = 
+                        (gasPortConfigurationData[port_num].u32PDO[index] & ~(DPM_PDO_CURRENT_MASK << DPM_PDO_CURRENT_POS)) |
+                        (((pdo_calculated_current / DPM_PDO_CURRENT_UNIT) & DPM_PDO_CURRENT_MASK) << DPM_PDO_CURRENT_POS);
+                LOG_PRINT1(LOG_DEBUG, "CHECK_POWER: new A %ld mA\r\n", ((uint32_t)DPM_GET_CURRENT_FROM_PDO_MILLI_A(gasPortConfigurationData[port_num].u32PDO[index])));
+            }
+        }
+    }
+    else
+    {
+        /* The power budget has been met */
+        LOG_PRINT1(LOG_DEBUG, "CHECK_POWER: Port %d within budget\r\n", port_num);
+        power_budget_met = 1;
+        port_max_power[port_num] = requested_port_power_mw;
+    }
+
+    return (power_budget_met);
+}
 
 void update_all_port_pdos(void)
 {
@@ -105,7 +167,76 @@ void update_all_port_pdos(void)
 
 }
 
-void thermal_power_management_state_machine(void)
+void reset_port_pdos(uint8_t port_num)
+{
+    uint8_t index;
+    
+    for (index = 0; index < gasPortConfigurationData[port_num].u8PDOCnt; index++)
+    {
+        switch(thermal_mgmt_state)
+        {
+            case THERM_ST_NORMAL:
+                gasPortConfigurationData[port_num].u32PDO[index] = gasPortNormalConfigurationData[port_num].u32PDO[index];
+            break;
+
+            case THERM_ST_ROLLBACK:
+                gasPortConfigurationData[port_num].u32PDO[index] = gasPortRollbackConfigurationData[port_num].u32PDO[index];
+            break;
+
+            case THERM_ST_5V_ONLY:
+                gasPortConfigurationData[port_num].u32PDO[index] = gasPortRollbackConfigurationData[port_num].u32PDO[index];
+            break;
+
+            case THERM_ST_SHUTDOWN:
+
+            break;
+        }
+    }
+}
+
+void update_single_port_pdos(uint8_t port_num)
+{
+
+    switch(thermal_mgmt_state)
+    {
+        case THERM_ST_NORMAL:
+            memcpy(gasPortConfigurationData, gasPortNormalConfigurationData, sizeof(gasPortConfigurationData));
+        break;
+
+        case THERM_ST_ROLLBACK:
+            memcpy(gasPortConfigurationData, gasPortRollbackConfigurationData, sizeof(gasPortConfigurationData));
+        break;
+
+        case THERM_ST_5V_ONLY:
+            /* Only enable the first PDO for 5V */
+            for (port_num = 0; port_num < CONFIG_PD_PORT_COUNT; port_num++)
+            {
+                gasPortConfigurationData[port_num].u8PDOCnt = 1;
+            }
+        break;
+
+        case THERM_ST_SHUTDOWN:
+            
+        break;
+    }
+
+    /* Set the flag to tell the state machine to update all ports */
+    for (port_num = 0; port_num < CONFIG_PD_PORT_COUNT; port_num++)
+    {
+        if (thermal_shutdown_active)
+        {
+            port_pdo_update_required[port_num] = PDO_UPDATE_CAPS_RESET;
+            thermal_shutdown_active = false;
+        }
+        else
+        {
+            port_pdo_update_required[port_num] = PDO_UPDATE_CAPABILITIES;
+        }
+    }
+
+}
+
+void power_management_state_machine(void)
 {
     uint8_t port_index;
     uint16_t temperature = Read_Temp();
@@ -120,6 +251,7 @@ void thermal_power_management_state_machine(void)
             for (port_index = 0; port_index < CONFIG_PD_PORT_COUNT; port_index++)
             {
                 port_pdo_update_required[port_index] = PDO_NO_UPDATE;
+                port_max_power[port_index] = 0;
             }
             break;
         case THERM_ST_NORMAL:

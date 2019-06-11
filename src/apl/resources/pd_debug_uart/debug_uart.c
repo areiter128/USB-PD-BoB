@@ -12,6 +12,8 @@ uint16_t tx_buffer_head = 0;
 uint16_t tx_buffer_tail = 0;
 uint8_t debug_tx_buffer[UART_TX_BUFFER_LENGTH] ;
 
+char pd_debug_string[64];
+
 void DEBUG_init(void)
 {
     unsigned int i = 0;

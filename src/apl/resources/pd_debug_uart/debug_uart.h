@@ -14,6 +14,15 @@
     extern "C" {
 
 #endif
+        
+#define LOG_PRINT(x,y) DEBUG_print(y); /* define away LOG_PRINTs */
+#define LOG_PRINT1(_log_level, _string, _param) \
+    sprintf(pd_debug_string, _string, _param ); \
+	LOG_PRINT(_log_level, pd_debug_string)
+
+#define LOG_PRINT2(_log_level, _string, _param1, _param2) \
+    sprintf(pd_debug_string, _string, _param1, _param2 ); \
+	LOG_PRINT(_log_level, pd_debug_string)
 
 //#define INCLUDE_DEBUG_UART_RX        
         
@@ -553,6 +562,6 @@ void DEBUG_print(char *message);
 void debug_uart_tx(void);
 void debug_uart_tx_flush(void);
 
-extern char debug_string[];
+extern char pd_debug_string[];
 
 #endif // DEBUG_UART_H

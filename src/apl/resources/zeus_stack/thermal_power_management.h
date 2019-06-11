@@ -14,6 +14,8 @@
 extern "C" {
 #endif
 
+#define POWER_BUDGET_WATTS    (uint32_t)60    
+    
 #define TEMP_HYSTERESIS             3
 
 /* Define the temperature at which currents are rolled back to 50% */
@@ -53,12 +55,15 @@ enum PDO_UPDATE_TYPE
     PDO_UPDATE_CAPS_RESET
 };
 
-void thermal_power_management_state_machine(void);
+
+uint8_t check_power_budget(uint8_t port_num, uint16_t max_current_requested, uint8_t pdo_requested);
+void reset_port_pdos(uint8_t port_num);
+void power_management_state_machine(void);
     
 extern thermal_mgmt_state_t thermal_mgmt_state;
 extern power_substate_t thermal_mgmt_substate;
 extern uint8_t port_pdo_update_required[CONFIG_PD_PORT_COUNT];
-
+extern uint32_t port_max_power[CONFIG_PD_PORT_COUNT];
 #ifdef	__cplusplus
 }
 #endif
