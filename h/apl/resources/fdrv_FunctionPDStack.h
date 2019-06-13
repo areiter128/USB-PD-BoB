@@ -70,7 +70,7 @@ typedef struct{
 	volatile unsigned :1;	// Bit #13: Reserved
 	volatile unsigned :1;	// Bit #14:  Reserved
     volatile unsigned :1;	// Bit #15:  Reserved
-    volatile PDSTACK_ENABLE_e enable:1;	// Bit #15: flag bit used to enable/disable the LED function
+    volatile PDSTACK_ENABLE_e enable:1;	// Bit #15: flag bit used to enable/disable the PD Stack function
 } FUNCTION_PD_STACK_STATUS_BIT_FIELD_t;
 
 typedef union 
@@ -81,9 +81,7 @@ typedef union
 
 typedef struct
 {
-    volatile FUNCTION_PD_STACK_STATUS_FLAGS_t status;  // used to globally publish the LED status
-    volatile uint16_t period;  // number of scheduler ticks until the status of the LED is toggled
-    volatile uint16_t on_time;  // number of scheduler ticks for which the LED will be ON
+    volatile FUNCTION_PD_STACK_STATUS_FLAGS_t status;  // used to globally publish the PD Stack status
     volatile uint16_t counter;  // internal tick counter
 }FUNCTION_PD_STACK_CONFIG_t;
 

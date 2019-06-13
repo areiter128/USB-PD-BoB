@@ -60,8 +60,6 @@ uint8_t check_power_budget(uint8_t port_num, uint16_t max_current_requested, uin
 void reset_port_pdos(uint8_t port_num);
 void power_management_state_machine(void);
     
-extern thermal_mgmt_state_t thermal_mgmt_state;
-extern power_substate_t thermal_mgmt_substate;
 extern uint8_t port_pdo_update_required[CONFIG_PD_PORT_COUNT];
 extern uint32_t port_max_power[CONFIG_PD_PORT_COUNT];
 #ifdef	__cplusplus
