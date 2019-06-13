@@ -4390,3 +4390,22 @@ Example:
 
 #define CONFIG_HOOK_ASSIGN_PDFU_BUFFER  
 
+/**************************************************************************************************
+
+
+    Description:
+        CONFIG_HOOK_FUNCTION_GET_TEMPERATURE calls the system specific function to get the temperature
+        in degrees C.
+
+
+    Example:
+    <code>
+      \#define CONFIG_HOOK_FUNCTION_GET_TEMPERATURE  hook_function_get_temperature_in_c()
+
+   </code>
+
+    Remarks:
+		Buffer Shall be of 260 Bytes.
+        User definition is mandatory when INCLUDE_PDFU is TRUE
+**************************************************************************************************/
+#define CONFIG_HOOK_FUNCTION_GET_TEMPERATURE_IN_C() hook_function_get_temperature_in_c()

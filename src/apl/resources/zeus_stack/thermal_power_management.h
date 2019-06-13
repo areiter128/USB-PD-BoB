@@ -14,23 +14,20 @@
 extern "C" {
 #endif
 
-#define POWER_BUDGET_WATTS    (uint32_t)60    
+#define POWER_BUDGET_DEFAULT_WATTS    (uint32_t)60    
     
-#define TEMP_HYSTERESIS             3
+#define THERMAL_HYSTERESIS             3
 
 /* Define the temperature at which currents are rolled back to 50% */
-#define TEMP_ROLLBACK_RISING_LEVEL  70
-#define TEMP_ROLLBACK_FALLING_LEVEL (TEMP_ROLLBACK_RISING_LEVEL - TEMP_HYSTERESIS)
+#define THERMAL_ROLLBACK_DEFAULT_LEVEL  70
 
 /* Define the temperature at which PDOs are reduced to 5V only */    
-#define TEMP_5V_ONLY_RISING_LEVEL   80
-#define TEMP_5V_ONLY_FALLING_LEVEL  (TEMP_5V_ONLY_RISING_LEVEL - TEMP_HYSTERESIS)
+#define THERMAL_5V_ONLY_DEFAULT_LEVEL   80
 
 /* Define the temperature at which the supply will shut down.  When the temperature
  * returns to below the falling level the system will reset
  */    
-#define TEMP_SHUTDOWN_RISING_LEVEL  85
-#define TEMP_SHUTDOWN_FALLING_LEVEL (TEMP_ROLLBACK_RISING_LEVEL - TEMP_HYSTERESIS)
+#define THERMAL_SHUTDOWN_DEFAULT_LEVEL  85
 
 
 typedef enum
@@ -62,6 +59,13 @@ void power_management_state_machine(void);
     
 extern uint8_t port_pdo_update_required[CONFIG_PD_PORT_COUNT];
 extern uint32_t port_max_power[CONFIG_PD_PORT_COUNT];
+
+extern uint16_t thermal_rollback_threshold;
+extern uint16_t thermal_5v_only_threshold;
+extern uint16_t thermal_shutdown_threshold;
+
+extern uint32_t power_budget_watts;
+        
 #ifdef	__cplusplus
 }
 #endif

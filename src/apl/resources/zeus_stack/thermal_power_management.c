@@ -28,6 +28,7 @@
 
 #include "ZeusStackConfig.h"
 #include "stdinc.h"
+#include "hook_functions.h"
 #include "thermal_power_management.h"
 //#include "buck.h"
 
@@ -37,10 +38,6 @@
 #include "int_globals.h"
 #include <libpic30.h>
 
-/*===== DEMO_BOARD_TEST =====*/
-#define Read_Temp() 30  // Set the temperature to 30C to keep the thermal management inactive
-/*===== DEMO_BOARD_TEST =====*/
-
 thermal_mgmt_state_t thermal_mgmt_state = THERM_ST_INIT;
 power_substate_t thermal_mgmt_substate = SUBSTATE_IDLE;
 uint8_t thermal_shutdown_active = false;
@@ -48,6 +45,12 @@ uint8_t thermal_shutdown_active = false;
 uint8_t port_pdo_update_required[CONFIG_PD_PORT_COUNT];
 
 uint32_t port_max_power[CONFIG_PD_PORT_COUNT];
+
+uint16_t thermal_rollback_threshold = THERMAL_ROLLBACK_DEFAULT_LEVEL;
+uint16_t thermal_5v_only_threshold = THERMAL_5V_ONLY_DEFAULT_LEVEL;
+uint16_t thermal_shutdown_threshold = THERMAL_SHUTDOWN_DEFAULT_LEVEL;
+
+uint32_t power_budget_watts = POWER_BUDGET_DEFAULT_WATTS;
 
 uint8_t check_power_budget(uint8_t port_num, uint16_t max_current_requested, uint8_t pdo_requested)
 {
@@ -71,12 +74,12 @@ uint8_t check_power_budget(uint8_t port_num, uint16_t max_current_requested, uin
     debug_uart_tx_flush();
     LOG_PRINT2(LOG_DEBUG, "CHECK_POWER: Port %d requested %ld mW\r\n", port_num, requested_port_power_mw);
             
-    if ((used_power_mw + requested_port_power_mw) > (POWER_BUDGET_WATTS * 1000))
+    if ((used_power_mw + requested_port_power_mw) > (power_budget_watts * 1000))
     {
         /* This will put us over the power budget.  Update the PDOs for this port and 
          * mark the request invalid
          */
-        remaining_power_mw = (POWER_BUDGET_WATTS * 1000) - used_power_mw;
+        remaining_power_mw = (power_budget_watts * 1000) - used_power_mw;
         LOG_PRINT2(LOG_DEBUG, "CHECK_POWER: Port %d Remaining %ld mW\r\n", port_num, remaining_power_mw);
         for (index = 0; index < gasPortConfigurationData[port_num].u8PDOCnt; index++)
         {
@@ -225,7 +228,7 @@ void update_single_port_pdos(uint8_t port_num)
 void power_management_state_machine(void)
 {
     uint8_t port_index;
-    uint16_t temperature = Read_Temp();
+    uint16_t temperature = CONFIG_HOOK_FUNCTION_GET_TEMPERATURE_IN_C();
     
     switch (thermal_mgmt_state)
     {
@@ -252,7 +255,7 @@ void power_management_state_machine(void)
                 break;
                     
                 case SUBSTATE_IDLE:
-                    if (temperature > TEMP_ROLLBACK_RISING_LEVEL)
+                    if (temperature > thermal_rollback_threshold)
                     {
                         /* Temperature has exceeded the normal operating range.
                          * go to the ROLLBACK state.
@@ -277,7 +280,7 @@ void power_management_state_machine(void)
                 break;
                     
                 case SUBSTATE_IDLE:
-                    if (temperature > TEMP_5V_ONLY_RISING_LEVEL)
+                    if (temperature > thermal_5v_only_threshold)
                     {
                         /* Temperature has exceeded the rollback operating range.
                          * go to the 5V ONLY state.
@@ -286,7 +289,7 @@ void power_management_state_machine(void)
                         thermal_mgmt_state = THERM_ST_5V_ONLY;
                         thermal_mgmt_substate = SUBSTATE_ENTRY;
                     }
-                    else if (temperature < TEMP_ROLLBACK_FALLING_LEVEL)
+                    else if (temperature < (thermal_rollback_threshold - THERMAL_HYSTERESIS))
                     {
                         /* Temperature has returned to the normal operating range.
                          * go to the NORMAL state.
@@ -311,7 +314,7 @@ void power_management_state_machine(void)
                     break;
                     
                 case SUBSTATE_IDLE:
-                    if (temperature > TEMP_SHUTDOWN_RISING_LEVEL)
+                    if (temperature > thermal_shutdown_threshold)
                     {
                         /* Temperature has exceeded the 5V ONLY operating range.
                          * go to the SHUTDOWN state.
@@ -320,7 +323,7 @@ void power_management_state_machine(void)
                         thermal_mgmt_state = THERM_ST_SHUTDOWN;
                         thermal_mgmt_substate = SUBSTATE_ENTRY;
                     }
-                    else if (temperature < TEMP_5V_ONLY_FALLING_LEVEL)
+                    else if (temperature < (thermal_5v_only_threshold - THERMAL_HYSTERESIS))
                     {
                         /* Temperature has returned to the ROLLBACK operating range.
                          * go to the ROLLBACK state.
@@ -352,7 +355,7 @@ void power_management_state_machine(void)
                     break;
                     
                 case SUBSTATE_IDLE:
-                    if (temperature < TEMP_SHUTDOWN_FALLING_LEVEL)
+                    if (temperature < (thermal_shutdown_threshold - THERMAL_HYSTERESIS))
                     {
                         /* Temperature has returned to the 5V ONLY operating range.
                          * go to the 5V ONLY state.

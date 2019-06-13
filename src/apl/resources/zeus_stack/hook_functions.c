@@ -506,6 +506,13 @@ void hook_notify_pd_events_cb(uint8_t port_num, uint8_t event)
 #endif    
 }
 
+uint16_t hook_function_get_temperature_in_c(void)
+{
+    // TODO: Get the actual temperature from the system
+    // For now return 30C to keep the thermal management code happy
+    return(30);
+}
+
 #if CONFIG_HOOK_DEBUG_MSG
 // Debug hook functions
 

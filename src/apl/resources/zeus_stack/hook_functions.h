@@ -41,6 +41,8 @@ void hook_notify_pd_events_cb(uint8_t port_num, uint8_t event);
 
 uint8_t dsPIC_HandlePowerFault(uint8_t u8PortNum, uint8_t u8PwrFaultSts);
 
+uint16_t hook_function_get_temperature_in_c(void);
+
 void hook_debug_print_string (char *str);
 void hook_debug_u8(uint8_t u8val);
 void hook_debug_u16(uint16_t u16val);
