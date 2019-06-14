@@ -237,6 +237,21 @@ volatile uint16_t init_DebugUART(void) {
     
     volatile uint16_t fres = 0;
 
+#ifdef __00173_USB_PD_BOB_R20__
+    
+    HUB_PRTPWR1_INIT_OUTPUT;
+    HUB_PRTPWR2_INIT_INPUT;
+    
+    // Set PPS for UART
+    pps_UnlockIO();
+    pps_RemapInput(HUB_PRTPWR2_RP, PPSIN_U2RX);
+    pps_RemapOutput(HUB_PRTPWR1_RP, PPSOUT_U2TX);
+    pps_LockIO();    
+    
+#endif    
+
+#ifdef  __MA330048_P33CK_R30_USB_PD_BOB__   
+    
     UART_TX_INIT_OUTPUT;
     UART_RX_INIT_INPUT;
 
@@ -246,6 +261,7 @@ volatile uint16_t init_DebugUART(void) {
     pps_RemapOutput(UART_TX_RP, PPSOUT_U2TX);
     pps_LockIO();
     
+#endif    
     // Configure UART peripheral
     fres=smps_uart_open_port(CVRT_UART_IDX,CVRT_UART_BAUDRATE, CVRT_UART_DATA_BITS, CVRT_UART_PARITY, CVRT_UART_STOP_BITS,CVRT_UART_IRS_PRIORITY);
 

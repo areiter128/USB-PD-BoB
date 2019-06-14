@@ -15,7 +15,7 @@
  ******************************************************************************/
 
 // Configuration bits for dsPIC33CK Dual Core devices
-#if defined (__dsPIC33CK256MP506__)
+#if defined (__00173_USB_PD_BOB_R20__) || defined (__MA330048_P33CK_R30_USB_PD_BOB__)
 
 // FICD
 #pragma config ICS = PGD2    // ICD Communication Channel Select bits->Communicate on PGEC1 and PGED1

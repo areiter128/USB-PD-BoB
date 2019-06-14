@@ -1197,7 +1197,7 @@
 #define HUB_PRTPWR1_CNSTAT  CNSTATBbits.CNSTATB11 // GPIO port change notification Status register bit
 #define HUB_PRTPWR1_CNEN1   CNEN1Bbits.CNEN1B11 // GPIO port change notification Edge Select Enable register bit
 #define HUB_PRTPWR1_CNF     CNFBbits.CNFB11 // GPIO port change notification flag bit register bit
-#define HUB_PRTPWR1_RP      43 // Number of Remappable Pin
+#define HUB_PRTPWR1_RP      PPS_RPO43 // Number of Remappable Pin
 #define HUB_PRTPWR1_SET     { asm volatile ("bset _LATB, #11 \n"); }
 #define HUB_PRTPWR1_CLEAR   { asm volatile ("bclr _LATB, #11 \n"); }
 #define HUB_PRTPWR1_TOGGLE  { asm volatile ("btg  _LATB, #11 \n"); }
