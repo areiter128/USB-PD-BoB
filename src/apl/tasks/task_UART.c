@@ -116,14 +116,10 @@
 #define TX_VOUT_CH2_INDEX       FRAME_START_OVERHEAD+10
 #define TX_IOUT_CH2_INDEX       FRAME_START_OVERHEAD+12
 #define TX_TEMPERATURE_INDEX    FRAME_START_OVERHEAD+14
-#define TX_UPD1_DEVICE_ID0      FRAME_START_OVERHEAD+16
-#define TX_UPD1_DEVICE_ID1      FRAME_START_OVERHEAD+18
-#define TX_UPD1_DEVICE_ID2      FRAME_START_OVERHEAD+20
-#define TX_UPD1_DEVICE_ID3      FRAME_START_OVERHEAD+22
-#define TX_UPD2_DEVICE_ID0      FRAME_START_OVERHEAD+24
-#define TX_UPD2_DEVICE_ID1      FRAME_START_OVERHEAD+26
-#define TX_UPD2_DEVICE_ID2      FRAME_START_OVERHEAD+28
-#define TX_UPD2_DEVICE_ID3      FRAME_START_OVERHEAD+30
+#define TX_UPD1_DEVICE_VID      FRAME_START_OVERHEAD+16
+#define TX_UPD1_DEVICE_PID      FRAME_START_OVERHEAD+18
+#define TX_UPD2_DEVICE_VID      FRAME_START_OVERHEAD+20
+#define TX_UPD2_DEVICE_PID      FRAME_START_OVERHEAD+22
 
 
 
@@ -602,36 +598,20 @@ volatile uint16_t task_DebugUARTsend_ID0100(void)
     UART_RxTx.TXBytes[TX_TEMPERATURE_INDEX+1]=(unsigned char)(tmps&0xff);
     
     tmps=1;
-    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID0]=(unsigned char)(tmps>>8);
-    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID0+1]=(unsigned char)(tmps&0xff);
+    UART_RxTx.TXBytes[TX_UPD1_DEVICE_VID]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_UPD1_DEVICE_VID+1]=(unsigned char)(tmps&0xff);
     
     tmps=2;
-    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID1]=(unsigned char)(tmps>>8);
-    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID1+1]=(unsigned char)(tmps&0xff);
+    UART_RxTx.TXBytes[TX_UPD1_DEVICE_PID]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_UPD1_DEVICE_PID+1]=(unsigned char)(tmps&0xff);
     
     tmps=3;
-    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID2]=(unsigned char)(tmps>>8);
-    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID2+1]=(unsigned char)(tmps&0xff);
+    UART_RxTx.TXBytes[TX_UPD2_DEVICE_VID]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_UPD2_DEVICE_VID+1]=(unsigned char)(tmps&0xff);
     
     tmps=4;
-    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID3]=(unsigned char)(tmps>>8);
-    UART_RxTx.TXBytes[TX_UPD1_DEVICE_ID3+1]=(unsigned char)(tmps&0xff);
-    
-    tmps=5;
-    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID0]=(unsigned char)(tmps>>8);
-    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID0+1]=(unsigned char)(tmps&0xff);
-    
-    tmps=6;
-    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID1]=(unsigned char)(tmps>>8);
-    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID1+1]=(unsigned char)(tmps&0xff);
-    
-    tmps=6;
-    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID2]=(unsigned char)(tmps>>8);
-    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID2+1]=(unsigned char)(tmps&0xff);
-    
-    tmps=8;
-    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID3]=(unsigned char)(tmps>>8);
-    UART_RxTx.TXBytes[TX_UPD2_DEVICE_ID3+1]=(unsigned char)(tmps&0xff);
+    UART_RxTx.TXBytes[TX_UPD2_DEVICE_PID]=(unsigned char)(tmps>>8);
+    UART_RxTx.TXBytes[TX_UPD2_DEVICE_PID+1]=(unsigned char)(tmps&0xff);
     
     UART_RxTx.CRC=smpsuart_get_crc(UART_RxTx.TXBytes,CVRT_UxTXBUF_SIZE_ID0100);
     UART_RxTx.TXBytes[CRCH_POS_ID0100]=(unsigned char)((UART_RxTx.CRC & 0xff00)>>8);
