@@ -1,46 +1,41 @@
 # .gitignore file
 #
-# Set up for Microchip/MPLAB X development environment
+# RELEASE BRANCH Setup for Microchip/MPLAB X development environment
+# The only files allowed in this release branch are hex files of release 
+# versions and binaries of additional tools required to operate the 
+# hardware.
 #
-# John Haroian
-# Updated May 7, 2015
-# Updated May 30, 2019, M91406
+# Created: June 05, 2019, M91406
+# Updated: 
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+# Exclude all project files and folders
+*.*
+common/
+src/
+h/
+dspic/debug
+dspic/disassembly/
+dspic/dist/
+dspic/nbproject/
+dspic/nbproject/*.*
+dspic/h/
+dspic/src/
+PIC24/debug
+PIC24/disassembly/
+PIC24/dist/
+pic24/nbproject/
+pic24/nbproject/*.*
+pic24/h/
+pic24/src/
 
-# Executables
-*.exe
+# include build-folders, HEX files and Executables
+!*/dist/
+!*.map
+!*.xml
+!*.elf
+!*.hex
+!*.exe
 
-# Netbeans specific
-~*.*
-nbproject/build/
-nbproject/dist/
-nbproject/private/
-nbproject/disassembly/
-build/
-dist/
-private/
-disassembly/
-*.zip
-*.mk
-*.bash
-Makefile-genesis.properties
-
-# MPLAB X Trace specific
-*.log
-*.inx
-
-# KDE specific
-.directory
-
-# Misc
-.git
-.svn
-*.bak
 
 
 
