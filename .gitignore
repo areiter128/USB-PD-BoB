@@ -36,9 +36,7 @@ pic24/src/
 !*.hex
 !*.exe
 
-
-
-
+# Additionally ignored files add by SourceTree
 dcdt_project.xml
 dspic/Makefile
 pic24/Makefile
