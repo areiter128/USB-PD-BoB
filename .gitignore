@@ -39,3 +39,6 @@ pic24/src/
 
 
 
+dcdt_project.xml
+dspic/Makefile
+pic24/Makefile
