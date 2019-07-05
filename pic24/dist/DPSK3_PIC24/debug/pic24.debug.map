@@ -1,0 +1,2060 @@
+Microchip Technology Inc, v1.36 (B)
+
+Tool Name:
+  c:\program files (x86)\microchip\xc16\v1.36\bin\bin\..\bin/elf-ld.exe
+
+Command:
+  -TC:\\Temp\\tmp00003408.00 \
+  -TC:\\Temp\\tmp00003408.01 \
+  -TC:\\Temp\\tmp00003408.02 \
+  -TC:\\Temp\\tmp00003408.03 \
+  -TC:\\Temp\\tmp00003408.04 \
+  -p24FJ64GA004 \
+  -o \
+  dist/DPSK3_PIC24/debug/pic24.debug.elf \
+  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/.. \
+  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib \
+  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../support/PIC24E/gld \
+  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../support/PIC24F/gld \
+  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../support/PIC24H/gld \
+  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../support/dsPIC30F/gld \
+  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../support/dsPIC33C/gld \
+  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../support/dsPIC33E/gld \
+  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../support/dsPIC33F/gld \
+  build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o \
+  build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o \
+  build/DPSK3_PIC24/debug/mcc_generated_files/traps.o \
+  build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o \
+  build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o \
+  build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o \
+  build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o \
+  build/DPSK3_PIC24/debug/src/leds.o \
+  build/DPSK3_PIC24/debug/src/fault.o \
+  build/DPSK3_PIC24/debug/src/loads.o \
+  build/DPSK3_PIC24/debug/src/buttons.o \
+  build/DPSK3_PIC24/debug/src/temperature.o \
+  build/DPSK3_PIC24/debug/src/protocol.o \
+  build/DPSK3_PIC24/debug/src/main.o \
+  build/DPSK3_PIC24/debug/src/reset.o \
+  --defsym=__MPLAB_BUILD=1 \
+  --defsym=__MPLAB_DEBUG=1 \
+  --defsym=__DEBUG=1 \
+  --defsym=__MPLAB_DEBUGGER_ICD4=1 \
+  -Tp24FJ64GA004.gld.05 \
+  --stack=16 \
+  --check-sections \
+  --data-init \
+  --pack-data \
+  --handles \
+  --isr \
+  --no-gc-sections \
+  --fill-upper=0 \
+  --stackguard=16 \
+  --no-force-link \
+  --smart-io \
+  -Map=dist/DPSK3_PIC24/debug/pic24.debug.map \
+  --report-mem \
+  --cref \
+  --memorysummary \
+  dist/DPSK3_PIC24/debug/memoryfile.xml \
+  -start-group \
+  --library=lega-pic30-elf \
+  --library=m-elf \
+  --library=lega-c-elf \
+  -end-group \
+
+
+Optional library libpPIC24Fxxx.a not found
+Archive member included because of file (symbol)
+
+c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                              (__resetPRI)
+c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+                              c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o) (__data_init_standard)
+c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
+                              (__crt_start_mode_normal)
+c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
+                              build/DPSK3_PIC24/debug/src/fault.o (___delay32)
+c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+                              build/DPSK3_PIC24/debug/src/temperature.o (___subsf3)
+c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                              build/DPSK3_PIC24/debug/src/temperature.o (___divsf3)
+c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
+                              build/DPSK3_PIC24/debug/src/temperature.o (___fixunssfsi)
+c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
+                              build/DPSK3_PIC24/debug/src/temperature.o (___floatunsisf)
+c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fpack.eo)
+                              c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo) (__fpack)
+c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack.eo)
+                              c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo) (__funpack)
+c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack2.eo)
+                              c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo) (__funpack2)
+c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
+                              c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo) (__fPropagateNaN)
+c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                              build/DPSK3_PIC24/debug/src/temperature.o (___mulsf3)
+c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+                              c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatunsisf.eo) (___floatundisf)
+
+
+xc16-ld 1.36 (B)
+
+"program" Memory  [Origin = 0x200, Length = 0xa9fc]
+
+section                    address   length (PC units)   length (bytes) (dec)
+-------                    -------   -----------------   --------------------
+.text                        0x200               0x500           0x780  (1920)
+.const                       0x700                0x40            0x60  (96)
+.text                        0x740               0xb98          0x1164  (4452)
+.dinit                      0x12d8                0x66            0x99  (153)
+.text                       0x133e                0xfa           0x177  (375)
+.init.delay32               0x1438                0x1c            0x2a  (42)
+.text                       0x1454                0x16            0x21  (33)
+
+                 Total "program" memory used (bytes):         0x1b9f  (7071) 10%
+
+
+"data" Memory  [Origin = 0x800, Length = 0x2000]
+
+section                    address      alignment gaps    total length  (dec)
+-------                    -------      --------------    -------------------
+reserve_data_0x800           0x800                0x20            0x20  (32)
+reserve_data_0x820           0x820                 0x2             0x2  (2)
+reserve_data_0x822           0x822                 0x2             0x2  (2)
+reserve_data_0x824           0x824                 0x2             0x2  (2)
+reserve_data_0x826           0x826                0x2a            0x2a  (42)
+.nbss                        0x850                   0            0x30  (48)
+.ndata                       0x880                   0             0x2  (2)
+.nbss                        0x882                   0             0x4  (4)
+.ndata                       0x886                   0             0x2  (2)
+.nbss                        0x888                   0             0x2  (2)
+.bss                         0x88a                   0            0x88  (136)
+
+                 Total "data" memory used (bytes):          0x112  (274) 3%
+
+
+Dynamic Memory Usage
+
+region                     address                      maximum length  (dec)
+------                     -------                      ---------------------
+heap                             0                                   0  (0)
+stack                        0x912                              0x1eee  (7918)
+
+                 Maximum dynamic memory (bytes):         0x1eee  (7918)
+
+
+External Symbols in Data Memory (by address):
+
+                    0x0860                  _data_buck
+                    0x0864                  _data_boost
+
+External Symbols in Data Memory (by name):
+
+                    0x0864                  _data_boost
+                    0x0860                  _data_buck
+
+External Symbols in Program Memory (by address):
+
+                  0x000200                  __resetPRI
+                  0x00023c                  __psv_init
+                  0x000252                  __data_init_standard
+                  0x000252                  __data_init
+                  0x0002f0                  __OscillatorFail
+                  0x0002f8                  __StackError
+                  0x000302                  __AddressError
+                  0x00030a                  __MathError
+                  0x000312                  __T1Interrupt
+                  0x000332                  __ADC1Interrupt
+                  0x00036e                  __U1TXInterrupt
+                  0x0003c2                  __U1RXInterrupt
+                  0x00040a                  __U1ErrInterrupt
+                  0x000414                  __DefaultInterrupt
+                  0x00041a                  ___subsf3
+                  0x00041c                  ___addsf3
+                  0x0004d6                  ___divsf3
+                  0x00055a                  ___fixunssfsi
+                  0x000590                  ___floatunsisf
+                  0x000594                  __fpack
+                  0x0005e0                  __funpack
+                  0x00060a                  __funpack2
+                  0x00061a                  __fPropagateNaN
+                  0x00062c                  __fbopExit
+                  0x000634                  __fbopReturnNaN
+                  0x00063a                  ___mulsf3
+                  0x0006a2                  ___floatundisf
+                  0x000700                  _fstates
+                  0x000714                  _stills
+                  0x00071e                  _blinks
+                  0x000784                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S0
+                  0x0007c2                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S1
+                  0x000802                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S2
+                  0x000842                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S3
+                  0x000880                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_B1
+                  0x0008c0                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_B2
+                  0x000900                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_B3
+                  0x000940                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S0t
+                  0x00097c                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S1t
+                  0x0009b8                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_B1t
+                  0x000a8c                  _LoadsInit
+                  0x000aac                  _LoadsTask
+                  0x000ae6                  _LoadsGetStatus
+                  0x000b12                  _LoadsStateMachine
+                  0x000bc8                  _FaultInit
+                  0x000bf6                  _FaultCheck
+                  0x000c4c                  _FaultTask
+                  0x000cb2                  _UART1_Initialize
+                  0x000cda                  _UART1_Read
+                  0x000d02                  _UART1_ReadBuffer
+                  0x000d28                  _UART1_Write
+                  0x000d50                  _UART1_WriteBuffer
+                  0x000d76                  _UART1_TransferStatusGet
+                  0x000d98                  _UART1_Peek
+                  0x000db0                  _UART1_ReceiveBufferSizeGet
+                  0x000dcc                  _UART1_TransmitBufferSizeGet
+                  0x000de8                  _UART1_ReceiveBufferIsEmpty
+                  0x000df0                  _UART1_TransmitBufferIsFull
+                  0x000df8                  _UART1_StatusGet
+                  0x000e04                  _LedsInit
+                  0x000e3e                  _LedOn
+                  0x000e56                  _LedOff
+                  0x000e6e                  _LedBlink
+                  0x000e86                  _LedsMatrixTask
+                  0x000ef0                  _LedsBlinkTask
+                  0x000f40                  _main
+                  0x001032                  _TMR1_CallBack
+                  0x001094                  _ButtonsInit
+                  0x0010bc                  _ButtonEventBuck
+                  0x0010ce                  _ButtonEventBoost
+                  0x0010e0                  _ButtonsTask
+                  0x00115a                  _ProtocolInit
+                  0x00115e                  _ProtocolCheck
+                  0x0011b4                  _ProtocolClose
+                  0x0011c8                  _ProtocolTick
+                  0x0011f8                  _ADC1_Initialize
+                  0x001216                  _ADC1_Start
+                  0x00121a                  _ADC1_Stop
+                  0x00121e                  _ADC1_ConversionResultBufferGet
+                  0x001234                  _ADC1_ConversionResultGet
+                  0x001238                  _ADC1_IsConversionComplete
+                  0x00123e                  _ADC1_ChannelSelect
+                  0x001242                  _ADC1_ReadAvg
+                  0x00126a                  _TemperatureCheck
+                  0x00133e                  _PIN_MANAGER_Initialize
+                  0x001390                  _TMR1_Initialize
+                  0x0013a2                  _TMR1_Period16BitSet
+                  0x0013a8                  _TMR1_Period16BitGet
+                  0x0013ac                  _TMR1_Counter16BitSet
+                  0x0013b2                  _TMR1_Counter16BitGet
+                  0x0013b8                  _TMR1_Start
+                  0x0013c0                  _TMR1_Stop
+                  0x0013c6                  _TMR1_GetElapsedThenClear
+                  0x0013ce                  _TMR1_SoftwareCounterGet
+                  0x0013d2                  _TMR1_SoftwareCounterClear
+                  0x0013d6                  _OSCILLATOR_Initialize
+                  0x0013fc                  _SYSTEM_Initialize
+                  0x001408                  _INTERRUPT_Initialize
+                  0x001438                  ___delay32
+                  0x001464                  _SysReset
+
+External Symbols in Program Memory (by name):
+
+                  0x00123e                  _ADC1_ChannelSelect
+                  0x00121e                  _ADC1_ConversionResultBufferGet
+                  0x001234                  _ADC1_ConversionResultGet
+                  0x0011f8                  _ADC1_Initialize
+                  0x001238                  _ADC1_IsConversionComplete
+                  0x001242                  _ADC1_ReadAvg
+                  0x001216                  _ADC1_Start
+                  0x00121a                  _ADC1_Stop
+                  0x0010ce                  _ButtonEventBoost
+                  0x0010bc                  _ButtonEventBuck
+                  0x001094                  _ButtonsInit
+                  0x0010e0                  _ButtonsTask
+                  0x000bf6                  _FaultCheck
+                  0x000bc8                  _FaultInit
+                  0x000c4c                  _FaultTask
+                  0x001408                  _INTERRUPT_Initialize
+                  0x000e6e                  _LedBlink
+                  0x000e56                  _LedOff
+                  0x000e3e                  _LedOn
+                  0x000ef0                  _LedsBlinkTask
+                  0x000e04                  _LedsInit
+                  0x000e86                  _LedsMatrixTask
+                  0x000ae6                  _LoadsGetStatus
+                  0x000a8c                  _LoadsInit
+                  0x000b12                  _LoadsStateMachine
+                  0x000aac                  _LoadsTask
+                  0x0013d6                  _OSCILLATOR_Initialize
+                  0x00133e                  _PIN_MANAGER_Initialize
+                  0x00115e                  _ProtocolCheck
+                  0x0011b4                  _ProtocolClose
+                  0x00115a                  _ProtocolInit
+                  0x0011c8                  _ProtocolTick
+                  0x0013fc                  _SYSTEM_Initialize
+                  0x001464                  _SysReset
+                  0x001032                  _TMR1_CallBack
+                  0x0013b2                  _TMR1_Counter16BitGet
+                  0x0013ac                  _TMR1_Counter16BitSet
+                  0x0013c6                  _TMR1_GetElapsedThenClear
+                  0x001390                  _TMR1_Initialize
+                  0x0013a8                  _TMR1_Period16BitGet
+                  0x0013a2                  _TMR1_Period16BitSet
+                  0x0013d2                  _TMR1_SoftwareCounterClear
+                  0x0013ce                  _TMR1_SoftwareCounterGet
+                  0x0013b8                  _TMR1_Start
+                  0x0013c0                  _TMR1_Stop
+                  0x00126a                  _TemperatureCheck
+                  0x000cb2                  _UART1_Initialize
+                  0x000d98                  _UART1_Peek
+                  0x000cda                  _UART1_Read
+                  0x000d02                  _UART1_ReadBuffer
+                  0x000de8                  _UART1_ReceiveBufferIsEmpty
+                  0x000db0                  _UART1_ReceiveBufferSizeGet
+                  0x000df8                  _UART1_StatusGet
+                  0x000d76                  _UART1_TransferStatusGet
+                  0x000df0                  _UART1_TransmitBufferIsFull
+                  0x000dcc                  _UART1_TransmitBufferSizeGet
+                  0x000d28                  _UART1_Write
+                  0x000d50                  _UART1_WriteBuffer
+                  0x000332                  __ADC1Interrupt
+                  0x000302                  __AddressError
+                  0x000414                  __DefaultInterrupt
+                  0x00030a                  __MathError
+                  0x0002f0                  __OscillatorFail
+                  0x0002f8                  __StackError
+                  0x000312                  __T1Interrupt
+                  0x00040a                  __U1ErrInterrupt
+                  0x0003c2                  __U1RXInterrupt
+                  0x00036e                  __U1TXInterrupt
+                  0x00041c                  ___addsf3
+                  0x001438                  ___delay32
+                  0x0004d6                  ___divsf3
+                  0x00055a                  ___fixunssfsi
+                  0x0006a2                  ___floatundisf
+                  0x000590                  ___floatunsisf
+                  0x00063a                  ___mulsf3
+                  0x00041a                  ___subsf3
+                  0x000252                  __data_init
+                  0x000252                  __data_init_standard
+                  0x00061a                  __fPropagateNaN
+                  0x00062c                  __fbopExit
+                  0x000634                  __fbopReturnNaN
+                  0x000594                  __fpack
+                  0x0005e0                  __funpack
+                  0x00060a                  __funpack2
+                  0x00023c                  __psv_init
+                  0x000200                  __resetPRI
+                  0x00071e                  _blinks
+                  0x000700                  _fstates
+                  0x000f40                  _main
+                  0x000714                  _stills
+                  0x000880                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_B1
+                  0x0009b8                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_B1t
+                  0x0008c0                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_B2
+                  0x000900                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_B3
+                  0x000784                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S0
+                  0x000940                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S0t
+                  0x0007c2                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S1
+                  0x00097c                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S1t
+                  0x000802                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S2
+                  0x000842                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S3
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+data             0x000800           0x002000           a !xr
+reset            0x000000           0x000004  
+ivt              0x000004           0x0000fc  
+_reserved        0x000100           0x000004  
+aivt             0x000104           0x0000fc  
+program          0x000200           0x00a9fc           xr
+CONFIG2          0x00abfc           0x000002  
+CONFIG1          0x00abfe           0x000002  
+*default*        0x000000           0xffffffff  
+
+Linker script and memory map
+
+
+reserve_data_0x800
+                    0x0800         0x20
+                    0x0820                  . = 0x20
+ *fill*             0x0800         0x2000
+
+reserve_data_0x820
+                    0x0820          0x2
+                    0x0822                  . = 0x2
+ *fill*             0x0820          0x200
+
+reserve_data_0x822
+                    0x0822          0x2
+                    0x0824                  . = 0x2
+ *fill*             0x0822          0x200
+
+reserve_data_0x824
+                    0x0824          0x2
+                    0x0826                  . = 0x2
+ *fill*             0x0824          0x200
+
+reserve_data_0x826
+                    0x0826         0x2a
+                    0x0850                  . = 0x2a
+ *fill*             0x0826         0x2a00
+LOAD build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+LOAD build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+LOAD build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+LOAD build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+LOAD build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+LOAD build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+LOAD build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+LOAD build/DPSK3_PIC24/debug/src/leds.o
+LOAD build/DPSK3_PIC24/debug/src/fault.o
+LOAD build/DPSK3_PIC24/debug/src/loads.o
+LOAD build/DPSK3_PIC24/debug/src/buttons.o
+LOAD build/DPSK3_PIC24/debug/src/temperature.o
+LOAD build/DPSK3_PIC24/debug/src/protocol.o
+LOAD build/DPSK3_PIC24/debug/src/main.o
+LOAD build/DPSK3_PIC24/debug/src/reset.o
+                    0x0001                  __MPLAB_BUILD = 0x1
+                    0x0001                  __MPLAB_DEBUG = 0x1
+                    0x0001                  __DEBUG = 0x1
+                    0x0001                  __MPLAB_DEBUGGER_ICD4 = 0x1
+LOAD pPIC24Fxxx
+LOAD c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libfx-elf.a
+                    0xabfc                  __CONFIG2 = 0xabfc
+                    0xabfe                  __CONFIG1 = 0xabfe
+                    0x0001                  __NO_HANDLES = 0x1
+                    0x0200                  __CODE_BASE = 0x200
+                    0xa9fc                  __CODE_LENGTH = 0xa9fc
+                    0x0004                  __IVT_BASE = 0x4
+                    0x0104                  __AIVT_BASE = 0x104
+                    0x0800                  __DATA_BASE = 0x800
+                    0x2000                  __DATA_LENGTH = 0x2000
+
+.reset            0x000000          0x4
+                  0x000000          0x2 SHORT 0x200 ABSOLUTE (__reset)
+                  0x000001          0x2 SHORT 0x4
+                  0x000002          0x2 SHORT 0x0 ((ABSOLUTE (__reset) >> 0x10) & 0x7f)
+                  0x000003          0x2 SHORT 0x0
+
+.text             0x000200        0x500
+ *(.init)
+ .init            0x000200         0x4c c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                  0x000200                  __resetPRI
+                  0x000200                  __reset
+                  0x00023c                  __psv_init
+ .init            0x00024c         0x7c c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+                  0x000252                  __data_init_standard
+                  0x000252                  __data_init
+ *(.user_init)
+ *(.handle)
+ *(.isr*)
+ .isr.text        0x0002f0         0x22 build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+                  0x0002f0                  __OscillatorFail
+                  0x0002f8                  __StackError
+                  0x000302                  __AddressError
+                  0x00030a                  __MathError
+ .isr.text        0x000312         0x20 build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+                  0x000312                  __T1Interrupt
+ .isr.text        0x000332         0x3c build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+                  0x000332                  __ADC1Interrupt
+ .isr.text        0x00036e         0xa6 build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+                  0x00036e                  __U1TXInterrupt
+                  0x0003c2                  __U1RXInterrupt
+                  0x00040a                  __U1ErrInterrupt
+ .isr             0x000414          0x4 default_isr
+                  0x000414                  __DefaultInterrupt
+ *(.libc)
+ *(.libm)
+ *(.libdsp)
+ *(.lib*)
+ .libpic30_crt_start_mode
+                  0x000418          0x2 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
+                  0x000418                  __crt_start_mode
+                  0x000418                  __crt_start_mode_normal
+ .libm.subsf3     0x00041a         0xbc c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+                  0x00041a                  ___subsf3
+                  0x00041c                  ___addsf3
+ .libm.divfs3     0x0004d6         0x84 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                  0x0004d6                  ___divsf3
+ .libm.fixunssfsi
+                  0x00055a         0x36 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
+                  0x00055a                  ___fixunssfsi
+ .libm.floatunsisf
+                  0x000590          0x4 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
+                  0x000590                  ___floatunsisf
+ .libm.fpack      0x000594         0x4c c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fpack.eo)
+                  0x000594                  __fpack
+ .libm.funpack    0x0005e0         0x2a c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack.eo)
+                  0x0005e0                  __funpack
+ .libm.funpack2
+                  0x00060a         0x10 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack2.eo)
+                  0x00060a                  __funpack2
+ .libm.fPropagateNaN
+                  0x00061a         0x12 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
+                  0x00061a                  __fPropagateNaN
+ .libm.fbobExit
+                  0x00062c          0x8 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
+                  0x00062c                  __fbopExit
+ .libm.fbopReturnNaN
+                  0x000634          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
+                  0x000634                  __fbopReturnNaN
+ .libm.mulsf3     0x00063a         0x68 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                  0x00063a                  ___mulsf3
+ .libm.floatundisf
+                  0x0006a2         0x5e c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+                  0x0006a2                  ___floatundisf
+
+usercode
+ *(usercode)
+
+__CONFIG2
+ *(__CONFIG2.sec*)
+
+__CONFIG1
+ *(__CONFIG1.sec*)
+
+.comment
+ *(.comment)
+
+.debug_info       0x000000       0x6e57
+ *(.debug_info)
+ .debug_info      0x000000        0x5f9 build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+ .debug_info      0x0005f9        0x7a9 build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+ .debug_info      0x000da2        0x397 build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+ .debug_info      0x001139        0x390 build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+ .debug_info      0x0014c9        0x79f build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+ .debug_info      0x001c68        0xae8 build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+ .debug_info      0x002750        0xecd build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+ .debug_info      0x00361d        0x88e build/DPSK3_PIC24/debug/src/leds.o
+ .debug_info      0x003eab        0x9ba build/DPSK3_PIC24/debug/src/fault.o
+ .debug_info      0x004865        0xc7b build/DPSK3_PIC24/debug/src/loads.o
+ .debug_info      0x0054e0        0x42e build/DPSK3_PIC24/debug/src/buttons.o
+ .debug_info      0x00590e        0x265 build/DPSK3_PIC24/debug/src/temperature.o
+ .debug_info      0x005b73        0x95e build/DPSK3_PIC24/debug/src/protocol.o
+ .debug_info      0x0064d1        0x8f0 build/DPSK3_PIC24/debug/src/main.o
+ .debug_info      0x006dc1         0x96 build/DPSK3_PIC24/debug/src/reset.o
+ *(.gnu.linkonce.wi.*)
+
+.debug_abbrev     0x000000       0x11b8
+ *(.debug_abbrev)
+ .debug_abbrev    0x000000         0xd6 build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+ .debug_abbrev    0x0000d6         0xb4 build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+ .debug_abbrev    0x00018a        0x100 build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+ .debug_abbrev    0x00028a         0xc5 build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+ .debug_abbrev    0x00034f        0x170 build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+ .debug_abbrev    0x0004bf        0x1a9 build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+ .debug_abbrev    0x000668        0x1f1 build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+ .debug_abbrev    0x000859        0x122 build/DPSK3_PIC24/debug/src/leds.o
+ .debug_abbrev    0x00097b        0x12e build/DPSK3_PIC24/debug/src/fault.o
+ .debug_abbrev    0x000aa9        0x248 build/DPSK3_PIC24/debug/src/loads.o
+ .debug_abbrev    0x000cf1        0x130 build/DPSK3_PIC24/debug/src/buttons.o
+ .debug_abbrev    0x000e21         0x82 build/DPSK3_PIC24/debug/src/temperature.o
+ .debug_abbrev    0x000ea3        0x194 build/DPSK3_PIC24/debug/src/protocol.o
+ .debug_abbrev    0x001037        0x16d build/DPSK3_PIC24/debug/src/main.o
+ .debug_abbrev    0x0011a4         0x14 build/DPSK3_PIC24/debug/src/reset.o
+
+.debug_line       0x000000       0x1248
+ *(.debug_line)
+ .debug_line      0x000000        0x110 build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+ .debug_line      0x000110        0x10b build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+ .debug_line      0x00021b        0x128 build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+ .debug_line      0x000343        0x106 build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+ .debug_line      0x000449        0x130 build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+ .debug_line      0x000579        0x160 build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+ .debug_line      0x0006d9        0x1ae build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+ .debug_line      0x000887        0x170 build/DPSK3_PIC24/debug/src/leds.o
+ .debug_line      0x0009f7        0x170 build/DPSK3_PIC24/debug/src/fault.o
+ .debug_line      0x000b67        0x1de build/DPSK3_PIC24/debug/src/loads.o
+ .debug_line      0x000d45        0x154 build/DPSK3_PIC24/debug/src/buttons.o
+ .debug_line      0x000e99         0xc2 build/DPSK3_PIC24/debug/src/temperature.o
+ .debug_line      0x000f5b        0x14d build/DPSK3_PIC24/debug/src/protocol.o
+ .debug_line      0x0010a8        0x167 build/DPSK3_PIC24/debug/src/main.o
+ .debug_line      0x00120f         0x39 build/DPSK3_PIC24/debug/src/reset.o
+
+.debug_frame      0x000000        0x83c
+ *(.debug_frame)
+ .debug_frame     0x000000         0x24 build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+ .debug_frame     0x000024         0x24 build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+ .debug_frame     0x000048         0x74 build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+ .debug_frame     0x0000bc         0x34 build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+ .debug_frame     0x0000f0         0xf8 build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+ .debug_frame     0x0001e8         0xe8 build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+ .debug_frame     0x0002d0        0x14c build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+ .debug_frame     0x00041c         0xb2 build/DPSK3_PIC24/debug/src/leds.o
+ .debug_frame     0x0004ce         0x9a build/DPSK3_PIC24/debug/src/fault.o
+ .debug_frame     0x000568        0x158 build/DPSK3_PIC24/debug/src/loads.o
+ .debug_frame     0x0006c0         0xa2 build/DPSK3_PIC24/debug/src/buttons.o
+ .debug_frame     0x000762         0x2e build/DPSK3_PIC24/debug/src/temperature.o
+ .debug_frame     0x000790         0x66 build/DPSK3_PIC24/debug/src/protocol.o
+ .debug_frame     0x0007f6         0x46 build/DPSK3_PIC24/debug/src/main.o
+
+.debug_str        0x000000        0x1aa
+ *(.debug_str)
+ .debug_str       0x000000         0x16 build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+ .debug_str       0x000016         0x25 build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+ .debug_str       0x00003b          0xc build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+ .debug_str       0x000047          0xb build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+ .debug_str       0x000052         0x1c build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+ .debug_str       0x00006e         0x33 build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+ .debug_str       0x0000a1         0x30 build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+ .debug_str       0x0000d1         0x25 build/DPSK3_PIC24/debug/src/leds.o
+ .debug_str       0x0000f6         0x3a build/DPSK3_PIC24/debug/src/fault.o
+ .debug_str       0x000130         0x3c build/DPSK3_PIC24/debug/src/loads.o
+ .debug_str       0x00016c          0xa build/DPSK3_PIC24/debug/src/buttons.o
+ .debug_str       0x000176         0x15 build/DPSK3_PIC24/debug/src/protocol.o
+ .debug_str       0x00018b         0x1f build/DPSK3_PIC24/debug/src/main.o
+
+.debug_loc
+ *(.debug_loc)
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_pubnames
+                  0x000000        0x6ab
+ *(.debug_pubnames)
+ .debug_pubnames
+                  0x000000         0x2d build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+ .debug_pubnames
+                  0x00002d         0x2b build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+ .debug_pubnames
+                  0x000058         0x6f build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+ .debug_pubnames
+                  0x0000c7         0x42 build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+ .debug_pubnames
+                  0x000109        0x11f build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+ .debug_pubnames
+                  0x000228         0xdc build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+ .debug_pubnames
+                  0x000304        0x167 build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+ .debug_pubnames
+                  0x00046b         0x66 build/DPSK3_PIC24/debug/src/leds.o
+ .debug_pubnames
+                  0x0004d1         0x3d build/DPSK3_PIC24/debug/src/fault.o
+ .debug_pubnames
+                  0x00050e         0x96 build/DPSK3_PIC24/debug/src/loads.o
+ .debug_pubnames
+                  0x0005a4         0x5b build/DPSK3_PIC24/debug/src/buttons.o
+ .debug_pubnames
+                  0x0005ff         0x27 build/DPSK3_PIC24/debug/src/temperature.o
+ .debug_pubnames
+                  0x000626         0x58 build/DPSK3_PIC24/debug/src/protocol.o
+ .debug_pubnames
+                  0x00067e         0x2d build/DPSK3_PIC24/debug/src/main.o
+
+.debug_ranges
+ *(.debug_ranges)
+
+.debug_aranges    0x000000        0x168
+ *(.debug_aranges)
+ .debug_aranges
+                  0x000000         0x18 build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+ .debug_aranges
+                  0x000018         0x18 build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+ .debug_aranges
+                  0x000030         0x18 build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+ .debug_aranges
+                  0x000048         0x18 build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+ .debug_aranges
+                  0x000060         0x18 build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+ .debug_aranges
+                  0x000078         0x18 build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+ .debug_aranges
+                  0x000090         0x18 build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+ .debug_aranges
+                  0x0000a8         0x18 build/DPSK3_PIC24/debug/src/leds.o
+ .debug_aranges
+                  0x0000c0         0x18 build/DPSK3_PIC24/debug/src/fault.o
+ .debug_aranges
+                  0x0000d8         0x18 build/DPSK3_PIC24/debug/src/loads.o
+ .debug_aranges
+                  0x0000f0         0x18 build/DPSK3_PIC24/debug/src/buttons.o
+ .debug_aranges
+                  0x000108         0x18 build/DPSK3_PIC24/debug/src/temperature.o
+ .debug_aranges
+                  0x000120         0x18 build/DPSK3_PIC24/debug/src/protocol.o
+ .debug_aranges
+                  0x000138         0x18 build/DPSK3_PIC24/debug/src/main.o
+ .debug_aranges
+                  0x000150         0x18 build/DPSK3_PIC24/debug/src/reset.o
+                    0x0000                  WREG0 = 0x0
+                    0x0000                  _WREG0 = 0x0
+                    0x0002                  WREG1 = 0x2
+                    0x0002                  _WREG1 = 0x2
+                    0x0004                  WREG2 = 0x4
+                    0x0004                  _WREG2 = 0x4
+                    0x0006                  WREG3 = 0x6
+                    0x0006                  _WREG3 = 0x6
+                    0x0008                  WREG4 = 0x8
+                    0x0008                  _WREG4 = 0x8
+                    0x000a                  WREG5 = 0xa
+                    0x000a                  _WREG5 = 0xa
+                    0x000c                  WREG6 = 0xc
+                    0x000c                  _WREG6 = 0xc
+                    0x000e                  WREG7 = 0xe
+                    0x000e                  _WREG7 = 0xe
+                    0x0010                  WREG8 = 0x10
+                    0x0010                  _WREG8 = 0x10
+                    0x0012                  WREG9 = 0x12
+                    0x0012                  _WREG9 = 0x12
+                    0x0014                  WREG10 = 0x14
+                    0x0014                  _WREG10 = 0x14
+                    0x0016                  WREG11 = 0x16
+                    0x0016                  _WREG11 = 0x16
+                    0x0018                  WREG12 = 0x18
+                    0x0018                  _WREG12 = 0x18
+                    0x001a                  WREG13 = 0x1a
+                    0x001a                  _WREG13 = 0x1a
+                    0x001c                  WREG14 = 0x1c
+                    0x001c                  _WREG14 = 0x1c
+                    0x001e                  WREG15 = 0x1e
+                    0x001e                  _WREG15 = 0x1e
+                    0x0020                  SPLIM = 0x20
+                    0x0020                  _SPLIM = 0x20
+                    0x002e                  PCL = 0x2e
+                    0x002e                  _PCL = 0x2e
+                    0x0030                  PCH = 0x30
+                    0x0030                  _PCH = 0x30
+                    0x0032                  TBLPAG = 0x32
+                    0x0032                  _TBLPAG = 0x32
+                    0x0034                  PSVPAG = 0x34
+                    0x0034                  _PSVPAG = 0x34
+                    0x0036                  RCOUNT = 0x36
+                    0x0036                  _RCOUNT = 0x36
+                    0x0042                  SR = 0x42
+                    0x0042                  _SR = 0x42
+                    0x0042                  _SRbits = 0x42
+                    0x0044                  CORCON = 0x44
+                    0x0044                  _CORCON = 0x44
+                    0x0044                  _CORCONbits = 0x44
+                    0x0052                  DISICNT = 0x52
+                    0x0052                  _DISICNT = 0x52
+                    0x0060                  CNEN1 = 0x60
+                    0x0060                  _CNEN1 = 0x60
+                    0x0060                  _CNEN1bits = 0x60
+                    0x0062                  CNEN2 = 0x62
+                    0x0062                  _CNEN2 = 0x62
+                    0x0062                  _CNEN2bits = 0x62
+                    0x0068                  CNPU1 = 0x68
+                    0x0068                  _CNPU1 = 0x68
+                    0x0068                  _CNPU1bits = 0x68
+                    0x006a                  CNPU2 = 0x6a
+                    0x006a                  _CNPU2 = 0x6a
+                    0x006a                  _CNPU2bits = 0x6a
+                    0x0080                  INTCON1 = 0x80
+                    0x0080                  _INTCON1 = 0x80
+                    0x0080                  _INTCON1bits = 0x80
+                    0x0082                  INTCON2 = 0x82
+                    0x0082                  _INTCON2 = 0x82
+                    0x0082                  _INTCON2bits = 0x82
+                    0x0084                  IFS0 = 0x84
+                    0x0084                  _IFS0 = 0x84
+                    0x0084                  _IFS0bits = 0x84
+                    0x0086                  IFS1 = 0x86
+                    0x0086                  _IFS1 = 0x86
+                    0x0086                  _IFS1bits = 0x86
+                    0x0088                  IFS2 = 0x88
+                    0x0088                  _IFS2 = 0x88
+                    0x0088                  _IFS2bits = 0x88
+                    0x008a                  IFS3 = 0x8a
+                    0x008a                  _IFS3 = 0x8a
+                    0x008a                  _IFS3bits = 0x8a
+                    0x008c                  IFS4 = 0x8c
+                    0x008c                  _IFS4 = 0x8c
+                    0x008c                  _IFS4bits = 0x8c
+                    0x0094                  IEC0 = 0x94
+                    0x0094                  _IEC0 = 0x94
+                    0x0094                  _IEC0bits = 0x94
+                    0x0096                  IEC1 = 0x96
+                    0x0096                  _IEC1 = 0x96
+                    0x0096                  _IEC1bits = 0x96
+                    0x0098                  IEC2 = 0x98
+                    0x0098                  _IEC2 = 0x98
+                    0x0098                  _IEC2bits = 0x98
+                    0x009a                  IEC3 = 0x9a
+                    0x009a                  _IEC3 = 0x9a
+                    0x009a                  _IEC3bits = 0x9a
+                    0x009c                  IEC4 = 0x9c
+                    0x009c                  _IEC4 = 0x9c
+                    0x009c                  _IEC4bits = 0x9c
+                    0x00a4                  IPC0 = 0xa4
+                    0x00a4                  _IPC0 = 0xa4
+                    0x00a4                  _IPC0bits = 0xa4
+                    0x00a6                  IPC1 = 0xa6
+                    0x00a6                  _IPC1 = 0xa6
+                    0x00a6                  _IPC1bits = 0xa6
+                    0x00a8                  IPC2 = 0xa8
+                    0x00a8                  _IPC2 = 0xa8
+                    0x00a8                  _IPC2bits = 0xa8
+                    0x00aa                  IPC3 = 0xaa
+                    0x00aa                  _IPC3 = 0xaa
+                    0x00aa                  _IPC3bits = 0xaa
+                    0x00ac                  IPC4 = 0xac
+                    0x00ac                  _IPC4 = 0xac
+                    0x00ac                  _IPC4bits = 0xac
+                    0x00ae                  IPC5 = 0xae
+                    0x00ae                  _IPC5 = 0xae
+                    0x00ae                  _IPC5bits = 0xae
+                    0x00b0                  IPC6 = 0xb0
+                    0x00b0                  _IPC6 = 0xb0
+                    0x00b0                  _IPC6bits = 0xb0
+                    0x00b2                  IPC7 = 0xb2
+                    0x00b2                  _IPC7 = 0xb2
+                    0x00b2                  _IPC7bits = 0xb2
+                    0x00b4                  IPC8 = 0xb4
+                    0x00b4                  _IPC8 = 0xb4
+                    0x00b4                  _IPC8bits = 0xb4
+                    0x00b6                  IPC9 = 0xb6
+                    0x00b6                  _IPC9 = 0xb6
+                    0x00b6                  _IPC9bits = 0xb6
+                    0x00b8                  IPC10 = 0xb8
+                    0x00b8                  _IPC10 = 0xb8
+                    0x00b8                  _IPC10bits = 0xb8
+                    0x00ba                  IPC11 = 0xba
+                    0x00ba                  _IPC11 = 0xba
+                    0x00ba                  _IPC11bits = 0xba
+                    0x00bc                  IPC12 = 0xbc
+                    0x00bc                  _IPC12 = 0xbc
+                    0x00bc                  _IPC12bits = 0xbc
+                    0x00c2                  IPC15 = 0xc2
+                    0x00c2                  _IPC15 = 0xc2
+                    0x00c2                  _IPC15bits = 0xc2
+                    0x00c4                  IPC16 = 0xc4
+                    0x00c4                  _IPC16 = 0xc4
+                    0x00c4                  _IPC16bits = 0xc4
+                    0x00c8                  IPC18 = 0xc8
+                    0x00c8                  _IPC18 = 0xc8
+                    0x00c8                  _IPC18bits = 0xc8
+                    0x0100                  TMR1 = 0x100
+                    0x0100                  _TMR1 = 0x100
+                    0x0102                  PR1 = 0x102
+                    0x0102                  _PR1 = 0x102
+                    0x0104                  T1CON = 0x104
+                    0x0104                  _T1CON = 0x104
+                    0x0104                  _T1CONbits = 0x104
+                    0x0106                  TMR2 = 0x106
+                    0x0106                  _TMR2 = 0x106
+                    0x0108                  TMR3HLD = 0x108
+                    0x0108                  _TMR3HLD = 0x108
+                    0x010a                  TMR3 = 0x10a
+                    0x010a                  _TMR3 = 0x10a
+                    0x010c                  PR2 = 0x10c
+                    0x010c                  _PR2 = 0x10c
+                    0x010e                  PR3 = 0x10e
+                    0x010e                  _PR3 = 0x10e
+                    0x0110                  T2CON = 0x110
+                    0x0110                  _T2CON = 0x110
+                    0x0110                  _T2CONbits = 0x110
+                    0x0112                  T3CON = 0x112
+                    0x0112                  _T3CON = 0x112
+                    0x0112                  _T3CONbits = 0x112
+                    0x0114                  TMR4 = 0x114
+                    0x0114                  _TMR4 = 0x114
+                    0x0116                  TMR5HLD = 0x116
+                    0x0116                  _TMR5HLD = 0x116
+                    0x0118                  TMR5 = 0x118
+                    0x0118                  _TMR5 = 0x118
+                    0x011a                  PR4 = 0x11a
+                    0x011a                  _PR4 = 0x11a
+                    0x011c                  PR5 = 0x11c
+                    0x011c                  _PR5 = 0x11c
+                    0x011e                  T4CON = 0x11e
+                    0x011e                  _T4CON = 0x11e
+                    0x011e                  _T4CONbits = 0x11e
+                    0x0120                  T5CON = 0x120
+                    0x0120                  _T5CON = 0x120
+                    0x0120                  _T5CONbits = 0x120
+                    0x0140                  IC1BUF = 0x140
+                    0x0140                  _IC1BUF = 0x140
+                    0x0142                  IC1CON = 0x142
+                    0x0142                  _IC1CON = 0x142
+                    0x0142                  _IC1CONbits = 0x142
+                    0x0144                  IC2BUF = 0x144
+                    0x0144                  _IC2BUF = 0x144
+                    0x0146                  IC2CON = 0x146
+                    0x0146                  _IC2CON = 0x146
+                    0x0146                  _IC2CONbits = 0x146
+                    0x0148                  IC3BUF = 0x148
+                    0x0148                  _IC3BUF = 0x148
+                    0x014a                  IC3CON = 0x14a
+                    0x014a                  _IC3CON = 0x14a
+                    0x014a                  _IC3CONbits = 0x14a
+                    0x014c                  IC4BUF = 0x14c
+                    0x014c                  _IC4BUF = 0x14c
+                    0x014e                  IC4CON = 0x14e
+                    0x014e                  _IC4CON = 0x14e
+                    0x014e                  _IC4CONbits = 0x14e
+                    0x0150                  IC5BUF = 0x150
+                    0x0150                  _IC5BUF = 0x150
+                    0x0152                  IC5CON = 0x152
+                    0x0152                  _IC5CON = 0x152
+                    0x0152                  _IC5CONbits = 0x152
+                    0x0180                  OC1RS = 0x180
+                    0x0180                  _OC1RS = 0x180
+                    0x0182                  OC1R = 0x182
+                    0x0182                  _OC1R = 0x182
+                    0x0184                  OC1CON = 0x184
+                    0x0184                  _OC1CON = 0x184
+                    0x0184                  _OC1CONbits = 0x184
+                    0x0186                  OC2RS = 0x186
+                    0x0186                  _OC2RS = 0x186
+                    0x0188                  OC2R = 0x188
+                    0x0188                  _OC2R = 0x188
+                    0x018a                  OC2CON = 0x18a
+                    0x018a                  _OC2CON = 0x18a
+                    0x018a                  _OC2CONbits = 0x18a
+                    0x018c                  OC3RS = 0x18c
+                    0x018c                  _OC3RS = 0x18c
+                    0x018e                  OC3R = 0x18e
+                    0x018e                  _OC3R = 0x18e
+                    0x0190                  OC3CON = 0x190
+                    0x0190                  _OC3CON = 0x190
+                    0x0190                  _OC3CONbits = 0x190
+                    0x0192                  OC4RS = 0x192
+                    0x0192                  _OC4RS = 0x192
+                    0x0194                  OC4R = 0x194
+                    0x0194                  _OC4R = 0x194
+                    0x0196                  OC4CON = 0x196
+                    0x0196                  _OC4CON = 0x196
+                    0x0196                  _OC4CONbits = 0x196
+                    0x0198                  OC5RS = 0x198
+                    0x0198                  _OC5RS = 0x198
+                    0x019a                  OC5R = 0x19a
+                    0x019a                  _OC5R = 0x19a
+                    0x019c                  OC5CON = 0x19c
+                    0x019c                  _OC5CON = 0x19c
+                    0x019c                  _OC5CONbits = 0x19c
+                    0x0200                  I2C1RCV = 0x200
+                    0x0200                  _I2C1RCV = 0x200
+                    0x0202                  I2C1TRN = 0x202
+                    0x0202                  _I2C1TRN = 0x202
+                    0x0204                  I2C1BRG = 0x204
+                    0x0204                  _I2C1BRG = 0x204
+                    0x0206                  I2C1CON = 0x206
+                    0x0206                  _I2C1CON = 0x206
+                    0x0206                  _I2C1CONbits = 0x206
+                    0x0208                  I2C1STAT = 0x208
+                    0x0208                  _I2C1STAT = 0x208
+                    0x0208                  _I2C1STATbits = 0x208
+                    0x020a                  I2C1ADD = 0x20a
+                    0x020a                  _I2C1ADD = 0x20a
+                    0x020c                  I2C1MSK = 0x20c
+                    0x020c                  _I2C1MSK = 0x20c
+                    0x0210                  I2C2RCV = 0x210
+                    0x0210                  _I2C2RCV = 0x210
+                    0x0212                  I2C2TRN = 0x212
+                    0x0212                  _I2C2TRN = 0x212
+                    0x0214                  I2C2BRG = 0x214
+                    0x0214                  _I2C2BRG = 0x214
+                    0x0216                  I2C2CON = 0x216
+                    0x0216                  _I2C2CON = 0x216
+                    0x0216                  _I2C2CONbits = 0x216
+                    0x0218                  I2C2STAT = 0x218
+                    0x0218                  _I2C2STAT = 0x218
+                    0x0218                  _I2C2STATbits = 0x218
+                    0x021a                  I2C2ADD = 0x21a
+                    0x021a                  _I2C2ADD = 0x21a
+                    0x021c                  I2C2MSK = 0x21c
+                    0x021c                  _I2C2MSK = 0x21c
+                    0x0220                  U1MODE = 0x220
+                    0x0220                  _U1MODE = 0x220
+                    0x0220                  _U1MODEbits = 0x220
+                    0x0222                  U1STA = 0x222
+                    0x0222                  _U1STA = 0x222
+                    0x0222                  _U1STAbits = 0x222
+                    0x0224                  U1TXREG = 0x224
+                    0x0224                  _U1TXREG = 0x224
+                    0x0226                  U1RXREG = 0x226
+                    0x0226                  _U1RXREG = 0x226
+                    0x0228                  U1BRG = 0x228
+                    0x0228                  _U1BRG = 0x228
+                    0x0230                  U2MODE = 0x230
+                    0x0230                  _U2MODE = 0x230
+                    0x0230                  _U2MODEbits = 0x230
+                    0x0232                  U2STA = 0x232
+                    0x0232                  _U2STA = 0x232
+                    0x0232                  _U2STAbits = 0x232
+                    0x0234                  U2TXREG = 0x234
+                    0x0234                  _U2TXREG = 0x234
+                    0x0236                  U2RXREG = 0x236
+                    0x0236                  _U2RXREG = 0x236
+                    0x0238                  U2BRG = 0x238
+                    0x0238                  _U2BRG = 0x238
+                    0x0240                  SPI1STAT = 0x240
+                    0x0240                  _SPI1STAT = 0x240
+                    0x0240                  _SPI1STATbits = 0x240
+                    0x0242                  SPI1CON1 = 0x242
+                    0x0242                  _SPI1CON1 = 0x242
+                    0x0242                  _SPI1CON1bits = 0x242
+                    0x0244                  SPI1CON2 = 0x244
+                    0x0244                  _SPI1CON2 = 0x244
+                    0x0244                  _SPI1CON2bits = 0x244
+                    0x0248                  SPI1BUF = 0x248
+                    0x0248                  _SPI1BUF = 0x248
+                    0x0260                  SPI2STAT = 0x260
+                    0x0260                  _SPI2STAT = 0x260
+                    0x0260                  _SPI2STATbits = 0x260
+                    0x0262                  SPI2CON1 = 0x262
+                    0x0262                  _SPI2CON1 = 0x262
+                    0x0262                  _SPI2CON1bits = 0x262
+                    0x0264                  SPI2CON2 = 0x264
+                    0x0264                  _SPI2CON2 = 0x264
+                    0x0264                  _SPI2CON2bits = 0x264
+                    0x0268                  SPI2BUF = 0x268
+                    0x0268                  _SPI2BUF = 0x268
+                    0x02c0                  TRISA = 0x2c0
+                    0x02c0                  _TRISA = 0x2c0
+                    0x02c0                  _TRISAbits = 0x2c0
+                    0x02c2                  PORTA = 0x2c2
+                    0x02c2                  _PORTA = 0x2c2
+                    0x02c2                  _PORTAbits = 0x2c2
+                    0x02c4                  LATA = 0x2c4
+                    0x02c4                  _LATA = 0x2c4
+                    0x02c4                  _LATAbits = 0x2c4
+                    0x02c6                  ODCA = 0x2c6
+                    0x02c6                  _ODCA = 0x2c6
+                    0x02c6                  _ODCAbits = 0x2c6
+                    0x02c8                  TRISB = 0x2c8
+                    0x02c8                  _TRISB = 0x2c8
+                    0x02c8                  _TRISBbits = 0x2c8
+                    0x02ca                  PORTB = 0x2ca
+                    0x02ca                  _PORTB = 0x2ca
+                    0x02ca                  _PORTBbits = 0x2ca
+                    0x02cc                  LATB = 0x2cc
+                    0x02cc                  _LATB = 0x2cc
+                    0x02cc                  _LATBbits = 0x2cc
+                    0x02ce                  ODCB = 0x2ce
+                    0x02ce                  _ODCB = 0x2ce
+                    0x02ce                  _ODCBbits = 0x2ce
+                    0x02d0                  TRISC = 0x2d0
+                    0x02d0                  _TRISC = 0x2d0
+                    0x02d0                  _TRISCbits = 0x2d0
+                    0x02d2                  PORTC = 0x2d2
+                    0x02d2                  _PORTC = 0x2d2
+                    0x02d2                  _PORTCbits = 0x2d2
+                    0x02d4                  LATC = 0x2d4
+                    0x02d4                  _LATC = 0x2d4
+                    0x02d4                  _LATCbits = 0x2d4
+                    0x02d6                  ODCC = 0x2d6
+                    0x02d6                  _ODCC = 0x2d6
+                    0x02d6                  _ODCCbits = 0x2d6
+                    0x02fc                  PADCFG1 = 0x2fc
+                    0x02fc                  _PADCFG1 = 0x2fc
+                    0x02fc                  _PADCFG1bits = 0x2fc
+                    0x0300                  ADC1BUF0 = 0x300
+                    0x0300                  _ADC1BUF0 = 0x300
+                    0x0302                  ADC1BUF1 = 0x302
+                    0x0302                  _ADC1BUF1 = 0x302
+                    0x0304                  ADC1BUF2 = 0x304
+                    0x0304                  _ADC1BUF2 = 0x304
+                    0x0306                  ADC1BUF3 = 0x306
+                    0x0306                  _ADC1BUF3 = 0x306
+                    0x0308                  ADC1BUF4 = 0x308
+                    0x0308                  _ADC1BUF4 = 0x308
+                    0x030a                  ADC1BUF5 = 0x30a
+                    0x030a                  _ADC1BUF5 = 0x30a
+                    0x030c                  ADC1BUF6 = 0x30c
+                    0x030c                  _ADC1BUF6 = 0x30c
+                    0x030e                  ADC1BUF7 = 0x30e
+                    0x030e                  _ADC1BUF7 = 0x30e
+                    0x0310                  ADC1BUF8 = 0x310
+                    0x0310                  _ADC1BUF8 = 0x310
+                    0x0312                  ADC1BUF9 = 0x312
+                    0x0312                  _ADC1BUF9 = 0x312
+                    0x0314                  ADC1BUFA = 0x314
+                    0x0314                  _ADC1BUFA = 0x314
+                    0x0316                  ADC1BUFB = 0x316
+                    0x0316                  _ADC1BUFB = 0x316
+                    0x0318                  ADC1BUFC = 0x318
+                    0x0318                  _ADC1BUFC = 0x318
+                    0x031a                  ADC1BUFD = 0x31a
+                    0x031a                  _ADC1BUFD = 0x31a
+                    0x031c                  ADC1BUFE = 0x31c
+                    0x031c                  _ADC1BUFE = 0x31c
+                    0x031e                  ADC1BUFF = 0x31e
+                    0x031e                  _ADC1BUFF = 0x31e
+                    0x0320                  AD1CON1 = 0x320
+                    0x0320                  _AD1CON1 = 0x320
+                    0x0320                  _AD1CON1bits = 0x320
+                    0x0322                  AD1CON2 = 0x322
+                    0x0322                  _AD1CON2 = 0x322
+                    0x0322                  _AD1CON2bits = 0x322
+                    0x0324                  AD1CON3 = 0x324
+                    0x0324                  _AD1CON3 = 0x324
+                    0x0324                  _AD1CON3bits = 0x324
+                    0x0328                  AD1CHS = 0x328
+                    0x0328                  _AD1CHS = 0x328
+                    0x0328                  _AD1CHSbits = 0x328
+                    0x032c                  AD1PCFG = 0x32c
+                    0x032c                  _AD1PCFG = 0x32c
+                    0x032c                  _AD1PCFGbits = 0x32c
+                    0x0330                  AD1CSSL = 0x330
+                    0x0330                  _AD1CSSL = 0x330
+                    0x0330                  _AD1CSSLbits = 0x330
+                    0x0600                  PMCON = 0x600
+                    0x0600                  _PMCON = 0x600
+                    0x0600                  _PMCONbits = 0x600
+                    0x0602                  PMMODE = 0x602
+                    0x0602                  _PMMODE = 0x602
+                    0x0602                  _PMMODEbits = 0x602
+                    0x0604                  PMADDR = 0x604
+                    0x0604                  _PMADDR = 0x604
+                    0x0604                  _PMADDRbits = 0x604
+                    0x0604                  PMDOUT1 = 0x604
+                    0x0604                  _PMDOUT1 = 0x604
+                    0x0604                  _PMDOUT1bits = 0x604
+                    0x0606                  PMDOUT2 = 0x606
+                    0x0606                  _PMDOUT2 = 0x606
+                    0x0608                  PMDIN1 = 0x608
+                    0x0608                  _PMDIN1 = 0x608
+                    0x060a                  PMDIN2 = 0x60a
+                    0x060a                  _PMDIN2 = 0x60a
+                    0x060c                  PMAEN = 0x60c
+                    0x060c                  _PMAEN = 0x60c
+                    0x060c                  _PMAENbits = 0x60c
+                    0x060e                  PMSTAT = 0x60e
+                    0x060e                  _PMSTAT = 0x60e
+                    0x060e                  _PMSTATbits = 0x60e
+                    0x0620                  ALRMVAL = 0x620
+                    0x0620                  _ALRMVAL = 0x620
+                    0x0622                  ALCFGRPT = 0x622
+                    0x0622                  _ALCFGRPT = 0x622
+                    0x0622                  _ALCFGRPTbits = 0x622
+                    0x0624                  RTCVAL = 0x624
+                    0x0624                  _RTCVAL = 0x624
+                    0x0626                  RCFGCAL = 0x626
+                    0x0626                  _RCFGCAL = 0x626
+                    0x0626                  _RCFGCALbits = 0x626
+                    0x0630                  CMCON = 0x630
+                    0x0630                  _CMCON = 0x630
+                    0x0630                  _CMCONbits = 0x630
+                    0x0632                  CVRCON = 0x632
+                    0x0632                  _CVRCON = 0x632
+                    0x0632                  _CVRCONbits = 0x632
+                    0x0640                  CRCCON = 0x640
+                    0x0640                  _CRCCON = 0x640
+                    0x0640                  _CRCCONbits = 0x640
+                    0x0642                  CRCXOR = 0x642
+                    0x0642                  _CRCXOR = 0x642
+                    0x0642                  _CRCXORbits = 0x642
+                    0x0644                  CRCDAT = 0x644
+                    0x0644                  _CRCDAT = 0x644
+                    0x0646                  CRCWDAT = 0x646
+                    0x0646                  _CRCWDAT = 0x646
+                    0x0680                  RPINR0 = 0x680
+                    0x0680                  _RPINR0 = 0x680
+                    0x0680                  _RPINR0bits = 0x680
+                    0x0682                  RPINR1 = 0x682
+                    0x0682                  _RPINR1 = 0x682
+                    0x0682                  _RPINR1bits = 0x682
+                    0x0686                  RPINR3 = 0x686
+                    0x0686                  _RPINR3 = 0x686
+                    0x0686                  _RPINR3bits = 0x686
+                    0x0688                  RPINR4 = 0x688
+                    0x0688                  _RPINR4 = 0x688
+                    0x0688                  _RPINR4bits = 0x688
+                    0x068e                  RPINR7 = 0x68e
+                    0x068e                  _RPINR7 = 0x68e
+                    0x068e                  _RPINR7bits = 0x68e
+                    0x0690                  RPINR8 = 0x690
+                    0x0690                  _RPINR8 = 0x690
+                    0x0690                  _RPINR8bits = 0x690
+                    0x0692                  RPINR9 = 0x692
+                    0x0692                  _RPINR9 = 0x692
+                    0x0692                  _RPINR9bits = 0x692
+                    0x0696                  RPINR11 = 0x696
+                    0x0696                  _RPINR11 = 0x696
+                    0x0696                  _RPINR11bits = 0x696
+                    0x06a4                  RPINR18 = 0x6a4
+                    0x06a4                  _RPINR18 = 0x6a4
+                    0x06a4                  _RPINR18bits = 0x6a4
+                    0x06a6                  RPINR19 = 0x6a6
+                    0x06a6                  _RPINR19 = 0x6a6
+                    0x06a6                  _RPINR19bits = 0x6a6
+                    0x06a8                  RPINR20 = 0x6a8
+                    0x06a8                  _RPINR20 = 0x6a8
+                    0x06a8                  _RPINR20bits = 0x6a8
+                    0x06aa                  RPINR21 = 0x6aa
+                    0x06aa                  _RPINR21 = 0x6aa
+                    0x06aa                  _RPINR21bits = 0x6aa
+                    0x06ac                  RPINR22 = 0x6ac
+                    0x06ac                  _RPINR22 = 0x6ac
+                    0x06ac                  _RPINR22bits = 0x6ac
+                    0x06ae                  RPINR23 = 0x6ae
+                    0x06ae                  _RPINR23 = 0x6ae
+                    0x06ae                  _RPINR23bits = 0x6ae
+                    0x06c0                  RPOR0 = 0x6c0
+                    0x06c0                  _RPOR0 = 0x6c0
+                    0x06c0                  _RPOR0bits = 0x6c0
+                    0x06c2                  RPOR1 = 0x6c2
+                    0x06c2                  _RPOR1 = 0x6c2
+                    0x06c2                  _RPOR1bits = 0x6c2
+                    0x06c4                  RPOR2 = 0x6c4
+                    0x06c4                  _RPOR2 = 0x6c4
+                    0x06c4                  _RPOR2bits = 0x6c4
+                    0x06c6                  RPOR3 = 0x6c6
+                    0x06c6                  _RPOR3 = 0x6c6
+                    0x06c6                  _RPOR3bits = 0x6c6
+                    0x06c8                  RPOR4 = 0x6c8
+                    0x06c8                  _RPOR4 = 0x6c8
+                    0x06c8                  _RPOR4bits = 0x6c8
+                    0x06ca                  RPOR5 = 0x6ca
+                    0x06ca                  _RPOR5 = 0x6ca
+                    0x06ca                  _RPOR5bits = 0x6ca
+                    0x06cc                  RPOR6 = 0x6cc
+                    0x06cc                  _RPOR6 = 0x6cc
+                    0x06cc                  _RPOR6bits = 0x6cc
+                    0x06ce                  RPOR7 = 0x6ce
+                    0x06ce                  _RPOR7 = 0x6ce
+                    0x06ce                  _RPOR7bits = 0x6ce
+                    0x06d0                  RPOR8 = 0x6d0
+                    0x06d0                  _RPOR8 = 0x6d0
+                    0x06d0                  _RPOR8bits = 0x6d0
+                    0x06d2                  RPOR9 = 0x6d2
+                    0x06d2                  _RPOR9 = 0x6d2
+                    0x06d2                  _RPOR9bits = 0x6d2
+                    0x06d4                  RPOR10 = 0x6d4
+                    0x06d4                  _RPOR10 = 0x6d4
+                    0x06d4                  _RPOR10bits = 0x6d4
+                    0x06d6                  RPOR11 = 0x6d6
+                    0x06d6                  _RPOR11 = 0x6d6
+                    0x06d6                  _RPOR11bits = 0x6d6
+                    0x06d8                  RPOR12 = 0x6d8
+                    0x06d8                  _RPOR12 = 0x6d8
+                    0x06d8                  _RPOR12bits = 0x6d8
+                    0x0740                  RCON = 0x740
+                    0x0740                  _RCON = 0x740
+                    0x0740                  _RCONbits = 0x740
+                    0x0742                  OSCCON = 0x742
+                    0x0742                  _OSCCON = 0x742
+                    0x0742                  _OSCCONbits = 0x742
+                    0x0742                  OSCCONL = 0x742
+                    0x0742                  _OSCCONL = 0x742
+                    0x0743                  OSCCONH = 0x743
+                    0x0743                  _OSCCONH = 0x743
+                    0x0744                  CLKDIV = 0x744
+                    0x0744                  _CLKDIV = 0x744
+                    0x0744                  _CLKDIVbits = 0x744
+                    0x0748                  OSCTUN = 0x748
+                    0x0748                  _OSCTUN = 0x748
+                    0x0748                  _OSCTUNbits = 0x748
+                    0x0760                  NVMCON = 0x760
+                    0x0760                  _NVMCON = 0x760
+                    0x0760                  _NVMCONbits = 0x760
+                    0x0766                  NVMKEY = 0x766
+                    0x0766                  _NVMKEY = 0x766
+                    0x0770                  PMD1 = 0x770
+                    0x0770                  _PMD1 = 0x770
+                    0x0770                  _PMD1bits = 0x770
+                    0x0772                  PMD2 = 0x772
+                    0x0772                  _PMD2 = 0x772
+                    0x0772                  _PMD2bits = 0x772
+                    0x0774                  PMD3 = 0x774
+                    0x0774                  _PMD3 = 0x774
+                    0x0774                  _PMD3bits = 0x774
+                    0x0140                  IC1 = 0x140
+                    0x0140                  _IC1 = 0x140
+                    0x0144                  IC2 = 0x144
+                    0x0144                  _IC2 = 0x144
+                    0x0148                  IC3 = 0x148
+                    0x0148                  _IC3 = 0x148
+                    0x014c                  IC4 = 0x14c
+                    0x014c                  _IC4 = 0x14c
+                    0x0150                  IC5 = 0x150
+                    0x0150                  _IC5 = 0x150
+                    0x0180                  OC1 = 0x180
+                    0x0180                  _OC1 = 0x180
+                    0x0186                  OC2 = 0x186
+                    0x0186                  _OC2 = 0x186
+                    0x018c                  OC3 = 0x18c
+                    0x018c                  _OC3 = 0x18c
+                    0x0192                  OC4 = 0x192
+                    0x0192                  _OC4 = 0x192
+                    0x0198                  OC5 = 0x198
+                    0x0198                  _OC5 = 0x198
+                    0x0240                  SPI1 = 0x240
+                    0x0240                  _SPI1 = 0x240
+                    0x0260                  SPI2 = 0x260
+                    0x0260                  _SPI2 = 0x260
+                    0x0220                  UART1 = 0x220
+                    0x0220                  _UART1 = 0x220
+                    0x0230                  UART2 = 0x230
+                    0x0230                  _UART2 = 0x230
+START GROUP
+LOAD c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a
+LOAD c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a
+LOAD c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-c-elf.a
+END GROUP
+OUTPUT(dist/DPSK3_PIC24/debug/pic24.debug.elf elf32-pic30)
+LOAD jump_table
+LOAD default_isr
+LOAD data_init
+
+.debug_pubtypes
+                  0x000168        0x846
+ .debug_pubtypes
+                  0x000168         0x61 build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+ .debug_pubtypes
+                  0x0001c9         0x95 build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+ .debug_pubtypes
+                  0x00025e         0x4e build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+ .debug_pubtypes
+                  0x0002ac         0x4c build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+ .debug_pubtypes
+                  0x0002f8         0x98 build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+ .debug_pubtypes
+                  0x000390         0xd8 build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+ .debug_pubtypes
+                  0x000468        0x113 build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+ .debug_pubtypes
+                  0x00057b         0xa7 build/DPSK3_PIC24/debug/src/leds.o
+ .debug_pubtypes
+                  0x000622         0xc4 build/DPSK3_PIC24/debug/src/fault.o
+ .debug_pubtypes
+                  0x0006e6         0xc2 build/DPSK3_PIC24/debug/src/loads.o
+ .debug_pubtypes
+                  0x0007a8         0x5c build/DPSK3_PIC24/debug/src/buttons.o
+ .debug_pubtypes
+                  0x000804         0x30 build/DPSK3_PIC24/debug/src/temperature.o
+ .debug_pubtypes
+                  0x000834         0xb6 build/DPSK3_PIC24/debug/src/protocol.o
+ .debug_pubtypes
+                  0x0008ea         0xc4 build/DPSK3_PIC24/debug/src/main.o
+
+__c30_signature
+                  0x0009ae         0xa2
+ __c30_signature
+                  0x0009ae          0x6 build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+ __c30_signature
+                  0x0009b4          0x6 build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+ __c30_signature
+                  0x0009ba          0x6 build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+ __c30_signature
+                  0x0009c0          0x6 build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+ __c30_signature
+                  0x0009c6          0x6 build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+ __c30_signature
+                  0x0009cc          0x6 build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+ __c30_signature
+                  0x0009d2          0x6 build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+ __c30_signature
+                  0x0009d8          0x6 build/DPSK3_PIC24/debug/src/leds.o
+ __c30_signature
+                  0x0009de          0x6 build/DPSK3_PIC24/debug/src/fault.o
+ __c30_signature
+                  0x0009e4          0x6 build/DPSK3_PIC24/debug/src/loads.o
+ __c30_signature
+                  0x0009ea          0x6 build/DPSK3_PIC24/debug/src/buttons.o
+ __c30_signature
+                  0x0009f0          0x6 build/DPSK3_PIC24/debug/src/temperature.o
+ __c30_signature
+                  0x0009f6          0x6 build/DPSK3_PIC24/debug/src/protocol.o
+ __c30_signature
+                  0x0009fc          0x6 build/DPSK3_PIC24/debug/src/main.o
+ __c30_signature
+                  0x000a02          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+ __c30_signature
+                  0x000a08          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+ __c30_signature
+                  0x000a0e          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
+ __c30_signature
+                  0x000a14          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+ __c30_signature
+                  0x000a1a          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+ __c30_signature
+                  0x000a20          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
+ __c30_signature
+                  0x000a26          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
+ __c30_signature
+                  0x000a2c          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fpack.eo)
+ __c30_signature
+                  0x000a32          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack.eo)
+ __c30_signature
+                  0x000a38          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack2.eo)
+ __c30_signature
+                  0x000a3e          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
+ __c30_signature
+                  0x000a44          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+ __c30_signature
+                  0x000a4a          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+
+.nbss               0x0850         0x30
+ .nbss              0x0850         0x10 build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+ .nbss              0x0860          0xa build/DPSK3_PIC24/debug/src/loads.o
+                    0x0860                  _data_buck
+                    0x0864                  _data_boost
+ .nbss              0x086a          0x8 build/DPSK3_PIC24/debug/src/fault.o
+ .nbss              0x0872          0x6 build/DPSK3_PIC24/debug/src/protocol.o
+ .nbss              0x0878          0x4 build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+ .nbss              0x087c          0x4 build/DPSK3_PIC24/debug/src/leds.o
+
+.ndata              0x0880          0x2
+ .ndata             0x0880          0x2 build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+
+.nbss               0x0882          0x4
+ .nbss              0x0882          0x2 build/DPSK3_PIC24/debug/src/buttons.o
+ .nbss              0x0884          0x2 build/DPSK3_PIC24/debug/src/temperature.o
+
+.ndata              0x0886          0x2
+ .ndata             0x0886          0x2 build/DPSK3_PIC24/debug/src/protocol.o
+
+.nbss               0x0888          0x2
+ .nbss              0x0888          0x2 build/DPSK3_PIC24/debug/src/main.o
+
+.bss                0x088a         0x88
+ .bss               0x088a         0x4a build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+ .bss               0x08d4         0x20 build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+ .bss               0x08f4         0x12 build/DPSK3_PIC24/debug/src/leds.o
+ .bss               0x0906          0x8 build/DPSK3_PIC24/debug/src/buttons.o
+ .bss               0x090e          0x4 build/DPSK3_PIC24/debug/src/fault.o
+
+.ivt._OscillatorFail
+                  0x000006          0x2
+ .ivt._OscillatorFail
+                  0x000006          0x2 build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+
+.ivt._StackError
+                  0x00000a          0x2
+ .ivt._StackError
+                  0x00000a          0x2 build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+
+.ivt._AddressError
+                  0x000008          0x2
+ .ivt._AddressError
+                  0x000008          0x2 build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+
+.ivt._MathError
+                  0x00000c          0x2
+ .ivt._MathError
+                  0x00000c          0x2 build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+
+.config_JTAGEN    0x00abfe          0x2
+ .config_JTAGEN
+                  0x00abfe          0x2 build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+
+.config_IESO      0x00abfc          0x2
+ .config_IESO     0x00abfc          0x2 build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+
+.ivt._T1Interrupt
+                  0x00001a          0x2
+ .ivt._T1Interrupt
+                  0x00001a          0x2 build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+
+.ivt._ADC1Interrupt
+                  0x00002e          0x2
+ .ivt._ADC1Interrupt
+                  0x00002e          0x2 build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+
+.ivt._U1TXInterrupt
+                  0x00002c          0x2
+ .ivt._U1TXInterrupt
+                  0x00002c          0x2 build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+
+.ivt._U1RXInterrupt
+                  0x00002a          0x2
+ .ivt._U1RXInterrupt
+                  0x00002a          0x2 build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+
+.ivt._U1ErrInterrupt
+                  0x000096          0x2
+ .ivt._U1ErrInterrupt
+                  0x000096          0x2 build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+
+.const              0x8700         0x40 load address 0x000700  
+ .const             0x8700         0x28 build/DPSK3_PIC24/debug/src/loads.o
+                    0x8700                  _fstates
+                    0x8714                  _stills
+                    0x871e                  _blinks
+ .const             0x8728         0x18 build/DPSK3_PIC24/debug/src/leds.o
+
+.text             0x000740        0xb98
+ .text            0x000740        0x416 build/DPSK3_PIC24/debug/src/loads.o
+                  0x000784                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S0
+                  0x0007c2                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S1
+                  0x000802                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S2
+                  0x000842                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S3
+                  0x000880                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_B1
+                  0x0008c0                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_B2
+                  0x000900                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_B3
+                  0x000940                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S0t
+                  0x00097c                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_S1t
+                  0x0009b8                  build/DPSK3_PIC24/debug/src/loads.o:__fstate_B1t
+                  0x000a8c                  _LoadsInit
+                  0x000aac                  _LoadsTask
+                  0x000ae6                  _LoadsGetStatus
+                  0x000b12                  _LoadsStateMachine
+ .text            0x000b56        0x15c build/DPSK3_PIC24/debug/src/fault.o
+                  0x000bc8                  _FaultInit
+                  0x000bf6                  _FaultCheck
+                  0x000c4c                  _FaultTask
+ .text            0x000cb2        0x14a build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+                  0x000cb2                  _UART1_Initialize
+                  0x000cda                  _UART1_Read
+                  0x000d02                  _UART1_ReadBuffer
+                  0x000d28                  _UART1_Write
+                  0x000d50                  _UART1_WriteBuffer
+                  0x000d76                  _UART1_TransferStatusGet
+                  0x000d98                  _UART1_Peek
+                  0x000db0                  _UART1_ReceiveBufferSizeGet
+                  0x000dcc                  _UART1_TransmitBufferSizeGet
+                  0x000de8                  _UART1_ReceiveBufferIsEmpty
+                  0x000df0                  _UART1_TransmitBufferIsFull
+                  0x000df8                  _UART1_StatusGet
+ .text            0x000dfc        0x144 build/DPSK3_PIC24/debug/src/leds.o
+                  0x000e04                  _LedsInit
+                  0x000e3e                  _LedOn
+                  0x000e56                  _LedOff
+                  0x000e6e                  _LedBlink
+                  0x000e86                  _LedsMatrixTask
+                  0x000ef0                  _LedsBlinkTask
+ .text            0x000f40        0x132 build/DPSK3_PIC24/debug/src/main.o
+                  0x000f40                  _main
+                  0x001032                  _TMR1_CallBack
+ .text            0x001072         0xe8 build/DPSK3_PIC24/debug/src/buttons.o
+                  0x001094                  _ButtonsInit
+                  0x0010bc                  _ButtonEventBuck
+                  0x0010ce                  _ButtonEventBoost
+                  0x0010e0                  _ButtonsTask
+ .text            0x00115a         0x96 build/DPSK3_PIC24/debug/src/protocol.o
+                  0x00115a                  _ProtocolInit
+                  0x00115e                  _ProtocolCheck
+                  0x0011b4                  _ProtocolClose
+                  0x0011c8                  _ProtocolTick
+ .text            0x0011f0         0x7a build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+                  0x0011f8                  _ADC1_Initialize
+                  0x001216                  _ADC1_Start
+                  0x00121a                  _ADC1_Stop
+                  0x00121e                  _ADC1_ConversionResultBufferGet
+                  0x001234                  _ADC1_ConversionResultGet
+                  0x001238                  _ADC1_IsConversionComplete
+                  0x00123e                  _ADC1_ChannelSelect
+                  0x001242                  _ADC1_ReadAvg
+ .text            0x00126a         0x6e build/DPSK3_PIC24/debug/src/temperature.o
+                  0x00126a                  _TemperatureCheck
+
+.dinit            0x0012d8         0x66
+ .dinit           0x0012d8         0x66 data_init
+
+.text             0x00133e         0xfa
+ .text            0x00133e         0x52 build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+                  0x00133e                  _PIN_MANAGER_Initialize
+ .text            0x001390         0x46 build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+                  0x001390                  _TMR1_Initialize
+                  0x0013a2                  _TMR1_Period16BitSet
+                  0x0013a8                  _TMR1_Period16BitGet
+                  0x0013ac                  _TMR1_Counter16BitSet
+                  0x0013b2                  _TMR1_Counter16BitGet
+                  0x0013b8                  _TMR1_Start
+                  0x0013c0                  _TMR1_Stop
+                  0x0013c6                  _TMR1_GetElapsedThenClear
+                  0x0013ce                  _TMR1_SoftwareCounterGet
+                  0x0013d2                  _TMR1_SoftwareCounterClear
+ .text            0x0013d6         0x32 build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+                  0x0013d6                  _OSCILLATOR_Initialize
+                  0x0013fc                  _SYSTEM_Initialize
+ .text            0x001408         0x30 build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+                  0x001408                  _INTERRUPT_Initialize
+
+.init.delay32     0x001438         0x1c
+ .init.delay32    0x001438         0x1c c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
+                  0x001438                  ___delay32
+
+.text             0x001454         0x16
+ .text            0x001454         0x10 build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+                  0x00145e                  _TRAPS_halt_on_error
+ .text            0x001464          0x6 build/DPSK3_PIC24/debug/src/reset.o
+                  0x001464                  _SysReset
+
+Cross Reference Table
+
+Symbol                                            File
+CORCON                                            c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+_AD1CHS                                           build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_AD1CON1                                          build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_AD1CON1bits                                      build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_AD1CON2                                          build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_AD1CON2bits                                      build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_AD1CON3                                          build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_AD1CSSL                                          build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_AD1PCFG                                          build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_ADC1BUF0                                         build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_ADC1_ChannelSelect                               build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_ADC1_ConversionResultBufferGet                   build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_ADC1_ConversionResultGet                         build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_ADC1_Initialize                                  build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+_ADC1_IsConversionComplete                        build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_ADC1_ReadAvg                                     build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+                                                  build/DPSK3_PIC24/debug/src/temperature.o
+_ADC1_Start                                       build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_ADC1_Stop                                        build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_ButtonEventBoost                                 build/DPSK3_PIC24/debug/src/buttons.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_ButtonEventBuck                                  build/DPSK3_PIC24/debug/src/buttons.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_ButtonsInit                                      build/DPSK3_PIC24/debug/src/buttons.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_ButtonsTask                                      build/DPSK3_PIC24/debug/src/buttons.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_CLKDIV                                           build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+_CNPU1                                            build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_CNPU2                                            build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_CORCON                                           c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+_FaultCheck                                       build/DPSK3_PIC24/debug/src/fault.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_FaultInit                                        build/DPSK3_PIC24/debug/src/fault.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_FaultTask                                        build/DPSK3_PIC24/debug/src/fault.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_IEC0bits                                         build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_IFS0bits                                         build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_IFS4bits                                         build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+_INTCON1bits                                      build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+_INTERRUPT_Initialize                             build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+_IPC0bits                                         build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+_IPC16bits                                        build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+_IPC2bits                                         build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+_IPC3bits                                         build/DPSK3_PIC24/debug/mcc_generated_files/interrupt_manager.o
+_LATA                                             build/DPSK3_PIC24/debug/src/leds.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_LATAbits                                         build/DPSK3_PIC24/debug/src/loads.o
+_LATB                                             build/DPSK3_PIC24/debug/src/leds.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_LATBbits                                         build/DPSK3_PIC24/debug/src/main.o
+                                                  build/DPSK3_PIC24/debug/src/loads.o
+                                                  build/DPSK3_PIC24/debug/src/fault.o
+_LATC                                             build/DPSK3_PIC24/debug/src/leds.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_LATCbits                                         build/DPSK3_PIC24/debug/src/loads.o
+_LedBlink                                         build/DPSK3_PIC24/debug/src/leds.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+                                                  build/DPSK3_PIC24/debug/src/loads.o
+                                                  build/DPSK3_PIC24/debug/src/fault.o
+_LedOff                                           build/DPSK3_PIC24/debug/src/leds.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+                                                  build/DPSK3_PIC24/debug/src/loads.o
+                                                  build/DPSK3_PIC24/debug/src/fault.o
+_LedOn                                            build/DPSK3_PIC24/debug/src/leds.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+                                                  build/DPSK3_PIC24/debug/src/loads.o
+                                                  build/DPSK3_PIC24/debug/src/fault.o
+_LedsBlinkTask                                    build/DPSK3_PIC24/debug/src/leds.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_LedsInit                                         build/DPSK3_PIC24/debug/src/leds.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_LedsMatrixTask                                   build/DPSK3_PIC24/debug/src/leds.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_LoadsGetStatus                                   build/DPSK3_PIC24/debug/src/loads.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_LoadsInit                                        build/DPSK3_PIC24/debug/src/loads.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_LoadsStateMachine                                build/DPSK3_PIC24/debug/src/loads.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_LoadsTask                                        build/DPSK3_PIC24/debug/src/loads.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_ODCA                                             build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_ODCB                                             build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_ODCC                                             build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_OSCCON                                           build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_OSCCONbits                                       build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+_OSCILLATOR_Initialize                            build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+_OSCTUN                                           build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+_PIN_MANAGER_Initialize                           build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+_PORTAbits                                        build/DPSK3_PIC24/debug/src/buttons.o
+_PORTBbits                                        build/DPSK3_PIC24/debug/src/fault.o
+_PORTCbits                                        build/DPSK3_PIC24/debug/src/fault.o
+_PR1                                              build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_PSVPAG                                           c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+_ProtocolCheck                                    build/DPSK3_PIC24/debug/src/protocol.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_ProtocolClose                                    build/DPSK3_PIC24/debug/src/protocol.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_ProtocolInit                                     build/DPSK3_PIC24/debug/src/protocol.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_ProtocolTick                                     build/DPSK3_PIC24/debug/src/protocol.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_RCOUNT                                           build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+_RPINR18bits                                      build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_RPOR3bits                                        build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_SPLIM                                            c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+_SYSTEM_Initialize                                build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_SysReset                                         build/DPSK3_PIC24/debug/src/reset.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_T1CON                                            build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_T1CONbits                                        build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_TBLPAG                                           c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+_TMR1                                             build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_TMR1_CallBack                                    build/DPSK3_PIC24/debug/src/main.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_TMR1_Counter16BitGet                             build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_TMR1_Counter16BitSet                             build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_TMR1_GetElapsedThenClear                         build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_TMR1_Initialize                                  build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+_TMR1_Period16BitGet                              build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_TMR1_Period16BitSet                              build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_TMR1_SoftwareCounterClear                        build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_TMR1_SoftwareCounterGet                          build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_TMR1_Start                                       build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_TMR1_Stop                                        build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+_TRAPS_halt_on_error                              build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+_TRISA                                            build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_TRISAbits                                        build/DPSK3_PIC24/debug/src/leds.o
+_TRISB                                            build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_TRISBbits                                        build/DPSK3_PIC24/debug/src/main.o
+                                                  build/DPSK3_PIC24/debug/src/fault.o
+                                                  build/DPSK3_PIC24/debug/src/leds.o
+_TRISC                                            build/DPSK3_PIC24/debug/mcc_generated_files/pin_manager.o
+_TRISCbits                                        build/DPSK3_PIC24/debug/src/fault.o
+                                                  build/DPSK3_PIC24/debug/src/leds.o
+_TemperatureCheck                                 build/DPSK3_PIC24/debug/src/temperature.o
+                                                  build/DPSK3_PIC24/debug/src/main.o
+_U1BRG                                            build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+_U1MODE                                           build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+_U1MODEbits                                       build/DPSK3_PIC24/debug/src/protocol.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+_U1RXREG                                          build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+_U1STA                                            build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+_U1STAbits                                        build/DPSK3_PIC24/debug/src/protocol.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+_U1TXREG                                          build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+_UART1_Initialize                                 build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/mcc.o
+_UART1_Peek                                       build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+_UART1_Read                                       build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+                                                  build/DPSK3_PIC24/debug/src/protocol.o
+_UART1_ReadBuffer                                 build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+                                                  build/DPSK3_PIC24/debug/src/protocol.o
+_UART1_ReceiveBufferIsEmpty                       build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+                                                  build/DPSK3_PIC24/debug/src/protocol.o
+_UART1_ReceiveBufferSizeGet                       build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+                                                  build/DPSK3_PIC24/debug/src/protocol.o
+_UART1_StatusGet                                  build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+_UART1_TransferStatusGet                          build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+                                                  build/DPSK3_PIC24/debug/src/protocol.o
+_UART1_TransmitBufferIsFull                       build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+_UART1_TransmitBufferSizeGet                      build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+_UART1_Write                                      build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+                                                  build/DPSK3_PIC24/debug/src/protocol.o
+_UART1_WriteBuffer                                build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+                                                  build/DPSK3_PIC24/debug/src/protocol.o
+__ADC1Interrupt                                   build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+__AddressError                                    build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+__DefaultInterrupt                                default_isr
+__MIN_STACK_SIZE                                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__MathError                                       build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+__OscillatorFail                                  build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+__SPLIM_init                                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__SP_init                                         dist/DPSK3_PIC24/debug/pic24.debug.elf
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__STACKGUARD_SIZE                                 dist/DPSK3_PIC24/debug/pic24.debug.elf
+__StackError                                      build/DPSK3_PIC24/debug/mcc_generated_files/traps.o
+__T1Interrupt                                     build/DPSK3_PIC24/debug/mcc_generated_files/tmr1.o
+__U1ErrInterrupt                                  build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+__U1RXInterrupt                                   build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+__U1TXInterrupt                                   build/DPSK3_PIC24/debug/mcc_generated_files/uart1.o
+___addsf3                                         c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+___delay32                                        c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
+                                                  build/DPSK3_PIC24/debug/src/main.o
+                                                  build/DPSK3_PIC24/debug/src/protocol.o
+                                                  build/DPSK3_PIC24/debug/src/fault.o
+___divsf3                                         c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                                                  build/DPSK3_PIC24/debug/src/temperature.o
+___fixunssfsi                                     c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
+                                                  build/DPSK3_PIC24/debug/src/temperature.o
+___floatundisf                                    c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
+___floatunsisf                                    c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
+                                                  build/DPSK3_PIC24/debug/src/temperature.o
+___mulsf3                                         c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                                                  build/DPSK3_PIC24/debug/src/temperature.o
+___subsf3                                         c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+                                                  build/DPSK3_PIC24/debug/src/temperature.o
+__bootconst_psvpage                               dist/DPSK3_PIC24/debug/pic24.debug.elf
+__const_length                                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__const_psvpage                                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                                                  build/DPSK3_PIC24/debug/mcc_generated_files/adc1.o
+__crt_start_mode                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__crt_start_mode_normal                           c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
+__data_init                                       c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+__data_init_standard                              c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__dinit_tbloffset                                 dist/DPSK3_PIC24/debug/pic24.debug.elf
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__dinit_tblpage                                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__eheap                                           dist/DPSK3_PIC24/debug/pic24.debug.elf
+__enable_fixed                                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__fPropagateNaN                                   c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+__fbopExit                                        c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+__fbopReturnNaN                                   c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+__fpack                                           c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fpack.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+__funpack                                         c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack2.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
+__funpack2                                        c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack2.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+__has_user_init                                   c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__heap                                            dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltADC1Interrupt                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltAddressError                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltCNInterrupt                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltCRCInterrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltCompInterrupt                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltIC1Interrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltIC2Interrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltIC3Interrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltIC4Interrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltIC5Interrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltINT0Interrupt                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltINT1Interrupt                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltINT2Interrupt                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt14                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt15                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt21                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt22                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt23                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt24                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt34                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt35                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt36                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt4                     dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt40                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt42                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt43                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt44                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt46                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt47                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt48                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt51                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt52                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt53                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt54                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt55                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt56                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt57                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt58                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt59                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt60                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt61                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt63                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt64                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt68                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt69                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt70                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltInterrupt71                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltLVDInterrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltMI2C1Interrupt                 dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltMI2C2Interrupt                 dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltMathError                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltOC1Interrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltOC2Interrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltOC3Interrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltOC4Interrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltOC5Interrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltOscillatorFail                 dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltPMPInterrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltRTCCInterrupt                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltReservedTrap0                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltReservedTrap5                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltReservedTrap6                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltReservedTrap7                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltSI2C1Interrupt                 dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltSI2C2Interrupt                 dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltSPI1ErrInterrupt               dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltSPI1Interrupt                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltSPI2ErrInterrupt               dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltSPI2Interrupt                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltStackError                     dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltT1Interrupt                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltT2Interrupt                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltT3Interrupt                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltT4Interrupt                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltT5Interrupt                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltU1ErrInterrupt                 dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltU1RXInterrupt                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltU1TXInterrupt                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltU2ErrInterrupt                 dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltU2RXInterrupt                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.aivt._AltU2TXInterrupt                  dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.bss                                     dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.config_IESO                             dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.config_JTAGEN                           dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.const                                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.debug_abbrev                            dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.debug_aranges                           dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.debug_frame                             dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.debug_info                              dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.debug_line                              dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.debug_pubnames                          dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.debug_pubtypes                          dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.debug_str                               dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.dinit                                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.init.delay32                            dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._ADC1Interrupt                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._AddressError                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._CNInterrupt                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._CRCInterrupt                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._CompInterrupt                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._IC1Interrupt                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._IC2Interrupt                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._IC3Interrupt                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._IC4Interrupt                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._IC5Interrupt                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._INT0Interrupt                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._INT1Interrupt                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._INT2Interrupt                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt14                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt15                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt21                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt22                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt23                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt24                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt34                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt35                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt36                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt4                         dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt40                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt42                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt43                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt44                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt46                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt47                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt48                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt51                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt52                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt53                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt54                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt55                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt56                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt57                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt58                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt59                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt60                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt61                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt63                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt64                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt68                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt69                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt70                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._Interrupt71                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._LVDInterrupt                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._MI2C1Interrupt                     dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._MI2C2Interrupt                     dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._MathError                          dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._OC1Interrupt                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._OC2Interrupt                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._OC3Interrupt                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._OC4Interrupt                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._OC5Interrupt                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._OscillatorFail                     dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._PMPInterrupt                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._RTCCInterrupt                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._ReservedTrap0                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._ReservedTrap5                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._ReservedTrap6                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._ReservedTrap7                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._SI2C1Interrupt                     dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._SI2C2Interrupt                     dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._SPI1ErrInterrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._SPI1Interrupt                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._SPI2ErrInterrupt                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._SPI2Interrupt                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._StackError                         dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._T1Interrupt                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._T2Interrupt                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._T3Interrupt                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._T4Interrupt                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._T5Interrupt                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._U1ErrInterrupt                     dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._U1RXInterrupt                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._U1TXInterrupt                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._U2ErrInterrupt                     dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._U2RXInterrupt                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ivt._U2TXInterrupt                      dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.nbss                                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.ndata                                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.reset                                   dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_.text                                    dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked___c30_signature                          dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_reserve_data_0x800                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_reserve_data_0x820                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_reserve_data_0x822                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_reserve_data_0x824                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__linked_reserve_data_0x826                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__psv_init                                        c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__reset                                           c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__resetALT                                        dist/DPSK3_PIC24/debug/pic24.debug.elf
+__resetPRI                                        c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__restart_dinit_tbloffset                         dist/DPSK3_PIC24/debug/pic24.debug.elf
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__restart_dinit_tblpage                           dist/DPSK3_PIC24/debug/pic24.debug.elf
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__restart_shared_dinit_addr                       dist/DPSK3_PIC24/debug/pic24.debug.elf
+__secureconst_psvpage                             dist/DPSK3_PIC24/debug/pic24.debug.elf
+__shared_dinit_addr                               dist/DPSK3_PIC24/debug/pic24.debug.elf
+__user_init                                       c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+_blinks                                           build/DPSK3_PIC24/debug/src/loads.o
+_data_boost                                       build/DPSK3_PIC24/debug/src/loads.o
+_data_buck                                        build/DPSK3_PIC24/debug/src/loads.o
+_fstates                                          build/DPSK3_PIC24/debug/src/loads.o
+_main                                             build/DPSK3_PIC24/debug/src/main.o
+                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+_stills                                           build/DPSK3_PIC24/debug/src/loads.o
+build/DPSK3_PIC24/debug/src/loads.o:__fstate_B1   build/DPSK3_PIC24/debug/src/loads.o
+                                                  jump_table
+build/DPSK3_PIC24/debug/src/loads.o:__fstate_B1t  build/DPSK3_PIC24/debug/src/loads.o
+                                                  jump_table
+build/DPSK3_PIC24/debug/src/loads.o:__fstate_B2   build/DPSK3_PIC24/debug/src/loads.o
+                                                  jump_table
+build/DPSK3_PIC24/debug/src/loads.o:__fstate_B3   build/DPSK3_PIC24/debug/src/loads.o
+                                                  jump_table
+build/DPSK3_PIC24/debug/src/loads.o:__fstate_S0   build/DPSK3_PIC24/debug/src/loads.o
+                                                  jump_table
+build/DPSK3_PIC24/debug/src/loads.o:__fstate_S0t  build/DPSK3_PIC24/debug/src/loads.o
+                                                  jump_table
+build/DPSK3_PIC24/debug/src/loads.o:__fstate_S1   build/DPSK3_PIC24/debug/src/loads.o
+                                                  jump_table
+build/DPSK3_PIC24/debug/src/loads.o:__fstate_S1t  build/DPSK3_PIC24/debug/src/loads.o
+                                                  jump_table
+build/DPSK3_PIC24/debug/src/loads.o:__fstate_S2   build/DPSK3_PIC24/debug/src/loads.o
+                                                  jump_table
+build/DPSK3_PIC24/debug/src/loads.o:__fstate_S3   build/DPSK3_PIC24/debug/src/loads.o
+                                                  jump_table
+reserve_data_0x800%GAPS                           dist/DPSK3_PIC24/debug/pic24.debug.elf
+reserve_data_0x820%GAPS                           dist/DPSK3_PIC24/debug/pic24.debug.elf
+reserve_data_0x822%GAPS                           dist/DPSK3_PIC24/debug/pic24.debug.elf
+reserve_data_0x824%GAPS                           dist/DPSK3_PIC24/debug/pic24.debug.elf
+reserve_data_0x826%GAPS                           dist/DPSK3_PIC24/debug/pic24.debug.elf
