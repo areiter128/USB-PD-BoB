@@ -20,7 +20,13 @@ The branching model for the hotfixes still foolows the usual scheme:
 * Branch orinial_develop  
     each HOTFIX is seperated in its own branch, starting with **orinial_hotfix_ [_issue title_]**  
 	
-### Please look up work items in **Project DPSK3-Initial Firmware Bugfixes** for details
+### Please look up work items in **Project DPSK3-Initial Firmware Bugfixes** for details  
+* Create/Review Tickets: https://github.com/areiter128/DPSK3/issues
+* Project Overview: https://github.com/areiter128/DPSK3/projects/1
+* Latest Releases:  https://github.com/areiter128/DPSK3/releases/latest
+
+**PLEASE NOTE:**  
+Please consider this project as **Prototype Firmware** only. Once all Hotfixes have been integrated, we will pull the plug on this project and move all project files back to SVN. All future firmware versions will be build on the **_New Firmware Version_**.
 
 
 ## 2) New Firmware Version (branches master, develop, feature, etc.)  
