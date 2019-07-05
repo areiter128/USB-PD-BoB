@@ -30,4 +30,4 @@ The state machine should be driven from the main()-loop.
 For simplicity it is desired **not** having any hidden libraries included and **not** using code generation tools like MCC at this point. 
 All tools used (e.g. to derive parameters) have to be officially released or at least be publicly available to end-users.
 
-### Please look up work items in **Project DPSK3-Simplistic Firmware** for details
+### Please look up work items in [[https://github.com/areiter128/DPSK3/projects/2]**Project DPSK3-Simplistic Firmware**] for details
