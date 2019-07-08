@@ -20,35 +20,58 @@
  */
 
 /* 
- * File:   main.h
+ * File:   init_gpio.h
  * Author: M91406
- * Comments: main header file of this application
+ * Comments: header file of the GPIO initialization
  * Revision history: 
- * v1.0 initial version
+ * 1.0  initial version
  */
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef APPLICATION_MAIN_HEADER_H
-#define	APPLICATION_MAIN_HEADER_H
+#ifndef INITIALIZE_GPIO_H
+#define	INITIALIZE_GPIO_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
 #include <stdbool.h>
 
-// List of user included header files
-#include "init/init_fosc.h"
-#include "init/init_timer1.h"
-#include "init/init_gpio.h"
+#include "../../h/main.h"
+
+#ifdef DPSK3_R30
+// DPSK3 Debug Pins 
+    #define DBGLED_SET		{ _LATB6 = 1; }
+    #define DBGLED_CLEAR	{ _LATB6 = 0; }
+    #define DBGLED_TOGGLE	{ _LATB6 ^= 1; }
+    #define DBGLED_INIT		{ _LATB6 = 0; _TRISB6 = 0; }
+
+    #define DBGPIN_SET		{ _LATB5 = 1; }
+    #define DBGPIN_CLEAR	{ _LATB5 = 0; }
+    #define DBGPIN_TOGGLE	{ _LATB5 ^= 1; }
+    #define DBGPIN_INIT		{ _LATB5 = 0; _TRISB5 = 0; }
+#endif
+
+#ifdef MA330048_R30
+// dsPIC33CK DP PIM Debug Pins
+    #define DBGLED_SET		{ _LATD15 = 1; }
+    #define DBGLED_CLEAR	{ _LATD15 = 0; }
+    #define DBGLED_TOGGLE	{ _LATD15 ^= 1; }
+    #define DBGLED_INIT		{ _LATD15 = 0; _TRISD15 = 0; }
+
+    #define DBGPIN_SET		{ _LATD12 = 1; }
+    #define DBGPIN_CLEAR	{ _LATD12 = 0; }
+    #define DBGPIN_TOGGLE	{ _LATD12 ^= 1; }
+    #define DBGPIN_INIT		{ _LATD12 = 0; _TRISD12 = 0; }
+#endif
 
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-    
+extern volatile uint16_t init_gpio(void);
+
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */
 
-#endif	/* APPLICATION_MAIN_HEADER_H */
-
+#endif	/* INITIALIZE_GPIO_H */

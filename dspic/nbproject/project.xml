@@ -15,7 +15,9 @@
             <sourceRootList>
                 <sourceRootElem>.</sourceRootElem>
                 <sourceRootElem>h</sourceRootElem>
+                <sourceRootElem>h/init</sourceRootElem>
                 <sourceRootElem>src</sourceRootElem>
+                <sourceRootElem>src/init</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

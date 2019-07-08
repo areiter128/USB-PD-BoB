@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "../h/init/init_fosc.h"   
+#include "init_fosc.h"   
 
 #define TIMEOUT_LIMIT   5000    // timeout counter maximum
 
