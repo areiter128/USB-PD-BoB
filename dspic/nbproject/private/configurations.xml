@@ -3,9 +3,9 @@
   <projectmakefile>Makefile</projectmakefile>
   <defaultConf>0</defaultConf>
   <confs>
-    <conf name="DPSK3_DSPIC" type="2">
-      <platformToolSN></platformToolSN>
-      <languageToolchainDir>C:\Program Files (x86)\Microchip\xc16\v1.36\bin</languageToolchainDir>
+    <conf name="DPSK3_R30" type="2">
+      <platformToolSN>:=MPLABComm-USB-Microchip:=&lt;vid>04D8:=&lt;pid>9018:=&lt;rev>0100:=&lt;man>Microchip Technology Incorporated:=&lt;prod>MPLAB Snap ICD:=&lt;sn>MTIxxxxxxxxx:=&lt;drv>x:=&lt;xpt>b:=end</platformToolSN>
+      <languageToolchainDir>C:\Program Files (x86)\Microchip\xc16\v1.36b\bin</languageToolchainDir>
       <mdbdebugger version="1">
         <placeholder1>place holder 1</placeholder1>
         <placeholder2>place holder 2</placeholder2>
@@ -21,9 +21,9 @@
         </environment>
       </runprofile>
     </conf>
-    <conf name="DPSK3_DSPIC_TEST" type="2">
-      <platformToolSN>:=MPLABComm-USB-Microchip:=&lt;vid>04D8:=&lt;pid>8109:=&lt;rev>0100:=&lt;man>Microchip Technology Incorporated:=&lt;prod>MPLAB PKoB 4:=&lt;sn>JIT190210001:=&lt;drv>x:=&lt;xpt>b:=end</platformToolSN>
-      <languageToolchainDir>C:\Program Files (x86)\Microchip\xc16\v1.36\bin</languageToolchainDir>
+    <conf name="MA330048_R30" type="2">
+      <platformToolSN>:=MPLABComm-USB-Microchip:=&lt;vid>04D8:=&lt;pid>900A:=&lt;rev>0002:=&lt;man>Microchip Technology Inc.:=&lt;prod>PICkit 3:=&lt;sn>BUR161872782:=&lt;drv>x:=&lt;xpt>h:=end</platformToolSN>
+      <languageToolchainDir>C:\Program Files (x86)\Microchip\xc16\v1.36b\bin</languageToolchainDir>
       <mdbdebugger version="1">
         <placeholder1>place holder 1</placeholder1>
         <placeholder2>place holder 2</placeholder2>
