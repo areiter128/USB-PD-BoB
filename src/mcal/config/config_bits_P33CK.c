@@ -94,7 +94,7 @@
 #pragma config BTMODE = SINGLE    // Device Boot Mode Configuration->Device is in Single Boot (legacy) mode
 
 //#endif  /* Config bits for dsPIC33CK Single Core Devices */
-#elif defined (__dsPIC33CK64MP505__)
+#elif (__dsPIC33CK32MP505__) || defined (__dsPIC33CK64MP505__) || defined (__dsPIC33CK128MP505__) || defined (__dsPIC33CK256MP505__)
 
 // TODO: Verify these settings.  Is this the proper place to put these settings or should they be in
 //       a different file.
