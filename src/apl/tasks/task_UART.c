@@ -82,7 +82,7 @@
 #define CVRT_UxRXBUF_SIZE_ID0100       (64)
 #define CVRT_UxTXBUF_SIZE_ID0100       CVRT_UxRXBUF_SIZE_ID0100
 
-#define GUI_ID_0100        0x100
+#define GUI_ID_0100        0x001
  
 #define CRCH_POS_ID0100     FRAME_START_OVERHEAD+CVRT_UxRXBUF_SIZE_ID0100 
 #define CRCL_POS_ID0100     FRAME_START_OVERHEAD+CVRT_UxRXBUF_SIZE_ID0100+1  
@@ -470,7 +470,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _CVRT_UxEInterrupt( void )
 void __attribute__((__interrupt__, no_auto_psv)) _CVRT_UxTXInterrupt() 
 {
 
-    if(UART_RxTx.UartSendCounter<=(UART_RxTx.UartSendLength + FRAME_START_OVERHEAD+FRAME_STOP_OVERHEAD)) 
+    if(UART_RxTx.UartSendCounter<(UART_RxTx.UartSendLength + FRAME_START_OVERHEAD+FRAME_STOP_OVERHEAD)) 
     {
         CVRT_UxTXREG=UART_RxTx.TXBytes[UART_RxTx.UartSendCounter++];
     }
