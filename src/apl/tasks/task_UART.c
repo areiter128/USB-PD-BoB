@@ -82,7 +82,7 @@
 #define CVRT_UxRXBUF_SIZE_ID0100       (64)
 #define CVRT_UxTXBUF_SIZE_ID0100       CVRT_UxRXBUF_SIZE_ID0100
 
-#define GUI_ID_0100        0x001
+#define GUI_ID_0100        0x100
  
 #define CRCH_POS_ID0100     FRAME_START_OVERHEAD+CVRT_UxRXBUF_SIZE_ID0100 
 #define CRCL_POS_ID0100     FRAME_START_OVERHEAD+CVRT_UxRXBUF_SIZE_ID0100+1  
@@ -181,7 +181,7 @@ volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint
 volatile uint16_t exec_DebugUART(void) 
 {
     volatile uint16_t fres = 1;
-    static task_cycles_counter=0;
+    static uint16_t task_cycles_counter=0;
     
     if (1==UART_RxTx.RXFrameReady)
     {
@@ -487,7 +487,7 @@ volatile uint16_t task_DebugUARTreceive(void)
 {
     volatile uint16_t fres = 1;
     unsigned short crc;
-    float tmpf;
+//    float tmpf;
     
     UART_RxTx.CRC=smpsuart_get_crc(UART_RxTx.RXBytes,UART_RxTx.UartRecLength);
     crc = (UART_RxTx.RXBytes[UART_RxTx.UartRecLength+5] << 8) | UART_RxTx.RXBytes[UART_RxTx.UartRecLength+6];
@@ -550,9 +550,9 @@ volatile uint16_t task_DebugUARTsend_ID0100(void)
 {   
     volatile uint16_t fres = 1;
     
-    static unsigned short iin;
-    static unsigned short cnt,tmps;
-    static float tmpf;
+//    static unsigned short iin;
+    static unsigned short tmps;
+//    static float tmpf;
     
     UART_RxTx.TXBytes[0] = FRM_START;
     UART_RxTx.TXBytes[1] = (unsigned char)((GUI_ID_0100 & 0xFF00)>>8);
@@ -569,31 +569,31 @@ volatile uint16_t task_DebugUARTsend_ID0100(void)
     UART_RxTx.TXBytes[TX_VIN_INDEX]=(unsigned char)(tmps>>8);
     UART_RxTx.TXBytes[TX_VIN_INDEX+1]=(unsigned char)(tmps&0xff);
     
-    tmps=51;
+    tmps=52; // Test V1=5.2V
     UART_RxTx.TXBytes[TX_VOUT_CH1_INDEX]=(unsigned char)(tmps>>8);
     UART_RxTx.TXBytes[TX_VOUT_CH1_INDEX+1]=(unsigned char)(tmps&0xff);
     
-    tmps=151;
+    tmps=151; // Test I1=1.51A
     UART_RxTx.TXBytes[TX_IOUT_CH1_INDEX]=(unsigned char)(tmps>>8);
     UART_RxTx.TXBytes[TX_IOUT_CH1_INDEX+1]=(unsigned char)(tmps&0xff);
     
-    tmps=0x001f;
+    tmps=0x001e; // Test converter status=0x1e
     UART_RxTx.TXBytes[TX_CONVERTER_STATUS]=(unsigned char)(tmps>>8);
     UART_RxTx.TXBytes[TX_CONVERTER_STATUS+1]=(unsigned char)(tmps&0xff);
 
-    tmps=0x1;
+    tmps=0x1f; // Test converter fault = 0x1f
     UART_RxTx.TXBytes[TX_CONVERTER_FAULT]=(unsigned char)(tmps>>8);
     UART_RxTx.TXBytes[TX_CONVERTER_FAULT+1]=(unsigned char)(tmps&0xff);
 
-    tmps=49;
+    tmps=48;// Test V2=4.8V
     UART_RxTx.TXBytes[TX_VOUT_CH2_INDEX]=(unsigned char)(tmps>>8);
     UART_RxTx.TXBytes[TX_VOUT_CH2_INDEX+1]=(unsigned char)(tmps&0xff);
     
-    tmps=290;
+    tmps=295; // Test I1=2.95A
     UART_RxTx.TXBytes[TX_IOUT_CH2_INDEX]=(unsigned char)(tmps>>8);
     UART_RxTx.TXBytes[TX_IOUT_CH2_INDEX+1]=(unsigned char)(tmps&0xff);
     
-    tmps=350;
+    tmps=360; // Test Temperature=36°C
     UART_RxTx.TXBytes[TX_TEMPERATURE_INDEX]=(unsigned char)(tmps>>8);
     UART_RxTx.TXBytes[TX_TEMPERATURE_INDEX+1]=(unsigned char)(tmps&0xff);
     
