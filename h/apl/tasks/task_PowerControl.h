@@ -37,8 +37,8 @@
 
 #include "apl/resources/soft_start.h"
 
-#include "apl/resources/cvmc_cha.h"
-#include "apl/resources/cacmc_cha.h"
+#include "apl/resources/ctrl_vloop.h"
+#include "apl/resources/ctrl_iloop.h"
 
 #ifdef	__cplusplus
 extern "C" {

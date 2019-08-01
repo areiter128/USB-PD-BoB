@@ -52,8 +52,8 @@ typedef struct {
 
 /* status items data structure to monitor a power converter */
 typedef union {
-    volatile CONTROLLER_STATUS_BIT_FIELD_t flag;
-    volatile uint16_t flags;
+    volatile CONTROLLER_STATUS_BIT_FIELD_t flags;
+    volatile uint16_t value;
 } __attribute__((packed))CONTROLLER_STATUS_t;
 
 typedef struct {

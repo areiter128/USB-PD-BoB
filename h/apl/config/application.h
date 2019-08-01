@@ -57,6 +57,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "apl/apl.h"
+
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */

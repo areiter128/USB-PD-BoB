@@ -12,8 +12,7 @@
 #include "mcal/mcal.h"
 #include "hal/hal.h"
 
-// ToDo: original flag used by init_pwm. Remove while reworking soft start
-volatile uint16_t SoftStartFinished;
+//#include "apl/tasks/task_PowerControl.h"
 
 
 volatile uint16_t exec_PowerControl(void) {
@@ -44,11 +43,11 @@ volatile uint16_t init_PowerControl(void) {
 
     
     // reset global flags
-    application.ctrl_status.flags.adc_active = false; // ADC has not been started yet
-    application.ctrl_status.flags.pwm_started = false; // PWM has not been started yet
-    application.ctrl_status.flags.system_startup = true; // System is in startup mode
-    application.ctrl_status.flags.system_ready = false; // system is not ready yet
-    application.ctrl_status.flags.power_source_detected = false; // reset power source detection
+//    application.ctrl_status.flags.adc_active = false; // ADC has not been started yet
+//    application.ctrl_status.flags.pwm_started = false; // PWM has not been started yet
+//    application.ctrl_status.flags.system_startup = true; // System is in startup mode
+//    application.ctrl_status.flags.system_ready = false; // system is not ready yet
+//    application.ctrl_status.flags.power_source_detected = false; // reset power source detection
     
     
     
