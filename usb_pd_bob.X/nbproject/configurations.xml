@@ -24,8 +24,8 @@
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
           <itemPath>../h/apl/resources/ctrl_iloop.h</itemPath>
           <itemPath>../h/apl/resources/ctrl_vloop.h</itemPath>
-          <itemPath>../h/apl/resources/soft_start.h</itemPath>
           <itemPath>../h/apl/resources/npnz16b.h</itemPath>
+          <itemPath>../h/apl/resources/c4swbb_control.h</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../h/apl/tasks/task_FaultHandler.h</itemPath>
@@ -102,7 +102,7 @@
           <itemPath>../src/apl/resources/ctrl_iloop_asm.s</itemPath>
           <itemPath>../src/apl/resources/ctrl_vloop.c</itemPath>
           <itemPath>../src/apl/resources/ctrl_vloop_asm.s</itemPath>
-          <itemPath>../src/apl/resources/soft_start.c</itemPath>
+          <itemPath>../src/apl/resources/c4swbb_control.c</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../src/apl/tasks/task_FaultHandler.c</itemPath>
@@ -194,7 +194,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.0.46"/>
+        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.1.51"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -305,6 +305,9 @@
         <property key="relax" value="false"/>
         <property key="warning-level" value="emit-warnings"/>
       </C30-AS>
+      <C30-CO>
+        <property key="coverage-enable" value=""/>
+      </C30-CO>
       <C30-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="boot-eeprom" value="no_eeprom"/>
@@ -1053,7 +1056,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.0.46"/>
+        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.1.51"/>
       </packs>
       <compileType>
         <linkerTool>

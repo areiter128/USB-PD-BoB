@@ -13,13 +13,11 @@
 #include "hal/hal.h"
 
 //#include "apl/tasks/task_PowerControl.h"
-
+volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;
+volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
 
 volatile uint16_t exec_PowerControl(void) {
 
-    Nop();
-    Nop();
-    Nop();
     
     return (1);
 }
@@ -28,28 +26,23 @@ volatile uint16_t init_PowerControl(void) {
 
     volatile uint16_t fres = 1;
     
-    fres &= initialize_adc();
-    fres &= initialize_pwm();
+    /* Initializing 4SW-BB DC/DC converter at USB port #1 */
+    init_4SWBB_PowerController(&c4swbb_1);  // Initialize power controller of USB port 1
     
-    /* SDB AIC power converter default settings */
-//    application.timing.period = SWITCHING_PERIOD; // n x 250 ps (e.g. 20,000 = ~250 kHz)
-//    application.timing.duty_ratio_init = DUTY_RATIO_INIT_REG; // n x 250 ps (e.g. 1% x 20,000 = 200 ticks)
-//    application.timing.duty_ratio_min = DUTY_RATIO_MIN_REG + (PWM_DEAD_TIME_LE + PWM_DEAD_TIME_FE); // n x 250 ps (e.g. 1% x 20,000 = 200 ticks)
-//    application.timing.duty_ratio_max = DUTY_RATIO_MAX_REG; // n x 250 ps (e.g. 1% x 20,000 = 200 ticks)
-//    application.timing.dead_time_rising = PWM_DEAD_TIME_LE; // n x 250 ps (e.g. 200 = 50 ns)
-//    application.timing.dead_time_falling = PWM_DEAD_TIME_FE; // n x 250 ps (e.g. 320 = 80 ns)
-//    
-    /* power supply converter default settings */
-
+    // Set PWM settings
+    c4swbb_1.boost_leg.pwm_instance = 5; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
+    c4swbb_1.boost_leg.period = SWITCHING_PERIOD; // set switching period 
+    c4swbb_1.boost_leg.phase = PWM_PHASE_SFT; // Phase shift of the PWM switching frequency 
+    c4swbb_1.boost_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
+    c4swbb_1.boost_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
+    c4swbb_1.boost_leg.duty_ratio_init = PWM_DUTY_RATIO_MIN; // reset initial duty cycle
+    c4swbb_1.boost_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
+    c4swbb_1.boost_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
+    c4swbb_1.boost_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     
-    // reset global flags
-//    application.ctrl_status.flags.adc_active = false; // ADC has not been started yet
-//    application.ctrl_status.flags.pwm_started = false; // PWM has not been started yet
-//    application.ctrl_status.flags.system_startup = true; // System is in startup mode
-//    application.ctrl_status.flags.system_ready = false; // system is not ready yet
-//    application.ctrl_status.flags.power_source_detected = false; // reset power source detection
+    c4swbb_2 = c4swbb_1;
     
-    
+    init_4SWBB_PowerController(&c4swbb_2);  // Initialize power controller of USB port 2
     
     return (fres);
 }

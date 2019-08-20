@@ -36,6 +36,73 @@
 
 #if defined (__00173_USB_PD_BOB_R20__) || defined (__MA330048_P33CK_R30_USB_PD_BOB__)
 
+
+/*!ADC Settings
+ * *************************************************************************************************
+ * Summary:
+ * Global defines for specific parameters of the device ADC
+ * 
+ * Description:
+ * This section is used to define device specific parameters of ADC reference, resolution
+ * and granularity to calculate register values representing physical voltages.
+ * Pre-compiler macros are used to translate physical values into binary (integer) numbers 
+ * to be written to SFRs
+ * 
+ * *************************************************************************************************/
+
+#define ADC_REF              3.300 // ADC reference voltage in V
+#define ADC_RES              12.0  // ADC resolution in [bit]
+#define ADC_GRAN             (float)(ADC_REF / pow(2.0, ADC_RES)) // ADC granularity in [V/tick]
+
+/*!Hardware Abstraction
+ * *************************************************************************************************
+ * Summary:
+ * Global defines for hardware specific parameters
+ * 
+ * Description:
+ * This section is used to define hardware specific parameters such as output voltage dividers,
+ * reference levels or feedback gains. Pre-compiler macros are used to translate physical  
+ * values into binary (integer) numbers to be written to SFRs and variables.
+ * 
+ * *************************************************************************************************/
+    
+    #define C4SWBB_VOUT_NOMINAL          5.0     // Nominal output voltage in [V]
+    #define C4SWBB_VOUT_MINIMUM          4.5     // Maximum output voltage in [V]
+    #define C4SWBB_VOUT_MAXIMUM          20.0    // Maximum output voltage in [V]
+    #define C4SWBB_VOUT_HYSTERESIS       1.0     // Output voltage protection hysteresis in [V]
+    #define C4SWBB_VOUT_UPPER_DEVIATION  2.0     // Upper output voltage deviation from reference in [V]
+    #define C4SWBB_VOUT_LOWER_DEVIATION  0.8     // Lower output voltage deviation from reference in [V]
+
+    #define C4SWBB_VOUT_R1               18.0    // Resitance of upper voltage divider resistor in kOhm
+    #define C4SWBB_VOUT_R2               2.87    // Resitance of lower voltage divider resistor in kOhm
+    #define C4SWBB_VOUT_AMP_GAIN         1.000    // Gain factor or additional op-amp (set to 1.0 if none is used)
+    #define C4SWBB_VOUT_SENSE_OFFSET     0.000    // Output voltage sense offset
+
+    //~~~~~~~~~~~~~~~~~ conversion macros -----------
+    #define C4SWBB_VOUT_FB_GAIN      (float)(C4SWBB_VOUT_AMP_GAIN * ((C4SWBB_VOUT_R2) / (C4SWBB_VOUT_R1 + C4SWBB_VOUT_R2)))
+    #define C4SWBB_VOUT_OFFSET       (uint16_t)(C4SWBB_VOUT_SENSE_OFFSET * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
+    #define C4SWBB_VOUT_REF          (uint16_t)(C4SWBB_VOUT_NOMINAL * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
+    #define C4SWBB_VOUT_OVP          (uint16_t)(C4SWBB_VOUT_MAXIMUM * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
+    #define C4SWBB_VOUT_HYST         (uint16_t)(C4SWBB_VOUT_HYSTERESIS * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
+    #define C4SWBB_VOUT_UDEVI        (uint16_t)(C4SWBB_VOUT_UPPER_DEVIATION * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
+    #define C4SWBB_VOUT_LDEVI        (uint16_t)(C4SWBB_VOUT_LOWER_DEVIATION * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
+    //~~~~~~~~~~~~~~~~~
+
+    #define C4SWBB_VIN_MINIMUM       7.0             // Minimum input voltage in [V]
+    #define C4SWBB_VIN_MAXIMUM       20.0            // Maximum input voltage in [V]
+    #define C4SWBB_VIN_HYSTERESIS    1.0             // Input voltage protection hysteresis in [V]
+
+    #define C4SWBB_VIN_R1            15.8            // Upper voltage divider resistor in kOhm
+    #define C4SWBB_VIN_R2            1.0             // Lower voltage divider resistor in kOhm
+
+    #define C4SWBB_VIN_FB_GAIN       (float)((C4SWBB_VIN_R2) / (C4SWBB_VIN_R1 + C4SWBB_VIN_R2))
+    #define C4SWBB_VIN_UVLO          (uint16_t)(C4SWBB_VIN_MINIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRAN)
+    #define C4SWBB_VIN_OVLO          (uint16_t)(C4SWBB_VIN_MAXIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRAN)
+    #define C4SWBB_VIN_HYST          (uint16_t)(C4SWBB_VIN_HYSTERESIS * C4SWBB_VIN_FB_GAIN / ADC_GRAN)
+
+
+
+
     // DSC bias voltage
     #define DEVICE_VDD                  3.300       // Device bias voltage in [V]
 
@@ -67,10 +134,14 @@
 
     // System Settings
     #define SWITCHING_FREQUENCY         350e+3      // Nominal switching frequency per converter phase in [Hz]
+    #define PWM_PHASE_SHIFT             (SWITCHING_PERIOD / 2.0) // Phase shift of the PWM switching frequency
     #define PWM_DEAD_TIME_RISING        50e-9       // Nominal dead time at the leading edge in [ns]
     #define PWM_DEAD_TIME_FALLING       60e-9       // Nominal dead time at the falling edge in [ns]
+    #define PWM_DUTY_RATIO_MAXIMUM      0.90        // Maximum duty ratio in [%]
+    #define PWM_DUTY_RATIO_MINIMUM      0.01        // Minimum duty ratio in [%]
     #define LEADING_EDGE_BLANKING_PER   150e-9		// Leading Edge Blanking period in nanoseconds
-    #define ADC_TRIGGER_OFFSET          120e-9      // ADC trigger offset compensating for propagat6ion delays
+    #define ADC_TRIGGER_OFFSET_VOUT     120e-9      // ADC trigger offset compensating for propagat6ion delays (voltage feedback)
+    #define ADC_TRIGGER_OFFSET_IOUT     120e-9      // ADC trigger offset compensating for propagat6ion delays (current feedback)
 
     // PWM time base Settings
     #define f_ACLK                      4e+9        // 4 GHz PWM tick rate
@@ -94,13 +165,17 @@
 // Macros are used to translate physical values into register values
 
 #define SWITCHING_PERIOD            ((uint16_t)(((float)((1.0/(float)(SWITCHING_FREQUENCY))/T_ACLK)-1)))
+#define PWM_PHASE_SFT               ((uint16_t)(((float)((1.0/(float)(PWM_PHASE_SHIFT))/T_ACLK)-1)))
+#define PWM_DUTY_RATIO_MAX          ((uint16_t)(PWM_DUTY_RATIO_MAXIMUM * (float)SWITCHING_PERIOD))
+#define PWM_DUTY_RATIO_MIN          ((uint16_t)(PWM_DUTY_RATIO_MINIMUM * (float)SWITCHING_PERIOD))
 
 // Macro calculating Leading Edge Blanking period counter value based on time base frequency selection
 #define REG_LEB_PERIOD_MASK         0b1111111111111111
 #define LEB_PERIOD                  ((uint16_t)((uint16_t)(((float)(LEADING_EDGE_BLANKING_PER))/((float)(T_ACLK))) >> PWM_PCLKDIV_PRIMARY))
 
 // Macro calculating ADC offset period counter value based on time base frequency selection
-#define ADC_TRIG_OFFSET             ((uint16_t)((uint16_t)(((float)(ADC_TRIGGER_OFFSET))/((float)(T_ACLK))) >> PWM_PCLKDIV_PRIMARY) & REG_LEB_PERIOD_MASK)
+#define ADC_TRIG_OFFSET_VOUT        ((uint16_t)((uint16_t)(((float)(ADC_TRIGGER_OFFSET_VOUT))/((float)(T_ACLK))) >> PWM_PCLKDIV_PRIMARY) & REG_LEB_PERIOD_MASK)
+#define ADC_TRIG_OFFSET_IOUT        ((uint16_t)((uint16_t)(((float)(ADC_TRIGGER_OFFSET_IOUT))/((float)(T_ACLK))) >> PWM_PCLKDIV_PRIMARY) & REG_LEB_PERIOD_MASK)
 
 // Macros calculating Dead Time Rising/Falling Edge period counter value based on time base frequency selection
 #define REG_DTRx_VALID_BIT_MSK      0b0011111111111111

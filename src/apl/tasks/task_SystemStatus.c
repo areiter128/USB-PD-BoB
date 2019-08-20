@@ -78,6 +78,7 @@ volatile uint16_t exec_CaptureSystemStatus(void) {
 //    if(!application.ctrl_status.flags.adc_active) 
 //    { return(fres); }
 
+    
     fres &= css_GetSystemStatus();
     fres &= css_SetSystemMode();
     

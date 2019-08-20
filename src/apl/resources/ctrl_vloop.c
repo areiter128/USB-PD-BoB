@@ -12,7 +12,7 @@
  * 
  * ***************************************************************************************/
 
-#include "../../apl/resources/ctrl_vloop.h"
+#include "apl/resources/ctrl_vloop.h"
 
 /* ***************************************************************************************
  * Data Arrays:
@@ -74,7 +74,7 @@ uint16_t ctrl_vloop_Init(void)
 	volatile uint16_t i = 0;
 
 	// Initialize controller data structure at runtime with pre-defined default values
-	ctrl_vloop.status.flags = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))
+	ctrl_vloop.status.value = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))
 
 	ctrl_vloop.ptrACoefficients = &ctrl_vloop_coefficients.ACoefficients[0]; // initialize pointer to A-coefficients array
 	ctrl_vloop.ptrBCoefficients = &ctrl_vloop_coefficients.BCoefficients[0]; // initialize pointer to B-coefficients array

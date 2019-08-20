@@ -94,7 +94,8 @@ volatile APPLICATION_t application; // global APPLICATION object holding setting
 volatile uint16_t init_ApplicationSettings(void) {
     
     /* Initialization of system status flags */
-    application.system_status.flags.dummy_bit = STAT_BIT_DUMMY_1;
+    application.system_status.flags.critical_fault = false;
+    application.system_status.flags.temp_warning = false;
     
 
     return(1);

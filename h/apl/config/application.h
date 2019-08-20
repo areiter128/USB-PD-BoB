@@ -104,29 +104,28 @@ typedef enum {
 }STAT_BIT_DUMMY_e;   // Battery connected/disconnected status bit 
 
 typedef struct {
-    volatile STAT_BIT_DUMMY_e dummy_bit: 1; // Bit 0: Dummy-bit (template only)
-    volatile unsigned: 1;                   // Bit 1: (reserved)
-    volatile unsigned: 1;                   // Bit 2: (reserved)
-    volatile unsigned: 1;                   // Bit 3: (reserved)
-    volatile unsigned: 1;                   // Bit 4: (reserved)
-    volatile unsigned: 1;                   // Bit 5: (reserved)
-    volatile unsigned: 1;                   // Bit 6: (reserved)
-    volatile unsigned: 1;                   // Bit 7: (reserved)
-    volatile unsigned: 1;                   // Bit 8:  (reserved)
-    volatile unsigned: 1;                   // Bit 9:  (reserved)
-    volatile unsigned: 1;                   // Bit 10: (reserved)
-    volatile unsigned: 1;                   // Bit 11: (reserved)
-    volatile unsigned: 1;                   // Bit 12: (reserved)
-    volatile unsigned: 1;                   // Bit 13: (reserved)
-    volatile unsigned: 1;                   // Bit 14: (reserved)
-	volatile bool critical_fault :1;        // Bit #15: Status flag distribution indicating a critical fault condition (forcing power converters to shut down)
+    volatile unsigned: 1;               // Bit 1: (reserved)
+    volatile unsigned: 1;               // Bit 1: (reserved)
+    volatile unsigned: 1;               // Bit 2: (reserved)
+    volatile unsigned: 1;               // Bit 3: (reserved)
+    volatile unsigned: 1;               // Bit 4: (reserved)
+    volatile unsigned: 1;               // Bit 5: (reserved)
+    volatile unsigned: 1;               // Bit 6: (reserved)
+    volatile unsigned: 1;               // Bit 7: (reserved)
+    volatile unsigned: 1;               // Bit 8:  (reserved)
+    volatile unsigned: 1;               // Bit 9:  (reserved)
+    volatile unsigned: 1;               // Bit 10: (reserved)
+    volatile unsigned: 1;               // Bit 11: (reserved)
+    volatile unsigned: 1;               // Bit 12: (reserved)
+    volatile unsigned: 1;               // Bit 13: (reserved)
+    volatile bool temp_warning: 1;      // Bit 14:  Status flag distribution indicating a temperature warning condition 
+	volatile bool critical_fault :1;    // Bit #15: Status flag distribution indicating a critical fault condition (forcing power converters to shut down)
 }SYSTEM_STATUS_BITS_t; // Internal system status flag bits
 
 typedef union {
     volatile uint16_t value; // 16-bit wide access to status bit field
     volatile SYSTEM_STATUS_BITS_t flags; // single bit access to status bit field
 } SYSTEM_STATUS_t; // Internal system status of converters and control signals
-
 
 
 typedef enum {
@@ -141,6 +140,18 @@ typedef union
 	volatile uint16_t value; // buffer for 16-bit word read/write operations
 	volatile SYSTEM_MODE_FLAG_BITS_e flags; // data structure for single bit addressing operations
 } SYSTEM_MODE_t;
+
+
+typedef struct {
+    volatile uint16_t v_in;  // power supply input voltage (template only)
+    volatile uint16_t i_in;  // power supply input current (template only)
+    volatile uint16_t v_out_cha;  // power supply output voltage (channel A)
+    volatile uint16_t i_out_cha;  // power supply output current (channel A)
+    volatile uint16_t temperature_a; // board temperature (template only)
+    volatile uint16_t v_out_chb;  // power supply output voltage (channel A)
+    volatile uint16_t i_out_chb;  // power supply output current (channel A)
+    volatile uint16_t temperature_b; // board temperature (template only)
+} APPLICATION_DATA_t; // Application real-time data value list (voltages, currents, etc.)
 
 
 typedef struct {
