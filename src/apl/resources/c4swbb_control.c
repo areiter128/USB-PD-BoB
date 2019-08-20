@@ -24,7 +24,7 @@ volatile uint16_t pg_couter = 0;    // Loop counter for power good delay
  * (none)
  *
  * Description:
- * This routine executes the soft-start state machine. This engine is completely self-suffcient in 
+ * This routine executes the soft-start state machine. This engine is completely self-sufficient in 
  * terms of tracking the soft-start progress. Once the soft-start procedure is completed, the engine
  * will reset itself waiting for being called again.
  * 
