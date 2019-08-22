@@ -64,8 +64,9 @@ uint16_t CLOCK_Initialize(void){
     
     // Initialize main oscillator and auxiliary clock
     //Remove: fres = init_SoftwareWatchDogTimer();
-    fres &= init_oscillator();
-    fres &= init_aux_oscillator();
+    fres &= init_oscillator();                  // Initialize main oscillator
+    fres &= init_aux_oscillator();              // Initialize auxiliary clock for PWM and ADC
+    fres &= osc_get_frequencies(0);             // Update clock settings of global system_frequencies object
    
     // Setup and start Timer1 as base clock for the task scheduler
     fres &= init_system_timer();               // Initialize timer @ 10 kHz

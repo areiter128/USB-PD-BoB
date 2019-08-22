@@ -42,11 +42,8 @@ extern "C" {
     #ifdef __00173_USB_PD_BOB_R20__
         #include "00173_USB_PD_BoB_R20_pinmap.h"
     #endif
-    #ifdef __10889_P33CH_R10__
-        #include "10889_P33CH_R10_pinmap.h"
-    #endif
-    #ifdef __10888_P33CK_R30__
-        #include "10888_P33CK_R30_pinmap.h"
+    #ifdef __MA330048_P33CK_R30_USB_PD_BOB__
+        #include "MA330048_P33CK_R30_USB_PD_BOB_pinmap.h"
     #endif
     
 #ifdef	__cplusplus

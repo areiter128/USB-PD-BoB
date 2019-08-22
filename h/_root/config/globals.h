@@ -105,7 +105,7 @@
  
 typedef union 
 {
-	volatile uint16_t reg_block;    // buffer for 16-bit word read/write operations
+	volatile uint16_t value;    // buffer for 16-bit word read/write operations
 	volatile SFR16b_FRAME_t flags;  // data structure for single bit addressing operations
 }SPECIAL_FUNCTION_REGISTER_t;
 

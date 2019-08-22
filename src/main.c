@@ -56,8 +56,6 @@ int main(void) {
     Nop();
     Nop();
     Nop();
-    Nop();
-    Nop();
 #endif
    
     fres = exec_scheduler();

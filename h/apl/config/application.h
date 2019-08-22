@@ -57,6 +57,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "apl/apl.h"
+
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
@@ -102,22 +104,22 @@ typedef enum {
 }STAT_BIT_DUMMY_e;   // Battery connected/disconnected status bit 
 
 typedef struct {
-    volatile STAT_BIT_DUMMY_e dummy_bit: 1; // Bit 0: Dummy-bit (template only)
-    volatile unsigned: 1;                   // Bit 1: (reserved)
-    volatile unsigned: 1;                   // Bit 2: (reserved)
-    volatile unsigned: 1;                   // Bit 3: (reserved)
-    volatile unsigned: 1;                   // Bit 4: (reserved)
-    volatile unsigned: 1;                   // Bit 5: (reserved)
-    volatile unsigned: 1;                   // Bit 6: (reserved)
-    volatile unsigned: 1;                   // Bit 7: (reserved)
-    volatile unsigned: 1;                   // Bit 8:  (reserved)
-    volatile unsigned: 1;                   // Bit 9:  (reserved)
-    volatile unsigned: 1;                   // Bit 10: (reserved)
-    volatile unsigned: 1;                   // Bit 11: (reserved)
-    volatile unsigned: 1;                   // Bit 12: (reserved)
-    volatile unsigned: 1;                   // Bit 13: (reserved)
-    volatile unsigned: 1;                   // Bit 14: (reserved)
-	volatile bool critical_fault :1;        // Bit #15: Status flag distribution indicating a critical fault condition (forcing power converters to shut down)
+    volatile unsigned: 1;               // Bit 1: (reserved)
+    volatile unsigned: 1;               // Bit 1: (reserved)
+    volatile unsigned: 1;               // Bit 2: (reserved)
+    volatile unsigned: 1;               // Bit 3: (reserved)
+    volatile unsigned: 1;               // Bit 4: (reserved)
+    volatile unsigned: 1;               // Bit 5: (reserved)
+    volatile unsigned: 1;               // Bit 6: (reserved)
+    volatile unsigned: 1;               // Bit 7: (reserved)
+    volatile unsigned: 1;               // Bit 8:  (reserved)
+    volatile unsigned: 1;               // Bit 9:  (reserved)
+    volatile unsigned: 1;               // Bit 10: (reserved)
+    volatile unsigned: 1;               // Bit 11: (reserved)
+    volatile unsigned: 1;               // Bit 12: (reserved)
+    volatile unsigned: 1;               // Bit 13: (reserved)
+    volatile bool temp_warning: 1;      // Bit 14:  Status flag distribution indicating a temperature warning condition 
+	volatile bool critical_fault :1;    // Bit #15: Status flag distribution indicating a critical fault condition (forcing power converters to shut down)
 }SYSTEM_STATUS_BITS_t; // Internal system status flag bits
 
 typedef union {
@@ -125,78 +127,6 @@ typedef union {
     volatile SYSTEM_STATUS_BITS_t flags; // single bit access to status bit field
 } SYSTEM_STATUS_t; // Internal system status of converters and control signals
 
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-typedef struct {
-    volatile uint16_t v_reference; // Voltage reference dummy for during soft-start control
-    volatile uint16_t i_reference; // Current reference dummy for during soft-start control
-    volatile uint16_t interval;  // Soft-start step interval in state-machine ticks
-    volatile uint16_t step; // Most recent soft-start step
-    volatile uint16_t direction; // 0 = RAMP DOWN, 1 = RAMP UP 
-    volatile bool ramp_complete; // Flag indicating if the startup ramp has been completed
-} CONTROL_SOFT_START_t; // Settings required by the soft-start driver while the converter is ramped up
-
-typedef struct {
-    volatile uint16_t reference; // Control loop reference variable
-    volatile uint16_t feedback_offset; // Feedback offset value for calibration or bi-direction feedback signals
-    volatile uint16_t trigger_offset; // ADC trigger offset value for trigger fine-tuning
-    volatile uint16_t minimum; // output clamping value (minimum)
-    volatile uint16_t maximum; // output clamping value (maximum)
-} CONTROL_LOOP_SETTINGS_t; // User defined settings for control loops; 
-
-typedef struct {
-    volatile uint16_t period; // Switching period
-    volatile uint16_t phase; // Switching signal phase-shift
-    volatile uint16_t duty_ratio_init; // Initial duty cycle when the PWM module is being turned on
-    volatile uint16_t duty_ratio_min; // Absolute duty cycle minimum during normal operation
-    volatile uint16_t duty_ratio_max; // Absolute duty cycle maximum during normal operation
-    volatile uint16_t dead_time_rising; // Dead time setting at rising edge of a half-bridge drive
-    volatile uint16_t dead_time_falling; // Dead time setting at falling edge of a half-bridge drive
-} CONTROL_SWITCHING_TIMING_SETTINGS_t; // Switching signal timing settings
-
-typedef struct {
-    volatile uint16_t v_in;  // power supply input voltage (template only)
-    volatile uint16_t i_in;  // power supply input current (template only)
-    volatile uint16_t v_out;  // power supply output voltage (template only)
-    volatile uint16_t i_out;  // power supply output current (template only)
-    volatile uint16_t temperature; // board temperature (template only)
-} APPLICATION_DATA_t; // Application real-time data value list (voltages, currents, etc.)
-
-#define CTRL_STAT_POWERSOURCE_DETECTED  0b0000000000000001
-#define CTRL_STAT_PWM_STARTED           0b0000000000000010
-#define CTRL_STAT_ADC_ACTIVE            0b0000000000000100
-
-#define CTRL_STAT_FORCED_SHUT_DOWN      0b0010000000000000
-#define CTRL_STAT_SYSTEM_STARTUP        0b0100000000000010
-#define CTRL_STAT_SYSTEM_READY          0b1000000000000000
-
-typedef struct{
-
-	volatile bool power_source_detected:1;	// Bit #0:  indicating that a valid power source was detected
-	volatile bool pwm_started:1;	// Bit #1:  indicating that PWM has been started and ADC triggers are generated
-	volatile bool adc_active:1;	    // Bit #2:  indicating that ADC has been started and samples are taken
-	volatile unsigned :1;   // Bit #3: (reserved)
-	volatile unsigned :1;	// Bit #4: (reserved)
-	volatile unsigned :1;	// Bit #5:  (reserved)
-	volatile unsigned :1;	// Bit #6:  (reserved)
-	volatile unsigned :1;	// Bit #7:  (reserved)
-    
-	volatile unsigned :1;	// Bit #8:  (reserved)
-	volatile unsigned :1;	// Bit #9:  (reserved)
-	volatile unsigned :1;	// Bit #10: (reserved)
-	volatile unsigned :1;	// Bit #11: (reserved)
-	volatile unsigned :1;	// Bit #12: (reserved)
-    volatile bool forced_shut_down :1; // Bit #13: Flag bit indicating system is in enforced shut down mode (usually due to a fault condition)
-	volatile bool system_startup:1;	// Bit #14:  indicating a system startup procedure
-	volatile bool system_ready:1;	// Bit #15:  indicating that system startup is complete
-} CONTROL_STATUS_BIT_FIELD_t;
-
-typedef union 
-{
-	volatile uint16_t value; // buffer for 16-bit word read/write operations
-	volatile CONTROL_STATUS_BIT_FIELD_t flags; // data structure for single bit addressing operations
-} CONTROL_STATUS_t;
 
 typedef enum {
     SYSTEM_MODE_FAULT      = 0b0000000000000000, // power supply is turned off and MCU is running in fault mode
@@ -213,11 +143,21 @@ typedef union
 
 
 typedef struct {
+    volatile uint16_t v_in;  // power supply input voltage (template only)
+    volatile uint16_t i_in;  // power supply input current (template only)
+    volatile uint16_t v_out_cha;  // power supply output voltage (channel A)
+    volatile uint16_t i_out_cha;  // power supply output current (channel A)
+    volatile uint16_t temperature_a; // board temperature (template only)
+    volatile uint16_t v_out_chb;  // power supply output voltage (channel A)
+    volatile uint16_t i_out_chb;  // power supply output current (channel A)
+    volatile uint16_t temperature_b; // board temperature (template only)
+} APPLICATION_DATA_t; // Application real-time data value list (voltages, currents, etc.)
+
+
+typedef struct {
 
     volatile SYSTEM_STATUS_t system_status; // converter and port status
     volatile SYSTEM_MODE_t system_mode; // system operating mode classification
-    volatile CONTROL_STATUS_t ctrl_status; // control loop status information
-    volatile CONTROL_SWITCHING_TIMING_SETTINGS_t timing; // PWM switch timing setup 
     volatile APPLICATION_DATA_t data; // system voltages
     
 }APPLICATION_t; // Data structure defining application settings, status flags and recent data

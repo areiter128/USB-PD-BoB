@@ -281,7 +281,7 @@ inline uint16_t init_TaskTimeQuotaViolationFaultObject(void)
 inline uint16_t init_MyCustomFaultObject(void)
 {
     // Configuring the Task Time Quota Violation fault object
-    fltobj_PowerSourceFailure.object = &application.ctrl_status.value;
+//    fltobj_PowerSourceFailure.object = &application.ctrl_status.value;
     fltobj_PowerSourceFailure.object_bit_mask = CTRL_STAT_POWERSOURCE_DETECTED;
     fltobj_PowerSourceFailure.error_code = (uint32_t)FLTOBJ_POWER_SOURCE_FAILURE;
     fltobj_PowerSourceFailure.id = (uint16_t)FLTOBJ_POWER_SOURCE_FAILURE;

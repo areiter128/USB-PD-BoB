@@ -29,7 +29,7 @@ uint16_t init_system_timer(void) {
     // write configuration
     fres =  gstmr_reset(TASK_MGR_TIMER_INDEX); 
     fres &= gstmr_init_timer16b(TASK_MGR_TIMER_INDEX, tmr, TASK_MGR_PERIOD, TASK_MGR_ISR_PRIORITY);
-
+    
     return(fres);
 }
 

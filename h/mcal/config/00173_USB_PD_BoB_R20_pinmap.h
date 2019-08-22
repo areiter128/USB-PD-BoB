@@ -3,8 +3,9 @@
  * Author:      M91406                                                                         
  * Comments:    Hardware abstraction layer device pinout descriptor                                
  * Board ID:    00173_USB_PD_BoB                                                                       
- * Date:        05/22/2019                                                                             
- * Build:       0007                                                                       
+ * HW Revision: R20                                                                   
+ * Date:        05/30/2019                                                                             
+ * Build:       0017                                                                       
  *                                                                                                 
  * Description:                                                                                    
  * This is a header file template adding signal labels for the hardware abstraction layer          
@@ -69,10 +70,10 @@
  * Description:
  * This flag is a user defined flag helping to provide version information about the
  * pinmap file. This string can be used universally across the firmware to identify the
- * hardware version this firmaware was written for.
+ * hardware version this firmware was written for.
  *
  * Please Note:
- * His label is not connected to the generic macro specified in the compiler settings
+ * This label is not connected to the generic macro specified in the compiler settings
  * and need to maintained by the designer independently.
  * ***********************************************************************************************/
 
@@ -131,12 +132,19 @@
 #define BUCKH2_PGx_PER      PG1PER // PWM channel period register
 #define BUCKH2_PGx_PHASE    PG1PHASE // PWM channel phase register
 #define BUCKH2_PGx_DC       PG1DC // PWM channel duty cycle register
+#define BUCKH2_PGx_DCA      PG1DCA// PWM channel duty cycle A register
+#define BUCKH2_PGx_DTH      PG1DTH // PWM channel rising edge dead time register
+#define BUCKH2_PGx_DTL      PG1DTL // PWM channel falling edge dead time register
 #define BUCKH2_PGx_OVRENH   PG1IOCONLbits.OVRENH // PWM channel IO config register override high control bit
 #define BUCKH2_PGx_PENH     PG1IOCONLbits.PENH // PWM channel IO config register pin enable high control bit
 #define BUCKH2_PGxUPDREQ    PG1STATbits.UPDREQ // PWM channel ADC trigger A register
 #define BUCKH2_PGxTRIGA     PG1TRIGA // PWM channel ADC trigger A register
 #define BUCKH2_PGxTRIGB     PG1TRIGB // PWM channel ADC trigger A register
 #define BUCKH2_PGxTRIGC     PG1TRIGC // PWM channel ADC trigger A register
+#define BUCKH2_PWM_IF       _PWM1IF // interrupt flag bit
+#define BUCKH2_PWM_IE       _PWM1IE // interrupt enable bit
+#define BUCKH2_PWM_IP       _PWM1IP // interrupt priority for this analog input
+#define _BUCKH2_PWM_Interrupt _PWM1Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #2 is RB15
 #define BUCKL2_TRIS    TRISBbits.TRISB15 // GPIO direction register bit
@@ -160,6 +168,9 @@
 #define BUCKL2_PGx_PER      PG1PER // PWM channel period register
 #define BUCKL2_PGx_PHASE    PG1PHASE // PWM channel phase register
 #define BUCKL2_PGx_DC       PG1DC // PWM channel duty cycle register
+#define BUCKL2_PGx_DCA      PG1DCA// PWM channel duty cycle A register
+#define BUCKL2_PGx_DTH      PG1DTH // PWM channel rising edge dead time register
+#define BUCKL2_PGx_DTL      PG1DTL // PWM channel falling edge dead time register
 #define BUCKL2_PGx_OVRENL   PG1IOCONLbits.OVRENL // PWM channel IO config register override low control bit
 #define BUCKL2_PGx_PENL     PG1IOCONLbits.PENL // PWM channel IO config register pin enable low control bit
 #define BUCKL2_PGxUPDREQ    PG1STATbits.UPDREQ // PWM channel ADC trigger A register
@@ -189,12 +200,19 @@
 #define HUB_RST_PGx_PER      PG8PER // PWM channel period register
 #define HUB_RST_PGx_PHASE    PG8PHASE // PWM channel phase register
 #define HUB_RST_PGx_DC       PG8DC // PWM channel duty cycle register
+#define HUB_RST_PGx_DCA      PG8DCA// PWM channel duty cycle A register
+#define HUB_RST_PGx_DTH      PG8DTH // PWM channel rising edge dead time register
+#define HUB_RST_PGx_DTL      PG8DTL // PWM channel falling edge dead time register
 #define HUB_RST_PGx_OVRENH   PG8IOCONLbits.OVRENH // PWM channel IO config register override high control bit
 #define HUB_RST_PGx_PENH     PG8IOCONLbits.PENH // PWM channel IO config register pin enable high control bit
 #define HUB_RST_PGxUPDREQ    PG8STATbits.UPDREQ // PWM channel ADC trigger A register
 #define HUB_RST_PGxTRIGA     PG8TRIGA // PWM channel ADC trigger A register
 #define HUB_RST_PGxTRIGB     PG8TRIGB // PWM channel ADC trigger A register
 #define HUB_RST_PGxTRIGC     PG8TRIGC // PWM channel ADC trigger A register
+#define HUB_RST_PWM_IF       _PWM8IF // interrupt flag bit
+#define HUB_RST_PWM_IE       _PWM8IE // interrupt enable bit
+#define HUB_RST_PWM_IP       _PWM8IP // interrupt priority for this analog input
+#define _HUB_RST_PWM_Interrupt _PWM8Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #4 is RC13
 #define HUB_PRTPWR2_TRIS    TRISCbits.TRISC13 // GPIO direction register bit
@@ -218,6 +236,9 @@
 #define HUB_PRTPWR2_PGx_PER      PG8PER // PWM channel period register
 #define HUB_PRTPWR2_PGx_PHASE    PG8PHASE // PWM channel phase register
 #define HUB_PRTPWR2_PGx_DC       PG8DC // PWM channel duty cycle register
+#define HUB_PRTPWR2_PGx_DCA      PG8DCA// PWM channel duty cycle A register
+#define HUB_PRTPWR2_PGx_DTH      PG8DTH // PWM channel rising edge dead time register
+#define HUB_PRTPWR2_PGx_DTL      PG8DTL // PWM channel falling edge dead time register
 #define HUB_PRTPWR2_PGx_OVRENL   PG8IOCONLbits.OVRENL // PWM channel IO config register override low control bit
 #define HUB_PRTPWR2_PGx_PENL     PG8IOCONLbits.PENL // PWM channel IO config register pin enable low control bit
 #define HUB_PRTPWR2_PGxUPDREQ    PG8STATbits.UPDREQ // PWM channel ADC trigger A register
@@ -876,6 +897,9 @@
 #define SDA2_PGx_PER      PG6PER // PWM channel period register
 #define SDA2_PGx_PHASE    PG6PHASE // PWM channel phase register
 #define SDA2_PGx_DC       PG6DC // PWM channel duty cycle register
+#define SDA2_PGx_DCA      PG6DCA// PWM channel duty cycle A register
+#define SDA2_PGx_DTH      PG6DTH // PWM channel rising edge dead time register
+#define SDA2_PGx_DTL      PG6DTL // PWM channel falling edge dead time register
 #define SDA2_PGx_OVRENL   PG6IOCONLbits.OVRENL // PWM channel IO config register override low control bit
 #define SDA2_PGx_PENL     PG6IOCONLbits.PENL // PWM channel IO config register pin enable low control bit
 #define SDA2_PGxUPDREQ    PG6STATbits.UPDREQ // PWM channel ADC trigger A register
@@ -905,12 +929,19 @@
 #define SCL2_PGx_PER      PG6PER // PWM channel period register
 #define SCL2_PGx_PHASE    PG6PHASE // PWM channel phase register
 #define SCL2_PGx_DC       PG6DC // PWM channel duty cycle register
+#define SCL2_PGx_DCA      PG6DCA// PWM channel duty cycle A register
+#define SCL2_PGx_DTH      PG6DTH // PWM channel rising edge dead time register
+#define SCL2_PGx_DTL      PG6DTL // PWM channel falling edge dead time register
 #define SCL2_PGx_OVRENH   PG6IOCONLbits.OVRENH // PWM channel IO config register override high control bit
 #define SCL2_PGx_PENH     PG6IOCONLbits.PENH // PWM channel IO config register pin enable high control bit
 #define SCL2_PGxUPDREQ    PG6STATbits.UPDREQ // PWM channel ADC trigger A register
 #define SCL2_PGxTRIGA     PG6TRIGA // PWM channel ADC trigger A register
 #define SCL2_PGxTRIGB     PG6TRIGB // PWM channel ADC trigger A register
 #define SCL2_PGxTRIGC     PG6TRIGC // PWM channel ADC trigger A register
+#define SCL2_PWM_IF       _PWM6IF // interrupt flag bit
+#define SCL2_PWM_IE       _PWM6IE // interrupt enable bit
+#define SCL2_PWM_IP       _PWM6IP // interrupt priority for this analog input
+#define _SCL2_PWM_Interrupt _PWM6Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #35 is RB7
 #define SPI_CS1_TRIS    TRISBbits.TRISB7 // GPIO direction register bit
@@ -1030,12 +1061,19 @@
 #define BUCKH1_PGx_PER      PG5PER // PWM channel period register
 #define BUCKH1_PGx_PHASE    PG5PHASE // PWM channel phase register
 #define BUCKH1_PGx_DC       PG5DC // PWM channel duty cycle register
+#define BUCKH1_PGx_DCA      PG5DCA// PWM channel duty cycle A register
+#define BUCKH1_PGx_DTH      PG5DTH // PWM channel rising edge dead time register
+#define BUCKH1_PGx_DTL      PG5DTL // PWM channel falling edge dead time register
 #define BUCKH1_PGx_OVRENH   PG5IOCONLbits.OVRENH // PWM channel IO config register override high control bit
 #define BUCKH1_PGx_PENH     PG5IOCONLbits.PENH // PWM channel IO config register pin enable high control bit
 #define BUCKH1_PGxUPDREQ    PG5STATbits.UPDREQ // PWM channel ADC trigger A register
 #define BUCKH1_PGxTRIGA     PG5TRIGA // PWM channel ADC trigger A register
 #define BUCKH1_PGxTRIGB     PG5TRIGB // PWM channel ADC trigger A register
 #define BUCKH1_PGxTRIGC     PG5TRIGC // PWM channel ADC trigger A register
+#define BUCKH1_PWM_IF       _PWM5IF // interrupt flag bit
+#define BUCKH1_PWM_IE       _PWM5IE // interrupt enable bit
+#define BUCKH1_PWM_IP       _PWM5IP // interrupt priority for this analog input
+#define _BUCKH1_PWM_Interrupt _PWM5Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #39 is RC5
 #define BUCKL1_TRIS    TRISCbits.TRISC5 // GPIO direction register bit
@@ -1059,6 +1097,9 @@
 #define BUCKL1_PGx_PER      PG5PER // PWM channel period register
 #define BUCKL1_PGx_PHASE    PG5PHASE // PWM channel phase register
 #define BUCKL1_PGx_DC       PG5DC // PWM channel duty cycle register
+#define BUCKL1_PGx_DCA      PG5DCA// PWM channel duty cycle A register
+#define BUCKL1_PGx_DTH      PG5DTH // PWM channel rising edge dead time register
+#define BUCKL1_PGx_DTL      PG5DTL // PWM channel falling edge dead time register
 #define BUCKL1_PGx_OVRENL   PG5IOCONLbits.OVRENL // PWM channel IO config register override low control bit
 #define BUCKL1_PGx_PENL     PG5IOCONLbits.PENL // PWM channel IO config register pin enable low control bit
 #define BUCKL1_PGxUPDREQ    PG5STATbits.UPDREQ // PWM channel ADC trigger A register
@@ -1088,12 +1129,19 @@
 #define BOOSTH1_PGx_PER      PG7PER // PWM channel period register
 #define BOOSTH1_PGx_PHASE    PG7PHASE // PWM channel phase register
 #define BOOSTH1_PGx_DC       PG7DC // PWM channel duty cycle register
+#define BOOSTH1_PGx_DCA      PG7DCA// PWM channel duty cycle A register
+#define BOOSTH1_PGx_DTH      PG7DTH // PWM channel rising edge dead time register
+#define BOOSTH1_PGx_DTL      PG7DTL // PWM channel falling edge dead time register
 #define BOOSTH1_PGx_OVRENH   PG7IOCONLbits.OVRENH // PWM channel IO config register override high control bit
 #define BOOSTH1_PGx_PENH     PG7IOCONLbits.PENH // PWM channel IO config register pin enable high control bit
 #define BOOSTH1_PGxUPDREQ    PG7STATbits.UPDREQ // PWM channel ADC trigger A register
 #define BOOSTH1_PGxTRIGA     PG7TRIGA // PWM channel ADC trigger A register
 #define BOOSTH1_PGxTRIGB     PG7TRIGB // PWM channel ADC trigger A register
 #define BOOSTH1_PGxTRIGC     PG7TRIGC // PWM channel ADC trigger A register
+#define BOOSTH1_PWM_IF       _PWM7IF // interrupt flag bit
+#define BOOSTH1_PWM_IE       _PWM7IE // interrupt enable bit
+#define BOOSTH1_PWM_IP       _PWM7IP // interrupt priority for this analog input
+#define _BOOSTH1_PWM_Interrupt _PWM7Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #41 is RC11
 #define BOOSTL1_TRIS    TRISCbits.TRISC11 // GPIO direction register bit
@@ -1117,6 +1165,9 @@
 #define BOOSTL1_PGx_PER      PG7PER // PWM channel period register
 #define BOOSTL1_PGx_PHASE    PG7PHASE // PWM channel phase register
 #define BOOSTL1_PGx_DC       PG7DC // PWM channel duty cycle register
+#define BOOSTL1_PGx_DCA      PG7DCA// PWM channel duty cycle A register
+#define BOOSTL1_PGx_DTH      PG7DTH // PWM channel rising edge dead time register
+#define BOOSTL1_PGx_DTL      PG7DTL // PWM channel falling edge dead time register
 #define BOOSTL1_PGx_OVRENL   PG7IOCONLbits.OVRENL // PWM channel IO config register override low control bit
 #define BOOSTL1_PGx_PENL     PG7IOCONLbits.PENL // PWM channel IO config register pin enable low control bit
 #define BOOSTL1_PGxUPDREQ    PG7STATbits.UPDREQ // PWM channel ADC trigger A register
@@ -1150,12 +1201,19 @@
 #define PPC_IRQ1_PGx_PER      PG4PER // PWM channel period register
 #define PPC_IRQ1_PGx_PHASE    PG4PHASE // PWM channel phase register
 #define PPC_IRQ1_PGx_DC       PG4DC // PWM channel duty cycle register
+#define PPC_IRQ1_PGx_DCA      PG4DCA// PWM channel duty cycle A register
+#define PPC_IRQ1_PGx_DTH      PG4DTH // PWM channel rising edge dead time register
+#define PPC_IRQ1_PGx_DTL      PG4DTL // PWM channel falling edge dead time register
 #define PPC_IRQ1_PGx_OVRENH   PG4IOCONLbits.OVRENH // PWM channel IO config register override high control bit
 #define PPC_IRQ1_PGx_PENH     PG4IOCONLbits.PENH // PWM channel IO config register pin enable high control bit
 #define PPC_IRQ1_PGxUPDREQ    PG4STATbits.UPDREQ // PWM channel ADC trigger A register
 #define PPC_IRQ1_PGxTRIGA     PG4TRIGA // PWM channel ADC trigger A register
 #define PPC_IRQ1_PGxTRIGB     PG4TRIGB // PWM channel ADC trigger A register
 #define PPC_IRQ1_PGxTRIGC     PG4TRIGC // PWM channel ADC trigger A register
+#define PPC_IRQ1_PWM_IF       _PWM4IF // interrupt flag bit
+#define PPC_IRQ1_PWM_IE       _PWM4IE // interrupt enable bit
+#define PPC_IRQ1_PWM_IP       _PWM4IP // interrupt priority for this analog input
+#define _PPC_IRQ1_PWM_Interrupt _PWM4Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #45 is RB10
 #define PPC_RST1_TRIS    TRISBbits.TRISB10 // GPIO direction register bit
@@ -1179,12 +1237,19 @@
 #define PPC_RST1_PGx_PER      PG3PER // PWM channel period register
 #define PPC_RST1_PGx_PHASE    PG3PHASE // PWM channel phase register
 #define PPC_RST1_PGx_DC       PG3DC // PWM channel duty cycle register
+#define PPC_RST1_PGx_DCA      PG3DCA// PWM channel duty cycle A register
+#define PPC_RST1_PGx_DTH      PG3DTH // PWM channel rising edge dead time register
+#define PPC_RST1_PGx_DTL      PG3DTL // PWM channel falling edge dead time register
 #define PPC_RST1_PGx_OVRENH   PG3IOCONLbits.OVRENH // PWM channel IO config register override high control bit
 #define PPC_RST1_PGx_PENH     PG3IOCONLbits.PENH // PWM channel IO config register pin enable high control bit
 #define PPC_RST1_PGxUPDREQ    PG3STATbits.UPDREQ // PWM channel ADC trigger A register
 #define PPC_RST1_PGxTRIGA     PG3TRIGA // PWM channel ADC trigger A register
 #define PPC_RST1_PGxTRIGB     PG3TRIGB // PWM channel ADC trigger A register
 #define PPC_RST1_PGxTRIGC     PG3TRIGC // PWM channel ADC trigger A register
+#define PPC_RST1_PWM_IF       _PWM3IF // interrupt flag bit
+#define PPC_RST1_PWM_IE       _PWM3IE // interrupt enable bit
+#define PPC_RST1_PWM_IP       _PWM3IP // interrupt priority for this analog input
+#define _PPC_RST1_PWM_Interrupt _PWM3Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #46 is RB11
 #define HUB_PRTPWR1_TRIS    TRISBbits.TRISB11 // GPIO direction register bit
@@ -1208,6 +1273,9 @@
 #define HUB_PRTPWR1_PGx_PER      PG3PER // PWM channel period register
 #define HUB_PRTPWR1_PGx_PHASE    PG3PHASE // PWM channel phase register
 #define HUB_PRTPWR1_PGx_DC       PG3DC // PWM channel duty cycle register
+#define HUB_PRTPWR1_PGx_DCA      PG3DCA// PWM channel duty cycle A register
+#define HUB_PRTPWR1_PGx_DTH      PG3DTH // PWM channel rising edge dead time register
+#define HUB_PRTPWR1_PGx_DTL      PG3DTL // PWM channel falling edge dead time register
 #define HUB_PRTPWR1_PGx_OVRENL   PG3IOCONLbits.OVRENL // PWM channel IO config register override low control bit
 #define HUB_PRTPWR1_PGx_PENL     PG3IOCONLbits.PENL // PWM channel IO config register pin enable low control bit
 #define HUB_PRTPWR1_PGxUPDREQ    PG3STATbits.UPDREQ // PWM channel ADC trigger A register
@@ -1237,12 +1305,19 @@
 #define BOOSTH2_PGx_PER      PG2PER // PWM channel period register
 #define BOOSTH2_PGx_PHASE    PG2PHASE // PWM channel phase register
 #define BOOSTH2_PGx_DC       PG2DC // PWM channel duty cycle register
+#define BOOSTH2_PGx_DCA      PG2DCA// PWM channel duty cycle A register
+#define BOOSTH2_PGx_DTH      PG2DTH // PWM channel rising edge dead time register
+#define BOOSTH2_PGx_DTL      PG2DTL // PWM channel falling edge dead time register
 #define BOOSTH2_PGx_OVRENH   PG2IOCONLbits.OVRENH // PWM channel IO config register override high control bit
 #define BOOSTH2_PGx_PENH     PG2IOCONLbits.PENH // PWM channel IO config register pin enable high control bit
 #define BOOSTH2_PGxUPDREQ    PG2STATbits.UPDREQ // PWM channel ADC trigger A register
 #define BOOSTH2_PGxTRIGA     PG2TRIGA // PWM channel ADC trigger A register
 #define BOOSTH2_PGxTRIGB     PG2TRIGB // PWM channel ADC trigger A register
 #define BOOSTH2_PGxTRIGC     PG2TRIGC // PWM channel ADC trigger A register
+#define BOOSTH2_PWM_IF       _PWM2IF // interrupt flag bit
+#define BOOSTH2_PWM_IE       _PWM2IE // interrupt enable bit
+#define BOOSTH2_PWM_IP       _PWM2IP // interrupt priority for this analog input
+#define _BOOSTH2_PWM_Interrupt _PWM2Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #48 is RB13
 #define POOSTL2_TRIS    TRISBbits.TRISB13 // GPIO direction register bit
@@ -1266,6 +1341,9 @@
 #define POOSTL2_PGx_PER      PG2PER // PWM channel period register
 #define POOSTL2_PGx_PHASE    PG2PHASE // PWM channel phase register
 #define POOSTL2_PGx_DC       PG2DC // PWM channel duty cycle register
+#define POOSTL2_PGx_DCA      PG2DCA// PWM channel duty cycle A register
+#define POOSTL2_PGx_DTH      PG2DTH // PWM channel rising edge dead time register
+#define POOSTL2_PGx_DTL      PG2DTL // PWM channel falling edge dead time register
 #define POOSTL2_PGx_OVRENL   PG2IOCONLbits.OVRENL // PWM channel IO config register override low control bit
 #define POOSTL2_PGx_PENL     PG2IOCONLbits.PENL // PWM channel IO config register pin enable low control bit
 #define POOSTL2_PGxUPDREQ    PG2STATbits.UPDREQ // PWM channel ADC trigger A register

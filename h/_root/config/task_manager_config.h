@@ -220,7 +220,7 @@
 
 #define TASK_MGR_TIME_STEP                  (float)(100.0e-6)     // Schedule time step in [sec]
     
-#define TASK_MGR_PERIOD                     (uint16_t)((float)FCY * (float)TASK_MGR_TIME_STEP)
+#define TASK_MGR_PERIOD                     (uint16_t)((float)system_frequencies.fcy * (float)TASK_MGR_TIME_STEP)
 
 #define TASK_MGR_TIMER_INDEX                1       // Index of the timer peripheral used
 #define TASK_MGR_TIMER_COUNTER_REGISTER     TMR1    // Timer counter register

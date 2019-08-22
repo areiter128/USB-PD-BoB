@@ -70,7 +70,7 @@ volatile uint16_t (*Task_Table[])(void) = {
     init_FaultObjects, // call fault object initialization
     exec_CaptureSystemStatus,           // Captures detection signals and analyzes voltages to determine the operating mode
     
-    /* ===== USER FUNCTIONS LIST ===== */
+    /* ==================== USER FUNCTIONS LIST ==================== */
     
     // Chip level initialization
     init_gpio,              // task initializing all used GPIOs in accordance to their application specific function
@@ -80,10 +80,13 @@ volatile uint16_t (*Task_Table[])(void) = {
     // Board level initialization
             
     // Add System function / Special function initialization
+    init_PowerControl,      // Initializing the power controller engine
+    exec_PowerControl,      // execute the power controller engine
+
     init_taskPDStack,
     task_PDStack,
     
-    /* ===== END OF USER FUNCTIONS ===== */
+    /* ==================== END OF USER FUNCTIONS ==================== */
 
     // Empty task used as internal task execution timing buffer
     task_Idle               // simple task doing nothing 
@@ -143,7 +146,7 @@ volatile uint16_t task_queue_boot_size = (sizeof(task_queue_boot)/sizeof(task_qu
  * *********************************************************************************************** */
 
 volatile uint16_t task_queue_device_startup[] = {
-    TASK_IDLE,                   // Step #1
+    INIT_POWER_CONTROL, // Step #1
     TASK_IDLE   // empty task used as task list execution time buffer 
 };
 volatile uint16_t task_queue_device_startup_size = (sizeof(task_queue_device_startup)/sizeof(task_queue_device_startup[0]));
@@ -185,7 +188,8 @@ volatile uint16_t task_queue_system_startup_size = (sizeof(task_queue_system_sta
  * *********************************************************************************************** */
 
 volatile uint16_t task_queue_idle[] = {
-    TASK_PDSTACK, // Step #0
+    EXEC_POWER_CONTROL, // Step #0
+    TASK_PDSTACK, // Step #1
     TASK_IDLE
 };
 volatile uint16_t task_queue_idle_size = (sizeof(task_queue_idle)/sizeof(task_queue_idle[0]));

@@ -75,9 +75,10 @@ volatile uint16_t exec_CaptureSystemStatus(void) {
     volatile uint16_t fres=1;
     
     // System status cannot reliably be detected without running ADC
-    if(!application.ctrl_status.flags.adc_active) 
-    { return(fres); }
+//    if(!application.ctrl_status.flags.adc_active) 
+//    { return(fres); }
 
+    
     fres &= css_GetSystemStatus();
     fres &= css_SetSystemMode();
     

@@ -1,5 +1,4 @@
-/* ****************************************************************************************************
- * Microchip Technology Inc. and its subsidiaries.  You may use this software 
+/* Microchip Technology Inc. and its subsidiaries.  You may use this software 
  * and any derivatives exclusively with Microchip products. 
  * 
  * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS".  NO WARRANTIES, WHETHER 
@@ -18,24 +17,46 @@
  *
  * MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE 
  * TERMS. 
- * *****************************************************************************************************
- * File:   devcfg_oscillator.h
- * Author: M91406
- * Comments: This file is offering default defines of basic system oscillator frequencies based on user selected CPU speed settings.
+ */
+
+/* 
+ * File:   task_PowerControl.h  
+ * Author: M91406   
+ * Comments: 
+ * Power control state machine for operating a 4-Switch Buck/Boost converter in 
+ * average current mode control (ACMC)
  * Revision history: 
- *  10/27/2017  iniial release
- * *****************************************************************************************************/
+ * 07/24/2019   initial version
+ */
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef _DEVICE_CONFIGURATION_OSCILLATOR_H_
-#define	_DEVICE_CONFIGURATION_OSCILLATOR_H_
+#ifndef APL_TASK_POWER_CONTROL_H
+#define	APL_TASK_POWER_CONTROL_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
-#include <stdint.h>
-
+#include "hal/hal.h"
 #include "mcal/mcal.h"
 
+#include "apl/resources/c4swbb_control.h"
 
-#endif	/* _DEVICE_CONFIGURATION_OSCILLATOR_H_ */
+
+#ifdef	__cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;
+extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
+
+// Public function prototypes
+extern volatile uint16_t init_PowerControl(void);
+extern volatile uint16_t exec_PowerControl(void);
+
+#ifdef	__cplusplus
+}
+#endif /* __cplusplus */
+
+#endif	/* APL_TASK_POWER_CONTROL_H */
 
