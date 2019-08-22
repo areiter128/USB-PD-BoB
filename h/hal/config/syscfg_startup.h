@@ -54,9 +54,10 @@
  * 
  * *************************************************************************************************/
 
-#define C4SWBB_POWER_ON_DELAY    500e-3      // power on delay in [sec]
-#define C4SWBB_RAMP_PERIOD       50e-3         // ramp period in [sec]
-#define C4SWBB_POWER_GOOD_DELAY  100e-3        // power good in [sec]
+#define C4SWBB_POWER_ON_DELAY    100e-3      // power on delay in [sec]
+#define C4SWBB_RAMP_PERIOD       50e-3       // ramp period in [sec]
+#define C4SWBB_POWER_GOOD_DELAY  100e-3      // power good in [sec]
+
 
 #define C4SWBB_PODLY     (uint16_t)((C4SWBB_POWER_ON_DELAY / TASK_MGR_PERIOD)-1.0)
 #define C4SWBB_RPER      (uint16_t)((C4SWBB_RAMP_PERIOD / TASK_MGR_PERIOD)-1.0)

@@ -216,6 +216,20 @@ typedef struct {
     volatile C4SWBB_SWITCH_NODE_SETTINGS_t buck_leg;  // Settings for 4-switch buck/boost converter buck leg
 } C4SWBB_POWER_CONTROLLER_t; // Settings, status and operating data of the power controller
 
+/* Code example of how to start/control the power controller 
+
+ * Hi James: search for your name to find this comment! :-)
+ * 
+    volatile C4SWBB_POWER_CONTROLLER_t my_supply;
+
+    my_supply.data.v_ref = C4SWBB_VOUT_REF_5V;
+    my_supply.status.flags.auto_start = 0;
+    my_supply.status.flags.enabled = 1;
+    my_supply.status.flags.GO = 1;
+
+ */
+
+
 
 /* Public Function Prototypes */
 extern volatile uint16_t init_4SWBB_PowerController(C4SWBB_POWER_CONTROLLER_t* pInstance);

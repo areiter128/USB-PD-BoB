@@ -68,17 +68,23 @@
     
     #define C4SWBB_VOUT_NOMINAL          5.0     // Nominal output voltage in [V]
     #define C4SWBB_VOUT_MINIMUM          4.5     // Maximum output voltage in [V]
-    #define C4SWBB_VOUT_MAXIMUM          20.0    // Maximum output voltage in [V]
+    #define C4SWBB_VOUT_MAXIMUM          21.0    // Maximum output voltage in [V]
     #define C4SWBB_VOUT_HYSTERESIS       1.0     // Output voltage protection hysteresis in [V]
     #define C4SWBB_VOUT_UPPER_DEVIATION  2.0     // Upper output voltage deviation from reference in [V]
     #define C4SWBB_VOUT_LOWER_DEVIATION  0.8     // Lower output voltage deviation from reference in [V]
+
+    #define C4SWBB_VOUT_LEVEL_5V         5.0      // Nominal output voltage in [V]
+    #define C4SWBB_VOUT_LEVEL_9V         9.0      // Nominal output voltage in [V]
+    #define C4SWBB_VOUT_LEVEL_12V        12.0     // Nominal output voltage in [V]
+    #define C4SWBB_VOUT_LEVEL_15V        15.0     // Nominal output voltage in [V]
+    #define C4SWBB_VOUT_LEVEL_20V        20.0     // Nominal output voltage in [V]
 
     #define C4SWBB_VOUT_R1               18.0    // Resitance of upper voltage divider resistor in kOhm
     #define C4SWBB_VOUT_R2               2.87    // Resitance of lower voltage divider resistor in kOhm
     #define C4SWBB_VOUT_AMP_GAIN         1.000    // Gain factor or additional op-amp (set to 1.0 if none is used)
     #define C4SWBB_VOUT_SENSE_OFFSET     0.000    // Output voltage sense offset
 
-    //~~~~~~~~~~~~~~~~~ conversion macros -----------
+    //~~~~~~~~~~~~~~~~~ conversion macros ~~~~~~~~~~~~~~~~~~
     #define C4SWBB_VOUT_FB_GAIN      (float)(C4SWBB_VOUT_AMP_GAIN * ((C4SWBB_VOUT_R2) / (C4SWBB_VOUT_R1 + C4SWBB_VOUT_R2)))
     #define C4SWBB_VOUT_OFFSET       (uint16_t)(C4SWBB_VOUT_SENSE_OFFSET * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
     #define C4SWBB_VOUT_REF          (uint16_t)(C4SWBB_VOUT_NOMINAL * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
@@ -86,6 +92,12 @@
     #define C4SWBB_VOUT_HYST         (uint16_t)(C4SWBB_VOUT_HYSTERESIS * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
     #define C4SWBB_VOUT_UDEVI        (uint16_t)(C4SWBB_VOUT_UPPER_DEVIATION * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
     #define C4SWBB_VOUT_LDEVI        (uint16_t)(C4SWBB_VOUT_LOWER_DEVIATION * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
+
+    #define C4SWBB_VOUT_REF_5V       (uint16_t)(C4SWBB_VOUT_LEVEL_5V * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
+    #define C4SWBB_VOUT_REF_9V       (uint16_t)(C4SWBB_VOUT_LEVEL_9V * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
+    #define C4SWBB_VOUT_REF_12V      (uint16_t)(C4SWBB_VOUT_LEVEL_12V * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
+    #define C4SWBB_VOUT_REF_15V      (uint16_t)(C4SWBB_VOUT_LEVEL_15V * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
+    #define C4SWBB_VOUT_REF_20V      (uint16_t)(C4SWBB_VOUT_LEVEL_20V * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
     //~~~~~~~~~~~~~~~~~
 
     #define C4SWBB_VIN_MINIMUM       7.0             // Minimum input voltage in [V]
@@ -95,12 +107,12 @@
     #define C4SWBB_VIN_R1            15.8            // Upper voltage divider resistor in kOhm
     #define C4SWBB_VIN_R2            1.0             // Lower voltage divider resistor in kOhm
 
+    //~~~~~~~~~~~~~~~~~ conversion macros ~~~~~~~~~~~~~~~~~~
     #define C4SWBB_VIN_FB_GAIN       (float)((C4SWBB_VIN_R2) / (C4SWBB_VIN_R1 + C4SWBB_VIN_R2))
     #define C4SWBB_VIN_UVLO          (uint16_t)(C4SWBB_VIN_MINIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRAN)
     #define C4SWBB_VIN_OVLO          (uint16_t)(C4SWBB_VIN_MAXIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRAN)
     #define C4SWBB_VIN_HYST          (uint16_t)(C4SWBB_VIN_HYSTERESIS * C4SWBB_VIN_FB_GAIN / ADC_GRAN)
-
-
+    //~~~~~~~~~~~~~~~~~
 
 
     // DSC bias voltage
