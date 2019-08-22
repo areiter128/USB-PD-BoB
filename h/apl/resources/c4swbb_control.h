@@ -216,18 +216,63 @@ typedef struct {
     volatile C4SWBB_SWITCH_NODE_SETTINGS_t buck_leg;  // Settings for 4-switch buck/boost converter buck leg
 } C4SWBB_POWER_CONTROLLER_t; // Settings, status and operating data of the power controller
 
-/* Code example of how to start/control the power controller 
+     volatile C4SWBB_POWER_CONTROLLER_t my_supply;
 
- * Hi James: search for your name to find this comment! :-)
+     
+     
+/* **********************************************************************************************
+ *  Code example of how to start/control the power controller in your code
  * 
-    volatile C4SWBB_POWER_CONTROLLER_t my_supply;
-
-    my_supply.data.v_ref = C4SWBB_VOUT_REF_5V;
-    my_supply.status.flags.auto_start = 0;
-    my_supply.status.flags.enabled = 1;
-    my_supply.status.flags.GO = 1;
-
- */
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Hi James: search for your name to find this comment! :-)
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * 
+ *  Step 1: define a power controller somewhere in your project
+ *
+ *     volatile C4SWBB_POWER_CONTROLLER_t my_supply;
+ * 
+ *
+ *  Step 2: Setting the output voltage reference
+ * 
+ *     The default output voltage level is +5V. This reference will be set automatically 
+ *     during the self-configuration of the 4swbb power controller. Would you like to 
+ *     change the reference to some other level, please follow these guidelines:
+ * 
+ *     a) Power Controller is NOT running yet:
+ * 
+ *          - write an appropriate 16 bit integer value to 'my_supply.data.v_ref'         
+ *          - use the enable and GO bits in the status word to initiate the power up (see Step 3)
+ * 
+ *     b) Changing output voltage at runtime
+ * 
+ *          - write an appropriate 16 bit integer value to 'my_supply.data.v_ref'
+ *          - when 'auto_start' is enabled, the c4swbb power controller will start ramping 
+ *            up/down the output voltage in the next state machine tick after this value has 
+ *            been changed.
+ *          - when 'auto_start' is disabled, the c4swbb power controller will wait for the GO bit 
+ *            to be set before ramping up/down the output voltage.
+ * 
+ *     The ramp-up/down period will end after the Power Good period has expired.
+ * 
+ * 
+ *  Step 3: 
+ *  
+ *   for manual control use the status word of the C4SWBB_POWER_CONTROLLER_t data structure: 
+ *
+ *      - disable 'auto_start'
+ *      - set 'enabled = true'
+ *        
+ *   Now the power controller is in standby mode until you set the GO bit.
+ * 
+ *      - set 'GO = 1'
+ * 
+ * 
+ *      my_supply.status.flags.auto_start = false;
+ *      my_supply.status.flags.enabled = true;
+ *      my_supply.status.flags.GO = 1;
+ * 
+ *
+ * **********************************************************************************************/
 
 
 
