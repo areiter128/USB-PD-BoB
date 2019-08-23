@@ -47,7 +47,8 @@ void DEBUG_init(void)
     PD_DEBUG_UART_STAH = 0x22;
     // BaudRate = 230400; Frequency = 100000000 Hz; BRG 108; 
     // U1BRG = 0x6C; // For 200 MIPS clock setting
-    PD_DEBUG_UART_BRG = 0x61;
+    //PD_DEBUG_UART_BRG = 0x61;
+    PD_DEBUG_UART_BRG = 0x6C;
     // BRG 0; 
     PD_DEBUG_UART_BRGH = 0x00;
     // P1 0; 
