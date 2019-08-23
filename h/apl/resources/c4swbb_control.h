@@ -47,7 +47,7 @@
 /* ToDo: Ramp Up Timing is not defined yet and will depend on reference step size and execution interval
  *       syscfg_startup contains a define POWER_UP_RAMP_PERIOD_TICKS which can be used to create a new 
  *       conversion macro to determine the required reference value steps size to meet the user-given 
- *       ramp up/down time */ 
+ *       ramp up/down time */
 #define SOFT_START_PRECHARGE_TICKS  10    // Number of bootstrap precharge pulses before ramp up
 #define SOFT_START_PCRG_PULSE_DUTY  asm volatile ( "REPEAT #6 \n NOP \n" ) // pulse width ~100ns
 
@@ -62,45 +62,53 @@
  * The upper three bits of the status word are used to enable/disable, start or stop the converter.
  * All other bits are read only and may get overridden by the power controller during operation.
  * 
- * *************************************************************************************************** */    
+ * *************************************************************************************************** */
 
 /* Power Controller State Machine Status Definitions */
 typedef enum {
-    CONVERTER_STATE_INITIALIZE     = 0b0000,   // soft-start phase #0: initialize peripherals, variables and hijack controller reference
-    CONVERTER_STATE_STANDBY        = 0b0001,   // soft-start phase #1: power on delay (no action)
-    CONVERTER_STATE_POWER_ON_DELAY = 0b0010,   // soft-start phase #2: power on delay (no action)
-    CONVERTER_STATE_PRECHARGE      = 0b0011,   // soft-start phase #3: pre-charge bootstrap capacitor to ensure proper function of half-bridge switch node
-    CONVERTER_STATE_LAUNCH_V_RAMP  = 0b0100,   // soft-start phase #4: turn on PWM outputs and enable controller
-    CONVERTER_STATE_V_RAMP_UP      = 0b0101,   // soft-start phase #5: perform output voltage ramp up based on parameters and system response 
-    CONVERTER_STATE_I_RAMP_UP      = 0b0110,   // soft-start phase #6: perform output current ramp up based on parameters and system response (average current mode only)
-    CONVERTER_STATE_POWER_GOOD     = 0b0111,   // soft-start phase #7: Output reached regulation point but waits until things have settled
-    CONVERTER_STATE_COMPLETE       = 0b1000,   // soft-start phase #8: Output in regulation and power is OK
-    CONVERTER_STATE_FAULT          = 0b1111    // soft-start phase #9: Output in regulation and power is OK
-}C4SWBB_STATUS_LABEL_e;                        // Labels of converter state machine status
+    CONVERTER_STATE_INITIALIZE = 0b0000, // converter state machine step #0: initialize peripherals, variables and hijack controller reference
+    CONVERTER_STATE_STANDBY = 0b0001, // converter state machine step #1: standby mode, power supply is disabled waiting for being enabled (no action)
+    CONVERTER_STATE_POWER_ON_DELAY = 0b0010, // converter state machine step #2: power on delay (no action)
+    CONVERTER_STATE_PRECHARGE = 0b0011, // converter state machine step #3: pre-charge bootstrap capacitor to ensure proper function of half-bridge switch node
+    CONVERTER_STATE_LAUNCH_V_RAMP = 0b0100, // converter state machine step #4: turn on PWM outputs and enable controller
+    CONVERTER_STATE_V_RAMP_UP = 0b0101, // converter state machine step #5: perform output voltage ramp up based on parameters and system response 
+    CONVERTER_STATE_I_RAMP_UP = 0b0110, // converter state machine step #6: perform output current ramp up based on parameters and system response (average current mode only)
+    CONVERTER_STATE_POWER_GOOD = 0b0111, // converter state machine step #7: Output reached regulation point but waits until things have settled
+    CONVERTER_STATE_COMPLETE = 0b1000, // converter state machine step #8: Output in regulation and power is OK
+    CONVERTER_STATE_FAULT = 0b1111 // converter state machine step #9: Some fault condition has been detected and the power supply is shut down
+} C4SWBB_STATUS_LABEL_e; // Labels of converter state machine steps
+
+/* 16-bit bit masks of converter status bits */
+#define C4SWBB_CTRL_STAT_POWERSOURCE_DETECTED   0b0000000100000000
+#define C4SWBB_CTRL_STAT_PWM_ACTIVE             0b0000001000000000
+#define C4SWBB_CTRL_STAT_ADC_ACTIVE             0b0000010000000000
+#define C4SWBB_CTRL_STAT_FAULT_ACTIVE           0b0000100000000000
+#define C4SWBB_CTRL_STAT_GO_ACTIVE              0b0010000000000000
+#define C4SWBB_CTRL_STAT_AUTORUN_ENABLED        0b0100000000000000
+#define C4SWBB_CTRL_STAT_ENABLED                0b1000000000000000
 
 typedef enum {
-    CONVERTER_RAMP_DIR_UP     = 0b1,   // soft-start ramp direction #1: output is ramping up
-    CONVERTER_RAMP_DIR_DOWN   = 0b0    // soft-start ramp direction #0: output is ramping down
-}C4SWBB_RAMP_DIRECTION_e;
+    CONVERTER_RAMP_DIR_UP = 0b1, // soft-start ramp direction #1: output is ramping up
+    CONVERTER_RAMP_DIR_DOWN = 0b0 // soft-start ramp direction #0: output is ramping down
+} C4SWBB_RAMP_DIRECTION_e;
 
 typedef struct {
-    volatile C4SWBB_STATUS_LABEL_e op_status : 4;    // Bit <0:3>: (read only) converter state machine operating status 
-    volatile C4SWBB_RAMP_DIRECTION_e tune_dir : 1;   // Bit 4: (read only) flag indicating the direction of the tune-in ramp when the reference is changed (0=up or 1=down)
-    volatile unsigned : 5;                           // Bit <4:8> (reserved)
-    volatile bool power_source_detected  :1;         // Bit 9:  (read only) Status bit indicating that a valid power source has been detected
-    volatile bool pwm_active  :1;                    // Bit 10: (read only) Status bit indicating that the PWM outputs have been enabled
-    volatile bool adc_active  :1;                    // Bit 11: (read only) Status bit indicating that the ADC has been started and is sampling data
-    volatile bool fault_active  :1;                  // Bit 12: (read only) Status bit indicating that a critical fault condition has been detected
-    volatile bool GO :1;                             // Bit 13: POWER SUPPLY START bit (will trigger startup procedure when set)
-    volatile bool auto_start :1;                     // Bit 14: Auto-Start will automatically enable the converter and set the GO bit when ready
-    volatile bool enabled :1;                        // Bit 15: Enable-bit (when disabled, power supply will reset in STANDBY mode)
-}__attribute__((packed))C4SWBB_STATUS_FLAGS_t;
+    volatile C4SWBB_STATUS_LABEL_e op_status : 4; // Bit <0:3>: (read only) converter state machine operating status 
+    volatile unsigned : 4; // Bit <4:7>: (reserved)
+    volatile bool power_source_detected : 1; // Bit <8>:  (read only) Status bit indicating that a valid power source has been detected
+    volatile bool pwm_active : 1; // Bit <9>:  (read only) Status bit indicating that the PWM outputs have been enabled
+    volatile bool adc_active : 1; // Bit <10>: (read only) Status bit indicating that the ADC has been started and is sampling data
+    volatile bool fault_active : 1; // Bit <11>: (read only) Status bit indicating that a critical fault condition has been detected
+    volatile C4SWBB_RAMP_DIRECTION_e tune_dir : 1; // Bit <12>: (read only) flag indicating the direction of the tune-in ramp when the reference is changed (0=up or 1=down)
+    volatile bool GO : 1; // Bit <13>: POWER SUPPLY START bit (will trigger startup procedure when set)
+    volatile bool autorun : 1; // Bit <14>: Auto-Start will automatically enable the converter and set the GO bit when ready
+    volatile bool enabled : 1; // Bit <15>: Enable-bit (when disabled, power supply will reset in STANDBY mode)
+} __attribute__((packed))C4SWBB_STATUS_FLAGS_t;
 
 typedef union {
-	volatile uint16_t value;                // buffer for 16-bit word read/write operations
-	volatile C4SWBB_STATUS_FLAGS_t flags;   // data structure for single bit addressing operations
-}C4SWBB_STATUS_t;                           // Power converter operation status bits
-
+    volatile uint16_t value; // buffer for 16-bit word read/write operations
+    volatile C4SWBB_STATUS_FLAGS_t flags; // data structure for single bit addressing operations
+} C4SWBB_STATUS_t; // Power converter operation status bits
 
 /*!C4SWBB_LOOP_SETTINGS_t
  * ***************************************************************************************************
@@ -114,7 +122,7 @@ typedef union {
  * minimum and maximum values.
  * This data structure may be used for one or multiple loops.
  * 
- * *************************************************************************************************** */    
+ * *************************************************************************************************** */
 typedef struct {
     volatile uint16_t reference; // Control loop reference variable
     volatile uint16_t feedback_offset; // Feedback offset value for calibration or bi-direction feedback signals
@@ -135,19 +143,19 @@ typedef struct {
  * for voltage and current, which are used internally by the controller (read only) but are still
  * accessible for external code modules for monitoring, diagnostics and fault handling purposes.
  * 
- * *************************************************************************************************** */    
+ * *************************************************************************************************** */
 
 typedef struct {
-    volatile uint16_t v_reference;          // Soft-Start target voltage loop reference value (read only)
-    volatile uint16_t i_reference;          // Soft-Start target current loop reference value (read only)
-    volatile uint16_t counter;              // Soft-Start Execution Counter (read only)
-    volatile uint16_t pwr_on_delay;         // Soft-Start POwer On Delay
-    volatile uint16_t precharge_delay;      // Soft-Start Bootstrap Capacitor pre-charge delay
-    volatile uint16_t ramp_period;          // Soft-Start Ramp-Up Duration
-    volatile uint16_t ramp_v_ref_increment;   // Soft-Start Single Voltage Reference Increment per Step
-    volatile uint16_t ramp_i_ref_increment;   // Soft-Start Single Current Reference Increment per Step
-    volatile uint16_t pwr_good_delay;       // Soft-Start Power Good Delay
-}C4SWBB_STARTUP_SETTINGS_t;                 // Power converter soft-start settings and variables
+    volatile uint16_t v_reference; // Soft-Start target voltage loop reference value (read only)
+    volatile uint16_t i_reference; // Soft-Start target current loop reference value (read only)
+    volatile uint16_t counter; // Soft-Start Execution Counter (read only)
+    volatile uint16_t pwr_on_delay; // Soft-Start POwer On Delay
+    volatile uint16_t precharge_delay; // Soft-Start Bootstrap Capacitor pre-charge delay
+    volatile uint16_t ramp_period; // Soft-Start Ramp-Up Duration
+    volatile uint16_t ramp_v_ref_increment; // Soft-Start Single Voltage Reference Increment per Step
+    volatile uint16_t ramp_i_ref_increment; // Soft-Start Single Current Reference Increment per Step
+    volatile uint16_t pwr_good_delay; // Soft-Start Power Good Delay
+} C4SWBB_STARTUP_SETTINGS_t; // Power converter soft-start settings and variables
 
 /*!C4SWBB_SWITCH_NODE_SETTINGS_t
  * ***************************************************************************************************
@@ -161,7 +169,7 @@ typedef struct {
  * bridge.
  * This data structure may be used for one or multiple half bridge legs.
  * 
- * *************************************************************************************************** */    
+ * *************************************************************************************************** */
 typedef struct {
     volatile uint16_t pwm_instance; // Instance of the PWM peripheral used (e.g. 1=PG1, 2=PG2, etc.)
     volatile uint16_t period; // Switching period
@@ -174,7 +182,6 @@ typedef struct {
     volatile uint16_t leb_period; // Leading Edge Blanking period 
 } C4SWBB_SWITCH_NODE_SETTINGS_t; // Switching signal timing settings
 
-
 /*!C4SWBB_DATA_t
  * ***************************************************************************************************
  * Summary:
@@ -184,16 +191,15 @@ typedef struct {
  * This data structure holds shadow copies of most recent sample points as global access points 
  * to system operating values, such as input and output voltage, output currents and temperatures.
  * 
- * *************************************************************************************************** */    
+ * *************************************************************************************************** */
 
 typedef struct {
-    volatile uint16_t i_out;    // Power converter output current
-    volatile uint16_t v_in;     // Power converter input voltage
-    volatile uint16_t v_out;    // Power converter output voltage
-    volatile uint16_t v_ref;    // Power converter reference voltage
-    volatile uint16_t temp;     // Power converter board temperature
-}C4SWBB_DATA_t;        // Power converter runtime data
-
+    volatile uint16_t i_out; // Power converter output current
+    volatile uint16_t v_in; // Power converter input voltage
+    volatile uint16_t v_out; // Power converter output voltage
+    volatile uint16_t v_ref; // Power converter reference voltage
+    volatile uint16_t temp; // Power converter board temperature
+} C4SWBB_DATA_t; // Power converter runtime data
 
 /*!C4SWBB_POWER_CONTROLLER_t
  * ***************************************************************************************************
@@ -204,22 +210,19 @@ typedef struct {
  * This data structure holds all defines, values and setting of a power controller state machine
  * object running a 4-switch buck boost converter DC/DC controller.
  * 
- * *************************************************************************************************** */    
+ * *************************************************************************************************** */
 
 typedef struct {
     volatile C4SWBB_STATUS_t status; // Operating status information
     volatile C4SWBB_STARTUP_SETTINGS_t soft_start; // Soft-Start settings
-    volatile C4SWBB_DATA_t data;      // Data structure providing real-time operating data
-    volatile C4SWBB_LOOP_SETTINGS_t i_loop;      // Current loop control data structure
-    volatile C4SWBB_LOOP_SETTINGS_t v_loop;      // Voltage loop control data structure
+    volatile C4SWBB_DATA_t data; // Data structure providing real-time operating data
+    volatile C4SWBB_LOOP_SETTINGS_t i_loop; // Current loop control data structure
+    volatile C4SWBB_LOOP_SETTINGS_t v_loop; // Voltage loop control data structure
     volatile C4SWBB_SWITCH_NODE_SETTINGS_t boost_leg; // Settings for 4-switch buck/boost converter boost leg
-    volatile C4SWBB_SWITCH_NODE_SETTINGS_t buck_leg;  // Settings for 4-switch buck/boost converter buck leg
+    volatile C4SWBB_SWITCH_NODE_SETTINGS_t buck_leg; // Settings for 4-switch buck/boost converter buck leg
 } C4SWBB_POWER_CONTROLLER_t; // Settings, status and operating data of the power controller
 
-     volatile C4SWBB_POWER_CONTROLLER_t my_supply;
 
-     
-     
 /* **********************************************************************************************
  *  Code example of how to start/control the power controller in your code
  * 
@@ -246,10 +249,10 @@ typedef struct {
  *     b) Changing output voltage at runtime
  * 
  *          - write an appropriate 16 bit integer value to 'my_supply.data.v_ref'
- *          - when 'auto_start' is enabled, the c4swbb power controller will start ramping 
+ *          - when 'autorun' is enabled, the c4swbb power controller will start ramping 
  *            up/down the output voltage in the next state machine tick after this value has 
  *            been changed.
- *          - when 'auto_start' is disabled, the c4swbb power controller will wait for the GO bit 
+ *          - when 'autorun' is disabled, the c4swbb power controller will wait for the GO bit 
  *            to be set before ramping up/down the output voltage.
  * 
  *     The ramp-up/down period will end after the Power Good period has expired.
@@ -259,7 +262,7 @@ typedef struct {
  *  
  *   for manual control use the status word of the C4SWBB_POWER_CONTROLLER_t data structure: 
  *
- *      - disable 'auto_start'
+ *      - disable 'autorun'
  *      - set 'enabled = true'
  *        
  *   Now the power controller is in standby mode until you set the GO bit.
@@ -267,7 +270,7 @@ typedef struct {
  *      - set 'GO = 1'
  * 
  * 
- *      my_supply.status.flags.auto_start = false;
+ *      my_supply.status.flags.autorun = false;
  *      my_supply.status.flags.enabled = true;
  *      my_supply.status.flags.GO = 1;
  * 
@@ -277,8 +280,8 @@ typedef struct {
 
 
 /* Public Function Prototypes */
-extern volatile uint16_t init_4SWBB_PowerController(C4SWBB_POWER_CONTROLLER_t* pInstance);
-extern volatile uint16_t exec_4SWBB_PowerController(C4SWBB_POWER_CONTROLLER_t* pInstance);
+extern volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
+extern volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
 
 
 #endif	/* _APL_RESOURCES_SOFT_START_H_ */

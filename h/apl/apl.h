@@ -39,10 +39,11 @@
 #include "config/application.h"
 
 //Remove: #include "task_ConverterStateControl.h"
-#include "../h/apl/tasks/task_Idle.h"
-#include "../h/apl/tasks/task_FaultHandler.h"
-#include "../h/apl/tasks/task_SystemStatus.h"
-#include "../h/apl/tasks/task_PowerControl.h"
+#include "apl/tasks/task_Idle.h"
+#include "apl/tasks/task_FaultHandler.h"
+#include "apl/tasks/task_SystemStatus.h"
+#include "apl/tasks/task_PowerControl.h"
+
 
 /* ***********************************************************************************************
  * GLOBAL APPLICATION LAYER USER OPTIONS

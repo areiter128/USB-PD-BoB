@@ -51,8 +51,8 @@
  * *************************************************************************************************/
 
 #define ADC_REF              3.300 // ADC reference voltage in V
-#define ADC_RES              12.0  // ADC resolution in [bit]
-#define ADC_GRAN             (float)(ADC_REF / pow(2.0, ADC_RES)) // ADC granularity in [V/tick]
+#define ADC_RESOLUTION       12.0  // ADC resolution in [bit]
+#define ADC_GRANULARITY      (float)(ADC_REF / pow(2.0, ADC_RESOLUTION)) // ADC granularity in [V/tick]
 
 /*!Hardware Abstraction
  * *************************************************************************************************
@@ -86,18 +86,18 @@
 
     //~~~~~~~~~~~~~~~~~ conversion macros ~~~~~~~~~~~~~~~~~~
     #define C4SWBB_VOUT_FB_GAIN      (float)(C4SWBB_VOUT_AMP_GAIN * ((C4SWBB_VOUT_R2) / (C4SWBB_VOUT_R1 + C4SWBB_VOUT_R2)))
-    #define C4SWBB_VOUT_OFFSET       (uint16_t)(C4SWBB_VOUT_SENSE_OFFSET * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
-    #define C4SWBB_VOUT_REF          (uint16_t)(C4SWBB_VOUT_NOMINAL * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
-    #define C4SWBB_VOUT_OVP          (uint16_t)(C4SWBB_VOUT_MAXIMUM * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
-    #define C4SWBB_VOUT_HYST         (uint16_t)(C4SWBB_VOUT_HYSTERESIS * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
-    #define C4SWBB_VOUT_UDEVI        (uint16_t)(C4SWBB_VOUT_UPPER_DEVIATION * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
-    #define C4SWBB_VOUT_LDEVI        (uint16_t)(C4SWBB_VOUT_LOWER_DEVIATION * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
+    #define C4SWBB_VOUT_OFFSET       (uint16_t)(C4SWBB_VOUT_SENSE_OFFSET * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VOUT_REF          (uint16_t)(C4SWBB_VOUT_NOMINAL * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VOUT_OVP          (uint16_t)(C4SWBB_VOUT_MAXIMUM * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VOUT_HYST         (uint16_t)(C4SWBB_VOUT_HYSTERESIS * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VOUT_UDEVI        (uint16_t)(C4SWBB_VOUT_UPPER_DEVIATION * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VOUT_LDEVI        (uint16_t)(C4SWBB_VOUT_LOWER_DEVIATION * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
 
-    #define C4SWBB_VOUT_REF_5V       (uint16_t)(C4SWBB_VOUT_LEVEL_5V * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
-    #define C4SWBB_VOUT_REF_9V       (uint16_t)(C4SWBB_VOUT_LEVEL_9V * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
-    #define C4SWBB_VOUT_REF_12V      (uint16_t)(C4SWBB_VOUT_LEVEL_12V * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
-    #define C4SWBB_VOUT_REF_15V      (uint16_t)(C4SWBB_VOUT_LEVEL_15V * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
-    #define C4SWBB_VOUT_REF_20V      (uint16_t)(C4SWBB_VOUT_LEVEL_20V * C4SWBB_VOUT_FB_GAIN / ADC_GRAN)
+    #define C4SWBB_VOUT_REF_5V       (uint16_t)(C4SWBB_VOUT_LEVEL_5V * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VOUT_REF_9V       (uint16_t)(C4SWBB_VOUT_LEVEL_9V * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VOUT_REF_12V      (uint16_t)(C4SWBB_VOUT_LEVEL_12V * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VOUT_REF_15V      (uint16_t)(C4SWBB_VOUT_LEVEL_15V * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VOUT_REF_20V      (uint16_t)(C4SWBB_VOUT_LEVEL_20V * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
     //~~~~~~~~~~~~~~~~~
 
     #define C4SWBB_VIN_MINIMUM       7.0             // Minimum input voltage in [V]
@@ -109,9 +109,9 @@
 
     //~~~~~~~~~~~~~~~~~ conversion macros ~~~~~~~~~~~~~~~~~~
     #define C4SWBB_VIN_FB_GAIN       (float)((C4SWBB_VIN_R2) / (C4SWBB_VIN_R1 + C4SWBB_VIN_R2))
-    #define C4SWBB_VIN_UVLO          (uint16_t)(C4SWBB_VIN_MINIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRAN)
-    #define C4SWBB_VIN_OVLO          (uint16_t)(C4SWBB_VIN_MAXIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRAN)
-    #define C4SWBB_VIN_HYST          (uint16_t)(C4SWBB_VIN_HYSTERESIS * C4SWBB_VIN_FB_GAIN / ADC_GRAN)
+    #define C4SWBB_VIN_UVLO          (uint16_t)(C4SWBB_VIN_MINIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VIN_OVLO          (uint16_t)(C4SWBB_VIN_MAXIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VIN_HYST          (uint16_t)(C4SWBB_VIN_HYSTERESIS * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
     //~~~~~~~~~~~~~~~~~
 
 

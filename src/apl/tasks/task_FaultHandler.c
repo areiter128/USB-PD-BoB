@@ -74,7 +74,7 @@ inline uint16_t init_TaskExecutionFaultObject(void);
 inline uint16_t init_TaskTimeQuotaViolationFaultObject(void);
 
     // user defined fault objects
-inline uint16_t init_MyCustomFaultObject(void);
+inline uint16_t init_PowerSourceFaultObject_PortA(void);
 
 /*!fault_object_list[]
  * ***********************************************************************************************
@@ -114,7 +114,7 @@ volatile uint16_t init_FaultObjects(void)
     fres &= init_TaskTimeQuotaViolationFaultObject();
     
     // user defined fault objects
-    fres &= init_MyCustomFaultObject();
+    fres &= init_PowerSourceFaultObject_PortA();
 
     // Set global fault flags (need to be cleared during operation)
     task_mgr.status.flags.global_fault = 1;
@@ -271,18 +271,18 @@ inline uint16_t init_TaskTimeQuotaViolationFaultObject(void)
 }
 
 
-/*!init_PowerSourceFaultObject
+/*!init_PowerSourceFaultObject_PortA
  * ***********************************************************************************************
  * Description:
- * The fltobj_PowerSourceFailure is initialized here. This fault object captures the condition 
- * when no power source is available (no AC source and no batteries)
+ * The fltobj_PowerSourceFailure for 4-Switch BuckBoost converter #1 is initialized here. 
+ * This fault object captures the condition when no power source is available.
  * ***********************************************************************************************/
 
-inline uint16_t init_MyCustomFaultObject(void)
+inline uint16_t init_PowerSourceFaultObject_PortA(void)
 {
     // Configuring the Task Time Quota Violation fault object
-//    fltobj_PowerSourceFailure.object = &application.ctrl_status.value;
-    fltobj_PowerSourceFailure.object_bit_mask = CTRL_STAT_POWERSOURCE_DETECTED;
+    fltobj_PowerSourceFailure.object = &c4swbb_1.status.value;
+    fltobj_PowerSourceFailure.object_bit_mask = C4SWBB_CTRL_STAT_POWERSOURCE_DETECTED;
     fltobj_PowerSourceFailure.error_code = (uint32_t)FLTOBJ_POWER_SOURCE_FAILURE;
     fltobj_PowerSourceFailure.id = (uint16_t)FLTOBJ_POWER_SOURCE_FAILURE;
 
