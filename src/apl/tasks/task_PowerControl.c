@@ -14,9 +14,8 @@
 
 #include "apl/tasks/task_PowerControl.h"
 
-//#include "apl/tasks/task_PowerControl.h"
 volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;
-//volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
+volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
 
 volatile uint16_t exec_PowerControl(void) {
 

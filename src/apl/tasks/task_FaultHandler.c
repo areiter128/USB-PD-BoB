@@ -281,7 +281,10 @@ inline uint16_t init_TaskTimeQuotaViolationFaultObject(void)
 inline uint16_t init_PowerSourceFaultObject_PortA(void)
 {
     // Configuring the Task Time Quota Violation fault object
-    fltobj_PowerSourceFailure.object = &c4swbb_1.status.value;
+    
+    // ToDo: Declare fault object by re-enabling the following code line:
+    //    fltobj_PowerSourceFailure.object = &c4swbb_1.status.value;
+    
     fltobj_PowerSourceFailure.object_bit_mask = C4SWBB_CTRL_STAT_POWERSOURCE_DETECTED;
     fltobj_PowerSourceFailure.error_code = (uint32_t)FLTOBJ_POWER_SOURCE_FAILURE;
     fltobj_PowerSourceFailure.id = (uint16_t)FLTOBJ_POWER_SOURCE_FAILURE;
