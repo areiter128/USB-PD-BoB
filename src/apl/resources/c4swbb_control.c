@@ -10,85 +10,96 @@
 #include "apl/resources/c4swbb_control.h"
 
 /* === private state machine counter variables ===================================================== */
-volatile uint16_t pwr_on_couter = 0; // Loop counter for power on delay
-volatile uint16_t pchrg_couter = 0; // Loop counter for bootstrap pre-charge process
-volatile uint16_t pg_couter = 0;    // Loop counter for power good delay
+// (none)
 
-
-/*!exec_SoftStart()
+/*!exec_4SWBB_PowerController()
  * *****************************************************************************************************
  * Summary:
- * Execute the soft start state machine
+ * Executes the 4-Switch Buck Boost Power Controller state machine
  *
  * Parameters: 
- * (none)
+ * C4SWBB_POWER_CONTROLLER_t* pInstance     Instance of a 4-SW BB DC/DC converter object
  *
  * Description:
- * This routine executes the soft-start state machine. This engine is completely self-sufficient in 
- * terms of tracking the soft-start progress. Once the soft-start procedure is completed, the engine
- * will reset itself waiting for being called again.
+ * This routine executes the state machine, driving a 4-switch buck boost controller. This engine is 
+ * completely self-sufficient in terms of tracking the converter progress during start up, shut down,
+ * standby, fault or under normal operating conditions. 
+ * 
+ * At startup, the power controller initializes the required peripherals and basic power controller
+ * state machine data structure including its voltage and current loop controllers. Once everything
+ * is set up, the state machine drops into standby mode, waiting for being enabled.
  * 
  * *****************************************************************************************************/
 
-volatile uint16_t exec_4SWBB_PowerController(C4SWBB_POWER_CONTROLLER_t* pInstance) {
+volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
     
     volatile uint16_t fres = 0; // buffer variable of function return value
-    volatile float fdummy = 0.0;
-    volatile uint16_t int_dummy = 0;
+    volatile float fdummy = 0.0; // buffer variable for control loop pre-charge calculation
+    volatile uint16_t int_dummy = 0; // buffer variable for control loop pre-charge calculation
     
     
-    switch (ss_shadow.step) {
+    switch (pInstance->status.flags.op_status) {
 
-        /* @@SOFT_START_STEP_INITIALIZE
+        /* @@CONVERTER_STATE_INITIALIZE
          * ============================
          * In this step the startup procedure and control loops are reset. The soft-start ramp
          * is defined by a power on delay, pre-charge delay, ramp-up period and power good delay. 
          * The internal counters for each of these phases are reset. Then the controller reference
          * is hijacked and reset to zero. 
-         * In the next function call the soft-start step POWER_ON_DELAY will be executed */
+         * In the next function call the state machine step CONVERTER_STATE_STANDBY will be 
+         * executed. */
+        
         case CONVERTER_STATE_INITIALIZE:
             
-            pwr_on_couter = 0;  // Reset power on counter
-            pchrg_couter = 0;   // Reset pre-charge counter
-            pg_couter = 0;      // Reset power good counter
-
+            // ToDo: Move PWM and ADC configuration in dedicated 4-Switch Buck/Boost initialization 
+            //       files, where they can be properly addressed from abstract instances.
+            
             fres &= initialize_adc();
             fres &= initialize_pwm();
             
-//            // Hijack voltage loop controller reference
-//            ss_shadow.v_reference = 0; // Reset Soft-Start Voltage Reference
-//            ss_shadow.i_reference = 0; // Reset Soft-Start Current Reference
-//            ctrl_vloop.ptrControlReference = &ss_shadow.v_reference; // Voltage loop reference is hijacked by the soft-start reference
-//
-//            // switch to soft-start phase POWER-ON DELAY
-//            ss_shadow.step = SOFT_START_STEP_POWER_ON_DELAY;
+            // Switch to operation status CONVERTER_STATE_STANDBY
+            pInstance->status.flags.op_status = CONVERTER_STATE_STANDBY;
 
             break;
 
-        /* @@SOFT_START_STEP_POWER_ON_DELAY
+        /* @@CONVERTER_STATE_STANDBY
+         * ============================
+         * In this step the power controller is waiting for being enabled. No action will be taken
+         * until c4swbb.status.flags.enable = true and c4swbb.status.flags.GO = 1. The AUTORUN option
+         * (c4swbb.status.flags.autorun = true) will automatically enable the power controller 
+         * and set the GO bit to bypass this step of the state machine */
+            
+        case CONVERTER_STATE_STANDBY:
+
+            if( (pInstance->status.flags.enabled) && (pInstance->status.flags.GO) && 
+                (!pInstance->status.flags.fault_active)) {
+                
+                    pInstance->soft_start.counter = 0;  // Reset soft-start counter
+                    pInstance->status.flags.op_status = CONVERTER_STATE_POWER_ON_DELAY; // switch to state POWER_ON_DELAY
+            
+            }            
+            break;
+            
+        /* @@CONVERTER_STATE_POWER_ON_DELAY
          * ================================
-         * In this step the soft-start procedure continues with counting up variable pwr_on_couter
-         * until the defined power on delay period has expired. At the end of this phase the low-side
-         * PWM output is configured as GPIO for the manual pre-charge process and the soft-start step 
-         * SOFT_START_STEP_PRECHARGE will be executed */
+         * During the POWER ON DELAY the power controller waits until the programmed delay 
+         * period has expired. Neither control loop nor power converter are active.
+         * Once this delay period has expired the state machine will switch to 
+         * CONVERTER_STATE_LAUNCH_V_RAMP  */
+            
         case CONVERTER_STATE_POWER_ON_DELAY:
 
-//            // delay startup until POWER ON DELAY has expired
-//            if(pwr_on_couter++ > SOFT_START_POWER_ON_DELAY)
-//            {
-//                // switch to soft-start phase PRE-CHARGE BOOTSTRAP
-//                BUCKL1_WR = 0;
-//                BUCKL1_INIT_OUTPUT;
-//                hspwm_set_gpio_low_side(BUCKH1_PGx_CHANNEL);
-//
-//                pchrg_couter = 0;   // Reset pre-charge counter
-//                ss_shadow.step = SOFT_START_STEP_PRECHARGE;
-//
-//            }
+            // delay startup until POWER ON DELAY has expired
+            if(pInstance->soft_start.counter++ > pInstance->soft_start.pwr_on_delay) {
+
+                pInstance->soft_start.counter = 0;  // Reset soft-start counter
+                pInstance->status.flags.op_status = CONVERTER_STATE_LAUNCH_V_RAMP; // switch to soft-start phase LAUNCH_V_RAMP
+                
+            }
                 
             break;
 
-        /* @@SOFT_START_STEP_PRECHARGE
+        /* @@CONVERTER_STATE_PRECHARGE
          * ===========================
          * In this step the soft-start procedure continues with performing the manual pre-charge 
          * process which produces ~120ns wide pulses on the low side PWM signal pre-charging the 
@@ -114,7 +125,7 @@ volatile uint16_t exec_4SWBB_PowerController(C4SWBB_POWER_CONTROLLER_t* pInstanc
             
             break;
 
-        /* @@SOFT_START_STEP_LAUNCH_V_RAMP
+        /* @@CONVERTER_STATE_LAUNCH_V_RAMP
          * ================================
          * In this step the ramp up starting point is determined by measuring the input and output 
          * voltage and calculates the ideal duty ratio of the PWM. This value is then programmed into
@@ -126,59 +137,78 @@ volatile uint16_t exec_4SWBB_PowerController(C4SWBB_POWER_CONTROLLER_t* pInstanc
          *  */
         case CONVERTER_STATE_LAUNCH_V_RAMP:
 
-//            // Pre-charge reference
-//            if (application.data.v_out_cha < application.bata_v_loop.reference)
-//            { ss_shadow.v_reference = application.data.v_out_cha; }
-//            else 
-//            { ss_shadow.v_reference = application.bata_v_loop.reference; }
-//
-//            // In average current mode, set current reference limit to max startup current level
-//            #if (BATA_CONTROL_MODE == ACMC)
-//            application.bata_v_loop.maximum = (volatile uint16_t)IBATx_OCL_STARTUP;
-//            cvmc_bata.MaxOutput = application.bata_v_loop.maximum;
-//            #endif
-//            
-//            // Pre-charge PWM and control loop history
-//            fdummy = (float)(application.data.v_out_cha) / (float)(application.data.v_in << 1);
-//            int_dummy = (uint16_t)(fdummy * (float)application.timing.period);
-//            
-//            #if (BATA_CONTROL_MODE == VMC)
-//            
-//            if(int_dummy < application.bata_v_loop.minimum) 
-//            { int_dummy = application.bata_v_loop.minimum; }
-//            else if(int_dummy > application.bata_v_loop.maximum) 
-//            { int_dummy = application.bata_v_loop.maximum; }
-//            
-//            cvmc_bata_Precharge(&cvmc_bata, 0, int_dummy);
-//
-//            #elif (BATA_CONTROL_MODE == ACMC)
-//
-//            if(int_dummy < application.bata_i_loop.minimum) 
-//            { int_dummy = application.bata_i_loop.minimum; }
-//            else if(int_dummy > application.bata_i_loop.maximum) 
-//            { int_dummy = application.bata_i_loop.maximum; }
-//
-//            cacmc_bata_Precharge(&cacmc_bata, 0, int_dummy);
-//            
-//            #endif            
-//
-//            Nop();
-//            Nop();
-//            Nop();
-//            Nop();
-//            
-//            // set initial PWM duty ratio
-//            BATA_PWM_DC = int_dummy;
-//            
-//            // Enable input power source
-//            hspwm_ovr_release(BATA_PWM_CHANNEL); // Release PWM
-//            
-//            // switch to soft-start phase RAMP UP
-//            ss_shadow.step = SOFT_START_STEP_V_RAMP_UP;
-//            
+ /*           // Hijack voltage loop controller reference
+            pInstance->soft_start.v_reference = 0; // Reset Soft-Start Voltage Reference
+            pInstance->soft_start.i_reference = 0; // Reset Soft-Start Current Reference
+            
+            // Voltage loop reference is hijacked by the soft-start reference
+            pInstance->v_loop.controller->ptrControlReference = &pInstance->soft_start.v_reference;
+*/            
+            
+            // Determine, if the soft-start needs to ramp up or down
+            if(pInstance->data.v_out <= pInstance->data.v_ref) {
+                pInstance->status.flags.tune_dir = CONVERTER_RAMP_DIR_UP;
+            }
+            else {
+                pInstance->status.flags.tune_dir = CONVERTER_RAMP_DIR_DOWN;
+            }
+            
+            // Set starting point of the soft-start reference to most recent output voltage level
+            pInstance->soft_start.v_reference = pInstance->data.v_out;
+            
+            // In average current mode, set current reference limit to max startup current level
+            #if (C4SWBB_CONTROL_MODE == C4SWBB_ACMC)
+            // === ToDo: =========
+            // Check if this section is required. Removing it is desired as it breaks the 
+            // generic nature of this code module by incorporating dedicated HAL labels!!!
+            pInstance->v_loop.maximum = (volatile uint16_t)IOUT_OCL_TRIP;
+            pInstance->v_loop.controller->MaxOutput = pInstance->v_loop.maximum;
+            // === ToDoEnd =======
+            #endif
+            
+            // Pre-charge PWM and control loop history
+            fdummy = (float)(pInstance->data.v_out) / (float)(pInstance->data.v_in << 1);
+            int_dummy = (uint16_t)(fdummy * (float)pInstance->buck_leg.period);
+            
+            #if (C4SWBB_CONTROL_MODE == C4SWBB_VMC)
+            
+            // In voltage mode control the PWM duty cycle is determined by the 
+            // voltage loop controller. Thus, the voltage loop control history
+            // needs to be pre-charged to prevent turn-on glitches.
+            
+            if(int_dummy < pInstance->v_loop.minimum) 
+            { int_dummy = pInstance->v_loop.minimum; }
+            else if(int_dummy > pInstance->v_loop.maximum) 
+            { int_dummy = pInstance->v_loop.maximum; }
+            
+            ctrl_vloop_Precharge(pInstance->v_loop.controller, 0, int_dummy);
+
+            #elif (C4SWBB_CONTROL_MODE == C4SWBB_ACMC)
+
+            // In average current mode control the PWM duty cycle is determined by the 
+            // inner current loop controller. Thus, the current loop control history
+            // needs to be pre-charged to prevent turn-on glitches.
+            
+            if(int_dummy < pInstance->i_loop.minimum) 
+            { int_dummy = pInstance->i_loop.minimum; }
+            else if(int_dummy > pInstance->i_loop.maximum) 
+            { int_dummy = pInstance->i_loop.maximum; }
+
+            ctrl_iloop_Precharge(pInstance->i_loop.controller, 0, int_dummy);
+            
+            #endif            
+
+            // set initial PWM duty ratio
+            hspwm_set_duty_cycle(pInstance->buck_leg.pwm_instance, int_dummy);
+            
+            // ToDo: Add boost leg duty ratio pre-charge 
+            
+            // switch to soft-start phase RAMP UP
+            pInstance->status.flags.op_status = CONVERTER_STATE_V_RAMP_UP;
+            
             break;
             
-        /* @@SOFT_START_STEP_V_RAMP_UP
+        /* @@CONVERTER_STATE_V_RAMP_UP
          * ===========================
          * This is the essential step in which the output voltage is ramped up by incrementing the 
          * outer control loop reference. In voltage mode the output voltage will ramp up to the 
@@ -186,6 +216,10 @@ volatile uint16_t exec_4SWBB_PowerController(C4SWBB_POWER_CONTROLLER_t* pInstanc
          * In average current mode the inner loop will limit the voltage as soon as the current 
          * reference limit is hit and the output is switched to constant current mode. */
         case CONVERTER_STATE_V_RAMP_UP:
+
+            // Enable input power source
+            hspwm_ovr_release(pInstance->buck_leg.pwm_instance); // Release buck leg PWM
+            hspwm_ovr_release(pInstance->boost_leg.pwm_instance); // Release boost leg PWM
 
 //            // enable control loop
 //            #if (BATA_CONTROL_MODE == VMC)
@@ -215,34 +249,43 @@ volatile uint16_t exec_4SWBB_PowerController(C4SWBB_POWER_CONTROLLER_t* pInstanc
 
         /*!CONVERTER_STATE_I_RAMP_UP
          * =========================
-         * This soft-start step is for Battery charger Applications only!
-         * This phase of the soft-start ramp is only executed in average current mode and will 
-         * only take effect when the current limit is hit before the nominal voltage regulation 
-         * point. In this case the constant output current is ramped up to from the startup current
-         * to the nominal constant charging current. */
+         * !!! THIS SOFT-START STEP IS FOR BATTERY CHARGERS ONLY !!!
+         * 
+         * During this phase of the soft-start, the maximum current loop reference is incremented
+         * to the nominal level. depending on the output current settings, this may enforce different
+         * behavior of the power supply. 
+         * 
+         * a) The outer voltage loop is in clamping mode
+         *    When the voltage loop controller has been ramped up to the point, where the maximum 
+         *    control output (= reference for the inner current loop) hits the maximum limit,
+         *    the voltage loop becomes ineffective while clamped to its maximum control output 
+         *    value. In this condition the converter output is only controlled by the inner current 
+         *    loop and operates as pure constant current source.
+         *    
+         *    Under these conditions this part of the soft-start will produce a visible and adjustable
+         *    current soft-start ramp, starting from the initial voltage loop limit to the nominal
+         *    current limit.
+         * 
+         * b) The outer voltage loop is operating
+         *    In case the output voltage loop was able to drive the converter output voltage up to 
+         *    nominal operating level without hitting an output clamping limit, this part of the 
+         *    soft-start will still increment the current limit to its nominal level, but won't 
+         *    show visible effect at the converter output (neither voltage nor current)
+         * 
+         *  */
         case CONVERTER_STATE_I_RAMP_UP:
 
-            // increment current limit
-            pInstance->i_loop->MaxOutput += pInstance->soft_start.ramp_i_ref_increment; // Increment maximum current limit
+            // increment current limit 
+            pInstance->v_loop.controller->MaxOutput += pInstance->soft_start.ramp_i_ref_increment; // Increment maximum current limit
 
             // check if ramp is complete
-            if (pInstance->i_loop->MaxOutput >= (volatile uint16_t)pInstance->data.) 
+            if (pInstance->v_loop.controller->MaxOutput >= (volatile uint16_t)pInstance->i_loop.reference) 
             {
-                application.bata_v_loop.maximum = (volatile uint16_t)charger.i_ref_ramp.i_ref_stop;
-                cvmc_bata.MaxOutput = application.bata_v_loop.maximum;
-                ss_shadow.step = SOFT_START_WAIT_FOR_PWRGOOD;
+                pInstance->v_loop.maximum = (volatile uint16_t)pInstance->i_loop.reference;
+                pInstance->v_loop.controller->MaxOutput = pInstance->v_loop.maximum;
+                pInstance->status.flags.op_status = CONVERTER_STATE_POWER_GOOD;
             }
 
-            //            
-//            cvmc_bata.MaxOutput += charger.i_ref_ramp.i_ref_step_size; // SOFT_START_I_REF_STEP_SIZE; 
-//
-//            // check if ramp is complete
-//            if (cvmc_bata.MaxOutput >= (volatile uint16_t)charger.i_ref_ramp.i_ref_stop) 
-//            {
-//                application.bata_v_loop.maximum = (volatile uint16_t)charger.i_ref_ramp.i_ref_stop;
-//                cvmc_bata.MaxOutput = application.bata_v_loop.maximum;
-//                ss_shadow.step = SOFT_START_WAIT_FOR_PWRGOOD;
-//            }
             break;
 
         /* @@CONVERTER_STATE_POWER_GOOD
@@ -254,7 +297,7 @@ volatile uint16_t exec_4SWBB_PowerController(C4SWBB_POWER_CONTROLLER_t* pInstanc
         case CONVERTER_STATE_POWER_GOOD:
             // Enforce POWER GOOD Delay
             if(pInstance->soft_start.counter++ > pInstance->soft_start.pwr_good_delay) {
-                pInstance->status.flags.op_status.CONVERTER_STATE_COMPLETE;  // set startup process COMPLETE
+                pInstance->status.flags.op_status = CONVERTER_STATE_COMPLETE;  // set startup process COMPLETE
                 pInstance->soft_start.counter = 0;  // reset startup counter
             }
             Nop();
@@ -278,18 +321,20 @@ volatile uint16_t exec_4SWBB_PowerController(C4SWBB_POWER_CONTROLLER_t* pInstanc
          * or a fault condition was set by external code modules. In any of these cases the state 
          * machine falls back to STANDBY waiting to be restarted.  */
         default:
+            pInstance->status.flags.fault_active = true;
+            pInstance->status.flags.GO = false;
             pInstance->status.flags.op_status = CONVERTER_STATE_STANDBY;
             break;
     }
 
     //----------------------------------------------------------
-    /*!Power Converter Auto-Start Function
+    /*!Power Converter Autorun Function
      * When the control bit c4swbb.status.flags.auto_start is set, the status bits 'enabled' 
      * and 'GO' are automatically set and continuously enforced to ensure the power supply
      * will enter RAMP UP from STANDBY without the need for user code intervention. */
     // 
-    if( (pInstance->status.flags.auto_start == true) && (pInstance->status.flags.fault_active == false)) {
-        pInstance->status.flags.enabled = true;  // Auto-Enable power converter
+    if( (pInstance->status.flags.autorun == true) && (pInstance->status.flags.fault_active == false)) {
+        pInstance->status.flags.enabled = true;  // Auto-run power converter
         pInstance->status.flags.GO = true;       // Auto-Kick-off power converter
     }
     else { 
@@ -314,7 +359,7 @@ volatile uint16_t exec_4SWBB_PowerController(C4SWBB_POWER_CONTROLLER_t* pInstanc
  * 
  * *****************************************************************************************************/
 
-volatile uint16_t init_4SWBB_PowerController(C4SWBB_POWER_CONTROLLER_t* pInstance) {
+volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
 
     // Reset Startup Settings
     pInstance->soft_start.pwr_good_delay = CONVERTER_STATE_INITIALIZE; // reset state machine
@@ -340,7 +385,7 @@ volatile uint16_t init_4SWBB_PowerController(C4SWBB_POWER_CONTROLLER_t* pInstanc
     pInstance->status.flags.tune_dir = 0; // reset voltage tune-in direction to UP
     pInstance->status.flags.fault_active = false; // reset power controller global fault flag bit
     pInstance->status.flags.GO = 0; // reset GO bit
-    pInstance->status.flags.auto_start = false; // clear AUTO_START bit
+    pInstance->status.flags.autorun = false; // clear AUTORUN bit
     pInstance->status.flags.enabled = false; // disable power controller
     pInstance->status.flags.op_status = CONVERTER_STATE_INITIALIZE; // reset state machine
     

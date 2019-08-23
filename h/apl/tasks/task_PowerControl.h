@@ -35,24 +35,24 @@
 #define	APL_TASK_POWER_CONTROL_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
+
 #include "hal/hal.h"
 #include "mcal/mcal.h"
 
 #include "apl/resources/c4swbb_control.h"
 
-
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;
-extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
+//    extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;
+//    extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
 
-// Public function prototypes
-extern volatile uint16_t init_PowerControl(void);
-extern volatile uint16_t exec_PowerControl(void);
+    // Public function prototypes
+    extern volatile uint16_t init_PowerControl(void);
+    extern volatile uint16_t exec_PowerControl(void);
 
 #ifdef	__cplusplus
 }

@@ -143,28 +143,16 @@ typedef union
 
 
 typedef struct {
-    volatile uint16_t v_in;  // power supply input voltage (template only)
-    volatile uint16_t i_in;  // power supply input current (template only)
-    volatile uint16_t v_out_cha;  // power supply output voltage (channel A)
-    volatile uint16_t i_out_cha;  // power supply output current (channel A)
-    volatile uint16_t temperature_a; // board temperature (template only)
-    volatile uint16_t v_out_chb;  // power supply output voltage (channel A)
-    volatile uint16_t i_out_chb;  // power supply output current (channel A)
-    volatile uint16_t temperature_b; // board temperature (template only)
-} APPLICATION_DATA_t; // Application real-time data value list (voltages, currents, etc.)
-
-
-typedef struct {
 
     volatile SYSTEM_STATUS_t system_status; // converter and port status
     volatile SYSTEM_MODE_t system_mode; // system operating mode classification
-    volatile APPLICATION_DATA_t data; // system voltages
     
 }APPLICATION_t; // Data structure defining application settings, status flags and recent data
 
 
 // Global application data structure 
 extern volatile APPLICATION_t application;
+
 
 // Initialization of the application data structure
 extern volatile uint16_t init_ApplicationSettings(void);

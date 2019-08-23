@@ -12,7 +12,8 @@
 #include "mcal/mcal.h"
 #include "hal/hal.h"
 
-//#include "apl/tasks/task_PowerControl.h"
+#include "apl/tasks/task_PowerControl.h"
+
 volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;
 volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
 
@@ -40,9 +41,9 @@ volatile uint16_t init_PowerControl(void) {
     c4swbb_1.boost_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
     c4swbb_1.boost_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     
-    c4swbb_2 = c4swbb_1;
+//    c4swbb_2 = c4swbb_1;
     
-    init_4SWBB_PowerController(&c4swbb_2);  // Initialize power controller of USB port 2
+//    init_4SWBB_PowerController(&c4swbb_2);  // Initialize power controller of USB port 2
     
     return (fres);
 }

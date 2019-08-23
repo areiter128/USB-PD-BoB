@@ -58,6 +58,9 @@
 #define C4SWBB_RAMP_PERIOD       50e-3       // ramp period in [sec]
 #define C4SWBB_POWER_GOOD_DELAY  100e-3      // power good in [sec]
 
+#define C4SWBB_VMC              0           // Flag for voltage mode control
+#define C4SWBB_ACMC             1           // Flag for average current mode control
+#define C4SWBB_CONTROL_MODE     C4SWBB_ACMC // Active control mode selection
 
 #define C4SWBB_PODLY     (uint16_t)((C4SWBB_POWER_ON_DELAY / TASK_MGR_PERIOD)-1.0)
 #define C4SWBB_RPER      (uint16_t)((C4SWBB_RAMP_PERIOD / TASK_MGR_PERIOD)-1.0)

@@ -57,9 +57,9 @@ volatile uint16_t initialize_pwm(void) {
  * ToDo: Quick 'n' Dirty Soft Start (don't do this at home, kids!
  * ***************************************************************************************************/
 
-extern volatile uint16_t timer1_expired;
+volatile uint16_t timer1_expired;
 volatile uint16_t softstart_counter;
-extern volatile uint16_t SoftStartFinished;
+volatile uint16_t SoftStartFinished;
 volatile uint16_t PWM5_enabled = 0;
 
 
