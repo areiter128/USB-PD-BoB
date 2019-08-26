@@ -115,8 +115,7 @@ void hw_portpower_init(void)
 
 void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
 {
-    // TODO: Implement the power supply API to control the supply under the framework
-    volatile C4SWBB_POWER_CONTROLLER_t *p_port_instance;
+   volatile C4SWBB_POWER_CONTROLLER_t *p_port_instance;
     
     switch (u8PortNum)
     {
