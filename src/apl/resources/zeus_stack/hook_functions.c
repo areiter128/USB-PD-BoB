@@ -33,6 +33,12 @@
 #include <libpic30.h>
 
 #include "thermal_power_management.h"
+#include "apl/resources/c4swbb_control.h"
+#include "apl/tasks/task_PowerControl.h"
+
+// TODO: JMS - Need to get these included from task_PowerControl.h (resolve compile errors)
+extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;
+extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
 
 //#include "../Compensator/Compensation.h"
 
@@ -121,6 +127,85 @@ void hw_portpower_init(void)
 void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
 {
     // TODO: Implement the power supply API to control the supply under the framework
+    volatile C4SWBB_POWER_CONTROLLER_t *p_port_instance;
+    
+    switch (u8PortNum)
+    {
+        case 0:
+            // Port 0
+            p_port_instance = &c4swbb_1;
+            break;
+            
+        case 1:
+            // Port 1
+            p_port_instance = &c4swbb_2;
+            break;
+            
+        default:
+            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: Invalid Port Number\r\n");
+            return;
+    }
+        /*
+     * Set up the port's buck converter to produce the proper voltage level
+     */
+    switch(u16VBUS_Voltage)
+    {
+        case PWRCTRL_VBUS_0V:
+            //Drive 0V on VBUS line of "u8PortNum" Port
+            p_port_instance->data.v_ref = C4SWBB_VOUT_REF_5V;
+            p_port_instance->status.flags.autorun = false;
+            p_port_instance->status.flags.enabled = false;
+            p_port_instance->status.flags.GO = 1;
+            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 0V\r\n");
+            break;
+
+        case PWRCTRL_VBUS_5V:
+            //Drive 5V on VBUS line of "u8PortNum" Port
+            p_port_instance->data.v_ref = C4SWBB_VOUT_REF_5V;
+            p_port_instance->status.flags.autorun = false;
+            p_port_instance->status.flags.enabled = true;
+            p_port_instance->status.flags.GO = 1;
+
+            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 5V\r\n");
+            break;
+
+        case PWRCTRL_VBUS_9V:
+            //Drive 9V on VBUS line of "u8PortNum" Port
+            p_port_instance->data.v_ref = C4SWBB_VOUT_REF_9V;
+            p_port_instance->status.flags.autorun = false;
+            p_port_instance->status.flags.enabled = true;
+            p_port_instance->status.flags.GO = 1;
+
+            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 9V\r\n");
+            break;
+
+        case PWRCTRL_VBUS_15V:
+            //Drive 15V on VBUS line of "u8PortNum" Port
+            p_port_instance->data.v_ref = C4SWBB_VOUT_REF_15V;
+            p_port_instance->status.flags.autorun = false;
+            p_port_instance->status.flags.enabled = true;
+            p_port_instance->status.flags.GO = 1;
+
+            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 15V\r\n");
+            break;
+
+        case PWRCTRL_VBUS_20V:
+            //Drive 20V on VBUS line of "u8PortNum" Port
+            p_port_instance->data.v_ref = C4SWBB_VOUT_REF_20V;
+            p_port_instance->status.flags.autorun = false;
+            p_port_instance->status.flags.enabled = true;
+            p_port_instance->status.flags.GO = 1;
+
+            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 20V\r\n");
+            break;
+
+        default:
+            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: Invalid Voltage Selection\r\n");
+            break;
+
+    }
+
+    
 #if 0  // DEMO_BOARD_TEST   
     void (*fp_buck_off)(void);
     void (*fp_buck_set_vout)(unsigned int);

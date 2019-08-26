@@ -19,6 +19,7 @@ volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
 
 volatile uint16_t exec_PowerControl(void) {
 
+    exec_4SWBB_PowerController(&c4swbb_1);
     
     return (1);
 }
