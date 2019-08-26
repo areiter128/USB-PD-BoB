@@ -15,6 +15,9 @@ extern "C" {
 #endif
 
 void configure_upd350_gpio (void);
+void port_led_on(uint8_t u8PortNum);
+void port_led_off(uint8_t u8PortNum);
+
 void hw_portpower_init(void);
 void hw_portpower_driveVBUS(uint8_t u8PortNum,uint16_t u16VBUS_Volatge);
 void hw_configure_discharge_output (void);

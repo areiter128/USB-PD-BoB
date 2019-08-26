@@ -59,13 +59,13 @@ volatile uint16_t task_PDStack(void)
         // Blink LEDS on UPD350s at the telemetry transmit interval
         if (upd_led_toggle++ & 0x01)
         {
-            UPD_GPIOSetClearOutput(0, UPD_PIO9, UPD_GPIO_SET);
-            UPD_GPIOSetClearOutput(1, UPD_PIO9, UPD_GPIO_SET);
+            port_led_on(PORT0);
+            port_led_on(PORT1);
         }
         else
         {
-            UPD_GPIOSetClearOutput(0, UPD_PIO9, UPD_GPIO_CLEAR);
-            UPD_GPIOSetClearOutput(1, UPD_PIO9, UPD_GPIO_CLEAR);
+            port_led_off(PORT0);
+            port_led_off(PORT1);
         }
 
     }
@@ -73,7 +73,7 @@ volatile uint16_t task_PDStack(void)
     
     if (taskPDStack_config.status.flags.enable)
     {
-            // Handle Interrupts from the ports
+        // Handle Interrupts from the ports
         for(index = 0; index < CONFIG_PD_PORT_COUNT; index++)
         {
             if (upd_irq_asserted(index))

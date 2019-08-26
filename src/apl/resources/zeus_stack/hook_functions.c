@@ -54,33 +54,24 @@ void configure_upd350_gpio (void)
 {
     uint8_t port_number;
 
-    // DEMO_BOARD_TEST (modified to hard initialize GPIO ports)
-    // TODO: Update UPD350 GPIO initialization for operation under the framework.
+    // UPD350 GPIO initialization for pins outside of stack control.
     for (port_number = 0; port_number < CONFIG_PD_PORT_COUNT; port_number++)
     {
-        // Set up PIO9 as output to TP8/TP13 on each port.
+        // Set up PIO9 as output to control the LED for each port.
         UPD_GPIOSetDirection(port_number, UPD_PIO9, UPD_GPIO_SETDIR_OUTPUT);
         UPD_GPIOSetBufferType(port_number, UPD_PIO9, UPD_GPIO_SETBUF_PUSHPULL);
         UPD_GPIOSetClearOutput(port_number, UPD_PIO9, UPD_GPIO_CLEAR);
         UPD_GPIOEnableDisable(port_number, UPD_PIO9, UPD_ENABLE_GPIO);
-
-   
-        // Set up PIO2 as output defaulting low for PPS discharge control (active high)
-        UPD_GPIOSetDirection(port_number, UPD_PIO2, UPD_GPIO_SETDIR_OUTPUT);
-        UPD_GPIOSetBufferType(port_number, UPD_PIO2, UPD_GPIO_SETBUF_PUSHPULL);
-        UPD_GPIOSetClearOutput(port_number, UPD_PIO2, UPD_GPIO_CLEAR);
-        UPD_GPIOEnableDisable(port_number, UPD_PIO2, UPD_ENABLE_GPIO);
-        
-        // Set up PIO7 as output defaulting low for PPS Enable control (active high)
-        UPD_GPIOSetDirection(port_number, UPD_PIO7, UPD_GPIO_SETDIR_OUTPUT);
-        UPD_GPIOSetBufferType(port_number, UPD_PIO7, UPD_GPIO_SETBUF_PUSHPULL);
-        UPD_GPIOSetClearOutput(port_number, UPD_PIO7, UPD_GPIO_CLEAR);
-        UPD_GPIOEnableDisable(port_number, UPD_PIO7, UPD_ENABLE_GPIO);
-
-        UPD_GPIOSetClearOutput(port_number, UPD_PIO7, UPD_GPIO_SET); 
     }
+}
 
-
+void port_led_on(uint8_t u8PortNum)
+{
+    UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO9, UPD_GPIO_SET);
+}
+void port_led_off(uint8_t u8PortNum)
+{
+    UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO9, UPD_GPIO_CLEAR);
 }
 
 
@@ -91,10 +82,8 @@ void configure_upd350_gpio (void)
 // *****************************************************************************
 void hw_portpower_init(void)
 {
-#if 0 // DEMO_BOARD_TEST                
     uint8_t port_number;
 //    uint32_t reg_data;
-// TODO: Update port power control initialization for DEMO BOARD     
         
     // Configure the UPD GPIO pins to be used for discharge
     // and port power switch enable set the pins low to disable the discharge circuit
@@ -113,6 +102,7 @@ void hw_portpower_init(void)
         UPD_GPIOSetBufferType(port_number, UPD_PIO7, UPD_GPIO_SETBUF_PUSHPULL);
         UPD_GPIOSetClearOutput(port_number, UPD_PIO7, UPD_GPIO_CLEAR);
         UPD_GPIOEnableDisable(port_number, UPD_PIO7, UPD_ENABLE_GPIO);
+
         
 //        // Set up the debounce register for PIO5 (the fault input from power switch)
 //        // default is 10 * 1us
@@ -121,7 +111,6 @@ void hw_portpower_init(void)
 
 
     }
-#endif
 }
 
 void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
@@ -155,7 +144,10 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->data.v_ref = C4SWBB_VOUT_REF_5V;
             p_port_instance->status.flags.autorun = false;
             p_port_instance->status.flags.enabled = false;
-            p_port_instance->status.flags.GO = 1;
+            p_port_instance->status.flags.GO = 0;
+            /* Clear the enable pin for the port power switch */
+            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_CLEAR);
+
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 0V\r\n");
             break;
 
@@ -165,7 +157,9 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.flags.autorun = false;
             p_port_instance->status.flags.enabled = true;
             p_port_instance->status.flags.GO = 1;
-
+            /* Enable the port power switch */
+            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
+            
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 5V\r\n");
             break;
 
@@ -175,6 +169,8 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.flags.autorun = false;
             p_port_instance->status.flags.enabled = true;
             p_port_instance->status.flags.GO = 1;
+            /* Enable the port power switch */
+            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
 
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 9V\r\n");
             break;
@@ -185,6 +181,8 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.flags.autorun = false;
             p_port_instance->status.flags.enabled = true;
             p_port_instance->status.flags.GO = 1;
+            /* Enable the port power switch */
+            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
 
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 15V\r\n");
             break;
@@ -195,6 +193,8 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.flags.autorun = false;
             p_port_instance->status.flags.enabled = true;
             p_port_instance->status.flags.GO = 1;
+            /* Enable the port power switch */
+            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
 
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 20V\r\n");
             break;
@@ -205,137 +205,35 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
 
     }
 
-    
-#if 0  // DEMO_BOARD_TEST   
-    void (*fp_buck_off)(void);
-    void (*fp_buck_set_vout)(unsigned int);
-    BUCK_EN_STATUS (*fp_buck_enable)(void);
-    
-    BUCK_EN_STATUS enable_status = BUCK_EN_STATUS_OK;
-    
-    /* 
-     * Set up function pointers to the correct buck control functions based on
-     * the port number selected
-     */
-    switch (u8PortNum)
-    {
-        case 0:
-            // Port 0
-            fp_buck_off = buck1OFF;
-            fp_buck_set_vout = buck1SETVOUT;
-            fp_buck_enable = buck1ENABLE;
-            break;
-            
-        case 1:
-            // Port 1
-            fp_buck_off = buck2OFF;
-            fp_buck_set_vout = buck2SETVOUT;
-            fp_buck_enable = buck2ENABLE;
-            break;
-            
-        default:
-            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: Invalid Port Number\r\n");
-            return;
-    }
-    
-    /*
-     * Set up the port's buck converter to produce the proper voltage level
-     */
-    switch(u16VBUS_Voltage)
-    {
-        case PWRCTRL_VBUS_0V:
-            //Drive 0V on VBUS line of "u8PortNum" Port
-            fp_buck_off();
-            //fp_buck_set_vout(VCompBuck13p3zVoltageRef5V);
-            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_CLEAR);
-            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 0V\r\n");
-            break;
-
-        case PWRCTRL_VBUS_5V:
-            //Drive 5V on VBUS line of "u8PortNum" Port
-            fp_buck_set_vout(VCompBuck13p3zVoltageRef5V);
-            enable_status = fp_buck_enable();
-            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
-            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 5V\r\n");
-            break;
-
-        case PWRCTRL_VBUS_9V:
-            //Drive 9V on VBUS line of "u8PortNum" Port
-            fp_buck_set_vout(VCompBuck13p3zVoltageRef9V);
-            enable_status = fp_buck_enable();
-            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
-            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 9V\r\n");
-            break;
-
-        case PWRCTRL_VBUS_15V:
-            //Drive 15V on VBUS line of "u8PortNum" Port
-            fp_buck_set_vout(VCompBuck13p3zVoltageRef15V);
-            enable_status = fp_buck_enable();
-            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
-            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 15V\r\n");
-            break;
-
-        case PWRCTRL_VBUS_20V:
-            //Drive 20V on VBUS line of "u8PortNum" Port
-            fp_buck_set_vout(VCompBuck13p3zVoltageRef20V);
-            enable_status = fp_buck_enable();
-            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
-            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 20V\r\n");
-            break;
-
-        default:
-            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: Invalid Voltage Selection\r\n");
-            break;
-
-    }
-    
-    /* TODO: add more functionality here to implement stack control based on status */
-    switch (enable_status)
-    {
-        case BUCK_EN_STATUS_OK:
-            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: Buck Enable OK\r\n");
-            break;
-            
-        case BUCK_EN_STATUS_UVLO:
-            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: ERROR - UVLO on Buck Enable\r\n");
-            LOG_PRINT1(LOG_INFO, "Input UVLO - Port %d", u8PortNum);
-            break;
-            
-        default:
-            break;
-    }
-#endif
 }
 
 void hw_portpower_enab_dis_VBUSDischarge(uint8_t u8PortNum, uint8_t u8EnableDisable)
 {
-    // TODO: Implement VBUS Discharge enable/disable hook function
-#if 0  // DEMO_BOARD_TEST   
-        switch(u8EnableDisable)
+    // Implement VBUS Discharge enable/disable hook function
+    switch(u8EnableDisable)
+    {
+        case PWRCTRL_ENABLE_VBUSDIS:
         {
-            case PWRCTRL_ENABLE_VBUSDIS:
-            {
-                //Enable the VBUS Discharge for "u8PortNum" Port
-                // Set the discharge enable high
-                UPD_GPIOSetClearOutput(u8PortNum,UPD_PIO2, UPD_GPIO_SET);
-                break;
-    
-            }
-            case PWRCTRL_DISABLE_VBUSDIS:
-            {
-                //Disable the VBUS Discharge for "u8PortNum" Port
-                // Set the discharge enable low
-                UPD_GPIOSetClearOutput(u8PortNum,UPD_PIO2, UPD_GPIO_CLEAR);
-                break;
-    
-            }
-            default:
-            {
-                break;
-            }
+            // Enable the VBUS Discharge for "u8PortNum" Port
+            // Set the discharge enable high
+            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO2, UPD_GPIO_SET);
+            break;
+
         }
+        case PWRCTRL_DISABLE_VBUSDIS:
+        {
+            // Disable the VBUS Discharge for "u8PortNum" Port
+            // Set the discharge enable low
+            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO2, UPD_GPIO_CLEAR);
+            break;
+
+        }
+        default:
+        {
+            break;
+        }
+    }
     
-#endif 
 }    
         
 void CRITICAL_SECTION_ENTER(void)
@@ -576,7 +474,6 @@ uint8_t hook_pdo_request_post_process_valid(uint8_t port_num, uint16_t max_curre
 
 void hook_notify_pd_events_cb(uint8_t port_num, uint8_t event)
 {
-#if 0 // DEMO_BOARD_TEST    
     switch(event)
     {
         case TYPEC_DETACH_EVENT:
@@ -588,7 +485,6 @@ void hook_notify_pd_events_cb(uint8_t port_num, uint8_t event)
         default:
             break;
     }
-#endif    
 }
 
 uint16_t hook_function_get_temperature_in_c(void)
