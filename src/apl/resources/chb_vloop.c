@@ -12,7 +12,7 @@
  * 
  * ***************************************************************************************/
 
-#include "../../apl/resources/chb_vloop.h"
+#include "apl/resources/chb_vloop.h"
 
 /* ***************************************************************************************
  * Data Arrays:
@@ -74,7 +74,7 @@ volatile uint16_t chb_vloop_Init(volatile cNPNZ16b_t* controller)
 	volatile uint16_t i = 0;
 
 	// Initialize controller data structure at runtime with pre-defined default values
-	controller->status.flags = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))
+	controller->status.value = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))
 
 	controller->ptrACoefficients = &chb_vloop_coefficients.ACoefficients[0]; // initialize pointer to A-coefficients array
 	controller->ptrBCoefficients = &chb_vloop_coefficients.BCoefficients[0]; // initialize pointer to B-coefficients array
