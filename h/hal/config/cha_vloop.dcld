@@ -1,6 +1,6 @@
 [GUI]
 CreateDate=08/01/19 4:10:00 PM
-SaveDate=08/01/19 6:17:46 PM
+SaveDate=09/09/2019 11:50:54 AM
 Name=z-Domain Control Loop Designer
 Version=0.9.0.61
 WindoWState=Maximized
@@ -32,7 +32,7 @@ InputDataResolution=12
 FixedPointErrorMsg=0.5
 FixedPointErrorWarning=0.1
 [AssemblyGenerator]
-UserPrefix1=ctrl_
+UserPrefix1=cha_
 UserPrefix2=vloop
 UseUserPrefix=1
 UseUserPrefixVar=1
@@ -42,7 +42,7 @@ ContextSavingMACRegisters=1
 ContextSavingAccumulatorRegisters=1
 ContextSavingCoreConfigRegister=1
 ContextSavingCoreStatusRegister=1
-EnforceCoreConfiguration=0
+EnforceCoreConfiguration=1
 AddEnableDisableFeature=1
 AddErrorNormalization=1
 AddADCTriggerPlacement=1

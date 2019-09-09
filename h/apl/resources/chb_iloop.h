@@ -12,8 +12,8 @@
  * 
  * ***************************************************************************************/
 
-#ifndef __SPECIAL_FUNCTION_LAYER_CTRL_ILOOP_H__
-#define __SPECIAL_FUNCTION_LAYER_CTRL_ILOOP_H__
+#ifndef __SPECIAL_FUNCTION_LAYER_CHB_ILOOP_H__
+#define __SPECIAL_FUNCTION_LAYER_CHB_ILOOP_H__
 
 #include <xc.h>
 #include <dsp.h>
@@ -26,7 +26,7 @@
  * The cNPNZ_t data structure contains a pointer to derived coefficients in X-space and
  * other pointers to controller and error history in Y-space.
  * This header file holds public declarations for variables and arrays defined in 
- * ctrl_iloop.c
+ * chb_iloop.c
  * 
  * Type definition for A- and B- coefficient arrays and error- and control-history arrays, 
  * which are aligned in memory for optimized addressing during DSP computations.           
@@ -38,35 +38,37 @@
 	{
 		volatile fractional ACoefficients[2]; // A-Coefficients
 		volatile fractional BCoefficients[3]; // B-Coefficients
-	} __attribute__((packed))CTRL_ILOOP_CONTROL_LOOP_COEFFICIENTS_t;
+	} __attribute__((packed))CHB_ILOOP_CONTROL_LOOP_COEFFICIENTS_t;
 
 	typedef struct
 	{
 		volatile fractional ControlHistory[2];  // Control History
 		volatile fractional ErrorHistory[3];    // Error History
-	} __attribute__((packed))CTRL_ILOOP_CONTROL_LOOP_HISTORIES_t;
+	} __attribute__((packed))CHB_ILOOP_CONTROL_LOOP_HISTORIES_t;
 
 
-	extern volatile cNPNZ16b_t ctrl_iloop; // user-controller data object
+	extern volatile cNPNZ16b_t chb_iloop; // user-controller data object
 
 /* ***************************************************************************************/
 
 // Function call prototypes for initialization routines and control loops
 
-extern uint16_t ctrl_iloop_Init(void); // Loads default coefficients into 2P2Z controller and resets histories to zero
-
-extern void ctrl_iloop_Reset( // Resets the 2P2Z controller histories
+extern volatile uint16_t chb_iloop_Init( // Loads default coefficients into 2P2Z controller and resets histories to zero
 	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure
 	);
 
-extern void ctrl_iloop_Precharge( // Pre-charges histories of the 2P2Z with defined steady-state data
+extern void chb_iloop_Reset( // Resets the 2P2Z controller histories
+	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure
+	);
+
+extern void chb_iloop_Precharge( // Pre-charges histories of the 2P2Z with defined steady-state data
 	volatile cNPNZ16b_t* controller, // Pointer to nPnZ data structure
 	volatile uint16_t ctrl_input, // user-defined, constant error history value
 	volatile uint16_t ctrl_output // user-defined, constant control output history value
 	);
 
-extern void ctrl_iloop_Update( // Calls the 2P2Z controller
+extern void chb_iloop_Update( // Calls the 2P2Z controller
 	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure
 	);
 
-#endif	// end of __SPECIAL_FUNCTION_LAYER_CTRL_ILOOP_H__ header file section
+#endif	// end of __SPECIAL_FUNCTION_LAYER_CHB_ILOOP_H__ header file section

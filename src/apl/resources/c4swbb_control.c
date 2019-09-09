@@ -7,10 +7,26 @@
 
 
 #include <xc.h>
-#include "apl/resources/c4swbb_control.h"
+#include "mcal/mcal.h"                      // Microcontroller Abstraction Layer Header
+
+#include "apl/resources/c4swbb_control.h"   // 4-Switch Buck/Boost Converter State Machine Header
 
 /* === private state machine counter variables ===================================================== */
 // (none)
+
+// Declare two 4-Switch Buck/Boost DC/DC converter objects
+volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;    // USB PD Port A
+volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;    // USB PD Port B
+
+
+volatile uint16_t ctrl_Init(volatile cNPNZ16b_t* controller);
+volatile uint16_t ctrl_Reset(volatile cNPNZ16b_t* controller);
+volatile uint16_t ctrl_Precharge(
+        volatile cNPNZ16b_t* controller, // Pointer to nPnZ data structure)
+        volatile uint16_t ctrl_input, // user-defined, constant error history value
+        volatile uint16_t ctrl_output // user-defined, constant control output history value
+    );
+
 
 /*!exec_4SWBB_PowerController()
  * *****************************************************************************************************
@@ -33,7 +49,7 @@
 
 volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
     
-    volatile uint16_t fres = 0; // buffer variable of function return value
+    volatile uint16_t fres = 1; // buffer variable of function return value
     volatile float fdummy = 0.0; // buffer variable for control loop pre-charge calculation
     volatile uint16_t int_dummy = 0; // buffer variable for control loop pre-charge calculation
     
@@ -51,11 +67,6 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         
         case CONVERTER_STATE_INITIALIZE:
             
-            // ToDo: Move PWM and ADC configuration in dedicated 4-Switch Buck/Boost initialization 
-            //       files, where they can be properly addressed from abstract instances.
-            
-            fres &= initialize_adc();
-            fres &= initialize_pwm();
             
             // Switch to operation status CONVERTER_STATE_STANDBY
             pInstance->status.flags.op_status = CONVERTER_STATE_STANDBY;
@@ -161,8 +172,8 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             // === ToDo: =========
             // Check if this section is required. Removing it is desired as it breaks the 
             // generic nature of this code module by incorporating dedicated HAL labels!!!
-            pInstance->v_loop.maximum = (volatile uint16_t)IOUT_OCL_TRIP;
-            pInstance->v_loop.controller->MaxOutput = pInstance->v_loop.maximum;
+//            pInstance->v_loop.maximum = (volatile uint16_t)IOUT_OCL_TRIP;
+//            pInstance->v_loop.controller->MaxOutput = pInstance->v_loop.maximum;
             // === ToDoEnd =======
             #endif
             
@@ -181,7 +192,8 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             else if(int_dummy > pInstance->v_loop.maximum) 
             { int_dummy = pInstance->v_loop.maximum; }
             
-            ctrl_vloop_Precharge(pInstance->v_loop.controller, 0, int_dummy);
+            // Call pre-charge routine, loading user values into control histories
+            pInstance->v_loop.ctrl_precharge(pInstance->v_loop.controller, 0, int_dummy);
 
             #elif (C4SWBB_CONTROL_MODE == C4SWBB_ACMC)
 
@@ -194,7 +206,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             else if(int_dummy > pInstance->i_loop.maximum) 
             { int_dummy = pInstance->i_loop.maximum; }
 
-            ctrl_iloop_Precharge(pInstance->i_loop.controller, 0, int_dummy);
+            ctrl_Precharge(pInstance->i_loop.controller, 0, int_dummy);
             
             #endif            
 
@@ -342,7 +354,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
     }
     //-- end of auto-start enforcement -------------------------
 
-    return(1);
+    return(fres);
 }
 
 /*!init_SoftStart()
@@ -361,35 +373,94 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
 
 volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
 
-    // Reset Startup Settings
-    pInstance->soft_start.pwr_good_delay = CONVERTER_STATE_INITIALIZE; // reset state machine
-    pInstance->soft_start.counter = 0; // reset startup counter
-    pInstance->soft_start.v_reference = 0;  // reset voltage reference
-    pInstance->soft_start.i_reference = 0;  // reset current reference
-    pInstance->soft_start.pwr_on_delay = C4SWBB_PODLY;  // set power-on delay
-    pInstance->soft_start.precharge_delay = 10;  // set pre-charge delay
-    pInstance->soft_start.ramp_period = C4SWBB_RPER;  // set ramp up period
-    pInstance->soft_start.pwr_good_delay = C4SWBB_PGDLY;  // set power good delay
-
-    // Reset data buffers
-    pInstance->data.v_in = 0;   // clear input voltage buffer
-    pInstance->data.v_out = 0;  // reset output voltage buffer
-    pInstance->data.i_out = 0;  // reset output current buffer
-    pInstance->data.v_ref = C4SWBB_VOUT_REF;  // set initial voltage reference
-    pInstance->data.temp = 0;   // reset converter board temperature buffer
-    
-    // Reset controller status
-    pInstance->status.flags.power_source_detected = false; // reset POWER_SOURCE_DETECTED flag bit
-    pInstance->status.flags.adc_active = false; // reset ADC_ACTIVE flag bit
-    pInstance->status.flags.pwm_active = false; // reset PWM_ACTIVE flag bit
-    pInstance->status.flags.tune_dir = 0; // reset voltage tune-in direction to UP
-    pInstance->status.flags.fault_active = false; // reset power controller global fault flag bit
-    pInstance->status.flags.GO = 0; // reset GO bit
-    pInstance->status.flags.autorun = false; // clear AUTORUN bit
-    pInstance->status.flags.enabled = false; // disable power controller
-    pInstance->status.flags.op_status = CONVERTER_STATE_INITIALIZE; // reset state machine
-    
+//    // Reset Startup Settings
+//    pInstance->soft_start.pwr_good_delay = CONVERTER_STATE_INITIALIZE; // reset state machine
+//    pInstance->soft_start.counter = 0; // reset startup counter
+//    pInstance->soft_start.v_reference = 0;  // reset voltage reference
+//    pInstance->soft_start.i_reference = 0;  // reset current reference
+//    pInstance->soft_start.pwr_on_delay = C4SWBB_PODLY;  // set power-on delay
+//    pInstance->soft_start.precharge_delay = 10;  // set pre-charge delay
+//    pInstance->soft_start.ramp_period = C4SWBB_RPER;  // set ramp up period
+//    pInstance->soft_start.pwr_good_delay = C4SWBB_PGDLY;  // set power good delay
+//
+//    
+//    // Reset data buffers
+//    pInstance->data.v_in = 0;   // clear input voltage buffer
+//    pInstance->data.v_out = 0;  // reset output voltage buffer
+//    pInstance->data.i_out = 0;  // reset output current buffer
+//    pInstance->data.v_ref = C4SWBB_VOUT_REF;  // set initial voltage reference
+//    pInstance->data.temp = 0;   // reset converter board temperature buffer
+//    
+//    // Reset controller status
+//    pInstance->status.flags.power_source_detected = false; // reset POWER_SOURCE_DETECTED flag bit
+//    pInstance->status.flags.adc_active = false; // reset ADC_ACTIVE flag bit
+//    pInstance->status.flags.pwm_active = false; // reset PWM_ACTIVE flag bit
+//    pInstance->status.flags.tune_dir = 0; // reset voltage tune-in direction to UP
+//    pInstance->status.flags.fault_active = false; // reset power controller global fault flag bit
+//    pInstance->status.flags.GO = 0; // reset GO bit
+//    pInstance->status.flags.autorun = false; // clear AUTORUN bit
+//    pInstance->status.flags.enabled = false; // disable power controller
+//    pInstance->status.flags.op_status = CONVERTER_STATE_INITIALIZE; // reset state machine
+//    
     
     return(1);
 }
 
+
+/*!ctrl_Init
+ * *****************************************************************************************************
+ * Summary:
+ * Initializes a nPnZ control structure
+ *
+ * Parameters: 
+ *      volatile cNPNZ16b_t* controller
+ *
+ * Description:
+ * This routine Initializes of a IIR-based control loop filter data structure. 
+ * 
+ * Please note: 
+ * The control library provides similar functions implemented in C-code. These are not used
+ * as this specific code module supports multiple controllers and therefore offers a generic version
+ * of the init, reset and precharge routine.
+ * 
+ * *****************************************************************************************************/
+volatile uint16_t ctrl_Init(volatile cNPNZ16b_t* controller) { // Pointer to nPnZ data structure)
+    
+//	volatile uint16_t i = 0;
+
+//	// Initialize controller data structure at runtime with pre-defined default values
+//	controller->status.value = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))
+//
+//	controller->ptrACoefficients = &cha_vloop_coefficients.ACoefficients[0]; // initialize pointer to A-coefficients array
+//	controller->ptrBCoefficients = &cha_vloop_coefficients.BCoefficients[0]; // initialize pointer to B-coefficients array
+//	controller->ptrControlHistory = &cha_vloop_histories.ControlHistory[0]; // initialize pointer to control history array
+//	controller->ptrErrorHistory = &cha_vloop_histories.ErrorHistory[0]; // initialize pointer to error history array
+//	controller->normPostShiftA = cha_vloop_post_shift_A; // initialize A-coefficients/single bit-shift scaler
+//	controller->normPostShiftB = cha_vloop_post_shift_B; // initialize B-coefficients/dual/post scale factor bit-shift scaler
+//	controller->normPostScaler = cha_vloop_post_scaler; // initialize control output value normalization scaling factor
+//	controller->normPreShift = cha_vloop_pre_scaler; // initialize A-coefficients/single bit-shift scaler
+//
+//	controller->ACoefficientsArraySize = cha_vloop_ACoefficients_size; // initialize A-coefficients array size
+//	controller->BCoefficientsArraySize = cha_vloop_BCoefficients_size; // initialize A-coefficients array size
+//	controller->ControlHistoryArraySize = cha_vloop_ControlHistory_size; // initialize control history array size
+//	controller->ErrorHistoryArraySize = cha_vloop_ErrorHistory_size; // initialize error history array size
+//
+//
+//	// Load default set of A-coefficients from user RAM into X-Space controller A-array
+//	for(i=0; i<controller->ACoefficientsArraySize; i++)
+//	{
+//		controller->ptrACoefficients[i] = cha_vloop_ACoefficients[i];
+//	}
+//
+//	// Load default set of B-coefficients from user RAM into X-Space controller B-array
+//	for(i=0; i<controller->BCoefficientsArraySize; i++)
+//	{
+//		controller->ptrBCoefficients[i] = cha_vloop_BCoefficients[i];
+//	}
+//
+//	// Clear error and control histories of the 3P3Z controller
+//	ctrl_Reset(controller);
+    
+    return(1);  // Return success
+    
+}
