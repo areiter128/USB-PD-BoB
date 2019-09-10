@@ -100,6 +100,9 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             
         case CONVERTER_STATE_POWER_ON_DELAY:
 
+            // Set the BUSY bit indicating a delay/ramp period being executed
+            pInstance->status.flags.busy = 1;
+            
             // delay startup until POWER ON DELAY has expired
             if(pInstance->soft_start.counter++ > pInstance->soft_start.pwr_on_delay) {
 
@@ -117,6 +120,9 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
          * half-bridge bootstrap cap. When this phase has expired, the execution step will be 
          * switched to SOFT_START_STEP_LAUNCH_V_RAMP */
         case CONVERTER_STATE_PRECHARGE:
+
+            // Set the BUSY bit indicating a delay/ramp period being executed
+            pInstance->status.flags.busy = 1;
 
 //            // generate n bootstrap pre-charge pulses before enabling switch node
 //            if(pchrg_couter++ < SOFT_START_PRECHARGE_TICKS)
@@ -155,6 +161,8 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             // Voltage loop reference is hijacked by the soft-start reference
             pInstance->v_loop.controller->ptrControlReference = &pInstance->soft_start.v_reference;
 */            
+            // Set the BUSY bit indicating a delay/ramp period being executed
+            pInstance->status.flags.busy = 1;
             
             // Determine, if the soft-start needs to ramp up or down
             if(pInstance->data.v_out <= pInstance->data.v_ref) {
@@ -229,6 +237,9 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
          * reference limit is hit and the output is switched to constant current mode. */
         case CONVERTER_STATE_V_RAMP_UP:
 
+            // Set the BUSY bit indicating a delay/ramp period being executed
+            pInstance->status.flags.busy = 1;
+
             // Enable input power source
             hspwm_ovr_release(pInstance->buck_leg.pwm_instance); // Release buck leg PWM
             hspwm_ovr_release(pInstance->boost_leg.pwm_instance); // Release boost leg PWM
@@ -287,6 +298,9 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
          *  */
         case CONVERTER_STATE_I_RAMP_UP:
 
+            // Set the BUSY bit indicating a delay/ramp period being executed
+            pInstance->status.flags.busy = 1;
+
             // increment current limit 
             pInstance->v_loop.controller->MaxOutput += pInstance->soft_start.ramp_i_ref_increment; // Increment maximum current limit
 
@@ -307,6 +321,10 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
          * power good delay has expired before the soft-start process is marked as 
          * CONVERTER_STATE_COMPLETE */
         case CONVERTER_STATE_POWER_GOOD:
+            
+            // Set the BUSY bit indicating a delay/ramp period being executed
+            pInstance->status.flags.busy = 1;
+            
             // Enforce POWER GOOD Delay
             if(pInstance->soft_start.counter++ > pInstance->soft_start.pwr_good_delay) {
                 pInstance->status.flags.op_status = CONVERTER_STATE_COMPLETE;  // set startup process COMPLETE
@@ -322,9 +340,38 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
          * From this point forward the power supply will exclusively be running in interrupt 
          * instances executing the control loops. */
         case CONVERTER_STATE_COMPLETE:
-            // do nothing => enter normal operation
-            Nop();
-            Nop();
+
+            // Clear the BUSY bit indicating a delay/ramp period being executed
+            pInstance->status.flags.busy = 0;
+
+            // Monitor changes in reference and step back into RAMP mode when necessary
+            if(pInstance->data.v_ref != pInstance->soft_start.v_reference)
+            {
+                // Set the BUSY bit indicating a delay/ramp period being executed
+                pInstance->status.flags.busy = 1;
+                
+                if(pInstance->data.v_ref < pInstance->soft_start.v_reference){
+                    // decrement
+                    pInstance->soft_start.v_reference -= pInstance->soft_start.ramp_v_ref_increment;
+                    if(pInstance->soft_start.v_reference < pInstance->data.v_ref) {
+                        pInstance->soft_start.v_reference = pInstance->data.v_ref;
+                    }
+                        
+                }
+                else if(pInstance->data.v_ref > pInstance->soft_start.v_reference) {
+                   // increment
+                    pInstance->soft_start.v_reference += pInstance->soft_start.ramp_v_ref_increment;
+                    if(pInstance->soft_start.v_reference > pInstance->data.v_ref){
+                        pInstance->soft_start.v_reference = pInstance->data.v_ref;
+                    }
+                }
+                
+            }
+            else{
+                pInstance->status.flags.busy = 0;
+
+            }
+            
             break;
 
         /*!State Machine Fall-Back 
@@ -333,9 +380,12 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
          * or a fault condition was set by external code modules. In any of these cases the state 
          * machine falls back to STANDBY waiting to be restarted.  */
         default:
+            
+            pInstance->status.flags.busy = 0; // Clear the BUSY bit indicating a delay/ramp period being executed
             pInstance->status.flags.fault_active = true;
             pInstance->status.flags.GO = false;
             pInstance->status.flags.op_status = CONVERTER_STATE_STANDBY;
+            
             break;
     }
 
