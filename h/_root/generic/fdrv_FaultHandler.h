@@ -114,12 +114,12 @@ typedef union
  * ***********************************************************************************************/
 
 typedef enum {
-    FLT_CLASS_NONE         = 0b0000000000000000,    // no fault classification =< user handling required
-    FLT_CLASS_NOTIFY       = 0b0000000000000001,    // uncritical fault condition has been detected (notice only)
-    FLT_CLASS_WARNING      = 0b0000000000000010,    // warning level (approaching critical level)
-    FLT_CLASS_CRITICAL     = 0b0000000000000100,    // critical level 
-    FLT_CLASS_CATASTROPHIC = 0b0000000000001000,    // catastrophic level 
-    FLT_CLASS_USER_ACTION  = 0b0000000100000000     // user defined level 
+    FLT_CLASS_NONE          = 0b0000000000000000,    // no fault classification =< user handling required
+    FLT_CLASS_NOTIFY        = 0b0000000000000001,    // uncritical fault condition has been detected (notice only)
+    FLT_CLASS_WARNING       = 0b0000000000000010,    // warning level (approaching critical level)
+    FLT_CLASS_CRITICAL      = 0b0000000000000100,    // critical level 
+    FLT_CLASS_CATASTROPHIC  = 0b0000000000001000,    // catastrophic level 
+    FLT_CLASS_USER_RESPONSE = 0b0000000100000000     // user defined level 
 } FAULT_OBJECT_CLASS_e;
 
 
@@ -148,6 +148,18 @@ typedef union
 	volatile FAULT_OBJECT_CLASS_BIT_FIELD_t flags; // data structure for single bit addressing operations
 }FAULT_OBJECT_CLASS_t;
 
+/*!FAULT_OBJECT_CLASS_t
+ * ***********************************************************************************************
+ * Description:
+ * FAULT_OBJECT_CLASS_t specifies flags determining the fault class level (importance) of a 
+ * fault object. This setting will be used by the FAULT_HANDLER to take pre-defined actions 
+ * ***********************************************************************************************/
+
+typedef enum {
+    FAULT_COMPARE_FIXED,    // Flag indicating that monitored value will be  compared against a constant value
+    FAULT_COMPARE_DYNAMIC   // Flag indicating that are variable with be  compared against another variable
+}FAULT_OBJECT_COMPARE_TYPE_e;
+
 /*!FAULT_CONDITION_SETTINGS_t
  * ***********************************************************************************************
  * Description:
@@ -162,9 +174,11 @@ typedef union
 typedef enum
 {
     FAULT_LEVEL_GREATER_THAN = 0b0000000000000000, // Flag to perform "greater than" comparison
-    FAULT_LEVEL_LESS_THAN    = 0b1111111111111111, // Flag to perform "less than" comparison
-    FAULT_LEVEL_EQUAL        = 0b0000000011111111, // Flag to perform "is equal" comparison
-    FAULT_LEVEL_NOT_EQUAL    = 0b1111111100000000  // Flag to perform "is not equal than" comparison
+    FAULT_LEVEL_LESS_THAN    = 0b0000000000000001, // Flag to perform "less than" comparison
+    FAULT_LEVEL_EQUAL        = 0b0000000000000010, // Flag to perform "is equal" comparison
+    FAULT_LEVEL_NOT_EQUAL    = 0b0000000000000100, // Flag to perform "is not equal than" comparison
+    FAULT_LEVEL_OUT_OF_RANGE = 0b0000000000001000, // Flag to perform "greater than or less than" comparison
+    FAULT_LEVEL_IN_RANGE     = 0b0000000000001000, // Flag to perform "greater than and less than" comparison
 }FAULT_OBJECT_CONDITION_LEVEL_e;
     
 typedef struct
@@ -191,10 +205,12 @@ typedef struct
 {
     volatile FAULT_OBJECT_STATUS_t status; // status bit field
     volatile FAULT_OBJECT_CLASS_t classes; // fault class bit field
+    volatile FAULT_OBJECT_COMPARE_TYPE_e comp_type; // comparison type (against fixed or dynamic threshold)
     volatile FAULT_CONDITION_SETTINGS_t criteria; // Fault check settings of the  fault object
     volatile uint32_t error_code; // error code helping to identify source module, system level and importance
     volatile uint16_t id; // identifier of this fault object
-    volatile uint16_t* object; // pointer to an object (e.g. variable or SFR) to be monitored
+    volatile uint16_t* source_object;  // pointer to an object to be monitored (e.g. variable or SFR) 
+    volatile uint16_t* compare_object; // pointer to an object, with which the source object should be compared with (e.g. variable or SFR) 
     volatile uint16_t object_bit_mask; // bit mask filter to monitor specific bits within OBJECT
     volatile uint16_t (*user_fault_action)(void); // pointer to a user function called when a defined fault condition is detected
     volatile uint16_t (*user_fault_reset)(void); // pointer to a user function called when a defined fault condition is detected
