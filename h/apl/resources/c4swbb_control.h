@@ -74,10 +74,11 @@ typedef enum {
 } C4SWBB_STATUS_LABEL_e; // Labels of converter state machine steps
 
 /* 16-bit bit masks of converter status bits */
-#define C4SWBB_CTRL_STAT_POWERSOURCE_DETECTED   0b0000000100000000
-#define C4SWBB_CTRL_STAT_PWM_ACTIVE             0b0000001000000000
-#define C4SWBB_CTRL_STAT_ADC_ACTIVE             0b0000010000000000
-#define C4SWBB_CTRL_STAT_FAULT_ACTIVE           0b0000100000000000
+#define C4SWBB_CTRL_STAT_POWERSOURCE_DETECTED   0b0000000000010000
+#define C4SWBB_CTRL_STAT_PWM_ACTIVE             0b0000000000100000
+#define C4SWBB_CTRL_STAT_ADC_ACTIVE             0b0000000001000000
+#define C4SWBB_CTRL_STAT_FAULT_ACTIVE           0b0000000010000000
+#define C4SWBB_CTRL_STAT_BUSY                   0b0000000100000000
 #define C4SWBB_CTRL_STAT_GO_ACTIVE              0b0010000000000000
 #define C4SWBB_CTRL_STAT_AUTORUN_ENABLED        0b0100000000000000
 #define C4SWBB_CTRL_STAT_ENABLED                0b1000000000000000
@@ -93,7 +94,8 @@ typedef struct {
     volatile bool pwm_active : 1; // Bit <5>:  (read only) Status bit indicating that the PWM outputs have been enabled
     volatile bool adc_active : 1; // Bit <6>: (read only) Status bit indicating that the ADC has been started and is sampling data
     volatile bool fault_active : 1; // Bit <7>: (read only) Status bit indicating that a critical fault condition has been detected
-    volatile unsigned : 4; // Bit <8:11>: (reserved)
+    volatile bool busy : 1; // Bit <9:11>: (read only) Status bit indicating that the state machine is in a ramp or delay phase
+    volatile unsigned : 3; // Bit <9:11>: (reserved)
     volatile C4SWBB_RAMP_DIRECTION_e tune_dir : 1; // Bit <12>: (read only) flag indicating the direction of the tune-in ramp when the reference is changed (0=up or 1=down)
     volatile bool GO : 1; // Bit <13>: POWER SUPPLY START bit (will trigger startup procedure when set)
     volatile bool autorun : 1; // Bit <14>: Auto-Start will automatically enable the converter and set the GO bit when ready
