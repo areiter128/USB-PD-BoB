@@ -24,10 +24,10 @@
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
           <itemPath>../h/apl/resources/npnz16b.h</itemPath>
           <itemPath>../h/apl/resources/c4swbb_control.h</itemPath>
-          <itemPath>D:/Firmware/00173_USB_PD_BoB/firmware/project/h/apl/resources/cha_vloop.h</itemPath>
-          <itemPath>D:/Firmware/00173_USB_PD_BoB/firmware/project/h/apl/resources/cha_iloop.h</itemPath>
-          <itemPath>D:/Firmware/00173_USB_PD_BoB/firmware/project/h/apl/resources/chb_vloop.h</itemPath>
-          <itemPath>D:/Firmware/00173_USB_PD_BoB/firmware/project/h/apl/resources/chb_iloop.h</itemPath>
+          <itemPath>../h/apl/resources/cha_iloop.h</itemPath>
+          <itemPath>../h/apl/resources/cha_vloop.h</itemPath>
+          <itemPath>../h/apl/resources/chb_iloop.h</itemPath>
+          <itemPath>../h/apl/resources/chb_vloop.h</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../h/apl/tasks/task_FaultHandler.h</itemPath>
@@ -101,14 +101,14 @@
         </logicalFolder>
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
           <itemPath>../src/apl/resources/c4swbb_control.c</itemPath>
-          <itemPath>D:/Firmware/00173_USB_PD_BoB/firmware/project/src/apl/resources/cha_iloop.c</itemPath>
-          <itemPath>D:/Firmware/00173_USB_PD_BoB/firmware/project/src/apl/resources/cha_iloop_asm.s</itemPath>
-          <itemPath>D:/Firmware/00173_USB_PD_BoB/firmware/project/src/apl/resources/cha_vloop.c</itemPath>
-          <itemPath>D:/Firmware/00173_USB_PD_BoB/firmware/project/src/apl/resources/cha_vloop_asm.s</itemPath>
-          <itemPath>D:/Firmware/00173_USB_PD_BoB/firmware/project/src/apl/resources/chb_iloop.c</itemPath>
-          <itemPath>D:/Firmware/00173_USB_PD_BoB/firmware/project/src/apl/resources/chb_iloop_asm.s</itemPath>
-          <itemPath>D:/Firmware/00173_USB_PD_BoB/firmware/project/src/apl/resources/chb_vloop.c</itemPath>
-          <itemPath>D:/Firmware/00173_USB_PD_BoB/firmware/project/src/apl/resources/chb_vloop_asm.s</itemPath>
+          <itemPath>../src/apl/resources/cha_iloop.c</itemPath>
+          <itemPath>../src/apl/resources/cha_iloop_asm.s</itemPath>
+          <itemPath>../src/apl/resources/cha_vloop.c</itemPath>
+          <itemPath>../src/apl/resources/cha_vloop_asm.s</itemPath>
+          <itemPath>../src/apl/resources/chb_iloop.c</itemPath>
+          <itemPath>../src/apl/resources/chb_iloop_asm.s</itemPath>
+          <itemPath>../src/apl/resources/chb_vloop.c</itemPath>
+          <itemPath>../src/apl/resources/chb_vloop_asm.s</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../src/apl/tasks/task_FaultHandler.c</itemPath>
@@ -161,8 +161,8 @@
       <itemPath>Makefile</itemPath>
       <itemPath>../h/hal/config/cha_iloop.dcld</itemPath>
       <itemPath>../h/hal/config/cha_vloop.dcld</itemPath>
-      <itemPath>D:/Firmware/00173_USB_PD_BoB/firmware/project/h/hal/config/chb_vloop.dcld</itemPath>
-      <itemPath>D:/Firmware/00173_USB_PD_BoB/firmware/project/h/hal/config/chb_iloop.dcld</itemPath>
+      <itemPath>D:/Firmware/USB_PD_BoB/firmware/firmware/h/hal/config/chb_iloop.dcld</itemPath>
+      <itemPath>D:/Firmware/USB_PD_BoB/firmware/firmware/h/hal/config/chb_vloop.dcld</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceFolderFilter></sourceFolderFilter>
@@ -198,7 +198,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>RealICEPlatformTool</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.36</languageToolchainVersion>
+        <languageToolchainVersion>1.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -1175,6 +1175,9 @@
         <property key="relax" value="false"/>
         <property key="warning-level" value="emit-warnings"/>
       </C30-AS>
+      <C30-CO>
+        <property key="coverage-enable" value=""/>
+      </C30-CO>
       <C30-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="boot-eeprom" value="no_eeprom"/>
