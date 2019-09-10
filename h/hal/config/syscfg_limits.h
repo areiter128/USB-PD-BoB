@@ -54,6 +54,7 @@
 #define VOUT_MINIMUM_HYST       0.500       // input voltage minimum (Under-Voltage-Lockout Hysteresis Level)
 
 #define VOUT_NOMINAL            5.000       // Nominal input voltage in [V]
+#define VOUT_MAX_DEVIATION      0.500       // maximum allowed daviation at output voltage 
 
 #define VOUT_MAXIMUM            22.000      // output voltage maximum (Under-Voltage-Lockout-Level)
 #define VOUT_MAXIMUM_HYST       0.500       // output voltage maximum (Under-Voltage-Lockout Hysteresis Level)
@@ -92,9 +93,10 @@
 
 #define VOUT_UVLO_TRIP          (uint16_t)(VOUT_MINIMUM * VOUT_DIVIDER_RATIO * ADC_SCALER) // Input voltage sense ADC ticks
 #define VOUT_UVLO_RELEASE       (uint16_t)((VOUT_MINIMUM + VOUT_MINIMUM_HYST) * VOUT_DIVIDER_RATIO * ADC_SCALER) // Input voltage sense ADC ticks
-#define VOUT_FB_REF_ADC         (uint16_t)((float)VOUT_DIVIDER_RATIO * (float)VOUT_NOMINAL * ADC_SCALER)   // Input voltage feedback in ADC ticks
+#define VOUT_FB_REF_ADC         (uint16_t)((float)VOUT_DIVIDER_RATIO * (float)VOUT_NOMINAL * ADC_SCALER)   // Output voltage feedback in ADC ticks
 #define VOUT_OVP_TRIP           (uint16_t)((float)VOUT_MAXIMUM * (float)VOUT_DIVIDER_RATIO * (float)ADC_SCALER) // Output voltage sense ADC ticks
 #define VOUT_OVP_RELEASE        (uint16_t)(((float)VOUT_MAXIMUM - (float)VOUT_MAXIMUM_HYST) * (float)VOUT_DIVIDER_RATIO * (float)ADC_SCALER) // Input voltage sense ADC ticks
+#define VOUT_MAX_DEV            (uint16_t)((float)VOUT_DIVIDER_RATIO * (float)VOUT_MAX_DEVIATION * ADC_SCALER)   // Maximum allowed output voltage deviation in ADC ticks 
 
 #define IOUT_LCL_CLAMP          (uint16_t)((((float)IOUT_MINIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)ADC_SCALER) // Output voltage sense ADC ticks
 #define IOUT_OCL_TRIP           (uint16_t)((((float)IOUT_MAXIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)ADC_SCALER) // Output voltage sense ADC ticks
