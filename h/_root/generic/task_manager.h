@@ -138,7 +138,7 @@ typedef struct {
     volatile unsigned :1; // Bit #10: (reserved)
     volatile unsigned :1; // Bit #11: (reserved)
     volatile unsigned :1; // Bit #12: (reserved)
-	volatile bool global_notice:1;	// Bit #13: flag bit indicating the presence of notify events
+	volatile bool global_notify:1;	// Bit #13: flag bit indicating the presence of notify events
 	volatile bool global_warning:1;	// Bit #14: flag bit indicating the presence of warning events
 	volatile bool global_fault:1;	// Bit #15: flag bit indicating the presence of fault events
 } __attribute__((packed))TASK_MANAGER_STATUS_FLAGS_t;
