@@ -33,7 +33,7 @@
 #include <dsp.h>
 #include <math.h>
 
-#include "syscfg_scaling.h"
+#include "hal/hal.h"
 
 // Converter input and output voltage and current levels
 
