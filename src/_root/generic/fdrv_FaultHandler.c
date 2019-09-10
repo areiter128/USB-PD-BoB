@@ -89,7 +89,8 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     // read value to monitor (with bit-mask filtering)
     source_value = ((*fltobj->source_object) & (fltobj->object_bit_mask));
     
-    // If compare type is 'dynamic', capture compare object value
+    // If compare type is 'dynamic', capture compare object value and calculate absolute difference
+    // between variable source and variable compare value (a.k.a. source and reference)
     if (fltobj->comp_type == FAULT_COMPARE_DYNAMIC) {
         
         if(fltobj->compare_object != NULL) 
