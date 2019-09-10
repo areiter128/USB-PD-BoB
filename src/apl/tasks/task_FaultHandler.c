@@ -53,12 +53,14 @@
  * ***********************************************************************************************/
 
 // Fault objects for firmware modules and task manager flow control
-FAULT_OBJECT_t fltobj_CPULoadOverrun;
-FAULT_OBJECT_t fltobj_TaskExecutionFailure;
-FAULT_OBJECT_t fltobj_TaskTimeQuotaViolation;
+volatile FAULT_OBJECT_t fltobj_CPULoadOverrun;
+volatile FAULT_OBJECT_t fltobj_TaskExecutionFailure;
+volatile FAULT_OBJECT_t fltobj_TaskTimeQuotaViolation;
 
 // Declaration of user defined fault objects
-FAULT_OBJECT_t fltobj_PowerSourceFailure;
+volatile FAULT_OBJECT_t fltobj_PowerSourceFailure;
+volatile FAULT_OBJECT_t fltobj_PowerControlFailure_PortA;
+volatile FAULT_OBJECT_t fltobj_PowerControlFailure_PortB;
 
 
 /*!User-Defined Fault Objects Initialization
@@ -74,7 +76,9 @@ inline uint16_t init_TaskExecutionFaultObject(void);
 inline uint16_t init_TaskTimeQuotaViolationFaultObject(void);
 
     // user defined fault objects
-inline uint16_t init_PowerSourceFaultObject_PortA(void);
+inline uint16_t init_PowerSourceFaultObject(void);
+inline uint16_t init_PowerControlFaultObject_PortA(void);
+inline uint16_t init_PowerControlFaultObject_PortB(void);
 
 /*!fault_object_list[]
  * ***********************************************************************************************
@@ -114,12 +118,14 @@ volatile uint16_t init_FaultObjects(void)
     fres &= init_TaskTimeQuotaViolationFaultObject();
     
     // user defined fault objects
-    fres &= init_PowerSourceFaultObject_PortA();
+    fres &= init_PowerSourceFaultObject();
+    fres &= init_PowerControlFaultObject_PortA();
+    fres &= init_PowerControlFaultObject_PortB();
 
     // Set global fault flags (need to be cleared during operation)
     task_mgr.status.flags.global_fault = 1;
     task_mgr.status.flags.global_warning = 1;
-    task_mgr.status.flags.global_notice = 1;
+    task_mgr.status.flags.global_notify = 1;
     
     return(fres);
     
@@ -138,7 +144,7 @@ inline uint16_t init_CPULoadOverrunFaultObject(void)
     // Configuring the CPU Load Overrun fault object
 
     // specify the target value/register to be monitored
-    fltobj_CPULoadOverrun.object = &task_mgr.cpu_load.load_max_buffer; // monitoring the CPU meter result
+    fltobj_CPULoadOverrun.source_object = &task_mgr.cpu_load.load_max_buffer; // monitoring the CPU meter result
     fltobj_CPULoadOverrun.object_bit_mask = FAULT_OBJECT_BIT_MASK_DEFAULT;
     fltobj_CPULoadOverrun.error_code = (uint32_t)FLTOBJ_CPU_LOAD_OVERRUN;
     fltobj_CPULoadOverrun.id = (uint16_t)FLTOBJ_CPU_LOAD_OVERRUN;
@@ -187,7 +193,7 @@ inline uint16_t init_TaskExecutionFaultObject(void)
     // Configuring the Task Execution Failure fault object
 
     // specify the target value/register to be monitored
-    fltobj_TaskExecutionFailure.object = &task_mgr.proc_code.segments.retval;
+    fltobj_TaskExecutionFailure.source_object = &task_mgr.proc_code.segments.retval;
     fltobj_TaskExecutionFailure.object_bit_mask = FAULT_OBJECT_BIT_MASK_DEFAULT;
     fltobj_TaskExecutionFailure.error_code = (uint32_t)FLTOBJ_TASK_EXECUTION_FAILURE;
     fltobj_TaskExecutionFailure.id = (uint16_t)FLTOBJ_TASK_EXECUTION_FAILURE;
@@ -234,7 +240,7 @@ inline uint16_t init_TaskExecutionFaultObject(void)
 inline uint16_t init_TaskTimeQuotaViolationFaultObject(void)
 {
     // Configuring the Task Time Quota Violation fault object
-    fltobj_TaskTimeQuotaViolation.object = &task_mgr.task_time_ctrl.maximum;
+    fltobj_TaskTimeQuotaViolation.source_object = &task_mgr.task_time_ctrl.maximum;
     fltobj_TaskTimeQuotaViolation.object_bit_mask = FAULT_OBJECT_BIT_MASK_DEFAULT;
     fltobj_TaskTimeQuotaViolation.error_code = (uint32_t)FLTOBJ_TASK_TIME_QUOTA_VIOLATION;
     fltobj_TaskTimeQuotaViolation.id = (uint16_t)FLTOBJ_TASK_TIME_QUOTA_VIOLATION;
@@ -271,19 +277,24 @@ inline uint16_t init_TaskTimeQuotaViolationFaultObject(void)
 }
 
 
-/*!init_PowerSourceFaultObject_PortA
+/*!init_PowerSourceFaultObject
  * ***********************************************************************************************
  * Description:
  * The fltobj_PowerSourceFailure for 4-Switch BuckBoost converter #1 is initialized here. 
  * This fault object captures the condition when no power source is available.
  * ***********************************************************************************************/
 
-inline uint16_t init_PowerSourceFaultObject_PortA(void)
+/* ToDo:
+ * There is no user function declared yet shutting down the power supply in case of a critical
+ * fault condition. All critical power-related fault objects need to enable the USER_FAULT_CLASS
+ * and need to declare the user function used to shut-down and restart the power supplies.
+ */
+
+inline uint16_t init_PowerSourceFaultObject(void)
 {
     // Configuring the Task Time Quota Violation fault object
     
-    // ToDo: Declare fault object by re-enabling the following code line:
-    //    fltobj_PowerSourceFailure.object = &c4swbb_1.status.value;
+    fltobj_PowerSourceFailure.source_object = &c4swbb_1.status.value;
     
     fltobj_PowerSourceFailure.object_bit_mask = C4SWBB_CTRL_STAT_POWERSOURCE_DETECTED;
     fltobj_PowerSourceFailure.error_code = (uint32_t)FLTOBJ_POWER_SOURCE_FAILURE;
@@ -298,23 +309,123 @@ inline uint16_t init_PowerSourceFaultObject_PortA(void)
     fltobj_PowerSourceFailure.criteria.reset_cnt_threshold = 3; // Set/reset number of successive resets before triggering fault release
 
     // specifying fault class, fault level and enable/disable status
-    fltobj_PowerSourceFailure.classes.flags.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
-    fltobj_PowerSourceFailure.classes.flags.warning = 0;  // Set =1 if this fault object triggers a warning fault condition response
-    fltobj_PowerSourceFailure.classes.flags.critical = 1; // Set =1 if this fault object triggers a critical fault condition response
-    fltobj_PowerSourceFailure.classes.flags.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
+    fltobj_PowerSourceFailure.classes.flags.notify = 0;   // Set if this fault object triggers a fault condition notification
+    fltobj_PowerSourceFailure.classes.flags.warning = 0;  // Set if this fault object triggers a warning fault condition response
+    fltobj_PowerSourceFailure.classes.flags.critical = 1; // Set if this fault object triggers a critical fault condition response
+    fltobj_PowerSourceFailure.classes.flags.catastrophic = 0; // Set if this fault object triggers a catastrophic fault condition response
 
-    fltobj_PowerSourceFailure.classes.flags.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
-    fltobj_PowerSourceFailure.user_fault_action = 0; // Set = 0 if no function should be called, Set= [function pointer] to function which should be executed
-    fltobj_PowerSourceFailure.user_fault_reset = 0; // Set = 0 if no function should be called, Set = [function pointer] to function which should be executed
+    fltobj_PowerSourceFailure.classes.flags.user_class = 0; // Set if this fault object triggers a user-defined fault condition response
+    fltobj_PowerSourceFailure.user_fault_action = 0; // Clear if no function should be called, Set = [function pointer] to function which should be executed
+    fltobj_PowerSourceFailure.user_fault_reset = 0; // Clear if no function should be called, Set = [function pointer] to function which should be executed
 
-    fltobj_PowerSourceFailure.status.flags.fltlvlhw = 1; // Set =1 if this fault condition is board-level fault condition
-    fltobj_PowerSourceFailure.status.flags.fltlvlsw = 0; // Set =1 if this fault condition is software-level fault condition
-    fltobj_PowerSourceFailure.status.flags.fltlvlsi = 0; // Set =1 if this fault condition is silicon-level fault condition
-    fltobj_PowerSourceFailure.status.flags.fltlvlsys = 1; // Set =1 if this fault condition is system-level fault condition
+    fltobj_PowerSourceFailure.status.flags.fltlvlhw = 1; // Set if this fault condition is board-level fault condition
+    fltobj_PowerSourceFailure.status.flags.fltlvlsw = 0; // Set if this fault condition is software-level fault condition
+    fltobj_PowerSourceFailure.status.flags.fltlvlsi = 0; // Set if this fault condition is silicon-level fault condition
+    fltobj_PowerSourceFailure.status.flags.fltlvlsys = 1; // Set if this fault condition is system-level fault condition
 
     fltobj_PowerSourceFailure.status.flags.fltstat = 1; // Set/reset fault condition as present/active
     fltobj_PowerSourceFailure.status.flags.fltactive = 1; // Set/reset fault condition as present/active
     fltobj_PowerSourceFailure.status.flags.fltchken = 1; // Enable/disable fault check
+
+    return(1);
+}
+
+/*!init_PowerControlFaultObject_PortA
+ * ***********************************************************************************************
+ * Description:
+ * The fltobj_PowerControlFailure for 4-Switch BuckBoost converter #1 is initialized here. 
+ * This fault object captures the condition when the output voltage deviates from its reference
+ * too much for too long.
+ * ***********************************************************************************************/
+
+inline uint16_t init_PowerControlFaultObject_PortA(void)
+{
+    // Configuring the Task Time Quota Violation fault object
+    
+    // ToDo: Declare fault object by re-enabling the following code line:
+    fltobj_PowerControlFailure_PortA.source_object = &c4swbb_1.data.v_out;
+    fltobj_PowerControlFailure_PortA.source_object = &c4swbb_1.v_loop.reference;
+    
+    fltobj_PowerControlFailure_PortA.object_bit_mask = FAULT_OBJECT_BIT_MASK_DEFAULT;
+    fltobj_PowerControlFailure_PortA.error_code = (uint32_t)FLTOBJ_POWER_CONTROL_FAILURE_PORT_A;
+    fltobj_PowerControlFailure_PortA.id = (uint16_t)FLTOBJ_POWER_CONTROL_FAILURE_PORT_A;
+
+    // configuring the trip and reset levels as well as trip and reset event filter setting
+    fltobj_PowerControlFailure_PortA.criteria.counter = 0;      // Set/reset fault counter
+    fltobj_PowerControlFailure_PortA.criteria.fault_ratio = FAULT_LEVEL_EQUAL;
+    fltobj_PowerControlFailure_PortA.criteria.trip_level = 0;   // Set/reset trip level value
+    fltobj_PowerControlFailure_PortA.criteria.trip_cnt_threshold = 1; // Set/reset number of successive trips before triggering fault event
+    fltobj_PowerControlFailure_PortA.criteria.reset_level = 1;  // Set/reset fault release level value
+    fltobj_PowerControlFailure_PortA.criteria.reset_cnt_threshold = 3; // Set/reset number of successive resets before triggering fault release
+
+    // specifying fault class, fault level and enable/disable status
+    fltobj_PowerControlFailure_PortA.classes.flags.notify = 0;   // Set if this fault object triggers a fault condition notification
+    fltobj_PowerControlFailure_PortA.classes.flags.warning = 0;  // Set if this fault object triggers a warning fault condition response
+    fltobj_PowerControlFailure_PortA.classes.flags.critical = 1; // Set if this fault object triggers a critical fault condition response
+    fltobj_PowerControlFailure_PortA.classes.flags.catastrophic = 0; // Set if this fault object triggers a catastrophic fault condition response
+
+    fltobj_PowerControlFailure_PortA.classes.flags.user_class = 0; // Set =1 if this fault object triggers a user-defined fault condition response
+    fltobj_PowerControlFailure_PortA.user_fault_action = 0; // Clear if no function should be called, Set= [function pointer] to function which should be executed
+    fltobj_PowerControlFailure_PortA.user_fault_reset = 0; // Clear if no function should be called, Set = [function pointer] to function which should be executed
+
+    fltobj_PowerControlFailure_PortA.status.flags.fltlvlhw = 1; // Set =1 if this fault condition is board-level fault condition
+    fltobj_PowerControlFailure_PortA.status.flags.fltlvlsw = 0; // Set =1 if this fault condition is software-level fault condition
+    fltobj_PowerControlFailure_PortA.status.flags.fltlvlsi = 0; // Set =1 if this fault condition is silicon-level fault condition
+    fltobj_PowerControlFailure_PortA.status.flags.fltlvlsys = 1; // Set =1 if this fault condition is system-level fault condition
+
+    fltobj_PowerControlFailure_PortA.status.flags.fltstat = 1; // Set/reset fault condition as present/active
+    fltobj_PowerControlFailure_PortA.status.flags.fltactive = 1; // Set/reset fault condition as present/active
+    fltobj_PowerControlFailure_PortA.status.flags.fltchken = 1; // Enable/disable fault check
+
+    return(1);
+}
+
+/*!init_PowerControlFaultObject_PortB
+ * ***********************************************************************************************
+ * Description:
+ * The fltobj_PowerControlFailure for 4-Switch BuckBoost converter #2 is initialized here. 
+ * This fault object captures the condition when the output voltage deviates from its reference
+ * too much for too long.
+ * ***********************************************************************************************/
+
+inline uint16_t init_PowerControlFaultObject_PortB(void)
+{
+    // Configuring the Task Time Quota Violation fault object
+    
+    // ToDo: Declare fault object by re-enabling the following code line:
+    fltobj_PowerControlFailure_PortB.source_object = &c4swbb_2.data.v_out;
+    fltobj_PowerControlFailure_PortB.compare_object = &c4swbb_2.v_loop.reference;
+    
+    fltobj_PowerControlFailure_PortB.object_bit_mask = FAULT_OBJECT_BIT_MASK_DEFAULT;
+    fltobj_PowerControlFailure_PortB.error_code = (uint32_t)FLTOBJ_POWER_CONTROL_FAILURE_PORT_B;
+    fltobj_PowerControlFailure_PortB.id = (uint16_t)FLTOBJ_POWER_CONTROL_FAILURE_PORT_B;
+
+    // configuring the trip and reset levels as well as trip and reset event filter setting
+    fltobj_PowerControlFailure_PortB.criteria.counter = 0;      // Set/reset fault counter
+    fltobj_PowerControlFailure_PortB.criteria.fault_ratio = FAULT_LEVEL_GREATER_THAN;
+    fltobj_PowerControlFailure_PortB.criteria.trip_level = VOUT_MAX_DEV;   // Set/reset trip level value
+    fltobj_PowerControlFailure_PortB.criteria.trip_cnt_threshold = 10; // Set/reset number of successive trips before triggering fault event
+    fltobj_PowerControlFailure_PortB.criteria.reset_level = VOUT_MAX_DEV;  // Set/reset fault release level value
+    fltobj_PowerControlFailure_PortB.criteria.reset_cnt_threshold = 2; // Set/reset number of successive resets before triggering fault release
+
+    // specifying fault class, fault level and enable/disable status
+    fltobj_PowerControlFailure_PortB.classes.flags.notify = 0;   // Set if this fault object triggers a fault condition notification
+    fltobj_PowerControlFailure_PortB.classes.flags.warning = 0;  // Set if this fault object triggers a warning fault condition response
+    fltobj_PowerControlFailure_PortB.classes.flags.critical = 1; // Set if this fault object triggers a critical fault condition response
+    fltobj_PowerControlFailure_PortB.classes.flags.catastrophic = 0; // Set if this fault object triggers a catastrophic fault condition response
+
+    fltobj_PowerControlFailure_PortB.classes.flags.user_class = 0; // Set =1 if this fault object triggers a user-defined fault condition response
+    fltobj_PowerControlFailure_PortB.user_fault_action = 0; // Clear if no function should be called, Set= [function pointer] to function which should be executed
+    fltobj_PowerControlFailure_PortB.user_fault_reset = 0; // Clear if no function should be called, Set = [function pointer] to function which should be executed
+
+    fltobj_PowerControlFailure_PortB.status.flags.fltlvlhw = 1; // Set =1 if this fault condition is board-level fault condition
+    fltobj_PowerControlFailure_PortB.status.flags.fltlvlsw = 0; // Set =1 if this fault condition is software-level fault condition
+    fltobj_PowerControlFailure_PortB.status.flags.fltlvlsi = 0; // Set =1 if this fault condition is silicon-level fault condition
+    fltobj_PowerControlFailure_PortB.status.flags.fltlvlsys = 1; // Set =1 if this fault condition is system-level fault condition
+
+    fltobj_PowerControlFailure_PortB.status.flags.fltstat = 1; // Set/reset fault condition as present/active
+    fltobj_PowerControlFailure_PortB.status.flags.fltactive = 1; // Set/reset fault condition as present/active
+    fltobj_PowerControlFailure_PortB.status.flags.fltchken = 1; // Enable/disable fault check
 
     return(1);
 }
