@@ -36,7 +36,7 @@ volatile uint16_t init_PowerControl(void) {
 
     // Run global/common, non-converter specific peripheral module configuration
     fres &= initialize_adc();
-    fres &= initialize_pwm();
+//    fres &= c4swbb_pwm_initialize();
     
     
     
