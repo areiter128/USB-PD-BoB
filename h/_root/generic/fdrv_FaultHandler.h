@@ -224,8 +224,8 @@ typedef struct
  * status information, fault classes and user fault actions.
  * ***********************************************************************************************/
 
-extern FAULT_OBJECT_t *fault_object_list[];
-extern uint16_t fltobj_list_size;
+extern volatile FAULT_OBJECT_t *fault_object_list[];
+extern volatile uint16_t fltobj_list_size;
 
 
 /*!CPU Reset Classes
