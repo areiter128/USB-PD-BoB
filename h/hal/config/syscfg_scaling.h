@@ -34,6 +34,8 @@
 #include <dsp.h>
 #include <math.h>
 
+#include "hal/hal.h"
+
 #if defined (__00173_USB_PD_BOB_R20__) || defined (__MA330048_P33CK_R30_USB_PD_BOB__)
 
 
@@ -195,9 +197,9 @@
 #define VIN_DIVIDER_RATIO_INV       (float)( 1.0 / VIN_DIVIDER_RATIO )
 #define VIN_FB_OFFSET               (uint16_t)(C4SWBB_VIN_FEEDBACK_OFFSET * ADC_SCALER)    // Input voltage sense offset ADC ticks
 
-#define VOUT_DIVIDER_RATIO          (float)((float)VOUT_AMP_GAIN * ((float)VOUT_DIVIDER_R2) / ((float)(VOUT_DIVIDER_R1 + VOUT_DIVIDER_R2)))
+#define VOUT_DIVIDER_RATIO          (float)((float)C4SWBB_VOUT_AMP_GAIN * ((float)C4SWBB_VOUT_R2) / ((float)(C4SWBB_VOUT_R1 + C4SWBB_VOUT_R2)))
 #define VOUT_DIVIDER_RATIO_INV      (float)( 1.0 / VOUT_DIVIDER_RATIO )
-#define VOUT_FB_OFFSET              (int16_t)(VOUT_SENSE_OFFSET * ADC_SCALER)   // Output voltage sense offset ADC ticks
+#define VOUT_FB_OFFSET              (int16_t)(C4SWBB_VOUT_SENSE_OFFSET * ADC_SCALER)   // Output voltage sense offset ADC ticks
 
 #define IOUT_SCALER_RATIO_I2V       (float)((float)C4SWBB_CS_SHUNT_RESISTANCE * (float)C4SWBB_CS_AMP_GAIN) // Current feeback ratio in [V/A] => used to convert current into feedback voltage
 #define IOUT_SCALER_RATIO_V2I       (float)(1.0/((float)IOUT_SCALER_RATIO_I2V))  // Current feeback ratio in [A/V] => used to convert feedback voltage into current
