@@ -36,6 +36,7 @@
 #include <stdint.h>
 
 #include "apl/apl.h"
+#include "hal/hal.h"
 #include "apl/tasks/task_FaultHandler.h"
 
 /*!User-Defined Fault Objects
@@ -88,7 +89,7 @@ inline uint16_t init_PowerControlFaultObject_PortB(void);
  * status information, fault classes and user fault actions.
  * ***********************************************************************************************/
 
-FAULT_OBJECT_t *fault_object_list[] = {
+volatile FAULT_OBJECT_t *fault_object_list[] = {
     
     // fault objects for firmware modules and task manager flow
     &fltobj_CPULoadOverrun,    // The CPU meter indicated an overrun condition (no free process time left))
@@ -97,9 +98,11 @@ FAULT_OBJECT_t *fault_object_list[] = {
     
     // user defined fault objects
     &fltobj_PowerSourceFailure, 
+    &fltobj_PowerControlFailure_PortA, 
+    &fltobj_PowerControlFailure_PortB, 
 
 };
-uint16_t fltobj_list_size = (sizeof(fault_object_list)/sizeof(fault_object_list[0]));
+volatile uint16_t fltobj_list_size = (sizeof(fault_object_list)/sizeof(fault_object_list[0]));
 
 /*!init_FaultObjects
  * ***********************************************************************************************
