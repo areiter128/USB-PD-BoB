@@ -1,13 +1,13 @@
 [GUI]
 CreateDate=08/01/19 4:10:47 PM
-SaveDate=09/09/2019 11:49:30 AM
+SaveDate=09/10/2019 05:23:00 PM
 Name=z-Domain Control Loop Designer
 Version=0.9.0.61
-WindoWState=Maximized
-Top=-8
-Left=-8
-Height=1066
-Width=1936
+WindoWState=Normal
+Top=75
+Left=225
+Height=894
+Width=1424
 TabHeight=244
 [ControlSetup]
 ControlType=1
