@@ -337,23 +337,23 @@ inline volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj)
     if(fltobj->classes.class & FLT_CLASS_CRITICAL)
     {
         // if fault is of class CRITICAL, set error flag and force scheduler in standby mode
-        task_mgr.status.flags.global_fault = 1;  // set global fault bit
+        task_mgr.status.flags.global_fault = 1;      // set global fault bit
         task_mgr.status.flags.fault_override = true; // setting global fault override bit
-        task_mgr.op_mode.mode = OP_MODE_FAULT; // force main scheduler into fault mode
+        task_mgr.op_mode.mode = OP_MODE_FAULT;       // force main scheduler into fault mode
     }
 
     if(fltobj->classes.class & FLT_CLASS_WARNING)
     {
-        // if fault is of class CRITICAL, set error flag and force schedule in standby mode
+        // if fault is of class WARNING, set error flag and force schedule in standby mode
         task_mgr.status.flags.global_warning = 1;   // set global warning bit 
                                                     // and don't take further action
     }
 
     if(fltobj->classes.class & FLT_CLASS_NOTIFY)
     {
-        // if fault is of class CRITICAL, set error flag and force schedule in standby mode
-        task_mgr.status.flags.global_notice = 1;  // setting global notify bit
-                                                     // and don't take further action
+        // if fault is of class NOTIFY, set error flag and force schedule in standby mode
+        task_mgr.status.flags.global_notify = 1;    // setting global notify bit
+                                                    // and don't take further action
     }
 
     if(fltobj->classes.class & FLT_CLASS_USER_ACTION)
@@ -417,16 +417,16 @@ inline volatile uint16_t ExecGlobalFaultFlagRelease(volatile uint16_t fault_clas
 
     if((!(fault_class_code & FLT_CLASS_WARNING)) && (task_mgr.status.flags.global_warning))
     {
-        // if fault is of class CRITICAL, set error flag and force schedule in standby mode
-        task_mgr.status.flags.global_warning = 0;  // set global warning bit 
-                                                      // and don't take further action
+        // if fault is of class WARNING, set error flag and force scheduler in standby mode
+        task_mgr.status.flags.global_warning = 0;   // set global warning bit 
+                                                    // and don't take further action
     }
 
-    if((!(fault_class_code & FLT_CLASS_NOTIFY)) && (task_mgr.status.flags.global_notice))
+    if((!(fault_class_code & FLT_CLASS_NOTIFY)) && (task_mgr.status.flags.global_notify))
     {
-        // if fault is of class CRITICAL, set error flag and force schedule in standby mode
-        task_mgr.status.flags.global_notice = 0;  // setting global notify bit
-                                                     // and don't take further action
+        // if fault is of class NOTIFY, set error flag and force scheduler in standby mode
+        task_mgr.status.flags.global_notify = 0;    // setting global notify bit
+                                                    // and don't take further action
     }
 
     return(fres);
