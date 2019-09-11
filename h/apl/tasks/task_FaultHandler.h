@@ -40,7 +40,9 @@ typedef enum {
     FLTOBJ_TASK_EXECUTION_FAILURE, // Fault object Task Execution Failure
     FLTOBJ_TASK_TIME_QUOTA_VIOLATION, // Fault object Task Time Quota Violation
         
-    FLTOBJ_POWER_SOURCE_FAILURE
+    FLTOBJ_POWER_SOURCE_FAILURE,
+    FLTOBJ_POWER_CONTROL_FAILURE_PORT_A,
+    FLTOBJ_POWER_CONTROL_FAILURE_PORT_B
 //    FLTOBJ_SOFT_START, // Fault object Soft-Start Failure
         
 //    FLTOBJ_UVLO, // Fault object Under Voltage Lock-Out

@@ -36,10 +36,16 @@
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 
+#include "apl/apl.h"
 #include "hal/hal.h"
 #include "mcal/mcal.h"
 
-#include "apl/resources/c4swbb_control.h"
+#include "apl/resources/cha_iloop.h"        // Current Control Loop library header of USB Port 1
+#include "apl/resources/cha_vloop.h"        // Voltage Control Loop library header of USB Port 1
+#include "apl/resources/chb_iloop.h"        // Current Control Loop library header of USB Port 2
+#include "apl/resources/chb_vloop.h"        // Voltage Control Loop library header of USB Port 2
+
+#include "apl/resources/c4swbb_control.h"   // 4-Switch Buck/Boost Power Control State Machine Header
 
 #ifdef	__cplusplus
 extern "C" {
@@ -47,8 +53,8 @@ extern "C" {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-//    extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;
-//    extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
+//    volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;
+//    volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
 
     // Public function prototypes
     extern volatile uint16_t init_PowerControl(void);

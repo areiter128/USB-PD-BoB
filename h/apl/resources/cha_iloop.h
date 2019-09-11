@@ -1,19 +1,19 @@
 /* ***************************************************************************************
  * z-Domain Control Loop Designer Version 0.9.0.61.
  * ***************************************************************************************
- * 3p3z compensation filter coefficients derived for following operating conditions:
+ * 2p2z compensation filter coefficients derived for following operating conditions:
  * ***************************************************************************************
  *
- * 	Controller Type:	3P3Z - Basic Voltage Mode Compensator
+ * 	Controller Type:	2P2Z - Basic Current Mode Compensator
  * 	Sampling Frequency:	300000 Hz 
  * 	Fixed Point Format:	15
- * 	Scaling Mode:		1 - Single Bit-Shift Scaling
- * 	Input Gain:			0.2
+ * 	Scaling Mode:		3 - Dual Bit-Shift Scaling
+ * 	Input Gain:			1
  * 
  * ***************************************************************************************/
 
-#ifndef __SPECIAL_FUNCTION_LAYER_CTRL_VLOOP_H__
-#define __SPECIAL_FUNCTION_LAYER_CTRL_VLOOP_H__
+#ifndef __SPECIAL_FUNCTION_LAYER_CHA_ILOOP_H__
+#define __SPECIAL_FUNCTION_LAYER_CHA_ILOOP_H__
 
 #include <xc.h>
 #include <dsp.h>
@@ -26,7 +26,7 @@
  * The cNPNZ_t data structure contains a pointer to derived coefficients in X-space and
  * other pointers to controller and error history in Y-space.
  * This header file holds public declarations for variables and arrays defined in 
- * ctrl_vloop.c
+ * cha_iloop.c
  * 
  * Type definition for A- and B- coefficient arrays and error- and control-history arrays, 
  * which are aligned in memory for optimized addressing during DSP computations.           
@@ -36,37 +36,39 @@
 
 	typedef struct
 	{
-		volatile fractional ACoefficients[3]; // A-Coefficients
-		volatile fractional BCoefficients[4]; // B-Coefficients
-	} __attribute__((packed))CTRL_VLOOP_CONTROL_LOOP_COEFFICIENTS_t;
+		volatile fractional ACoefficients[2]; // A-Coefficients
+		volatile fractional BCoefficients[3]; // B-Coefficients
+	} __attribute__((packed))CHA_ILOOP_CONTROL_LOOP_COEFFICIENTS_t;
 
 	typedef struct
 	{
-		volatile fractional ControlHistory[3];  // Control History
-		volatile fractional ErrorHistory[4];    // Error History
-	} __attribute__((packed))CTRL_VLOOP_CONTROL_LOOP_HISTORIES_t;
+		volatile fractional ControlHistory[2];  // Control History
+		volatile fractional ErrorHistory[3];    // Error History
+	} __attribute__((packed))CHA_ILOOP_CONTROL_LOOP_HISTORIES_t;
 
 
-	extern volatile cNPNZ16b_t ctrl_vloop; // user-controller data object
+	extern volatile cNPNZ16b_t cha_iloop; // user-controller data object
 
 /* ***************************************************************************************/
 
 // Function call prototypes for initialization routines and control loops
 
-extern uint16_t ctrl_vloop_Init(void); // Loads default coefficients into 3P3Z controller and resets histories to zero
-
-extern void ctrl_vloop_Reset( // Resets the 3P3Z controller histories
+extern volatile uint16_t cha_iloop_Init( // Loads default coefficients into 2P2Z controller and resets histories to zero
 	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure
 	);
 
-extern void ctrl_vloop_Precharge( // Pre-charges histories of the 3P3Z with defined steady-state data
+extern void cha_iloop_Reset( // Resets the 2P2Z controller histories
+	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure
+	);
+
+extern void cha_iloop_Precharge( // Pre-charges histories of the 2P2Z with defined steady-state data
 	volatile cNPNZ16b_t* controller, // Pointer to nPnZ data structure
 	volatile uint16_t ctrl_input, // user-defined, constant error history value
 	volatile uint16_t ctrl_output // user-defined, constant control output history value
 	);
 
-extern void ctrl_vloop_Update( // Calls the 3P3Z controller
+extern void cha_iloop_Update( // Calls the 2P2Z controller
 	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure
 	);
 
-#endif	// end of __SPECIAL_FUNCTION_LAYER_CTRL_VLOOP_H__ header file section
+#endif	// end of __SPECIAL_FUNCTION_LAYER_CHA_ILOOP_H__ header file section

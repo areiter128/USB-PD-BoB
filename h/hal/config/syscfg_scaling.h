@@ -34,6 +34,8 @@
 #include <dsp.h>
 #include <math.h>
 
+#include "hal/hal.h"
+
 #if defined (__00173_USB_PD_BOB_R20__) || defined (__MA330048_P33CK_R30_USB_PD_BOB__)
 
 
@@ -66,23 +68,33 @@
  * 
  * *************************************************************************************************/
     
-    #define C4SWBB_VOUT_NOMINAL          5.0     // Nominal output voltage in [V]
-    #define C4SWBB_VOUT_MINIMUM          4.5     // Maximum output voltage in [V]
-    #define C4SWBB_VOUT_MAXIMUM          21.0    // Maximum output voltage in [V]
-    #define C4SWBB_VOUT_HYSTERESIS       1.0     // Output voltage protection hysteresis in [V]
-    #define C4SWBB_VOUT_UPPER_DEVIATION  2.0     // Upper output voltage deviation from reference in [V]
-    #define C4SWBB_VOUT_LOWER_DEVIATION  0.8     // Lower output voltage deviation from reference in [V]
 
-    #define C4SWBB_VOUT_LEVEL_5V         5.0      // Nominal output voltage in [V]
-    #define C4SWBB_VOUT_LEVEL_9V         9.0      // Nominal output voltage in [V]
-    #define C4SWBB_VOUT_LEVEL_12V        12.0     // Nominal output voltage in [V]
-    #define C4SWBB_VOUT_LEVEL_15V        15.0     // Nominal output voltage in [V]
-    #define C4SWBB_VOUT_LEVEL_20V        20.0     // Nominal output voltage in [V]
+    // DSC bias voltage
+    #define DEVICE_VDD                  3.300       // Device bias voltage in [V]
 
-    #define C4SWBB_VOUT_R1               18.0    // Resitance of upper voltage divider resistor in kOhm
-    #define C4SWBB_VOUT_R2               2.87    // Resitance of lower voltage divider resistor in kOhm
-    #define C4SWBB_VOUT_AMP_GAIN         1.000    // Gain factor or additional op-amp (set to 1.0 if none is used)
-    #define C4SWBB_VOUT_SENSE_OFFSET     0.000    // Output voltage sense offset
+    // Inductance of the main inductor
+    #define INDUCTANCE                  5.600       // Inductance in [µH]
+    #define CAPACITANCE                 150e-6      // Output Capacity
+
+
+    // Output Voltage Feedback Scaling and Nominal Signal Levels
+    #define C4SWBB_VOUT_NOMINAL          5.0    // Nominal output voltage in [V]
+    #define C4SWBB_VOUT_MINIMUM          4.5    // Maximum output voltage in [V]
+    #define C4SWBB_VOUT_MAXIMUM          21.0   // Maximum output voltage in [V]
+    #define C4SWBB_VOUT_HYSTERESIS       1.0    // Output voltage protection hysteresis in [V]
+    #define C4SWBB_VOUT_UPPER_DEVIATION  2.0    // Upper output voltage deviation from reference in [V]
+    #define C4SWBB_VOUT_LOWER_DEVIATION  0.8    // Lower output voltage deviation from reference in [V]
+
+    #define C4SWBB_VOUT_LEVEL_5V         5.0    // Nominal output voltage in [V]
+    #define C4SWBB_VOUT_LEVEL_9V         9.0    // Nominal output voltage in [V]
+    #define C4SWBB_VOUT_LEVEL_12V        12.0   // Nominal output voltage in [V]
+    #define C4SWBB_VOUT_LEVEL_15V        15.0   // Nominal output voltage in [V]
+    #define C4SWBB_VOUT_LEVEL_20V        20.0   // Nominal output voltage in [V]
+
+    #define C4SWBB_VOUT_R1               18000  // Resitance of upper voltage divider resistor in kOhm
+    #define C4SWBB_VOUT_R2               2870   // Resitance of lower voltage divider resistor in kOhm
+    #define C4SWBB_VOUT_AMP_GAIN         1.000  // Gain factor or additional op-amp (set to 1.0 if none is used)
+    #define C4SWBB_VOUT_SENSE_OFFSET     0.000  // Output voltage sense offset
 
     //~~~~~~~~~~~~~~~~~ conversion macros ~~~~~~~~~~~~~~~~~~
     #define C4SWBB_VOUT_FB_GAIN      (float)(C4SWBB_VOUT_AMP_GAIN * ((C4SWBB_VOUT_R2) / (C4SWBB_VOUT_R1 + C4SWBB_VOUT_R2)))
@@ -100,49 +112,33 @@
     #define C4SWBB_VOUT_REF_20V      (uint16_t)(C4SWBB_VOUT_LEVEL_20V * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
     //~~~~~~~~~~~~~~~~~
 
-    #define C4SWBB_VIN_MINIMUM       7.0             // Minimum input voltage in [V]
-    #define C4SWBB_VIN_MAXIMUM       20.0            // Maximum input voltage in [V]
-    #define C4SWBB_VIN_HYSTERESIS    1.0             // Input voltage protection hysteresis in [V]
+    // Input Voltage Feedback Scaling
+    #define C4SWBB_VIN_DIVIDER_R1          36000       // Resitance of upper voltage divider resistor in Ohm
+    #define C4SWBB_VIN_DIVIDER_R2          2870        // Resitance of lower voltage divider resistor in Ohm
+    #define C4SWBB_VIN_AMP_GAIN            1.000       // Gain factor or additional op-amp (set to 1.0 if none is used)
+    #define C4SWBB_VIN_FEEDBACK_OFFSET     0.000       // Input voltage sense offset
 
-    #define C4SWBB_VIN_R1            15.8            // Upper voltage divider resistor in kOhm
-    #define C4SWBB_VIN_R2            1.0             // Lower voltage divider resistor in kOhm
+    #define C4SWBB_VIN_MINIMUM      7.0         // Minimum input voltage in [V]
+    #define C4SWBB_VIN_MAXIMUM      20.0        // Maximum input voltage in [V]
+    #define C4SWBB_VIN_HYSTERESIS   1.0         // Input voltage protection hysteresis in [V]
 
     //~~~~~~~~~~~~~~~~~ conversion macros ~~~~~~~~~~~~~~~~~~
     #define C4SWBB_VIN_FB_GAIN       (float)((C4SWBB_VIN_R2) / (C4SWBB_VIN_R1 + C4SWBB_VIN_R2))
     #define C4SWBB_VIN_UVLO          (uint16_t)(C4SWBB_VIN_MINIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
     #define C4SWBB_VIN_OVLO          (uint16_t)(C4SWBB_VIN_MAXIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
     #define C4SWBB_VIN_HYST          (uint16_t)(C4SWBB_VIN_HYSTERESIS * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
+
+    #define VIN2VOUT_NORMALIZATION  0x7fff  // (int16_t)(ceiling(log(VOUT_DIVIDER_RATIO/VIN_DIVIDER_RATIO)))
+    #define VIN2VOUT_NORM_BSFT      1       // Fixed-Point Bit-Shift of normalization factor
     //~~~~~~~~~~~~~~~~~
 
+    #define C4SWBB_CS_AMP_GAIN          50.000      // Current sense amplifier gain in [V/V]
+    #define C4SWBB_CS_SHUNT_RESISTANCE  4.0e-3      // Current sense resistor value in [Ohm]
+    #define C4SWBB_CS_PROPAGATION_DELAY 560.0e-9    // signal phase shift for accurate triggering
+    #define C4SWBB_CS_COMMON_MODE_V_MIN 2.500       // Common mode minimum voltage at which the amplifier starts to provide an output signal
 
-    // DSC bias voltage
-    #define DEVICE_VDD                  3.300       // Device bias voltage in [V]
-
-    // Inductance of the main inductor
-    #define INDUCTANCE                  5.600       // Inductance in [µH]
-    #define CAPACITANCE                 150e-6      // Output Capacity
-
-    // Feedback Scaling
-    #define VIN_DIVIDER_R1              36000       // Resitance of upper voltage divider resistor in Ohm
-    #define VIN_DIVIDER_R2              2870        // Resitance of lower voltage divider resistor in Ohm
-    #define VIN_AMP_GAIN                1.000       // Gain factor or additional op-amp (set to 1.0 if none is used)
-    #define VIN_FEEDBACK_OFFSET         0.000       // Input voltage sense offset
-
-    #define VOUT_DIVIDER_R1             18000       // Resitance of upper voltage divider resistor in Ohm
-    #define VOUT_DIVIDER_R2             2870        // Resitance of lower voltage divider resistor in Ohm
-    #define VOUT_AMP_GAIN               1.000       // Gain factor or additional op-amp (set to 1.0 if none is used)
-    #define VOUT_SENSE_OFFSET           0.000       // Output voltage sense offset
-
-    #define VIN2VOUT_NORMALIZATION      0x7fff      //(int16_t)(ceiling(log(VOUT_DIVIDER_RATIO/VIN_DIVIDER_RATIO)))
-    #define VIN2VOUT_NORM_BSFT          1
-
-    #define CS_AMP_GAIN                 50.000      // Current sense amplifier gain in [V/V]
-    #define CS_SHUNT_RESISTANCE         4.0e-3     // Current sense resistor value in [Ohm]
-    #define CS_PROPAGATION_DELAY        560.0e-9    // signal phase shift for accurate triggering
-    #define CS_COMMON_MODE_V_MIN        2.500       // Common mode minimum voltage at which the amplifier starts to provide an output signal
-
-    #define IOUT_IS_BI_DIRECTIONAL      false       // Current sens is (0=uni-directional, 1=bi-directional)
-    #define IOUT_FEEDBACK_OFFSET        0.000       // Current sense zero offset 
+    #define C4SWBB_IOUT_IS_BI_DIRECTIONAL   false       // Current sens is (0=uni-directional, 1=bi-directional)
+    #define C4SWBB_IOUT_FEEDBACK_OFFSET     0.000       // Current sense zero offset 
 
     // System Settings
     #define SWITCHING_FREQUENCY         350e+3      // Nominal switching frequency per converter phase in [Hz]
@@ -197,21 +193,21 @@
 
 // Macros calculating register values based on the physical values given above
 
-#define VIN_DIVIDER_RATIO           (float)((float)VIN_AMP_GAIN * ((float)VIN_DIVIDER_R2) / ((float)(VIN_DIVIDER_R1 + VIN_DIVIDER_R2)))
+#define VIN_DIVIDER_RATIO           (float)((float)C4SWBB_VIN_AMP_GAIN * ((float)C4SWBB_VIN_DIVIDER_R2) / ((float)(C4SWBB_VIN_DIVIDER_R1 + C4SWBB_VIN_DIVIDER_R2)))
 #define VIN_DIVIDER_RATIO_INV       (float)( 1.0 / VIN_DIVIDER_RATIO )
-#define VIN_FB_OFFSET               (uint16_t)(VIN_FEEDBACK_OFFSET * ADC_SCALER)    // Input voltage sense offset ADC ticks
+#define VIN_FB_OFFSET               (uint16_t)(C4SWBB_VIN_FEEDBACK_OFFSET * ADC_SCALER)    // Input voltage sense offset ADC ticks
 
-#define VOUT_DIVIDER_RATIO          (float)((float)VOUT_AMP_GAIN * ((float)VOUT_DIVIDER_R2) / ((float)(VOUT_DIVIDER_R1 + VOUT_DIVIDER_R2)))
+#define VOUT_DIVIDER_RATIO          (float)((float)C4SWBB_VOUT_AMP_GAIN * ((float)C4SWBB_VOUT_R2) / ((float)(C4SWBB_VOUT_R1 + C4SWBB_VOUT_R2)))
 #define VOUT_DIVIDER_RATIO_INV      (float)( 1.0 / VOUT_DIVIDER_RATIO )
-#define VOUT_FB_OFFSET              (int16_t)(VOUT_SENSE_OFFSET * ADC_SCALER)   // Output voltage sense offset ADC ticks
+#define VOUT_FB_OFFSET              (int16_t)(C4SWBB_VOUT_SENSE_OFFSET * ADC_SCALER)   // Output voltage sense offset ADC ticks
 
-#define IOUT_SCALER_RATIO_I2V       (float)((float)CS_SHUNT_RESISTANCE * (float)CS_AMP_GAIN) // Current feeback ratio in [V/A] => used to convert current into feedback voltage
+#define IOUT_SCALER_RATIO_I2V       (float)((float)C4SWBB_CS_SHUNT_RESISTANCE * (float)C4SWBB_CS_AMP_GAIN) // Current feeback ratio in [V/A] => used to convert current into feedback voltage
 #define IOUT_SCALER_RATIO_V2I       (float)(1.0/((float)IOUT_SCALER_RATIO_I2V))  // Current feeback ratio in [A/V] => used to convert feedback voltage into current
 #define IOUT_SCALER_RATIO_TICKS     (uint16_t)((float)IOUT_SCALER_RATIO_I2V * (float)ADC_SCALER) // Current feeback ratio in [Ticks/A] => used to convert current into ADC ticks
 
-#define IOUT_SCALER_OFFSET_TICKS    (uint16_t)((float)IOUT_FEEDBACK_OFFSET * (float)ADC_SCALER) // Current sense offset ADC ticks
-#define IOUT_PROPAGATION_DELAY      (uint16_t)((float)CS_PROPAGATION_DELAY /(float)T_ACLK) // current feedback signal phase shift
-#define IOUT_COMMON_MODE_V_MIN      (uint16_t)((float)CS_COMMON_MODE_V_MIN * (float)VOUT_DIVIDER_RATIO * (float)ADC_SCALER) // Current sense minimum common mode voltage ADC ticks
+#define IOUT_SCALER_OFFSET_TICKS    (uint16_t)((float)C4SWBB_IOUT_FEEDBACK_OFFSET * (float)ADC_SCALER) // Current sense offset ADC ticks
+#define IOUT_PROPAGATION_DELAY      (uint16_t)((float)C4SWBB_CS_PROPAGATION_DELAY /(float)T_ACLK) // current feedback signal phase shift
+#define IOUT_COMMON_MODE_V_MIN      (uint16_t)((float)C4SWBB_CS_COMMON_MODE_V_MIN * (float)VOUT_DIVIDER_RATIO * (float)ADC_SCALER) // Current sense minimum common mode voltage ADC ticks
 
 
 #endif	/* _HARDWARE_ABSTRACTION_LAYER_SYSTEM_SCALING_H_ */

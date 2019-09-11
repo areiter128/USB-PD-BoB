@@ -35,12 +35,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "hal/config/syscfg_scaling.h"
-#include "hal/config/syscfg_limits.h"
-#include "hal/config/syscfg_startup.h"
-
-#include "apl/resources/ctrl_vloop.h"
-#include "apl/resources/ctrl_iloop.h"
+#include "apl/resources/npnz16b.h"
 
 /* Controller Settings */
 
@@ -79,10 +74,11 @@ typedef enum {
 } C4SWBB_STATUS_LABEL_e; // Labels of converter state machine steps
 
 /* 16-bit bit masks of converter status bits */
-#define C4SWBB_CTRL_STAT_POWERSOURCE_DETECTED   0b0000000100000000
-#define C4SWBB_CTRL_STAT_PWM_ACTIVE             0b0000001000000000
-#define C4SWBB_CTRL_STAT_ADC_ACTIVE             0b0000010000000000
-#define C4SWBB_CTRL_STAT_FAULT_ACTIVE           0b0000100000000000
+#define C4SWBB_CTRL_STAT_POWERSOURCE_DETECTED   0b0000000000010000
+#define C4SWBB_CTRL_STAT_PWM_ACTIVE             0b0000000000100000
+#define C4SWBB_CTRL_STAT_ADC_ACTIVE             0b0000000001000000
+#define C4SWBB_CTRL_STAT_FAULT_ACTIVE           0b0000000010000000
+#define C4SWBB_CTRL_STAT_BUSY                   0b0000000100000000
 #define C4SWBB_CTRL_STAT_GO_ACTIVE              0b0010000000000000
 #define C4SWBB_CTRL_STAT_AUTORUN_ENABLED        0b0100000000000000
 #define C4SWBB_CTRL_STAT_ENABLED                0b1000000000000000
@@ -94,11 +90,12 @@ typedef enum {
 
 typedef struct {
     volatile C4SWBB_STATUS_LABEL_e op_status : 4; // Bit <0:3>: (read only) converter state machine operating status 
-    volatile unsigned : 4; // Bit <4:7>: (reserved)
-    volatile bool power_source_detected : 1; // Bit <8>:  (read only) Status bit indicating that a valid power source has been detected
-    volatile bool pwm_active : 1; // Bit <9>:  (read only) Status bit indicating that the PWM outputs have been enabled
-    volatile bool adc_active : 1; // Bit <10>: (read only) Status bit indicating that the ADC has been started and is sampling data
-    volatile bool fault_active : 1; // Bit <11>: (read only) Status bit indicating that a critical fault condition has been detected
+    volatile bool power_source_detected : 1; // Bit <4>:  (read only) Status bit indicating that a valid power source has been detected
+    volatile bool pwm_active : 1; // Bit <5>:  (read only) Status bit indicating that the PWM outputs have been enabled
+    volatile bool adc_active : 1; // Bit <6>: (read only) Status bit indicating that the ADC has been started and is sampling data
+    volatile bool fault_active : 1; // Bit <7>: (read only) Status bit indicating that a critical fault condition has been detected
+    volatile bool busy : 1; // Bit <9:11>: (read only) Status bit indicating that the state machine is in a ramp or delay phase
+    volatile unsigned : 3; // Bit <9:11>: (reserved)
     volatile C4SWBB_RAMP_DIRECTION_e tune_dir : 1; // Bit <12>: (read only) flag indicating the direction of the tune-in ramp when the reference is changed (0=up or 1=down)
     volatile bool GO : 1; // Bit <13>: POWER SUPPLY START bit (will trigger startup procedure when set)
     volatile bool autorun : 1; // Bit <14>: Auto-Start will automatically enable the converter and set the GO bit when ready
@@ -124,12 +121,15 @@ typedef union {
  * 
  * *************************************************************************************************** */
 typedef struct {
-    volatile uint16_t reference; // Control loop reference variable
-    volatile uint16_t feedback_offset; // Feedback offset value for calibration or bi-direction feedback signals
+    volatile cNPNZ16b_t* controller; // pointer to control loop object data structure
+    volatile uint16_t (*ctrl_init)(volatile cNPNZ16b_t*); // Function pointer to INIT routine
+    void (*ctrl_reset)(volatile cNPNZ16b_t*); // Function pointer to RESET routine
+    void (*ctrl_precharge)(volatile cNPNZ16b_t*, volatile uint16_t, volatile uint16_t); // Function pointer to PRECHARGE routine
+    volatile uint16_t feedback_offset; // Feedback offset value for calibration or bidirectional feedback signals
     volatile uint16_t trigger_offset; // ADC trigger offset value for trigger fine-tuning
-    volatile uint16_t minimum; // output clamping value (minimum)
-    volatile uint16_t maximum; // output clamping value (maximum)
-    volatile cNPNZ16b_t* controller; // pointer to control loop object
+    volatile uint16_t reference; // Control loop reference variable
+    volatile uint16_t minimum; // output voltage clamping value (minimum)
+    volatile uint16_t maximum; // output voltage clamping value (maximum)
 } C4SWBB_LOOP_SETTINGS_t; // User defined settings for control loops; 
 
 /*!C4SWBB_STARTUP_SETTINGS_t
@@ -146,8 +146,6 @@ typedef struct {
  * *************************************************************************************************** */
 
 typedef struct {
-    volatile uint16_t v_reference; // Soft-Start target voltage loop reference value (read only)
-    volatile uint16_t i_reference; // Soft-Start target current loop reference value (read only)
     volatile uint16_t counter; // Soft-Start Execution Counter (read only)
     volatile uint16_t pwr_on_delay; // Soft-Start POwer On Delay
     volatile uint16_t precharge_delay; // Soft-Start Bootstrap Capacitor pre-charge delay
@@ -155,6 +153,8 @@ typedef struct {
     volatile uint16_t ramp_v_ref_increment; // Soft-Start Single Voltage Reference Increment per Step
     volatile uint16_t ramp_i_ref_increment; // Soft-Start Single Current Reference Increment per Step
     volatile uint16_t pwr_good_delay; // Soft-Start Power Good Delay
+    volatile uint16_t v_reference; // Soft-Start target voltage loop reference value (read only)
+    volatile uint16_t i_reference; // Soft-Start target current loop reference value (read only)
 } C4SWBB_STARTUP_SETTINGS_t; // Power converter soft-start settings and variables
 
 /*!C4SWBB_SWITCH_NODE_SETTINGS_t
@@ -197,7 +197,7 @@ typedef struct {
     volatile uint16_t i_out; // Power converter output current
     volatile uint16_t v_in; // Power converter input voltage
     volatile uint16_t v_out; // Power converter output voltage
-    volatile uint16_t v_ref; // Power converter reference voltage
+    volatile uint16_t v_ref; // Power converter output voltage reference (user setting)
     volatile uint16_t temp; // Power converter board temperature
 } C4SWBB_DATA_t; // Power converter runtime data
 
@@ -214,13 +214,13 @@ typedef struct {
 
 typedef struct {
     volatile C4SWBB_STATUS_t status; // Operating status information
-    volatile C4SWBB_STARTUP_SETTINGS_t soft_start; // Soft-Start settings
     volatile C4SWBB_DATA_t data; // Data structure providing real-time operating data
     volatile C4SWBB_LOOP_SETTINGS_t i_loop; // Current loop control data structure
     volatile C4SWBB_LOOP_SETTINGS_t v_loop; // Voltage loop control data structure
     volatile C4SWBB_SWITCH_NODE_SETTINGS_t boost_leg; // Settings for 4-switch buck/boost converter boost leg
     volatile C4SWBB_SWITCH_NODE_SETTINGS_t buck_leg;  // Settings for 4-switch buck/boost converter buck leg
-} C4SWBB_POWER_CONTROLLER_t; // Settings, status and operating data of the power controller
+    volatile C4SWBB_STARTUP_SETTINGS_t soft_start; // Soft-Start settings
+} __attribute__((packed))C4SWBB_POWER_CONTROLLER_t; // Settings, status and operating data of the power controller
 
      
 /* **********************************************************************************************
@@ -276,13 +276,23 @@ typedef struct {
  * 
  *
  * **********************************************************************************************/
-
+extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;
+extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
 
 
 /* Public Function Prototypes */
 extern volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
 extern volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
 
+extern volatile uint16_t ctrl_Precharge(
+        volatile cNPNZ16b_t* controller,  // Pointer to nPnZ data structure)
+        volatile uint16_t ctrl_input, // user-defined, constant error history value
+        volatile uint16_t ctrl_output // user-defined, constant control output history value
+    );
+
+volatile uint16_t ctrl_Reset(
+        volatile cNPNZ16b_t* controller); // Pointer to nPnZ data structure)
+        
 
 #endif	/* _APL_RESOURCES_SOFT_START_H_ */
 

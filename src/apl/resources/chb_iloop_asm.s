@@ -2,7 +2,7 @@
 ; **********************************************************************************
 ;  SDK Version: z-Domain Control Loop Designer v0.9.0.61
 ;  Author:      M91406
-;  Date/Time:   08/01/19 6:17:22 PM
+;  Date/Time:   09/09/2019 11:51:21 AM
 ; **********************************************************************************
 ;  2P2Z Control Library File (Dual Bitshift-Scaliing Mode)
 ; **********************************************************************************
@@ -55,15 +55,20 @@
 ; This function calls the z-domain controller processing the latest data point input
 ;------------------------------------------------------------------------------
 	
-	.global _ctrl_iloop_Update
-_ctrl_iloop_Update:    ; provide global scope to routine
+	.global _chb_iloop_Update
+_chb_iloop_Update:    ; provide global scope to routine
 	push w12    ; save working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------
 ; Check status word for Enable/Disable flag and bypass computation, if disabled
 	mov [w0 + #offStatus], w12
 	btss w12, #NPMZ16_STATUS_ENABLE
-	bra CTRL_ILOOP_BYPASS_LOOP
+	bra CHB_ILOOP_BYPASS_LOOP
+	
+;------------------------------------------------------------------------------
+; Configure DSP for fractional operation with normal saturation (Q1.31 format)
+	mov #0x00E4, w4
+	mov w4, _CORCON
 	
 ;------------------------------------------------------------------------------
 ; Setup pointers to A-Term data arrays
@@ -131,24 +136,24 @@ _ctrl_iloop_Update:    ; provide global scope to routine
 ; Check for upper limit violation
 	mov [w0 + #offMaxOutput], w6    ; load upper limit value
 	cpslt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output < upper limit)
-	bra CTRL_ILOOP_CLAMP_MAX_OVERRIDE    ; jump to override label if control output > upper limit
+	bra CHB_ILOOP_CLAMP_MAX_OVERRIDE    ; jump to override label if control output > upper limit
 	bclr w12, #NPMZ16_STATUS_USAT    ; clear upper limit saturation flag bit
-	bra CTRL_ILOOP_CLAMP_MAX_EXIT    ; jump to exit
-	CTRL_ILOOP_CLAMP_MAX_OVERRIDE:
+	bra CHB_ILOOP_CLAMP_MAX_EXIT    ; jump to exit
+	CHB_ILOOP_CLAMP_MAX_OVERRIDE:
 	mov w6, w4    ; override controller output
 	bset w12, #NPMZ16_STATUS_USAT    ; set upper limit saturation flag bit
-	CTRL_ILOOP_CLAMP_MAX_EXIT:
+	CHB_ILOOP_CLAMP_MAX_EXIT:
 	
 ; Check for lower limit violation
 	mov [w0 + #offMinOutput], w6    ; load lower limit value
 	cpsgt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output > upper limit)
-	bra CTRL_ILOOP_CLAMP_MIN_OVERRIDE    ; jump to override label if control output < lower limit
+	bra CHB_ILOOP_CLAMP_MIN_OVERRIDE    ; jump to override label if control output < lower limit
 	bclr w12, #NPMZ16_STATUS_LSAT    ; clear lower limit saturation flag bit
-	bra CTRL_ILOOP_CLAMP_MIN_EXIT    ; jump to exit
-	CTRL_ILOOP_CLAMP_MIN_OVERRIDE:
+	bra CHB_ILOOP_CLAMP_MIN_EXIT    ; jump to exit
+	CHB_ILOOP_CLAMP_MIN_OVERRIDE:
 	mov w6, w4    ; override controller output
 	bset w12, #NPMZ16_STATUS_LSAT    ; set lower limit saturation flag bit
-	CTRL_ILOOP_CLAMP_MIN_EXIT:
+	CHB_ILOOP_CLAMP_MIN_EXIT:
 	
 ;------------------------------------------------------------------------------
 ; Write control output value to target
@@ -179,7 +184,7 @@ _ctrl_iloop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Enable/Disable bypass branch target
-	CTRL_ILOOP_BYPASS_LOOP:
+	CHB_ILOOP_BYPASS_LOOP:
 	pop w12    ; restore working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------
@@ -188,12 +193,12 @@ _ctrl_iloop_Update:    ; provide global scope to routine
 ;------------------------------------------------------------------------------
 	
 ;------------------------------------------------------------------------------
-; Global function declaration _ctrl_iloop_Reset
+; Global function declaration _chb_iloop_Reset
 ; This function clears control and error histories enforcing a reset
 ;------------------------------------------------------------------------------
 	
-	.global _ctrl_iloop_Reset
-_ctrl_iloop_Reset:
+	.global _chb_iloop_Reset
+_chb_iloop_Reset:
 	
 ;------------------------------------------------------------------------------
 ; Clear control history array
@@ -218,12 +223,12 @@ _ctrl_iloop_Reset:
 ;------------------------------------------------------------------------------
 	
 ;------------------------------------------------------------------------------
-; Global function declaration _ctrl_iloop_Precharge
+; Global function declaration _chb_iloop_Precharge
 ; This function loads user-defined default values into control and error histories
 ;------------------------------------------------------------------------------
 	
-	.global _ctrl_iloop_Precharge
-_ctrl_iloop_Precharge:
+	.global _chb_iloop_Precharge
+_chb_iloop_Precharge:
 	
 ;------------------------------------------------------------------------------
 ; Charge error history array with defined value

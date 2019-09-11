@@ -1,13 +1,13 @@
 [GUI]
 CreateDate=08/01/19 4:10:47 PM
-SaveDate=09/10/2019 05:23:00 PM
+SaveDate=09/09/2019 11:51:27 AM
 Name=z-Domain Control Loop Designer
 Version=0.9.0.61
-WindoWState=Normal
-Top=75
-Left=225
-Height=894
-Width=1424
+WindoWState=Maximized
+Top=-8
+Left=-8
+Height=1066
+Width=1936
 TabHeight=244
 [ControlSetup]
 ControlType=1
@@ -32,7 +32,7 @@ InputDataResolution=12
 FixedPointErrorMsg=0.5
 FixedPointErrorWarning=0.1
 [AssemblyGenerator]
-UserPrefix1=cha_
+UserPrefix1=chb_
 UserPrefix2=iloop
 UseUserPrefix=1
 UseUserPrefixVar=1

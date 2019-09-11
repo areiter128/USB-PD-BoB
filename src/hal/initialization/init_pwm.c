@@ -17,12 +17,20 @@
 
 #define PWM_PRE_SST_DURATION    6250 
 
+
+
 volatile uint16_t start_pwm(void);
 void PWM_Initialize (void);
 
-volatile uint16_t initialize_pwm(void) {
+volatile uint16_t c4swbb_pwm_initialize(volatile HSPWM_C_TYPE_PWM_CHANNEL_CONFIG_t pwm_config) {
     
-    volatile uint16_t fres = 0;
+    volatile uint16_t fres = 1;
+    
+    pwm_config.PGxCON.value = (((uint32_t)C4SWBB_BUCKLEG_PGxCONH << 16) | (uint32_t)C4SWBB_BUCKLEG_PGxCONL);
+    pwm_config.PGxSTAT = C4SWBB_BUCKLEG_PGxSTAT;
+    pwm_config.PGxIOCON.value = (((uint32_t)C4SWBB_BUCKLEG_PGxIOCONH << 16) | (uint32_t)C4SWBB_BUCKLEG_PGxIOCONL);
+    pwm_config.PGxEVT.value = (((uint32_t)C4SWBB_BUCKLEG_PGxEVTH << 16) | C4SWBB_BUCKLEG_PGxEVTL);
+    pwm_config.PGxEVT.value = (((uint32_t)C4SWBB_BUCKLEG_PGxEVTH << 16) | C4SWBB_BUCKLEG_PGxEVTL);
     
     PWM_Initialize();
 
@@ -43,13 +51,60 @@ volatile uint16_t initialize_pwm(void) {
     ADTRIG2Lbits.TRGSRC9   = 0x04;  // PWM1 trigger is enabled for AN9  
     ADTRIG4Hbits.TRGSRC18  = 0x0C;  // PWM5 trigger is enabled for AN18
 
+    return(fres); // return failure/success or error code
+
+}
+    
+volatile uint16_t c4swbb_pwm_enable(void) {
+    
+    volatile uint16_t fres = 1;
+    
     fres &= hspwm_enable_pwm(BUCKH1_PGx_CHANNEL, true);
     fres &= hspwm_enable_pwm(BOOSTH1_PGx_CHANNEL, true);
     fres &= hspwm_enable_pwm(BUCKH2_PGx_CHANNEL, true);
     fres &= hspwm_enable_pwm(BOOSTH2_PGx_CHANNEL, true);
+    
+    return(fres); // return failure/success or error code
+    
+}
 
+volatile uint16_t c4swbb_pwm_disable(void) {
+    
+    volatile uint16_t fres = 1;
+    
+    fres &= hspwm_disable_pwm(BUCKH1_PGx_CHANNEL);
+    fres &= hspwm_disable_pwm(BOOSTH1_PGx_CHANNEL);
+    fres &= hspwm_disable_pwm(BUCKH2_PGx_CHANNEL);
+    fres &= hspwm_disable_pwm(BOOSTH2_PGx_CHANNEL);
     
     return(fres); // ToDo: need function execution success validation
+    
+}
+
+
+volatile uint16_t c4swbb_pwm_hold(void) {
+    
+    volatile uint16_t fres = 1;
+    
+    fres &= hspwm_ovr_hold(BUCKH1_PGx_CHANNEL);
+    fres &= hspwm_ovr_hold(BOOSTH1_PGx_CHANNEL);
+    fres &= hspwm_ovr_hold(BUCKH2_PGx_CHANNEL);
+    fres &= hspwm_ovr_hold(BOOSTH2_PGx_CHANNEL);
+    
+    return(fres); // return failure/success or error code
+    
+}
+
+volatile uint16_t c4swbb_pwm_release(void) {
+    
+    volatile uint16_t fres = 1;
+    
+    fres &= hspwm_ovr_release(BUCKH1_PGx_CHANNEL);
+    fres &= hspwm_ovr_release(BOOSTH1_PGx_CHANNEL);
+    fres &= hspwm_ovr_release(BUCKH2_PGx_CHANNEL);
+    fres &= hspwm_ovr_release(BOOSTH2_PGx_CHANNEL);
+    
+    return(fres); // return failure/success or error code
     
 }
 

@@ -35,6 +35,7 @@
 #include "xc.h"
 #include <stdint.h>
 #include <stddef.h>
+#include <math.h>
 #include "_root/generic/fdrv_FaultHandler.h"
 
 /* private function prototypes */
@@ -79,24 +80,38 @@ volatile uint16_t fault_object_list_pointer = 0;
  * ***********************************************************************************************/
 inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
 {
+    volatile uint16_t source_value = 0;
     volatile uint16_t compare_value = 0;
+    volatile int32_t diff_dummy = 0;
     
     // if the fault object is not initialized, exit here
-    if(fltobj->object == NULL) { return(1); }
+    if(fltobj->source_object == NULL) { return(1); }
+    // read value to monitor (with bit-mask filtering)
+    source_value = ((*fltobj->source_object) & (fltobj->object_bit_mask));
     
-    // derive value to monitor
-    compare_value = ((*fltobj->object) & (fltobj->object_bit_mask));
-    
+    // If compare type is 'dynamic', capture compare object value and calculate absolute difference
+    // between variable source and variable compare value (a.k.a. source and reference)
+    if (fltobj->comp_type == FAULT_COMPARE_DYNAMIC) {
+        
+        if(fltobj->compare_object != NULL) 
+        {
+            compare_value = (*fltobj->compare_object); // read value with which the monitored value should be compared with
+            diff_dummy = abs(((int32_t)source_value) - ((int32_t)compare_value)); // subtract "source from reference" and make result an absolute number
+            source_value = (uint16_t)diff_dummy; // map absolute difference back into source value
+        }
+        else{ return(0); }  // Return error code if pointer is empty
+    }
+        
     // Check the given fault object on threshold violations
     if(fltobj->criteria.fault_ratio == (FAULT_LEVEL_GREATER_THAN))
     // if the fault level is defined to be greater than a given threshold, 
     // check for upper thresholds violation (including hysteresis when defined)
     {
         
-        if(compare_value > fltobj->criteria.trip_level)
+        if(source_value > fltobj->criteria.trip_level)
         // if the upper threshold is exceeded, set "fault present" flag
         { fltobj->status.flags.fltactive = 1; } // set "fault present" bit
-        else if(compare_value < fltobj->criteria.reset_level)
+        else if(source_value < fltobj->criteria.reset_level)
         // if the value is above the upper limit of the hysteresis of the threshold, reset fault flag
         { fltobj->status.flags.fltactive = 0; } // reset "fault present" bit
         else
@@ -109,10 +124,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     // check for lower thresholds violation (including hysteresis when defined)
     {
         
-        if(compare_value < fltobj->criteria.trip_level)
+        if(source_value < fltobj->criteria.trip_level)
         // if the lower threshold is exceeded, set "fault present" flag
         { fltobj->status.flags.fltactive = 1; } // set "fault present" bit
-        else if(compare_value > fltobj->criteria.reset_level)
+        else if(source_value > fltobj->criteria.reset_level)
         // if the value is above the upper limit of the hysteresis of the threshold, reset fault flag
         { fltobj->status.flags.fltactive = 0; } // reset "fault present" bit
         else
@@ -123,7 +138,7 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     else if (fltobj->criteria.fault_ratio == (FAULT_LEVEL_EQUAL))
     // if the fault level is defined to be at a constant number/value, trigger fault (without hysteresis)
     {
-        if(compare_value == fltobj->criteria.trip_level)
+        if(source_value == fltobj->criteria.trip_level)
         // if the fault value is hit, set the fault flag and increment the fault counter
         { fltobj->status.flags.fltactive = 1; } // set "fault present" bit
         else
@@ -134,13 +149,39 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     else if (fltobj->criteria.fault_ratio == (FAULT_LEVEL_NOT_EQUAL))
     // if the fault level is defined to be "off a constant number/value", trigger fault (without hysteresis)
     {
-        if(compare_value != fltobj->criteria.trip_level)
+        if(source_value != fltobj->criteria.trip_level)
         // if the fault value is off constant, set the fault flag and increment the fault counter
         { fltobj->status.flags.fltactive = 1; } // set "fault present" bit
         else
         // if equal, reset the fault flag and fault counter
         { fltobj->status.flags.fltactive = 0; } // reset "fault present" bit
 
+    }
+    else if(fltobj->criteria.fault_ratio == (FAULT_LEVEL_OUT_OF_RANGE)) 
+    // the fault condition is defined to be triggered, when the monitored value is outside a window 
+    // defined by the 'trip' and 'reset' fault levels, where 'trip' is the upper and 'reset' is the  
+    // lower threshold
+    {
+        if((source_value > fltobj->criteria.trip_level) || (source_value < fltobj->criteria.reset_level))
+        // if the fault value is outside the window, set the fault flag and increment the fault counter
+        { fltobj->status.flags.fltactive = 1; } // set "fault present" bit
+        else
+        // if inside the window, reset the fault flag and fault counter
+        { fltobj->status.flags.fltactive = 0; } // reset "fault present" bit
+        
+    }
+    else if(fltobj->criteria.fault_ratio == (FAULT_LEVEL_IN_RANGE)) 
+    // the fault condition is defined to be triggered, when the monitored value is inside a window 
+    // defined by the 'trip' and 'reset' fault levels, where 'trip' is the upper and 'reset' is the  
+    // lower threshold
+    {
+        if((fltobj->criteria.reset_level < source_value) && (source_value < fltobj->criteria.trip_level))
+        // if the fault value is inside the window, set the fault flag and increment the fault counter
+        { fltobj->status.flags.fltactive = 1; } // set "fault present" bit
+        else
+        // if outside the window, reset the fault flag and fault counter
+        { fltobj->status.flags.fltactive = 0; } // reset "fault present" bit
+        
     }
     else
     { // unknown/unsupported compare condition. => Exit with error code
@@ -337,26 +378,26 @@ inline volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj)
     if(fltobj->classes.class & FLT_CLASS_CRITICAL)
     {
         // if fault is of class CRITICAL, set error flag and force scheduler in standby mode
-        task_mgr.status.flags.global_fault = 1;  // set global fault bit
+        task_mgr.status.flags.global_fault = 1;      // set global fault bit
         task_mgr.status.flags.fault_override = true; // setting global fault override bit
-        task_mgr.op_mode.mode = OP_MODE_FAULT; // force main scheduler into fault mode
+        task_mgr.op_mode.mode = OP_MODE_FAULT;       // force main scheduler into fault mode
     }
 
     if(fltobj->classes.class & FLT_CLASS_WARNING)
     {
-        // if fault is of class CRITICAL, set error flag and force schedule in standby mode
+        // if fault is of class WARNING, set error flag and force schedule in standby mode
         task_mgr.status.flags.global_warning = 1;   // set global warning bit 
                                                     // and don't take further action
     }
 
     if(fltobj->classes.class & FLT_CLASS_NOTIFY)
     {
-        // if fault is of class CRITICAL, set error flag and force schedule in standby mode
-        task_mgr.status.flags.global_notice = 1;  // setting global notify bit
-                                                     // and don't take further action
+        // if fault is of class NOTIFY, set error flag and force schedule in standby mode
+        task_mgr.status.flags.global_notify = 1;    // setting global notify bit
+                                                    // and don't take further action
     }
 
-    if(fltobj->classes.class & FLT_CLASS_USER_ACTION)
+    if(fltobj->classes.class & FLT_CLASS_USER_RESPONSE)
     {
         // If a user defined fault handler routine has been specified, 
         // call/execute user defined function of type uint16_t xxxx(void) only
@@ -417,16 +458,16 @@ inline volatile uint16_t ExecGlobalFaultFlagRelease(volatile uint16_t fault_clas
 
     if((!(fault_class_code & FLT_CLASS_WARNING)) && (task_mgr.status.flags.global_warning))
     {
-        // if fault is of class CRITICAL, set error flag and force schedule in standby mode
-        task_mgr.status.flags.global_warning = 0;  // set global warning bit 
-                                                      // and don't take further action
+        // if fault is of class WARNING, set error flag and force scheduler in standby mode
+        task_mgr.status.flags.global_warning = 0;   // set global warning bit 
+                                                    // and don't take further action
     }
 
-    if((!(fault_class_code & FLT_CLASS_NOTIFY)) && (task_mgr.status.flags.global_notice))
+    if((!(fault_class_code & FLT_CLASS_NOTIFY)) && (task_mgr.status.flags.global_notify))
     {
-        // if fault is of class CRITICAL, set error flag and force schedule in standby mode
-        task_mgr.status.flags.global_notice = 0;  // setting global notify bit
-                                                     // and don't take further action
+        // if fault is of class NOTIFY, set error flag and force scheduler in standby mode
+        task_mgr.status.flags.global_notify = 0;    // setting global notify bit
+                                                    // and don't take further action
     }
 
     return(fres);
@@ -457,7 +498,7 @@ inline volatile uint16_t ExecFaultFlagReleaseHandler(volatile FAULT_OBJECT_t* fl
     volatile uint16_t fres = 1;
     
 
-    if(fltobj->classes.class & FLT_CLASS_USER_ACTION)
+    if(fltobj->classes.class & FLT_CLASS_USER_RESPONSE)
     {
         // If a user defined fault release handler routine has been specified, 
         // call/execute user defined function of type volatile uint16_t xxxx(void) only
