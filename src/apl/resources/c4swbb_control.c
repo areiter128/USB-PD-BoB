@@ -335,39 +335,49 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             
         /*!CONVERTER_STATE_COMPLETE
          * =============================
-         * When the soft-start step is set to CONVERTER_STATE_COMPLETE, the state machine 
-         * will not be executed any further and the converter has entered normal operation.  
-         * From this point forward the power supply will exclusively be running in interrupt 
-         * instances executing the control loops. */
+         * When the soft-start step is set to CONVERTER_STATE_COMPLETE, the start-up procedure
+         * has been completed and the converter has entered normal operation. From this point 
+         * forward the power supply will exclusively be running in interrupt instances executing 
+         * the control loops. 
+         * 
+         * The state machine monitors changes of the user reference setting. Once a change has
+         * been detected, the state machine tunes the voltage loop reference into the new level 
+         * directly and without ramp-up and power good delays. The fault handler is kept running
+         * and no further current limiting functions (like during soft-start) are performed.
+         */
         case CONVERTER_STATE_COMPLETE:
 
-            // Clear the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.busy = 0;
-
-            // Monitor changes in reference and step back into RAMP mode when necessary
-            if(pInstance->data.v_ref != pInstance->soft_start.v_reference)
+            // If the user reference setting is different from the most recent controller reference,
+            // the state machine will tune the controller reference into the user control reference 
+            // level
+            if(pInstance->data.v_ref != pInstance->v_loop.reference)
             {
                 // Set the BUSY bit indicating a delay/ramp period being executed
                 pInstance->status.flags.busy = 1;
                 
-                if(pInstance->data.v_ref < pInstance->soft_start.v_reference){
-                    // decrement
-                    pInstance->soft_start.v_reference -= pInstance->soft_start.ramp_v_ref_increment;
-                    if(pInstance->soft_start.v_reference < pInstance->data.v_ref) {
-                        pInstance->soft_start.v_reference = pInstance->data.v_ref;
+                // New reference value is less than controller reference value => ramp down
+                if(pInstance->data.v_ref < pInstance->v_loop.reference){
+                    // decrement reference until new reference level is reached
+                    pInstance->status.flags.tune_dir = CONVERTER_RAMP_DIR_DOWN; // set RAMP_DOWN flag
+                    pInstance->v_loop.reference -= pInstance->soft_start.ramp_v_ref_increment; // decrement reference
+                    if(pInstance->v_loop.reference < pInstance->data.v_ref) { // check if ramp is complete
+                        pInstance->v_loop.reference = pInstance->data.v_ref; // clamp reference level to setting
                     }
                         
                 }
-                else if(pInstance->data.v_ref > pInstance->soft_start.v_reference) {
-                   // increment
-                    pInstance->soft_start.v_reference += pInstance->soft_start.ramp_v_ref_increment;
-                    if(pInstance->soft_start.v_reference > pInstance->data.v_ref){
-                        pInstance->soft_start.v_reference = pInstance->data.v_ref;
+                // New reference value is greater than controller reference value => ramp up
+                else if(pInstance->data.v_ref > pInstance->v_loop.reference) {
+                    // increment reference until new reference level is reached
+                    pInstance->status.flags.tune_dir = CONVERTER_RAMP_DIR_UP; // set RAMP_UP flag
+                    pInstance->v_loop.reference += pInstance->soft_start.ramp_v_ref_increment; // increment reference
+                    if(pInstance->v_loop.reference > pInstance->data.v_ref){ // check if ramp is complete
+                        pInstance->v_loop.reference = pInstance->data.v_ref; // clamp reference level to setting
                     }
                 }
                 
             }
             else{
+                // Clear the BUSY bit indicating a delay/ramp period being executed
                 pInstance->status.flags.busy = 0;
 
             }
