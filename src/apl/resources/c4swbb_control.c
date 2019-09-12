@@ -101,7 +101,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         case CONVERTER_STATE_POWER_ON_DELAY:
 
             // Set the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.busy = 1;
+            pInstance->status.flags.busy = true;
             
             // delay startup until POWER ON DELAY has expired
             if(pInstance->soft_start.counter++ > pInstance->soft_start.pwr_on_delay) {
@@ -122,7 +122,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         case CONVERTER_STATE_PRECHARGE:
 
             // Set the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.busy = 1;
+            pInstance->status.flags.busy = true;
 
 //            // generate n bootstrap pre-charge pulses before enabling switch node
 //            if(pchrg_couter++ < SOFT_START_PRECHARGE_TICKS)
@@ -162,7 +162,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             pInstance->v_loop.controller->ptrControlReference = &pInstance->soft_start.v_reference;
 */            
             // Set the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.busy = 1;
+            pInstance->status.flags.busy = true;
             
             // Determine, if the soft-start needs to ramp up or down
             if(pInstance->data.v_out <= pInstance->data.v_ref) {
@@ -238,7 +238,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         case CONVERTER_STATE_V_RAMP_UP:
 
             // Set the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.busy = 1;
+            pInstance->status.flags.busy = true;
 
             // Enable input power source
             hspwm_ovr_release(pInstance->buck_leg.pwm_instance); // Release buck leg PWM
@@ -299,7 +299,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         case CONVERTER_STATE_I_RAMP_UP:
 
             // Set the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.busy = 1;
+            pInstance->status.flags.busy = true;
 
             // increment current limit 
             pInstance->v_loop.controller->MaxOutput += pInstance->soft_start.ramp_i_ref_increment; // Increment maximum current limit
@@ -323,7 +323,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         case CONVERTER_STATE_POWER_GOOD:
             
             // Set the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.busy = 1;
+            pInstance->status.flags.busy = true;
             
             // Enforce POWER GOOD Delay
             if(pInstance->soft_start.counter++ > pInstance->soft_start.pwr_good_delay) {
@@ -347,13 +347,25 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
          */
         case CONVERTER_STATE_COMPLETE:
 
-            // If the user reference setting is different from the most recent controller reference,
-            // the state machine will tune the controller reference into the user control reference 
-            // level
-            if(pInstance->data.v_ref != pInstance->v_loop.reference)
+            if(!pInstance->status.flags.autorun){
+                if(!pInstance->status.flags.enabled)
+                { pInstance->status.flags.op_status = CONVERTER_STATE_RESET; } // Always Auto-Clear GO bit
+            }
+                
+            /*! Runtime Reference Tuning
+             * ==================================================================================
+             * Description:
+             * If the user reference setting has been changed and different from the most recent 
+             * controller reference, the state machine will tune the controller reference into the 
+             * user control reference level. While ramping the output voltage up or down, the 
+             * BUSY bit will be set and any new changes to the reference will be ignored until
+             * the ramp up/down is complete.
+             * =================================================================================*/
+
+            if((pInstance->data.v_ref != pInstance->v_loop.reference) && (!pInstance->status.flags.busy))
             {
                 // Set the BUSY bit indicating a delay/ramp period being executed
-                pInstance->status.flags.busy = 1;
+                pInstance->status.flags.busy = true;
                 
                 // New reference value is less than controller reference value => ramp down
                 if(pInstance->data.v_ref < pInstance->v_loop.reference){
@@ -378,7 +390,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             }
             else{
                 // Clear the BUSY bit indicating a delay/ramp period being executed
-                pInstance->status.flags.busy = 0;
+                pInstance->status.flags.busy = false;
 
             }
             
@@ -391,7 +403,9 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
          * machine falls back to STANDBY waiting to be restarted.  */
         default:
             
-            pInstance->status.flags.busy = 0; // Clear the BUSY bit indicating a delay/ramp period being executed
+            c4SWBB_shut_down(pInstance);
+            
+            pInstance->status.flags.busy = false; // Clear the BUSY bit indicating a delay/ramp period being executed
             pInstance->status.flags.fault_active = true;
             pInstance->status.flags.GO = false;
             pInstance->status.flags.op_status = CONVERTER_STATE_STANDBY;
@@ -410,117 +424,229 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         pInstance->status.flags.GO = true;       // Auto-Kick-off power converter
     }
     else { 
-        pInstance->status.flags.GO = false; // Always Auto-Clear GO bit
+        pInstance->status.flags.GO = false;
     }
     //-- end of auto-start enforcement -------------------------
 
+    
     return(fres);
 }
 
-/*!init_SoftStart()
+/*!c4swbb_reset()
  * *****************************************************************************************************
  * Summary:
- * Initializes the soft start state machine
+ * Turns off the power converter and switches the state machine back into STANDBY
  *
  * Parameters: 
- * (none)
+ *  volatile C4SWBB_POWER_CONTROLLER_t* pInstance
  *
  * Description:
- * This routine sets the default values of the soft-start engine considering the power supply is 
- * started up for the first time (clean startup).
+ * This routine resets the the 4-switch buck/boost converter by turning off the PWM immediately.
+ * Once the PWM output have been disabled, the control loop histories are cleared and the 
+ * power controller state machine is switched into STANDBY.
  * 
  * *****************************************************************************************************/
 
-volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+volatile uint16_t c4SWBB_shut_down(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+    
+    volatile uint16_t fres = 1;
+    
+    fres &= hspwm_ovr_hold(pInstance->buck_leg.pwm_instance);
+    fres &= hspwm_ovr_hold(pInstance->boost_leg.pwm_instance);
+    
+    fres &= ctrl_Reset(pInstance->v_loop.controller);
+    fres &= ctrl_Reset(pInstance->i_loop.controller);
+    
+    return(fres); // ToDo: need function execution success validation
+    
+}
 
-//    // Reset Startup Settings
-//    pInstance->soft_start.pwr_good_delay = CONVERTER_STATE_INITIALIZE; // reset state machine
-//    pInstance->soft_start.counter = 0; // reset startup counter
-//    pInstance->soft_start.v_reference = 0;  // reset voltage reference
-//    pInstance->soft_start.i_reference = 0;  // reset current reference
-//    pInstance->soft_start.pwr_on_delay = C4SWBB_PODLY;  // set power-on delay
-//    pInstance->soft_start.precharge_delay = 10;  // set pre-charge delay
-//    pInstance->soft_start.ramp_period = C4SWBB_RPER;  // set ramp up period
-//    pInstance->soft_start.pwr_good_delay = C4SWBB_PGDLY;  // set power good delay
-//
-//    
-//    // Reset data buffers
-//    pInstance->data.v_in = 0;   // clear input voltage buffer
-//    pInstance->data.v_out = 0;  // reset output voltage buffer
-//    pInstance->data.i_out = 0;  // reset output current buffer
-//    pInstance->data.v_ref = C4SWBB_VOUT_REF;  // set initial voltage reference
-//    pInstance->data.temp = 0;   // reset converter board temperature buffer
-//    
-//    // Reset controller status
-//    pInstance->status.flags.power_source_detected = false; // reset POWER_SOURCE_DETECTED flag bit
-//    pInstance->status.flags.adc_active = false; // reset ADC_ACTIVE flag bit
-//    pInstance->status.flags.pwm_active = false; // reset PWM_ACTIVE flag bit
-//    pInstance->status.flags.tune_dir = 0; // reset voltage tune-in direction to UP
-//    pInstance->status.flags.fault_active = false; // reset power controller global fault flag bit
-//    pInstance->status.flags.GO = 0; // reset GO bit
-//    pInstance->status.flags.autorun = false; // clear AUTORUN bit
-//    pInstance->status.flags.enabled = false; // disable power controller
-//    pInstance->status.flags.op_status = CONVERTER_STATE_INITIALIZE; // reset state machine
-//    
+/*!reset_4SWBB_PowerController()
+ * *****************************************************************************************************
+ * Summary:
+ * Resets the 4-switch buck/boost controller state machine
+ *
+ * Parameters: 
+ *  volatile C4SWBB_POWER_CONTROLLER_t* pInstance
+ *
+ * Description:
+ * This routine resets the default values of the state machine of the 4-switch buck/boost controller 
+ * specified by function parameter 'pInstance'. This also resets all previously made settings.
+ * 
+ * 
+ * *****************************************************************************************************/
+
+volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+
+    // Reset PWM settings
+    pInstance->buck_leg.pwm_instance = 0; // Clear PWM instance of the buck leg
+    pInstance->buck_leg.period = 0; // Reset PWM period of the buck leg
+    pInstance->buck_leg.phase = 0; // Clear PWM phase of the buck leg
+    pInstance->buck_leg.leb_period = 0; // Clear PWM LEB period of the buck leg
+    pInstance->buck_leg.duty_ratio_min = 0; // Clear minimum PWM duty cycle of the buck leg
+    pInstance->buck_leg.duty_ratio_max = 0; // Clear maximum PWM duty cycle of the buck leg
+    pInstance->buck_leg.duty_ratio_init = 0; // Clear initial PWM duty cycle of the buck leg
+    pInstance->buck_leg.dead_time_rising = 0; // Clear PWM leading edge half-bridge dead time of the buck leg
+    pInstance->buck_leg.dead_time_falling = 0; // Clear PWM falling edge half-bridge dead time of the buck leg
+    
+    pInstance->boost_leg.pwm_instance = 0; // Clear PWM instance of the buck leg
+    pInstance->boost_leg.period = 0; // Reset PWM period of the buck leg
+    pInstance->boost_leg.phase = 0; // Clear PWM phase of the buck leg
+    pInstance->boost_leg.leb_period = 0; // Clear PWM LEB period of the buck leg
+    pInstance->boost_leg.duty_ratio_min = 0; // Clear minimum PWM duty cycle of the buck leg
+    pInstance->boost_leg.duty_ratio_max = 0; // Clear maximum PWM duty cycle of the buck leg
+    pInstance->boost_leg.duty_ratio_init = 0; // Clear initial PWM duty cycle of the buck leg
+    pInstance->boost_leg.dead_time_rising = 0; // Clear PWM leading edge half-bridge dead time of the buck leg
+    pInstance->boost_leg.dead_time_falling = 0; // Clear PWM falling edge half-bridge dead time of the buck leg
+
+    // Reset Controller Settings
+    pInstance->v_loop.controller = 0; // Clear pointer to voltage control loop object
+    pInstance->v_loop.ctrl_init = 0; // Clear function pointer to voltage control loop initialization routine
+    pInstance->v_loop.ctrl_precharge = 0; // Clear function pointer to voltage control loop precharge routine
+    pInstance->v_loop.ctrl_reset = 0; // Clear function pointer to voltage control loop reset routine
+    pInstance->v_loop.ctrl_Update = 0; // Clear function pointer to voltage control loop update routine
+    pInstance->v_loop.feedback_offset = 0; // Reset the feedback offset setting of the voltage control loop
+    pInstance->v_loop.minimum = 0; // Reset the minimum output setting of the voltage control loop
+    pInstance->v_loop.maximum = 0; // Reset the maximum output setting of the voltage control loop
+    pInstance->v_loop.trigger_offset = 0; // Reset the ADC trigger offset setting of the voltage control loop
+    pInstance->v_loop.reference = 0; // Reset the control reference of the voltage control loop
+        
+    pInstance->i_loop.controller = 0; // Clear pointer to current control loop object
+    pInstance->i_loop.ctrl_init = 0; // Clear function pointer to current control loop initialization routine
+    pInstance->i_loop.ctrl_precharge = 0; // Clear function pointer to current control loop precharge routine
+    pInstance->i_loop.ctrl_reset = 0; // Clear function pointer to current control loop reset routine
+    pInstance->i_loop.ctrl_Update = 0; // Clear function pointer to current control loop update routine
+    pInstance->i_loop.feedback_offset = 0; // Reset the feedback offset setting of the current control loop
+    pInstance->i_loop.minimum = 0; // Reset the minimum output setting of the current control loop
+    pInstance->i_loop.maximum = 0; // Reset the maximum output setting of the current control loop
+    pInstance->i_loop.trigger_offset = 0; // Reset the ADC trigger offset setting of the current control loop
+    pInstance->i_loop.reference = 0; // Reset the control reference of the current control loop
+    
+    // Reset Startup Settings
+    pInstance->soft_start.pwr_good_delay = 0; // reset state machine
+    pInstance->soft_start.counter = 0; // reset startup counter
+    pInstance->soft_start.v_reference = 0;  // reset voltage tuning reference
+    pInstance->soft_start.i_reference = 0;  // reset current tuning reference
+    pInstance->soft_start.pwr_on_delay = 0;  // set power-on delay
+    pInstance->soft_start.precharge_delay = 10;  // set pre-charge delay
+    pInstance->soft_start.ramp_period = 0;  // set ramp up period
+    pInstance->soft_start.pwr_good_delay = 0;  // set power good delay
+    
+    // Reset data buffers
+    pInstance->data.v_in = 0;   // clear input voltage buffer
+    pInstance->data.v_out = 0;  // reset output voltage buffer
+    pInstance->data.i_out = 0;  // reset output current buffer
+    pInstance->data.v_ref = 0;  // reset initial voltage reference
+    pInstance->data.temp = 0;   // reset converter board temperature buffer
+    
+    // Reset controller status
+    pInstance->status.flags.power_source_detected = false; // reset POWER_SOURCE_DETECTED flag bit
+    pInstance->status.flags.adc_active = false; // reset ADC_ACTIVE flag bit
+    pInstance->status.flags.pwm_active = false; // reset PWM_ACTIVE flag bit
+    pInstance->status.flags.tune_dir = 0; // reset voltage tune-in direction to UP
+    pInstance->status.flags.fault_active = false; // reset power controller global fault flag bit
+    pInstance->status.flags.GO = 0; // reset GO bit
+    pInstance->status.flags.autorun = false; // clear AUTORUN bit
+    pInstance->status.flags.enabled = false; // disable power controller
+    pInstance->status.flags.op_status = CONVERTER_STATE_INITIALIZE; // reset state machine
     
     return(1);
 }
 
 
-/*!ctrl_Init
+
+/*!init_4SWBB_PowerController()
  * *****************************************************************************************************
  * Summary:
- * Initializes a nPnZ control structure
+ * Initializes the 4-switch buck/boost controller state machine
  *
  * Parameters: 
- *      volatile cNPNZ16b_t* controller
+ *  volatile C4SWBB_POWER_CONTROLLER_t* pInstance
  *
  * Description:
- * This routine Initializes of a IIR-based control loop filter data structure. 
+ * This routine initializes the default values of the state machine of the 4-switch buck/boost controller 
+ * specified by function parameter 'pInstance'. This also overrides all previously made settings.
  * 
- * Please note: 
- * The control library provides similar functions implemented in C-code. These are not used
- * as this specific code module supports multiple controllers and therefore offers a generic version
- * of the init, reset and precharge routine.
  * 
  * *****************************************************************************************************/
-volatile uint16_t ctrl_Init(volatile cNPNZ16b_t* controller) { // Pointer to nPnZ data structure)
-    
-//	volatile uint16_t i = 0;
 
-//	// Initialize controller data structure at runtime with pre-defined default values
-//	controller->status.value = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))
-//
-//	controller->ptrACoefficients = &cha_vloop_coefficients.ACoefficients[0]; // initialize pointer to A-coefficients array
-//	controller->ptrBCoefficients = &cha_vloop_coefficients.BCoefficients[0]; // initialize pointer to B-coefficients array
-//	controller->ptrControlHistory = &cha_vloop_histories.ControlHistory[0]; // initialize pointer to control history array
-//	controller->ptrErrorHistory = &cha_vloop_histories.ErrorHistory[0]; // initialize pointer to error history array
-//	controller->normPostShiftA = cha_vloop_post_shift_A; // initialize A-coefficients/single bit-shift scaler
-//	controller->normPostShiftB = cha_vloop_post_shift_B; // initialize B-coefficients/dual/post scale factor bit-shift scaler
-//	controller->normPostScaler = cha_vloop_post_scaler; // initialize control output value normalization scaling factor
-//	controller->normPreShift = cha_vloop_pre_scaler; // initialize A-coefficients/single bit-shift scaler
-//
-//	controller->ACoefficientsArraySize = cha_vloop_ACoefficients_size; // initialize A-coefficients array size
-//	controller->BCoefficientsArraySize = cha_vloop_BCoefficients_size; // initialize A-coefficients array size
-//	controller->ControlHistoryArraySize = cha_vloop_ControlHistory_size; // initialize control history array size
-//	controller->ErrorHistoryArraySize = cha_vloop_ErrorHistory_size; // initialize error history array size
-//
-//
-//	// Load default set of A-coefficients from user RAM into X-Space controller A-array
-//	for(i=0; i<controller->ACoefficientsArraySize; i++)
-//	{
-//		controller->ptrACoefficients[i] = cha_vloop_ACoefficients[i];
-//	}
-//
-//	// Load default set of B-coefficients from user RAM into X-Space controller B-array
-//	for(i=0; i<controller->BCoefficientsArraySize; i++)
-//	{
-//		controller->ptrBCoefficients[i] = cha_vloop_BCoefficients[i];
-//	}
-//
-//	// Clear error and control histories of the 3P3Z controller
-//	ctrl_Reset(controller);
+volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+
+    // Initialize PWM settings
+    pInstance->buck_leg.pwm_instance = 0; // Clear PWM instance of the buck leg
+    pInstance->buck_leg.period = 0; // Reset PWM period of the buck leg
+    pInstance->buck_leg.phase = 0; // Clear PWM phase of the buck leg
+    pInstance->buck_leg.leb_period = 0; // Clear PWM LEB period of the buck leg
+    pInstance->buck_leg.duty_ratio_min = 0; // Clear minimum PWM duty cycle of the buck leg
+    pInstance->buck_leg.duty_ratio_max = 0; // Clear maximum PWM duty cycle of the buck leg
+    pInstance->buck_leg.duty_ratio_init = 0; // Clear initial PWM duty cycle of the buck leg
+    pInstance->buck_leg.dead_time_rising = 0; // Clear PWM leading edge half-bridge dead time of the buck leg
+    pInstance->buck_leg.dead_time_falling = 0; // Clear PWM falling edge half-bridge dead time of the buck leg
     
-    return(1);  // Return success
+    pInstance->boost_leg.pwm_instance = 0; // Clear PWM instance of the buck leg
+    pInstance->boost_leg.period = 0; // Reset PWM period of the buck leg
+    pInstance->boost_leg.phase = 0; // Clear PWM phase of the buck leg
+    pInstance->boost_leg.leb_period = 0; // Clear PWM LEB period of the buck leg
+    pInstance->boost_leg.duty_ratio_min = 0; // Clear minimum PWM duty cycle of the buck leg
+    pInstance->boost_leg.duty_ratio_max = 0; // Clear maximum PWM duty cycle of the buck leg
+    pInstance->boost_leg.duty_ratio_init = 0; // Clear initial PWM duty cycle of the buck leg
+    pInstance->boost_leg.dead_time_rising = 0; // Clear PWM leading edge half-bridge dead time of the buck leg
+    pInstance->boost_leg.dead_time_falling = 0; // Clear PWM falling edge half-bridge dead time of the buck leg
+
+    // Reset Controller Settings
+    pInstance->v_loop.controller = 0; // Clear pointer to voltage control loop object
+    pInstance->v_loop.ctrl_init = 0; // Clear function pointer to voltage control loop initialization routine
+    pInstance->v_loop.ctrl_precharge = 0; // Clear function pointer to voltage control loop precharge routine
+    pInstance->v_loop.ctrl_reset = 0; // Clear function pointer to voltage control loop reset routine
+    pInstance->v_loop.ctrl_Update = 0; // Clear function pointer to voltage control loop update routine
+    pInstance->v_loop.feedback_offset = 0; // Reset the feedback offset setting of the voltage control loop
+    pInstance->v_loop.minimum = 0; // Reset the minimum output setting of the voltage control loop
+    pInstance->v_loop.maximum = 0; // Reset the maximum output setting of the voltage control loop
+    pInstance->v_loop.trigger_offset = 0; // Reset the ADC trigger offset setting of the voltage control loop
+    pInstance->v_loop.reference = 0; // Reset the control reference of the voltage control loop
+        
+    pInstance->i_loop.controller = 0; // Clear pointer to current control loop object
+    pInstance->i_loop.ctrl_init = 0; // Clear function pointer to current control loop initialization routine
+    pInstance->i_loop.ctrl_precharge = 0; // Clear function pointer to current control loop precharge routine
+    pInstance->i_loop.ctrl_reset = 0; // Clear function pointer to current control loop reset routine
+    pInstance->i_loop.ctrl_Update = 0; // Clear function pointer to current control loop update routine
+    pInstance->i_loop.feedback_offset = 0; // Reset the feedback offset setting of the current control loop
+    pInstance->i_loop.minimum = 0; // Reset the minimum output setting of the current control loop
+    pInstance->i_loop.maximum = 0; // Reset the maximum output setting of the current control loop
+    pInstance->i_loop.trigger_offset = 0; // Reset the ADC trigger offset setting of the current control loop
+    pInstance->i_loop.reference = 0; // Reset the control reference of the current control loop
     
+    // Reset Startup Settings
+    pInstance->soft_start.pwr_good_delay = 0; // reset state machine
+    pInstance->soft_start.counter = 0; // reset startup counter
+    pInstance->soft_start.v_reference = 0;  // reset voltage tuning reference
+    pInstance->soft_start.i_reference = 0;  // reset current tuning reference
+    pInstance->soft_start.pwr_on_delay = 0;  // set power-on delay
+    pInstance->soft_start.precharge_delay = 10;  // set pre-charge delay
+    pInstance->soft_start.ramp_period = 0;  // set ramp up period
+    pInstance->soft_start.pwr_good_delay = 0;  // set power good delay
+    
+    // Reset data buffers
+    pInstance->data.v_in = 0;   // clear input voltage buffer
+    pInstance->data.v_out = 0;  // reset output voltage buffer
+    pInstance->data.i_out = 0;  // reset output current buffer
+    pInstance->data.v_ref = 0;  // reset initial voltage reference
+    pInstance->data.temp = 0;   // reset converter board temperature buffer
+    
+    // Reset controller status
+    pInstance->status.flags.power_source_detected = false; // reset POWER_SOURCE_DETECTED flag bit
+    pInstance->status.flags.adc_active = false; // reset ADC_ACTIVE flag bit
+    pInstance->status.flags.pwm_active = false; // reset PWM_ACTIVE flag bit
+    pInstance->status.flags.tune_dir = 0; // reset voltage tune-in direction to UP
+    pInstance->status.flags.fault_active = false; // reset power controller global fault flag bit
+    pInstance->status.flags.GO = 0; // reset GO bit
+    pInstance->status.flags.autorun = false; // clear AUTORUN bit
+    pInstance->status.flags.enabled = false; // disable power controller
+    pInstance->status.flags.op_status = CONVERTER_STATE_INITIALIZE; // reset state machine
+    
+    return(1);
 }
+
+
+
+

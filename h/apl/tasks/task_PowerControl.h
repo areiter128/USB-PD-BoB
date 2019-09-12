@@ -53,8 +53,8 @@ extern "C" {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-//    volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;
-//    volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
+    extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;
+    extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
 
     // Public function prototypes
     extern volatile uint16_t init_PowerControl(void);
