@@ -327,7 +327,7 @@ Description:
 /* ***********************************************************************************************
  * PROTOTYPES
  * ***********************************************************************************************/
-extern volatile uint16_t c4swbb_pwm_initialize(volatile HSPWM_C_TYPE_PWM_CHANNEL_CONFIG_t c4swbb_pwm);
+extern volatile uint16_t c4swbb_pwm_initialize(volatile HSPWM_C_CHANNEL_CONFIG_t c4swbb_pwm);
 extern volatile uint16_t c4swbb_pwm_enable(void); 
 extern volatile uint16_t c4swbb_pwm_disable(void); 
 extern volatile uint16_t c4swbb_pwm_hold(void); 

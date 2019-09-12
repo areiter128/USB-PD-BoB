@@ -20,17 +20,55 @@
 
 
 volatile uint16_t start_pwm(void);
-void PWM_Initialize (void);
+volatile void PWM_Initialize (void);
 
-volatile uint16_t c4swbb_pwm_initialize(volatile HSPWM_C_TYPE_PWM_CHANNEL_CONFIG_t pwm_config) {
+volatile uint16_t c4swbb_pwm_initialize(uint16_t buck_leg_pwm_instance, uint16_t boost_leg_pwm_instance) {
     
     volatile uint16_t fres = 1;
+    volatile HSPWM_C_CHANNEL_CONFIG_t pwm_config;
+    volatile HSPWM_C_MODULE_CONFIG_t pmod_cfg;
     
+    // Initialize PWM module
+    pmod_cfg.PCLKCON.bits.HRRDY = 0; // Clear HIGH RESOLUTION READY STATUS bit
+    pmod_cfg.PCLKCON.bits.HRERR = 0; // Clear HIGH RESOLUTION ERROR STATUS bit
+    pmod_cfg.PCLKCON.bits.LOCK = PCLKCON_LOCK_UNLOCKED; // Keep PWM registers unlocked during operation
+    pmod_cfg.PCLKCON.bits.MCLKSEL = PCLKCON_MCLKSEL_AFPLLO; // Use auxiliary PLL as clock source
+    pmod_cfg.PCLKCON.bits.DIVSEL = PCLKCON_DIVSEL_DIV_2; // Select default 'by 2' divider (minimum)
+    
+    pmod_cfg.FSCL.value = 0;  // Clear frequency scaling register
+    pmod_cfg.FSMINPER.value = 0;  // Clear frequency scaling minimum period register
+    pmod_cfg.LFSR.value = 0; // Clear linear feedback shift register
+    pmod_cfg.MDC.value = 0; // Clear Master Duty Cycle register
+    pmod_cfg.MPER.value = 0; // Clear Master Period register
+    pmod_cfg.MPHASE.value = 0; // Clear Master Phase register
+    
+    pmod_cfg.LOGCONA.value = 0; // Clear combinatorial PWM logic control register A
+    pmod_cfg.LOGCONB.value = 0; // Clear combinatorial PWM logic control register B
+    pmod_cfg.LOGCONC.value = 0; // Clear combinatorial PWM logic control register C
+    pmod_cfg.LOGCOND.value = 0; // Clear combinatorial PWM logic control register D
+    pmod_cfg.LOGCONE.value = 0; // Clear combinatorial PWM logic control register E
+    pmod_cfg.LOGCONF.value = 0; // Clear combinatorial PWM logic control register F
+
+    pmod_cfg.CMBTRIG.value = 0;  // Disable all Combinatorial Logic PWM triggers
+
+    pmod_cfg.PWMEVTA.value = 0; // Clear PWM event output control register A
+    pmod_cfg.PWMEVTB.value = 0; // Clear PWM event output control register A
+    pmod_cfg.PWMEVTC.value = 0; // Clear PWM event output control register A
+    pmod_cfg.PWMEVTD.value = 0; // Clear PWM event output control register A
+    pmod_cfg.PWMEVTE.value = 0; // Clear PWM event output control register A
+    pmod_cfg.PWMEVTF.value = 0; // Clear PWM event output control register A
+    
+    // call module configuration function
+    fres &= hspwm_init_pwm_module(pmod_cfg);
+    
+    // Initialize PWM Channel for buck leg of converter #1
     pwm_config.PGxCON.value = (((uint32_t)C4SWBB_BUCKLEG_PGxCONH << 16) | (uint32_t)C4SWBB_BUCKLEG_PGxCONL);
-    pwm_config.PGxSTAT = C4SWBB_BUCKLEG_PGxSTAT;
+    pwm_config.PGxSTAT.value = C4SWBB_BUCKLEG_PGxSTAT;
     pwm_config.PGxIOCON.value = (((uint32_t)C4SWBB_BUCKLEG_PGxIOCONH << 16) | (uint32_t)C4SWBB_BUCKLEG_PGxIOCONL);
     pwm_config.PGxEVT.value = (((uint32_t)C4SWBB_BUCKLEG_PGxEVTH << 16) | C4SWBB_BUCKLEG_PGxEVTL);
     pwm_config.PGxEVT.value = (((uint32_t)C4SWBB_BUCKLEG_PGxEVTH << 16) | C4SWBB_BUCKLEG_PGxEVTL);
+    
+    fres &= hspwm_init_pwm_channel(buck_leg_pwm_instance, pwm_config);
     
     PWM_Initialize();
 
@@ -173,7 +211,7 @@ volatile uint16_t start_pwm(void)
 }
 
 
-void PWM_Initialize (void)
+volatile void PWM_Initialize (void)
 {
     // MCLKSEL AFPLLO - Auxiliary Clock with PLL Enabled; HRERR disabled; LOCK disabled; DIVSEL 1:2; 
     PCLKCON = 0x03;
