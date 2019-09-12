@@ -15,15 +15,6 @@
 // (none)
 
 
-volatile uint16_t ctrl_Init(volatile cNPNZ16b_t* controller);
-volatile uint16_t ctrl_Reset(volatile cNPNZ16b_t* controller);
-volatile uint16_t ctrl_Precharge(
-        volatile cNPNZ16b_t* controller, // Pointer to nPnZ data structure)
-        volatile uint16_t ctrl_input, // user-defined, constant error history value
-        volatile uint16_t ctrl_output // user-defined, constant control output history value
-    );
-
-
 /*!exec_4SWBB_PowerController()
  * *****************************************************************************************************
  * Summary:
@@ -447,11 +438,13 @@ volatile uint16_t c4SWBB_shut_down(volatile C4SWBB_POWER_CONTROLLER_t* pInstance
     
     volatile uint16_t fres = 1;
     
+    // Overriding PWM output pins with pin states defined in PGxIOCONL->OVRDAT
     fres &= hspwm_ovr_hold(pInstance->buck_leg.pwm_instance);
     fres &= hspwm_ovr_hold(pInstance->boost_leg.pwm_instance);
     
-    fres &= ctrl_Reset(pInstance->v_loop.controller);
-    fres &= ctrl_Reset(pInstance->i_loop.controller);
+    // void functions don't get checked
+    pInstance->v_loop.ctrl_reset(pInstance->v_loop.controller);
+    pInstance->i_loop.ctrl_reset(pInstance->i_loop.controller);
     
     return(fres); // ToDo: need function execution success validation
     
