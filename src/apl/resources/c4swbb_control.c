@@ -188,7 +188,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             { int_dummy = pInstance->v_loop.maximum; }
             
             // Call pre-charge routine, loading user values into control histories
-            pInstance->v_loop.ctrl_precharge(pInstance->v_loop.controller, 0, int_dummy);
+            pInstance->v_loop.ctrl_Precharge(pInstance->v_loop.controller, 0, int_dummy);
 
             #elif (C4SWBB_CONTROL_MODE == C4SWBB_ACMC)
 
@@ -443,8 +443,8 @@ volatile uint16_t c4SWBB_shut_down(volatile C4SWBB_POWER_CONTROLLER_t* pInstance
     fres &= hspwm_ovr_hold(pInstance->boost_leg.pwm_instance);
     
     // void functions don't get checked
-    pInstance->v_loop.ctrl_reset(pInstance->v_loop.controller);
-    pInstance->i_loop.ctrl_reset(pInstance->i_loop.controller);
+    pInstance->v_loop.ctrl_Reset(pInstance->v_loop.controller);
+    pInstance->i_loop.ctrl_Reset(pInstance->i_loop.controller);
     
     return(fres); // ToDo: need function execution success validation
     
@@ -490,9 +490,9 @@ volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t
 
     // Reset Controller Settings
     pInstance->v_loop.controller = 0; // Clear pointer to voltage control loop object
-    pInstance->v_loop.ctrl_init = 0; // Clear function pointer to voltage control loop initialization routine
-    pInstance->v_loop.ctrl_precharge = 0; // Clear function pointer to voltage control loop precharge routine
-    pInstance->v_loop.ctrl_reset = 0; // Clear function pointer to voltage control loop reset routine
+    pInstance->v_loop.ctrl_Init = 0; // Clear function pointer to voltage control loop initialization routine
+    pInstance->v_loop.ctrl_Precharge = 0; // Clear function pointer to voltage control loop precharge routine
+    pInstance->v_loop.ctrl_Reset = 0; // Clear function pointer to voltage control loop reset routine
     pInstance->v_loop.ctrl_Update = 0; // Clear function pointer to voltage control loop update routine
     pInstance->v_loop.feedback_offset = 0; // Reset the feedback offset setting of the voltage control loop
     pInstance->v_loop.minimum = 0; // Reset the minimum output setting of the voltage control loop
@@ -501,9 +501,9 @@ volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t
     pInstance->v_loop.reference = 0; // Reset the control reference of the voltage control loop
         
     pInstance->i_loop.controller = 0; // Clear pointer to current control loop object
-    pInstance->i_loop.ctrl_init = 0; // Clear function pointer to current control loop initialization routine
-    pInstance->i_loop.ctrl_precharge = 0; // Clear function pointer to current control loop precharge routine
-    pInstance->i_loop.ctrl_reset = 0; // Clear function pointer to current control loop reset routine
+    pInstance->i_loop.ctrl_Init = 0; // Clear function pointer to current control loop initialization routine
+    pInstance->i_loop.ctrl_Precharge = 0; // Clear function pointer to current control loop precharge routine
+    pInstance->i_loop.ctrl_Reset = 0; // Clear function pointer to current control loop reset routine
     pInstance->i_loop.ctrl_Update = 0; // Clear function pointer to current control loop update routine
     pInstance->i_loop.feedback_offset = 0; // Reset the feedback offset setting of the current control loop
     pInstance->i_loop.minimum = 0; // Reset the minimum output setting of the current control loop
@@ -584,9 +584,9 @@ volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
 
     // Reset Controller Settings
     pInstance->v_loop.controller = 0; // Clear pointer to voltage control loop object
-    pInstance->v_loop.ctrl_init = 0; // Clear function pointer to voltage control loop initialization routine
-    pInstance->v_loop.ctrl_precharge = 0; // Clear function pointer to voltage control loop precharge routine
-    pInstance->v_loop.ctrl_reset = 0; // Clear function pointer to voltage control loop reset routine
+    pInstance->v_loop.ctrl_Init = 0; // Clear function pointer to voltage control loop initialization routine
+    pInstance->v_loop.ctrl_Precharge = 0; // Clear function pointer to voltage control loop precharge routine
+    pInstance->v_loop.ctrl_Reset = 0; // Clear function pointer to voltage control loop reset routine
     pInstance->v_loop.ctrl_Update = 0; // Clear function pointer to voltage control loop update routine
     pInstance->v_loop.feedback_offset = 0; // Reset the feedback offset setting of the voltage control loop
     pInstance->v_loop.minimum = 0; // Reset the minimum output setting of the voltage control loop
@@ -595,9 +595,9 @@ volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
     pInstance->v_loop.reference = 0; // Reset the control reference of the voltage control loop
         
     pInstance->i_loop.controller = 0; // Clear pointer to current control loop object
-    pInstance->i_loop.ctrl_init = 0; // Clear function pointer to current control loop initialization routine
-    pInstance->i_loop.ctrl_precharge = 0; // Clear function pointer to current control loop precharge routine
-    pInstance->i_loop.ctrl_reset = 0; // Clear function pointer to current control loop reset routine
+    pInstance->i_loop.ctrl_Init = 0; // Clear function pointer to current control loop initialization routine
+    pInstance->i_loop.ctrl_Precharge = 0; // Clear function pointer to current control loop precharge routine
+    pInstance->i_loop.ctrl_Reset = 0; // Clear function pointer to current control loop reset routine
     pInstance->i_loop.ctrl_Update = 0; // Clear function pointer to current control loop update routine
     pInstance->i_loop.feedback_offset = 0; // Reset the feedback offset setting of the current control loop
     pInstance->i_loop.minimum = 0; // Reset the minimum output setting of the current control loop
