@@ -35,6 +35,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "c4swbb_pconfig.h"
 #include "apl/resources/npnz16b.h"
 
 /* Controller Settings */
@@ -70,6 +71,7 @@ typedef enum {
     CONVERTER_STATE_I_RAMP_UP = 0b0110, // converter state machine step #6: perform output current ramp up based on parameters and system response (average current mode only)
     CONVERTER_STATE_POWER_GOOD = 0b0111, // converter state machine step #7: Output reached regulation point but waits until things have settled
     CONVERTER_STATE_COMPLETE = 0b1000, // converter state machine step #8: Output in regulation and power is OK
+    CONVERTER_STATE_RESET = 0b1001, // converter state machine step #9: State machine is pushed in default step causing it to reset to STANDBY (off)
     CONVERTER_STATE_FAULT = 0b1111 // converter state machine step #9: Some fault condition has been detected and the power supply is shut down
 } C4SWBB_STATUS_LABEL_e; // Labels of converter state machine steps
 
@@ -125,6 +127,7 @@ typedef struct {
     volatile uint16_t (*ctrl_init)(volatile cNPNZ16b_t*); // Function pointer to INIT routine
     void (*ctrl_reset)(volatile cNPNZ16b_t*); // Function pointer to RESET routine
     void (*ctrl_precharge)(volatile cNPNZ16b_t*, volatile uint16_t, volatile uint16_t); // Function pointer to PRECHARGE routine
+    void (*ctrl_Update)(volatile cNPNZ16b_t*); // Function pointer to UPDATE routine
     volatile uint16_t feedback_offset; // Feedback offset value for calibration or bidirectional feedback signals
     volatile uint16_t trigger_offset; // ADC trigger offset value for trigger fine-tuning
     volatile uint16_t reference; // Control loop reference variable
@@ -276,23 +279,13 @@ typedef struct {
  * 
  *
  * **********************************************************************************************/
-extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;
-extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
-
 
 /* Public Function Prototypes */
+extern volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
 extern volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
 extern volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
+extern volatile uint16_t c4SWBB_shut_down(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
 
-extern volatile uint16_t ctrl_Precharge(
-        volatile cNPNZ16b_t* controller,  // Pointer to nPnZ data structure)
-        volatile uint16_t ctrl_input, // user-defined, constant error history value
-        volatile uint16_t ctrl_output // user-defined, constant control output history value
-    );
-
-volatile uint16_t ctrl_Reset(
-        volatile cNPNZ16b_t* controller); // Pointer to nPnZ data structure)
-        
 
 #endif	/* _APL_RESOURCES_SOFT_START_H_ */
 
