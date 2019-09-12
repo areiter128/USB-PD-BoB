@@ -88,7 +88,7 @@ volatile uint16_t start_pwm(void)
 }
 
 
-volatile void PWM_Initialize (void)
+void PWM_Initialize (void)
 {
     // MCLKSEL AFPLLO - Auxiliary Clock with PLL Enabled; HRERR disabled; LOCK disabled; DIVSEL 1:2; 
     PCLKCON = 0x03;
