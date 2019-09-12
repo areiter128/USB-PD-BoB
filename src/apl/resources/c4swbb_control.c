@@ -219,7 +219,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             #endif            
 
             // set initial PWM duty ratio
-            hspwm_set_duty_cycle(pInstance->buck_leg.pwm_instance, int_dummy);
+            hspwm_set_duty_cycle(pInstance->buck_leg.pwm_instance, int_dummy, 0);
             
             // ToDo: Add boost leg duty ratio pre-charge 
             
