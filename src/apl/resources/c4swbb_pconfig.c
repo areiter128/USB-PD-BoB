@@ -129,16 +129,16 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_POWER_CONTROL
     pg_config.PGxLEBCON.value = (((uint32_t)C4SWBB_BUCKLEG_PGxLEBH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxLEBL));
     
     // PWM timing configuration PWM generator Buck Leg
-    pg_config.PGxLEB.value = C4SWBB_BOOSTLEG_PGxLEBL;
-    pg_config.PGxPHASE.value = C4SWBB_BUCKLEG_PGxPHASE;
-    pg_config.PGxDC.value = C4SWBB_BUCKLEG_PGxDC;
-    pg_config.PGxDCA.value = C4SWBB_BUCKLEG_PGxDCA;
-    pg_config.PGxPER.value = C4SWBB_BUCKLEG_PGxPER;
-    pg_config.PGxDT.value = (((uint32_t)C4SWBB_BUCKLEG_PGxDTH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxDTL));
-    pg_config.PGxTRIGA.value = C4SWBB_BUCKLEG_PGxTRIGA;
-    pg_config.PGxTRIGB.value = C4SWBB_BUCKLEG_PGxTRIGB;
-    pg_config.PGxTRIGC.value = C4SWBB_BUCKLEG_PGxTRIGC;
-    pg_config.PGxCAP.value = C4SWBB_BUCKLEG_PGxCAP;
+    pg_config.PGxLEB.value = C4SWBB_BOOSTLEG_PGxLEBL;   // reset LEB period to ZERO
+    pg_config.PGxPHASE.value = C4SWBB_BUCKLEG_PGxPHASE; // reset PWM phase shift to ZERO
+    pg_config.PGxDC.value = C4SWBB_BUCKLEG_PGxDC;       // reset PWM duty cycle to ZERO
+    pg_config.PGxDCA.value = C4SWBB_BUCKLEG_PGxDCA;     // reset PWM duty cycle adjustment to ZERO
+    pg_config.PGxPER.value = C4SWBB_BUCKLEG_PGxPER;     // reset PWM period to ZERO
+    pg_config.PGxDT.value = (((uint32_t)C4SWBB_BUCKLEG_PGxDTH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxDTL)); // Reset half-bridge dead-times to DEFAULT
+    pg_config.PGxTRIGA.value = C4SWBB_BUCKLEG_PGxTRIGA; // reset PWM trigger A compare register
+    pg_config.PGxTRIGB.value = C4SWBB_BUCKLEG_PGxTRIGB; // reset PWM trigger B compare register
+    pg_config.PGxTRIGC.value = C4SWBB_BUCKLEG_PGxTRIGC; // reset PWM trigger C compare register
+    pg_config.PGxCAP.value = C4SWBB_BUCKLEG_PGxCAP;     // reset PWM capture result register
 
     // Overriding pre-configured settings with user settings
     pg_config.PGxLEB.value = pInstance->buck_leg.leb_period;   // leading edge blanking period
