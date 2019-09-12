@@ -9,9 +9,9 @@
 #include <xc.h>
 #include "apl/tasks/task_PowerControl.h"
 
-//// Declare two 4-Switch Buck/Boost DC/DC converter objects
-//volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;    // USB PD Port A
-//volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;    // USB PD Port B
+// Declare two 4-Switch Buck/Boost DC/DC converter objects
+volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;    // USB PD Port A
+volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;    // USB PD Port B
 
 
 volatile uint16_t exec_PowerControl(void) {
@@ -92,10 +92,17 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.controller = &cha_vloop;        // 4-Switch Buck/Boost converter voltage loop controller
 
     // Assign control functions by loading function pointers into the data structure
+<<<<<<< HEAD
     c4swbb_1.v_loop.ctrl_init = &cha_vloop_Init;        // Function pointer to CONTROL INIT routine
     c4swbb_1.v_loop.ctrl_Update = &cha_vloop_Update;    // Function pointer to CONTROL UPDATE routine
     c4swbb_1.v_loop.ctrl_precharge = &cha_vloop_Precharge; // Function pointer to CONTROL PRECHARGE routine
     c4swbb_1.v_loop.ctrl_reset = &cha_vloop_Reset;     // Function pointer to CONTROL RESET routine
+=======
+//    c4swbb_1.v_loop.ctrl_init = &cha_vloop_Init(volatile cNPNZ16b_t*);        // Function pointer to CONTROL INIT routine
+//    c4swbb_1.v_loop.ctrl_Update = &cha_vloop_Update(volatile cNPNZ16b_t*);    // Function pointer to CONTROL UPDATE routine
+//    c4swbb_1.v_loop.ctrl_Update = &cha_vloop_Precharge(volatile cNPNZ16b_t*, volatile uint16_t, volatile uint16_t); // Function pointer to CONTROL PRECHARGE routine
+//    c4swbb_1.v_loop.ctrl_Update = &cha_vloop_Reset(volatile cNPNZ16b_t*);     // Function pointer to CONTROL RESET routine
+>>>>>>> pwr_control
     
 
     
