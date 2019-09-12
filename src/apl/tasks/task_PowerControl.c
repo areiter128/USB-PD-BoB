@@ -9,10 +9,6 @@
 #include <xc.h>
 #include "apl/tasks/task_PowerControl.h"
 
-//// Declare two 4-Switch Buck/Boost DC/DC converter objects
-//volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;    // USB PD Port A
-//volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;    // USB PD Port B
-
 // Declare two 4-Switch Buck/Boost DC/DC converter objects
 volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;    // USB PD Port A
 volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;    // USB PD Port B

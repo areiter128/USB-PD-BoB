@@ -46,7 +46,7 @@
 #include "apl/resources/chb_vloop.h"        // Voltage Control Loop library header of USB Port 2
 
 #include "apl/resources/c4swbb_control.h"   // 4-Switch Buck/Boost Power Control State Machine Header
-#include "apl/resources/c4swbb_pconfig.h"   // 4-Switch Buck/Boost Power Control Peripheral Configuration Header
+//#include "apl/resources/c4swbb_pconfig.h"   // 4-Switch Buck/Boost Power Control Peripheral Configuration Header
 
 #ifdef	__cplusplus
 extern "C" {

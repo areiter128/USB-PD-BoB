@@ -9,7 +9,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "c4swbb_pconfig.h"
+#include "apl/resources/c4swbb_pconfig.h"   // 4-Switch Buck/Boost Power Control State Machine Header
+
 
 /*!c4swbb_pwm_module_initialize()
  * *****************************************************************************************************
@@ -72,6 +73,9 @@ volatile uint16_t c4swbb_pwm_module_initialize(void) {
     pmod_cfg.PWMEVTE.value = 0; // Clear PWM event output control register A
     pmod_cfg.PWMEVTF.value = 0; // Clear PWM event output control register A
     
+    // Set user defined settings
+//    pmod_cfg.MPER.value = pInstance->buck_leg.period;
+    
     // call module configuration function
     fres &= hspwm_init_pwm_module(pmod_cfg);
     
@@ -117,7 +121,7 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_POWER_CONTROL
     // If pointer to controller object is not initialized, return error code
     if(pInstance == NULL) { return(0); }
     
-    // Initialize PWM Channel for buck leg 
+    // Initialize PWM generator for buck leg 
     pg_config.PGxCON.value = (((uint32_t)C4SWBB_BUCKLEG_PGxCONH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxCONL));
     pg_config.PGxSTAT.value = C4SWBB_BUCKLEG_PGxSTAT;
     pg_config.PGxIOCON.value = (((uint32_t)C4SWBB_BUCKLEG_PGxIOCONH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxIOCONL));
@@ -143,13 +147,15 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_POWER_CONTROL
     // Overriding pre-configured settings with user settings
     pg_config.PGxLEB.value = pInstance->buck_leg.leb_period;   // leading edge blanking period
     pg_config.PGxDT.value = (((uint32_t)pInstance->buck_leg.dead_time_rising << 16) | // Rising edge dead time
-                            ((uint32_t)pInstance->buck_leg.dead_time_falling));       // Falling edge dead time
+                             ((uint32_t)pInstance->buck_leg.dead_time_falling));      // Falling edge dead time
+    pg_config.PGxDC.value = pInstance->buck_leg.duty_ratio_init;   // initial PWM duty cycle
+    pg_config.PGxPHASE.value = pInstance->buck_leg.phase;   // initial PWM phase shift
     
 
     // Write PWM generator configuration to PWM module
     fres &= hspwm_init_pwm_generator(pInstance->buck_leg.pwm_instance, pg_config);
 
-    // Initialize PWM Channel for Boost leg
+    // Initialize PWM generator for Boost leg
     pg_config.PGxCON.value = (((uint32_t)C4SWBB_BUCKLEG_PGxCONH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxCONL));
     pg_config.PGxSTAT.value = C4SWBB_BUCKLEG_PGxSTAT;
     pg_config.PGxIOCON.value = (((uint32_t)C4SWBB_BUCKLEG_PGxIOCONH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxIOCONL));
@@ -172,6 +178,11 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_POWER_CONTROL
     pg_config.PGxTRIGC.value = C4SWBB_BOOSTLEG_PGxTRIGC;
     pg_config.PGxCAP.value = C4SWBB_BOOSTLEG_PGxCAP;
 
+    // Overriding pre-configured settings with user settings
+    pg_config.PGxLEB.value = pInstance->buck_leg.leb_period;   // leading edge blanking period
+    pg_config.PGxDT.value = (((uint32_t)pInstance->buck_leg.dead_time_rising << 16) | // Rising edge dead time
+                            ((uint32_t)pInstance->buck_leg.dead_time_falling));       // Falling edge dead time
+    
     // Write PWM generator configuration to PWM module
     fres &= hspwm_init_pwm_generator(pInstance->boost_leg.pwm_instance, pg_config);
 

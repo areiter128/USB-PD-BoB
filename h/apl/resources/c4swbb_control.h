@@ -35,8 +35,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "c4swbb_pconfig.h"
-#include "apl/resources/npnz16b.h"
+#include "apl/resources/c4swbb_pconfig.h"   // 4-Switch Buck/Boost Power Control Peripheral Configuration Header
+#include "apl/resources/npnz16b.h"          // Generic nPnZ control loop header file
 
 /* Controller Settings */
 
@@ -133,7 +133,7 @@ typedef struct {
     volatile uint16_t reference; // Control loop reference variable
     volatile uint16_t minimum; // output voltage clamping value (minimum)
     volatile uint16_t maximum; // output voltage clamping value (maximum)
-} C4SWBB_LOOP_SETTINGS_t; // User defined settings for control loops; 
+} __attribute__((packed)) C4SWBB_LOOP_SETTINGS_t; // User defined settings for control loops; 
 
 /*!C4SWBB_STARTUP_SETTINGS_t
  * ***************************************************************************************************
@@ -158,7 +158,7 @@ typedef struct {
     volatile uint16_t pwr_good_delay; // Soft-Start Power Good Delay
     volatile uint16_t v_reference; // Soft-Start target voltage loop reference value (read only)
     volatile uint16_t i_reference; // Soft-Start target current loop reference value (read only)
-} C4SWBB_STARTUP_SETTINGS_t; // Power converter soft-start settings and variables
+}  __attribute__((packed)) C4SWBB_STARTUP_SETTINGS_t; // Power converter soft-start settings and variables
 
 /*!C4SWBB_SWITCH_NODE_SETTINGS_t
  * ***************************************************************************************************
@@ -183,7 +183,7 @@ typedef struct {
     volatile uint16_t dead_time_rising; // Dead time setting at rising edge of a half-bridge drive
     volatile uint16_t dead_time_falling; // Dead time setting at falling edge of a half-bridge drive
     volatile uint16_t leb_period; // Leading Edge Blanking period 
-} C4SWBB_SWITCH_NODE_SETTINGS_t; // Switching signal timing settings
+}  __attribute__((packed)) C4SWBB_SWITCH_NODE_SETTINGS_t; // Switching signal timing settings
 
 /*!C4SWBB_DATA_t
  * ***************************************************************************************************
@@ -202,7 +202,7 @@ typedef struct {
     volatile uint16_t v_out; // Power converter output voltage
     volatile uint16_t v_ref; // Power converter output voltage reference (user setting)
     volatile uint16_t temp; // Power converter board temperature
-} C4SWBB_DATA_t; // Power converter runtime data
+}  __attribute__((packed)) C4SWBB_DATA_t; // Power converter runtime data
 
 /*!C4SWBB_POWER_CONTROLLER_t
  * ***************************************************************************************************
