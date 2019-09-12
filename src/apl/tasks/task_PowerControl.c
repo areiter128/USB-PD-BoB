@@ -35,10 +35,10 @@ volatile uint16_t init_PowerControl(void) {
     volatile uint16_t fres = 1;
 
     // Run global/common, non-converter specific peripheral module configuration
-    fres &= initialize_adc();
+//    fres &= initialize_adc();
 //    fres &= c4swbb_pwm_initialize();
     
-    
+    c4swbb_pwm_module_initialize();
     
     //    c4swbb_2 = c4swbb_1;
     
@@ -52,7 +52,7 @@ volatile uint16_t init_USBport_1(void) {
     volatile uint16_t fres=1;
     
     /* Initializing 4SW-BB DC/DC converter at USB port A */
-    init_4SWBB_PowerController(&c4swbb_1);  // Initialize power controller of USB port 1
+    reset_4SWBB_PowerController(&c4swbb_1);  // Initialize power controller of USB port 1
     
     // Set PWM settings
     c4swbb_1.buck_leg.pwm_instance = BUCKH1_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
@@ -76,15 +76,32 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.boost_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     
     // Initialize converter #1 voltage loop settings
+
+    // Initializing the hardware-specific settings into data structure
+    // Initialize basic controller settings of voltage loop object
     cha_vloop_Init(&cha_vloop);
-    
-    c4swbb_1.v_loop.controller = &cha_vloop;   // 4-Switch Buck/Boost converter voltage loop controller
+
     c4swbb_1.v_loop.minimum = IOUT_LCL_CLAMP;   // Minimum output value of voltage loop is absolute current limit
     c4swbb_1.v_loop.maximum = IOUT_OCL_TRIP;    // Maximum output value of voltage loop is absolute current limit
     c4swbb_1.v_loop.feedback_offset = C4SWBB_VOUT_OFFSET;   // Voltage feedback signal offset
     c4swbb_1.v_loop.reference = C4SWBB_VOUT_REF; // Voltage loop reference value
     c4swbb_1.v_loop.trigger_offset = ADC_TRIG_OFFSET_VOUT; // Voltage sample ADC trigger offset (offset from 50% on-time)
 
+    
+    // Assign voltage loop object to 4-switch buck/boost converter instance
+    c4swbb_1.v_loop.controller = &cha_vloop;        // 4-Switch Buck/Boost converter voltage loop controller
+
+    // Assign control functions by loading function pointers into the data structure
+    c4swbb_1.v_loop.ctrl_init = &cha_vloop_Init(volatile cNPNZ16b_t*);        // Function pointer to CONTROL INIT routine
+    c4swbb_1.v_loop.ctrl_Update = &cha_vloop_Update(volatile cNPNZ16b_t*);    // Function pointer to CONTROL UPDATE routine
+    c4swbb_1.v_loop.ctrl_Update = &cha_vloop_Precharge(volatile cNPNZ16b_t*, volatile uint16_t, volatile uint16_t); // Function pointer to CONTROL PRECHARGE routine
+    c4swbb_1.v_loop.ctrl_Update = &cha_vloop_Reset(volatile cNPNZ16b_t*);     // Function pointer to CONTROL RESET routine
+    
+
+    
+    
+
+    
     // Initialize converter #1 current loop settings
     cha_iloop_Init(&cha_iloop);
     
