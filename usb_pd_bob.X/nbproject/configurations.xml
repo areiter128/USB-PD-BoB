@@ -183,6 +183,7 @@
           <itemPath>../src/apl/resources/chb_iloop_asm.s</itemPath>
           <itemPath>../src/apl/resources/chb_vloop.c</itemPath>
           <itemPath>../src/apl/resources/chb_vloop_asm.s</itemPath>
+          <itemPath>../src/apl/resources/c4swbb_pconfig.c</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../src/apl/tasks/task_FaultHandler.c</itemPath>

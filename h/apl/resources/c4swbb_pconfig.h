@@ -47,14 +47,6 @@
 extern "C" {
 #endif /* __cplusplus */
 
-    /* FUNCTION PROTOTYPES */
-    extern volatile uint16_t c4swbb_pwm_module_initialize(void);
-    extern volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
-    //extern volatile uint16_t c4swbb_pwm_enable(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
-    //extern volatile uint16_t c4swbb_pwm_disable(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
-    //extern volatile uint16_t c4swbb_pwm_hold(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
-    //extern volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
-
 
     /*!4-Switch Buck/Boost PWM Configuration 
      * ***********************************************************************************************

@@ -13,6 +13,10 @@
 volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;    // USB PD Port A
 volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;    // USB PD Port B
 
+// PRIVATE FUNCTION PROTOTYPES
+volatile uint16_t init_USBport_1(void);
+volatile uint16_t init_USBport_2(void);
+
 
 volatile uint16_t exec_PowerControl(void) {
 
@@ -34,11 +38,23 @@ volatile uint16_t init_PowerControl(void) {
 
     volatile uint16_t fres = 1;
 
+    // Initialize the 4-switch buck/boost power controller objects
+    fres &= init_USBport_1();
+    fres &= init_USBport_2();
+    
     // Run global/common, non-converter specific peripheral module configuration
 //    fres &= initialize_adc();
 //    fres &= c4swbb_pwm_initialize();
     
-    c4swbb_pwm_module_initialize();
+    // Initialize PWM module base registers 
+    // This only needs to be called once and applies to both USB PD ports.
+    // The only setting of the data structure used in this routine is the 
+    // PWM period, which is written into the master time base period register MPER
+    fres &= c4swbb_pwm_module_initialize(&c4swbb_1);
+    
+    // Load PWM configurations for PWM generators for both ports
+    fres &= c4swbb_pwm_generators_initialize(&c4swbb_1); // Initialize PWM generators of Port A
+    fres &= c4swbb_pwm_generators_initialize(&c4swbb_2); // Initialize PWM generators of Port B
     
     //    c4swbb_2 = c4swbb_1;
     
@@ -92,10 +108,10 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.controller = &cha_vloop;        // 4-Switch Buck/Boost converter voltage loop controller
 
     // Assign control functions by loading function pointers into the data structure
-    c4swbb_1.v_loop.ctrl_init = &cha_vloop_Init;        // Function pointer to CONTROL INIT routine
+    c4swbb_1.v_loop.ctrl_Init = &cha_vloop_Init;        // Function pointer to CONTROL INIT routine
     c4swbb_1.v_loop.ctrl_Update = &cha_vloop_Update;    // Function pointer to CONTROL UPDATE routine
-    c4swbb_1.v_loop.ctrl_precharge = &cha_vloop_Precharge; // Function pointer to CONTROL PRECHARGE routine
-    c4swbb_1.v_loop.ctrl_reset = &cha_vloop_Reset;     // Function pointer to CONTROL RESET routine
+    c4swbb_1.v_loop.ctrl_Precharge = &cha_vloop_Precharge; // Function pointer to CONTROL PRECHARGE routine
+    c4swbb_1.v_loop.ctrl_Reset = &cha_vloop_Reset;     // Function pointer to CONTROL RESET routine
     
 
     
