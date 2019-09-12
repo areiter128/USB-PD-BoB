@@ -35,12 +35,21 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "c4swbb_control.h"
+#include "c4swbb_control.h" 
 
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
+/* FUNCTION PROTOTYPES */   
+extern volatile uint16_t c4swbb_pwm_module_initialize(void);
+//extern volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
+//extern volatile uint16_t c4swbb_pwm_enable(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
+//extern volatile uint16_t c4swbb_pwm_disable(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
+//extern volatile uint16_t c4swbb_pwm_hold(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
+//extern volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
+
+    
 /*!4-Switch Buck/Boost PWM Configuration 
  * ***********************************************************************************************
  * Dedicated, generic PWM configuration of a dsPIC33C-type PWM to drive a 4-switch buck boost
@@ -64,12 +73,12 @@ extern "C" {
     bit 2-0 MODSEL[2:0]: Mode Selection bits: 001 = Variable Phase PWM mode
 */
 
-#define C4SWBB_BUCKLEG_PGxCONL  (   REG_PGCON_MODSEL_VARIABLE_PHASE | \
+#define C4SWBB_BUCKLEG_PGxCONL  {   REG_PGCON_MODSEL_VARIABLE_PHASE | \
                                     REG_PGCON_CLKSEL_BY_MCLKSEL | \
                                     REG_PGCON_HREN_HIGH_RES | \
                                     REG_PGCON_TRGCNT_1_PWM_CYCLES | \
                                     REG_PGCON_ON_PWM_DISABLED \
-                                )   // 0b0000000010001001
+                                }   // 0b0000000010001001
 
 /*!PGxCONH: PWM GENERATOR x CONTROL REGISTER HIGH
   
@@ -88,14 +97,14 @@ extern "C" {
     bit 3-0 SOCS[3:0]: Start-of-Cycle Selection bits(1,2,3): 0000 = Local EOC ? PWM Generator is self-triggered
 */
 
-#define C4SWBB_BUCKLEG_PGxCONH      (   REG_PGCON_SOCS_LOCAL_EOC | \
+#define C4SWBB_BUCKLEG_PGxCONH      {   REG_PGCON_SOCS_LOCAL_EOC | \
                                         REG_PGCON_TRGMOD_REPEAT | \
                                         REG_PGCON_UPDMOD_IMMEDIATE | \
                                         REG_PGCON_MSTEN_NO_BROADCAST | \
                                         REG_PGCON_MPHSEL_INDEPENDENT | \
                                         REG_PGCON_MPERSEL_INDEPENDENT | \
                                         REG_PGCON_MDCSEL_INDEPENDENT \
-                                    )   // 0b0100000101000000
+                                    }   // 0b0100000101000000
 
 /*!PGxSTAT: PWM GENERATOR x STATUS REGISTER
   
@@ -119,7 +128,7 @@ extern "C" {
     bit 3-2 FFDAT[1:0]: Data for PWMxH/PWMxL Pins if Feed-Forward Event is Active bits: 00 PWMxH = LOW, PWMxL = LOW
     bit 1-0 DBDAT[1:0]: Data for PWMxH/PWMxL Pins if Debug Mode is Active bits: 00 PWMxH = LOW, PWMxL = LOW
  */
-#define C4SWBB_BUCKLEG_PGxIOCONL    (   REG_IOCON_CLMOD_DISABLED | \
+#define C4SWBB_BUCKLEG_PGxIOCONL    {   REG_IOCON_CLMOD_DISABLED | \
                                         REG_IOCON_SWAP_DISABLED | \
                                         REG_IOCON_OSYNC_PWM | \
                                         REG_IOCON_OVREN_COMP_SET | \
@@ -128,7 +137,7 @@ extern "C" {
                                         REG_IOCON_CLDAT_LOW_LOW | \
                                         REG_IOCON_FFDAT_LOW_LOW | \
                                         REG_IOCON_DBDAT_LOW_LOW \
-                                    )  // 0b0011000000000000
+                                    }  // 0b0011000000000000
 
 /*!PGxIOCONH: PWM GENERATOR x I/O CONTROL REGISTER HIGH
  
@@ -143,13 +152,13 @@ extern "C" {
     bit 1 POLH: PWMxH Output Polarity bit: 0 = Output pin is active-high
     bit 0 POLL: PWMxL Output Polarity bit: 0 = Output pin is active-high
  */
-#define C4SWBB_BUCKLEG_PGxIOCONH    (   REG_IOCON_POLH_ACTIVE_LOW | \
+#define C4SWBB_BUCKLEG_PGxIOCONH    {   REG_IOCON_POLH_ACTIVE_LOW | \
                                         REG_IOCON_POLL_ACTIVE_LOW | \
                                         REG_IOCON_PENx_COMP_PGx | \
                                         REG_IOCON_PMOD_COMPLEMENTARY | \
                                         REG_IOCON_DTCMPSEL_PCI_SYNC | \
                                         REG_IOCON_CAPSRC_NONE \
-                                    )  // 0b0000000000001100
+                                    }  // 0b0000000000001100
 
 /*!PGxEVTL: PWM GENERATOR x EVENT REGISTER LOW
 
@@ -161,13 +170,13 @@ extern "C" {
     bit 4-3 UPDTRG[1:0]: Update Trigger Select bits: 11 = A write of the PGxTRIGA register automatically sets the UPDATE bit
     bit 2-0 PGTRGSEL[2:0]: PWM Generator Trigger Output Selection bits(1): 001 = PGxTRIGA compare event is the PWM Generator trigger
  */
-#define C4SWBB_BUCKLEG_PGxEVTL      (   REG_PGEVT_ADTR1PS_POSTSCALE_1 | \
+#define C4SWBB_BUCKLEG_PGxEVTL      {   REG_PGEVT_ADTR1PS_POSTSCALE_1 | \
                                         REG_PGEVT_ADTR1EN3_PGxTRIGC_DISABLED | \
                                         REG_PGEVT_ADTR1EN2_PGxTRIGB_DISABLED | \
                                         REG_PGEVT_ADTR1EN1_PGxTRIGA_ENABLED | \
                                         REG_PGEVT_UPDTRG_PGxTRIGA | \
                                         REG_PGEVT_PGTRGSEL_PGxTRIGA \
-                                    )  // 0b0000000000011001
+                                    }  // 0b0000000000011001
 
 /*!PGxEVTH: PWM GENERATOR x EVENT REGISTER HIGH
 
@@ -184,7 +193,7 @@ extern "C" {
     bit 5 ADTR2EN1: ADC Trigger 2 Source is PGxTRIGA Compare Event Enable bit: 0 = PGxTRIGA register compare event is disabled as trigger source for ADC Trigger 2 
     bit 4-0 ADTR1OFS[4:0]: ADC Trigger 1 Offset Selection bits: 00000 = No offset 
  */
-#define C4SWBB_BUCKLEG_PGxEVTH      (   REG_PGEVT_FLTIEN_DISABLED | \
+#define C4SWBB_BUCKLEG_PGxEVTH      {   REG_PGEVT_FLTIEN_DISABLED | \
                                         REG_PGEVT_CLIEN_DISABLED | \
                                         REG_PGEVT_FFIEN_DISABLED | \
                                         REG_PGEVT_SIEN_DISABLED | \
@@ -193,7 +202,7 @@ extern "C" {
                                         REG_PGEVT_ADTR2EN2_PGxTRIGB_DISABLED | \
                                         REG_PGEVT_ADTR2EN1_PGxTRIGA_DISABLED | \
                                         REG_PGEVT_ADTR1OFS_OFFSET_EVENTS_0 \
-                                    )   // 0b0000001100000000
+                                    }   // 0b0000001100000000
 
 /*!PGxyPCIL: PWM GENERATOR x CL PCI REGISTER LOW (x = PWM GENERATOR #; CL = Current Limit)
 
@@ -206,7 +215,7 @@ extern "C" {
     bit 5 PPS: PCI Polarity Select bit: 0 = Not inverted
     bit 4-0 PSS[4:0]: PCI Source Selection bits: 00000 = Tied to ?0?
  */
-#define C4SWBB_BUCKLEG_PGxCLPCIL    (   REG_PGxyPCIL_TSYNCDIS_EOC | \
+#define C4SWBB_BUCKLEG_PGxCLPCIL    {   REG_PGxyPCIL_TSYNCDIS_EOC | \
                                         REG_PGxyPCIL_TERM_MANUAL | \
                                         REG_PGxyPCIL_AQPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_AQSS_NONE | \
@@ -214,7 +223,7 @@ extern "C" {
                                         REG_PGxyPCIL_PSYNC_NONE | \
                                         REG_PGxyPCIL_PPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_PSS_VSS \
-                                    )   // 0b0000000000000000
+                                    }   // 0b0000000000000000
 
 /*!PGxyPCIH: PWM GENERATOR x FF PCI REGISTER HIGH (x = PWM GENERATOR #; CL = Current Limit)
  
@@ -228,7 +237,7 @@ extern "C" {
     bit 3 TQPS: Termination Qualifier Polarity Select bit: 0 = Not inverted
     bit 2-0 TQSS[2:0]: Termination Qualifier Source Selection bits: 000 = No termination qualifier used (qualifier forced to ?1?)
  */ 
-#define C4SWBB_BUCKLEG_PGxCLPCIH    (   REG_PGxyPCIH_BPEN_DISABLED | \
+#define C4SWBB_BUCKLEG_PGxCLPCIH    {   REG_PGxyPCIH_BPEN_DISABLED | \
                                         REG_PGxyPCIH_BPSEL_PG1 | \
                                         REG_PGxyPCIH_REG_ACP_LEVEL | \
                                         REG_PGxyPCIH_SWPCI_LOW | \
@@ -236,7 +245,7 @@ extern "C" {
                                         REG_PGxyPCIH_LATMOD_SET | \
                                         REG_PGxyPCIH_TQPS_NOT_INVERTED | \
                                         REG_PGxyPCIH_TQSS_NONE \
-                                    )  // 0b0000000000000000
+                                    }  // 0b0000000000000000
 
 /*!PGxyPCIL: PWM GENERATOR x FF PCI REGISTER LOW (x = PWM GENERATOR #; FF = Feed Forward)
 
@@ -249,7 +258,7 @@ extern "C" {
     bit 5 PPS: PCI Polarity Select bit: 0 = Not inverted
     bit 4-0 PSS[4:0]: PCI Source Selection bits: 00000 = Tied to ?0?
  */
-#define C4SWBB_BUCKLEG_PGxFFPCIL    (   REG_PGxyPCIL_TSYNCDIS_EOC | \
+#define C4SWBB_BUCKLEG_PGxFFPCIL    {   REG_PGxyPCIL_TSYNCDIS_EOC | \
                                         REG_PGxyPCIL_TERM_MANUAL | \
                                         REG_PGxyPCIL_AQPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_AQSS_NONE | \
@@ -257,7 +266,7 @@ extern "C" {
                                         REG_PGxyPCIL_PSYNC_NONE | \
                                         REG_PGxyPCIL_PPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_PSS_VSS \
-                                    )   // 0b0000000000000000
+                                    }   // 0b0000000000000000
 
 /*!PGxyPCIH: PWM GENERATOR x FF PCI REGISTER HIGH (x = PWM GENERATOR #; FF = Feed Forward)
  
@@ -271,7 +280,7 @@ extern "C" {
     bit 3 TQPS: Termination Qualifier Polarity Select bit: 0 = Not inverted
     bit 2-0 TQSS[2:0]: Termination Qualifier Source Selection bits: 000 = No termination qualifier used (qualifier forced to ?1?)
  */ 
-#define C4SWBB_BUCKLEG_PGxFFPCIH    (   REG_PGxyPCIH_BPEN_DISABLED | \
+#define C4SWBB_BUCKLEG_PGxFFPCIH    {   REG_PGxyPCIH_BPEN_DISABLED | \
                                         REG_PGxyPCIH_BPSEL_PG1 | \
                                         REG_PGxyPCIH_REG_ACP_LEVEL | \
                                         REG_PGxyPCIH_SWPCI_LOW | \
@@ -279,7 +288,7 @@ extern "C" {
                                         REG_PGxyPCIH_LATMOD_SET | \
                                         REG_PGxyPCIH_TQPS_NOT_INVERTED | \
                                         REG_PGxyPCIH_TQSS_NONE \
-                                    )  // 0b0000000000000000
+                                    }  // 0b0000000000000000
 
 /*!PGxyPCIL: PWM GENERATOR x F PCI REGISTER LOW (x = PWM GENERATOR #; F = Fault)
 
@@ -292,7 +301,7 @@ extern "C" {
     bit 5 PPS: PCI Polarity Select bit: 0 = Not inverted
     bit 4-0 PSS[4:0]: PCI Source Selection bits: 00000 = Tied to ?0?
  */
-#define C4SWBB_BUCKLEG_PGxFPCIL    (   REG_PGxyPCIL_TSYNCDIS_EOC | \
+#define C4SWBB_BUCKLEG_PGxFPCIL    {   REG_PGxyPCIL_TSYNCDIS_EOC | \
                                         REG_PGxyPCIL_TERM_MANUAL | \
                                         REG_PGxyPCIL_AQPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_AQSS_NONE | \
@@ -300,7 +309,7 @@ extern "C" {
                                         REG_PGxyPCIL_PSYNC_NONE | \
                                         REG_PGxyPCIL_PPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_PSS_VSS \
-                                    )   // 0b0000000000000000
+                                    }   // 0b0000000000000000
 
 /*!PGxyPCIH: PWM GENERATOR x F PCI REGISTER HIGH (x = PWM GENERATOR #; F = Fault)
  
@@ -314,7 +323,7 @@ extern "C" {
     bit 3 TQPS: Termination Qualifier Polarity Select bit: 0 = Not inverted
     bit 2-0 TQSS[2:0]: Termination Qualifier Source Selection bits: 000 = No termination qualifier used (qualifier forced to ?1?)
  */ 
-#define C4SWBB_BUCKLEG_PGxFPCIH     (   REG_PGxyPCIH_BPEN_DISABLED | \
+#define C4SWBB_BUCKLEG_PGxFPCIH     {   REG_PGxyPCIH_BPEN_DISABLED | \
                                         REG_PGxyPCIH_BPSEL_PG1 | \
                                         REG_PGxyPCIH_REG_ACP_LEVEL | \
                                         REG_PGxyPCIH_SWPCI_LOW | \
@@ -322,7 +331,7 @@ extern "C" {
                                         REG_PGxyPCIH_LATMOD_SET | \
                                         REG_PGxyPCIH_TQPS_NOT_INVERTED | \
                                         REG_PGxyPCIH_TQSS_NONE \
-                                    )  // 0b0000000000000000
+                                    }  // 0b0000000000000000
 
 /*!PGxyPCIL: PWM GENERATOR x S PCI REGISTER LOW (x = PWM GENERATOR #; S = Debug/Software)
 
@@ -336,7 +345,7 @@ extern "C" {
     bit 4-0 PSS[4:0]: PCI Source Selection bits: 00000 = Tied to ?0?
  */
 
-#define C4SWBB_BUCKLEG_PGxSPCIL    (   REG_PGxyPCIL_TSYNCDIS_EOC | \
+#define C4SWBB_BUCKLEG_PGxSPCIL    {   REG_PGxyPCIL_TSYNCDIS_EOC | \
                                         REG_PGxyPCIL_TERM_MANUAL | \
                                         REG_PGxyPCIL_AQPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_AQSS_NONE | \
@@ -344,7 +353,7 @@ extern "C" {
                                         REG_PGxyPCIL_PSYNC_NONE | \
                                         REG_PGxyPCIL_PPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_PSS_VSS \
-                                    )   // 0b0000000000000000
+                                    }   // 0b0000000000000000
 
 /*!PGxyPCIH: PWM GENERATOR x S PCI REGISTER HIGH (x = PWM GENERATOR #; S = Debug/Software)
  
@@ -358,7 +367,7 @@ extern "C" {
     bit 3 TQPS: Termination Qualifier Polarity Select bit: 0 = Not inverted
     bit 2-0 TQSS[2:0]: Termination Qualifier Source Selection bits: 000 = No termination qualifier used (qualifier forced to ?1?)
  */ 
-#define C4SWBB_BUCKLEG_PGxSPCIH     (   REG_PGxyPCIH_BPEN_DISABLED | \
+#define C4SWBB_BUCKLEG_PGxSPCIH     {   REG_PGxyPCIH_BPEN_DISABLED | \
                                         REG_PGxyPCIH_BPSEL_PG1 | \
                                         REG_PGxyPCIH_REG_ACP_LEVEL | \
                                         REG_PGxyPCIH_SWPCI_LOW | \
@@ -366,7 +375,7 @@ extern "C" {
                                         REG_PGxyPCIH_LATMOD_SET | \
                                         REG_PGxyPCIH_TQPS_NOT_INVERTED | \
                                         REG_PGxyPCIH_TQSS_NONE \
-                                    )  // 0b0000000000000000
+                                    }  // 0b0000000000000000
 
 /*!PGxLEBH: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER HIGH
  
@@ -378,12 +387,12 @@ extern "C" {
     bit 1 PLR: PWMxL Rising Edge Trigger Enable bit: 0 = LEB ignores the rising edge of PWMxL
     bit 0 PLF: PWMxL Falling Edge Trigger Enable bit: 0 = LEB ignores the falling edge of PWMxL
  */
-#define C4SWBB_BUCKLEG_PGxLEBH      (   REG_LEBCON_PWMPCI_PG1 | \
+#define C4SWBB_BUCKLEG_PGxLEBH      {   REG_LEBCON_PWMPCI_PG1 | \
                                         REG_PGxLEBCON_LEBTRG_PHR_DISABLE | \
                                         REG_PGxLEBCON_LEBTRG_PHF_DISABLE | \
                                         REG_PGxLEBCON_LEBTRG_PLR_DISABLE | \
                                         REG_PGxLEBCON_LEBTRG_PLF_DISABLE \
-                                    )  // 0b0000000000000000
+                                    }  // 0b0000000000000000
 
 /*!PWM Generator Timing Registers
 
@@ -437,12 +446,12 @@ Description:
     bit 2-0 MODSEL[2:0]: Mode Selection bits: 001 = Variable Phase PWM mode
 */
 
-#define C4SWBB_BOOSTLEG_PGxCONL (   REG_PGCON_MODSEL_VARIABLE_PHASE | \
+#define C4SWBB_BOOSTLEG_PGxCONL {   REG_PGCON_MODSEL_VARIABLE_PHASE | \
                                     REG_PGCON_CLKSEL_BY_MCLKSEL | \
                                     REG_PGCON_HREN_HIGH_RES | \
                                     REG_PGCON_TRGCNT_1_PWM_CYCLES | \
                                     REG_PGCON_ON_PWM_DISABLED \
-                                )   // 0b0000000010001001
+                                }   // 0b0000000010001001
 
 /*!PGxCONH: PWM GENERATOR x CONTROL REGISTER HIGH
   
@@ -461,14 +470,14 @@ Description:
     bit 3-0 SOCS[3:0]: Start-of-Cycle Selection bits(1,2,3): 0000 = Local EOC ? PWM Generator is self-triggered
 */
 
-#define C4SWBB_BOOSTLEG_PGxCONH     (   REG_PGCON_SOCS_LOCAL_EOC | \
+#define C4SWBB_BOOSTLEG_PGxCONH     {   REG_PGCON_SOCS_LOCAL_EOC | \
                                         REG_PGCON_TRGMOD_REPEAT | \
                                         REG_PGCON_UPDMOD_IMMEDIATE | \
                                         REG_PGCON_MSTEN_NO_BROADCAST | \
                                         REG_PGCON_MPHSEL_INDEPENDENT | \
                                         REG_PGCON_MPERSEL_INDEPENDENT | \
                                         REG_PGCON_MDCSEL_INDEPENDENT \
-                                    )   // 0b0100000101000000
+                                    }   // 0b0100000101000000
 
 /*!PGxSTAT: PWM GENERATOR x STATUS REGISTER
   
@@ -492,7 +501,7 @@ Description:
     bit 3-2 FFDAT[1:0]: Data for PWMxH/PWMxL Pins if Feed-Forward Event is Active bits: 00 PWMxH = LOW, PWMxL = LOW
     bit 1-0 DBDAT[1:0]: Data for PWMxH/PWMxL Pins if Debug Mode is Active bits: 00 PWMxH = LOW, PWMxL = LOW
  */
-#define C4SWBB_BOOSTLEG_PGxIOCONL   (   REG_IOCON_CLMOD_DISABLED | \
+#define C4SWBB_BOOSTLEG_PGxIOCONL   {   REG_IOCON_CLMOD_DISABLED | \
                                         REG_IOCON_SWAP_DISABLED | \
                                         REG_IOCON_OSYNC_PWM | \
                                         REG_IOCON_OVREN_COMP_SET | \
@@ -501,7 +510,7 @@ Description:
                                         REG_IOCON_CLDAT_LOW_LOW | \
                                         REG_IOCON_FFDAT_LOW_LOW | \
                                         REG_IOCON_DBDAT_LOW_LOW \
-                                    )  // 0b0011000000000000
+                                    }  // 0b0011000000000000
 
 /*!PGxIOCONH: PWM GENERATOR x I/O CONTROL REGISTER HIGH
  
@@ -516,13 +525,13 @@ Description:
     bit 1 POLH: PWMxH Output Polarity bit: 0 = Output pin is active-high
     bit 0 POLL: PWMxL Output Polarity bit: 0 = Output pin is active-high
  */
-#define C4SWBB_BOOSTLEG_PGxIOCONH   (   REG_IOCON_POLH_ACTIVE_LOW | \
+#define C4SWBB_BOOSTLEG_PGxIOCONH   {   REG_IOCON_POLH_ACTIVE_LOW | \
                                         REG_IOCON_POLL_ACTIVE_LOW | \
                                         REG_IOCON_PENx_COMP_PGx | \
                                         REG_IOCON_PMOD_COMPLEMENTARY | \
                                         REG_IOCON_DTCMPSEL_PCI_SYNC | \
                                         REG_IOCON_CAPSRC_NONE \
-                                    )  // 0b0000000000001100
+                                    }  // 0b0000000000001100
 
 /*!PGxEVTL: PWM GENERATOR x EVENT REGISTER LOW
 
@@ -534,13 +543,13 @@ Description:
     bit 4-3 UPDTRG[1:0]: Update Trigger Select bits: 11 = A write of the PGxTRIGA register automatically sets the UPDATE bit
     bit 2-0 PGTRGSEL[2:0]: PWM Generator Trigger Output Selection bits(1): 001 = PGxTRIGA compare event is the PWM Generator trigger
  */
-#define C4SWBB_BOOSTLEG_PGxEVTL     (   REG_PGEVT_ADTR1PS_POSTSCALE_1 | \
+#define C4SWBB_BOOSTLEG_PGxEVTL     {   REG_PGEVT_ADTR1PS_POSTSCALE_1 | \
                                         REG_PGEVT_ADTR1EN3_PGxTRIGC_DISABLED | \
                                         REG_PGEVT_ADTR1EN2_PGxTRIGB_DISABLED | \
                                         REG_PGEVT_ADTR1EN1_PGxTRIGA_ENABLED | \
                                         REG_PGEVT_UPDTRG_PGxTRIGA | \
                                         REG_PGEVT_PGTRGSEL_PGxTRIGA \
-                                    )  // 0b0000000000011001
+                                    }  // 0b0000000000011001
 
 /*!PGxEVTH: PWM GENERATOR x EVENT REGISTER HIGH
 
@@ -557,7 +566,7 @@ Description:
     bit 5 ADTR2EN1: ADC Trigger 2 Source is PGxTRIGA Compare Event Enable bit: 0 = PGxTRIGA register compare event is disabled as trigger source for ADC Trigger 2 
     bit 4-0 ADTR1OFS[4:0]: ADC Trigger 1 Offset Selection bits: 00000 = No offset 
  */
-#define C4SWBB_BOOSTLEG_PGxEVTH     (   REG_PGEVT_FLTIEN_DISABLED | \
+#define C4SWBB_BOOSTLEG_PGxEVTH     {   REG_PGEVT_FLTIEN_DISABLED | \
                                         REG_PGEVT_CLIEN_DISABLED | \
                                         REG_PGEVT_FFIEN_DISABLED | \
                                         REG_PGEVT_SIEN_DISABLED | \
@@ -566,7 +575,7 @@ Description:
                                         REG_PGEVT_ADTR2EN2_PGxTRIGB_DISABLED | \
                                         REG_PGEVT_ADTR2EN1_PGxTRIGA_DISABLED | \
                                         REG_PGEVT_ADTR1OFS_OFFSET_EVENTS_0 \
-                                    )   // 0b0000001100000000
+                                    }   // 0b0000001100000000
 
 /*!PGxyPCIL: PWM GENERATOR x CL PCI REGISTER LOW (x = PWM GENERATOR #; CL = Current Limit)
 
@@ -579,7 +588,7 @@ Description:
     bit 5 PPS: PCI Polarity Select bit: 0 = Not inverted
     bit 4-0 PSS[4:0]: PCI Source Selection bits: 00000 = Tied to ?0?
  */
-#define C4SWBB_BOOSTLEG_PGxCLPCIL   (   REG_PGxyPCIL_TSYNCDIS_EOC | \
+#define C4SWBB_BOOSTLEG_PGxCLPCIL   {   REG_PGxyPCIL_TSYNCDIS_EOC | \
                                         REG_PGxyPCIL_TERM_MANUAL | \
                                         REG_PGxyPCIL_AQPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_AQSS_NONE | \
@@ -587,7 +596,7 @@ Description:
                                         REG_PGxyPCIL_PSYNC_NONE | \
                                         REG_PGxyPCIL_PPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_PSS_VSS \
-                                    )   // 0b0000000000000000
+                                    }   // 0b0000000000000000
 
 /*!PGxyPCIH: PWM GENERATOR x FF PCI REGISTER HIGH (x = PWM GENERATOR #; CL = Current Limit)
  
@@ -601,7 +610,7 @@ Description:
     bit 3 TQPS: Termination Qualifier Polarity Select bit: 0 = Not inverted
     bit 2-0 TQSS[2:0]: Termination Qualifier Source Selection bits: 000 = No termination qualifier used (qualifier forced to ?1?)
  */ 
-#define C4SWBB_BOOSTLEG_PGxCLPCIH   (   REG_PGxyPCIH_BPEN_DISABLED | \
+#define C4SWBB_BOOSTLEG_PGxCLPCIH   {   REG_PGxyPCIH_BPEN_DISABLED | \
                                         REG_PGxyPCIH_BPSEL_PG1 | \
                                         REG_PGxyPCIH_REG_ACP_LEVEL | \
                                         REG_PGxyPCIH_SWPCI_LOW | \
@@ -609,7 +618,7 @@ Description:
                                         REG_PGxyPCIH_LATMOD_SET | \
                                         REG_PGxyPCIH_TQPS_NOT_INVERTED | \
                                         REG_PGxyPCIH_TQSS_NONE \
-                                    )  // 0b0000000000000000
+                                    }  // 0b0000000000000000
 
 /*!PGxyPCIL: PWM GENERATOR x FF PCI REGISTER LOW (x = PWM GENERATOR #; FF = Feed Forward)
 
@@ -622,7 +631,7 @@ Description:
     bit 5 PPS: PCI Polarity Select bit: 0 = Not inverted
     bit 4-0 PSS[4:0]: PCI Source Selection bits: 00000 = Tied to ?0?
  */
-#define C4SWBB_BOOSTLEG_PGxFFPCIL   (   REG_PGxyPCIL_TSYNCDIS_EOC | \
+#define C4SWBB_BOOSTLEG_PGxFFPCIL   {   REG_PGxyPCIL_TSYNCDIS_EOC | \
                                         REG_PGxyPCIL_TERM_MANUAL | \
                                         REG_PGxyPCIL_AQPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_AQSS_NONE | \
@@ -630,7 +639,7 @@ Description:
                                         REG_PGxyPCIL_PSYNC_NONE | \
                                         REG_PGxyPCIL_PPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_PSS_VSS \
-                                    )   // 0b0000000000000000
+                                    }   // 0b0000000000000000
 
 /*!PGxyPCIH: PWM GENERATOR x FF PCI REGISTER HIGH (x = PWM GENERATOR #; FF = Feed Forward)
  
@@ -644,7 +653,7 @@ Description:
     bit 3 TQPS: Termination Qualifier Polarity Select bit: 0 = Not inverted
     bit 2-0 TQSS[2:0]: Termination Qualifier Source Selection bits: 000 = No termination qualifier used (qualifier forced to ?1?)
  */ 
-#define C4SWBB_BOOSTLEG_PGxFFPCIH   (   REG_PGxyPCIH_BPEN_DISABLED | \
+#define C4SWBB_BOOSTLEG_PGxFFPCIH   {   REG_PGxyPCIH_BPEN_DISABLED | \
                                         REG_PGxyPCIH_BPSEL_PG1 | \
                                         REG_PGxyPCIH_REG_ACP_LEVEL | \
                                         REG_PGxyPCIH_SWPCI_LOW | \
@@ -652,7 +661,7 @@ Description:
                                         REG_PGxyPCIH_LATMOD_SET | \
                                         REG_PGxyPCIH_TQPS_NOT_INVERTED | \
                                         REG_PGxyPCIH_TQSS_NONE \
-                                    )  // 0b0000000000000000
+                                    }  // 0b0000000000000000
 
 /*!PGxyPCIL: PWM GENERATOR x F PCI REGISTER LOW (x = PWM GENERATOR #; F = Fault)
 
@@ -665,7 +674,7 @@ Description:
     bit 5 PPS: PCI Polarity Select bit: 0 = Not inverted
     bit 4-0 PSS[4:0]: PCI Source Selection bits: 00000 = Tied to ?0?
  */
-#define C4SWBB_BOOSTLEG_PGxFPCIL    (   REG_PGxyPCIL_TSYNCDIS_EOC | \
+#define C4SWBB_BOOSTLEG_PGxFPCIL    {   REG_PGxyPCIL_TSYNCDIS_EOC | \
                                         REG_PGxyPCIL_TERM_MANUAL | \
                                         REG_PGxyPCIL_AQPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_AQSS_NONE | \
@@ -673,7 +682,7 @@ Description:
                                         REG_PGxyPCIL_PSYNC_NONE | \
                                         REG_PGxyPCIL_PPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_PSS_VSS \
-                                    )   // 0b0000000000000000
+                                    }   // 0b0000000000000000
 
 /*!PGxyPCIH: PWM GENERATOR x F PCI REGISTER HIGH (x = PWM GENERATOR #; F = Fault)
  
@@ -687,7 +696,7 @@ Description:
     bit 3 TQPS: Termination Qualifier Polarity Select bit: 0 = Not inverted
     bit 2-0 TQSS[2:0]: Termination Qualifier Source Selection bits: 000 = No termination qualifier used (qualifier forced to ?1?)
  */ 
-#define C4SWBB_BOOSTLEG_PGxFPCIH    (   REG_PGxyPCIH_BPEN_DISABLED | \
+#define C4SWBB_BOOSTLEG_PGxFPCIH    {   REG_PGxyPCIH_BPEN_DISABLED | \
                                         REG_PGxyPCIH_BPSEL_PG1 | \
                                         REG_PGxyPCIH_REG_ACP_LEVEL | \
                                         REG_PGxyPCIH_SWPCI_LOW | \
@@ -695,7 +704,7 @@ Description:
                                         REG_PGxyPCIH_LATMOD_SET | \
                                         REG_PGxyPCIH_TQPS_NOT_INVERTED | \
                                         REG_PGxyPCIH_TQSS_NONE \
-                                    )  // 0b0000000000000000
+                                    }  // 0b0000000000000000
 
 /*!PGxyPCIL: PWM GENERATOR x S PCI REGISTER LOW (x = PWM GENERATOR #; S = Debug/Software)
 
@@ -709,7 +718,7 @@ Description:
     bit 4-0 PSS[4:0]: PCI Source Selection bits: 00000 = Tied to ?0?
  */
 
-#define C4SWBB_BOOSTLEG_PGxSPCIL    (   REG_PGxyPCIL_TSYNCDIS_EOC | \
+#define C4SWBB_BOOSTLEG_PGxSPCIL    {   REG_PGxyPCIL_TSYNCDIS_EOC | \
                                         REG_PGxyPCIL_TERM_MANUAL | \
                                         REG_PGxyPCIL_AQPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_AQSS_NONE | \
@@ -717,7 +726,7 @@ Description:
                                         REG_PGxyPCIL_PSYNC_NONE | \
                                         REG_PGxyPCIL_PPS_NOT_INVERTED | \
                                         REG_PGxyPCIL_PSS_VSS \
-                                    )   // 0b0000000000000000
+                                    }   // 0b0000000000000000
 
 /*!PGxyPCIH: PWM GENERATOR x S PCI REGISTER HIGH (x = PWM GENERATOR #; S = Debug/Software)
  
@@ -731,7 +740,7 @@ Description:
     bit 3 TQPS: Termination Qualifier Polarity Select bit: 0 = Not inverted
     bit 2-0 TQSS[2:0]: Termination Qualifier Source Selection bits: 000 = No termination qualifier used (qualifier forced to ?1?)
  */ 
-#define C4SWBB_BOOSTLEG_PGxSPCIH    (   REG_PGxyPCIH_BPEN_DISABLED | \
+#define C4SWBB_BOOSTLEG_PGxSPCIH    {   REG_PGxyPCIH_BPEN_DISABLED | \
                                         REG_PGxyPCIH_BPSEL_PG1 | \
                                         REG_PGxyPCIH_REG_ACP_LEVEL | \
                                         REG_PGxyPCIH_SWPCI_LOW | \
@@ -739,7 +748,7 @@ Description:
                                         REG_PGxyPCIH_LATMOD_SET | \
                                         REG_PGxyPCIH_TQPS_NOT_INVERTED | \
                                         REG_PGxyPCIH_TQSS_NONE \
-                                    )  // 0b0000000000000000
+                                    }  // 0b0000000000000000
 
 /*!PGxLEBH: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER HIGH
  
@@ -751,12 +760,12 @@ Description:
     bit 1 PLR: PWMxL Rising Edge Trigger Enable bit: 0 = LEB ignores the rising edge of PWMxL
     bit 0 PLF: PWMxL Falling Edge Trigger Enable bit: 0 = LEB ignores the falling edge of PWMxL
  */
-#define C4SWBB_BOOSTLEG_PGxLEBH     (   REG_LEBCON_PWMPCI_PG1 | \
+#define C4SWBB_BOOSTLEG_PGxLEBH     {   REG_LEBCON_PWMPCI_PG1 | \
                                         REG_PGxLEBCON_LEBTRG_PHR_DISABLE | \
                                         REG_PGxLEBCON_LEBTRG_PHF_DISABLE | \
                                         REG_PGxLEBCON_LEBTRG_PLR_DISABLE | \
                                         REG_PGxLEBCON_LEBTRG_PLF_DISABLE \
-                                    )  // 0b0000000000000000
+                                    }  // 0b0000000000000000
 
 /*!PWM Generator Timing Registers
 
@@ -796,13 +805,6 @@ Description:
 
     
     
-/* FUNCTION PROTOTYPES */   
-extern volatile uint16_t c4swbb_pwm_module_initialize(void);
-extern volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
-extern volatile uint16_t c4swbb_pwm_enable(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
-extern volatile uint16_t c4swbb_pwm_disable(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
-extern volatile uint16_t c4swbb_pwm_hold(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
-extern volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
     
     
 #ifdef	__cplusplus
