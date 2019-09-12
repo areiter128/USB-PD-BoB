@@ -14,10 +14,6 @@
 /* === private state machine counter variables ===================================================== */
 // (none)
 
-// Declare two 4-Switch Buck/Boost DC/DC converter objects
-volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;    // USB PD Port A
-volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;    // USB PD Port B
-
 
 volatile uint16_t ctrl_Init(volatile cNPNZ16b_t* controller);
 volatile uint16_t ctrl_Reset(volatile cNPNZ16b_t* controller);

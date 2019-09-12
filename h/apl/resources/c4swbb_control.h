@@ -223,7 +223,7 @@ typedef struct {
     volatile C4SWBB_SWITCH_NODE_SETTINGS_t boost_leg; // Settings for 4-switch buck/boost converter boost leg
     volatile C4SWBB_SWITCH_NODE_SETTINGS_t buck_leg; // Settings for 4-switch buck/boost converter buck leg
     volatile C4SWBB_STARTUP_SETTINGS_t soft_start; // Soft-Start settings
-} __attribute__((packed))C4SWBB_POWER_CONTROLLER_t; // Settings, status and operating data of the power controller
+} __attribute__((packed)) C4SWBB_POWER_CONTROLLER_t; // Settings, status and operating data of the power controller
 
 
 /* **********************************************************************************************
