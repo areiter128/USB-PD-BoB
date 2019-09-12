@@ -92,6 +92,7 @@
           <itemPath>../h/hal/initialization/init_irq.h</itemPath>
           <itemPath>../h/hal/initialization/init_dsp.h</itemPath>
           <itemPath>../h/hal/initialization/init_adc.h</itemPath>
+          <itemPath>../h/hal/initialization/init_pwm.h</itemPath>
         </logicalFolder>
         <itemPath>../h/hal/hal.h</itemPath>
       </logicalFolder>
@@ -204,6 +205,7 @@
           <itemPath>../src/hal/initialization/init_irq.c</itemPath>
           <itemPath>../src/hal/initialization/init_dsp.c</itemPath>
           <itemPath>../src/hal/initialization/init_adc.c</itemPath>
+          <itemPath>../src/hal/initialization/init_pwm.c</itemPath>
         </logicalFolder>
         <itemPath>../src/hal/hal.c</itemPath>
       </logicalFolder>
