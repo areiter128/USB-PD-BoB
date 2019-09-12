@@ -38,7 +38,7 @@
  * 
  * *****************************************************************************************************/
 
-volatile uint16_t c4swbb_pwm_module_initialize(void) {
+volatile uint16_t c4swbb_pwm_module_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
 
     volatile uint16_t fres = 1;
     volatile HSPWM_C_MODULE_CONFIG_t pmod_cfg;
@@ -74,7 +74,7 @@ volatile uint16_t c4swbb_pwm_module_initialize(void) {
     pmod_cfg.PWMEVTF.value = 0; // Clear PWM event output control register A
     
     // Set user defined settings
-//    pmod_cfg.MPER.value = pInstance->buck_leg.period;
+    pmod_cfg.MPER.value = pInstance->buck_leg.period;
     
     // call module configuration function
     fres &= hspwm_init_pwm_module(pmod_cfg);
