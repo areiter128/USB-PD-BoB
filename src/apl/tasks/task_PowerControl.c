@@ -7,6 +7,7 @@
 
 
 #include <xc.h>
+
 #include "apl/tasks/task_PowerControl.h"
 
 // Declare two 4-Switch Buck/Boost DC/DC converter objects
@@ -56,9 +57,7 @@ volatile uint16_t init_PowerControl(void) {
     fres &= c4swbb_pwm_generators_initialize(&c4swbb_1); // Initialize PWM generators of Port A
     fres &= c4swbb_pwm_generators_initialize(&c4swbb_2); // Initialize PWM generators of Port B
     
-    //    c4swbb_2 = c4swbb_1;
     
-//    init_4SWBB_PowerController(&c4swbb_2);  // Initialize power controller of USB port 2
     
     return (fres);
 }
@@ -80,6 +79,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.buck_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
     c4swbb_1.buck_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
     c4swbb_1.buck_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
+    c4swbb_1.boost_leg.pwm_swap = 0; // PWMxH and PWMxL are not swapped for buck converter operation
 
     c4swbb_1.boost_leg.pwm_instance = BOOSTH1_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_1.boost_leg.period = SWITCHING_PERIOD; // set switching period 
@@ -90,6 +90,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.boost_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
     c4swbb_1.boost_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
     c4swbb_1.boost_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
+    c4swbb_1.boost_leg.pwm_swap = 1; // PWMxH and PWMxL are swapped for boost converter operation
     
     // Initialize converter #1 voltage loop settings
 
