@@ -257,3 +257,12 @@ volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_POWER_CONTROLLER_t* pInstan
     
 }
 
+volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+    
+    volatile uint16_t fres = 1;
+    volatile HSADC_MODULE_CONFIG_t adcmod_cfg;
+    
+    adcmod_cfg.ADCON1.value = (((uint32_t)C4SWBB_ADC_ADCON1H << 16) | ((uint32_t)C4SWBB_ADC_ADCON1L));
+    
+    return(fres);
+}
