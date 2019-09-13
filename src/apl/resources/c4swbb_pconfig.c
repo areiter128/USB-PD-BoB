@@ -150,10 +150,11 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_POWER_CONTROL
                              ((uint32_t)pInstance->buck_leg.dead_time_falling));      // Falling edge dead time
     pg_config.PGxDC.value = pInstance->buck_leg.duty_ratio_init;   // initial PWM duty cycle
     pg_config.PGxPHASE.value = pInstance->buck_leg.phase;   // initial PWM phase shift
-    
+    pg_config.PGxIOCON.bits.SWAP = pInstance->buck_leg.pwm_swap; // PWMxH/PWMxL output pin swap setting
 
     // Write PWM generator configuration to PWM module
     fres &= hspwm_init_pwm_generator(pInstance->buck_leg.pwm_instance, pg_config);
+
 
     // Initialize PWM generator for Boost leg
     pg_config.PGxCON.value = (((uint32_t)C4SWBB_BUCKLEG_PGxCONH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxCONL));
@@ -179,9 +180,12 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_POWER_CONTROL
     pg_config.PGxCAP.value = C4SWBB_BOOSTLEG_PGxCAP;
 
     // Overriding pre-configured settings with user settings
-    pg_config.PGxLEB.value = pInstance->buck_leg.leb_period;   // leading edge blanking period
-    pg_config.PGxDT.value = (((uint32_t)pInstance->buck_leg.dead_time_rising << 16) | // Rising edge dead time
-                            ((uint32_t)pInstance->buck_leg.dead_time_falling));       // Falling edge dead time
+    pg_config.PGxLEB.value = pInstance->boost_leg.leb_period;   // leading edge blanking period
+    pg_config.PGxDT.value = (((uint32_t)pInstance->boost_leg.dead_time_rising << 16) | // Rising edge dead time
+                             ((uint32_t)pInstance->boost_leg.dead_time_falling));      // Falling edge dead time
+    pg_config.PGxDC.value = pInstance->boost_leg.duty_ratio_init;   // initial PWM duty cycle
+    pg_config.PGxPHASE.value = pInstance->boost_leg.phase;   // initial PWM phase shift
+    pg_config.PGxIOCON.bits.SWAP = pInstance->boost_leg.pwm_swap; // PWMxH/PWMxL output pin swap setting
     
     // Write PWM generator configuration to PWM module
     fres &= hspwm_init_pwm_generator(pInstance->boost_leg.pwm_instance, pg_config);

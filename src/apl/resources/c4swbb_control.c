@@ -477,21 +477,23 @@ volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t
     pInstance->buck_leg.duty_ratio_init = 0; // Clear initial PWM duty cycle of the buck leg
     pInstance->buck_leg.dead_time_rising = 0; // Clear PWM leading edge half-bridge dead time of the buck leg
     pInstance->buck_leg.dead_time_falling = 0; // Clear PWM falling edge half-bridge dead time of the buck leg
+    pInstance->buck_leg.pwm_swap = 0; // Reset PWMxH/PWMxL swap setting of the buck leg
     
-    pInstance->boost_leg.pwm_instance = 0; // Clear PWM instance of the buck leg
-    pInstance->boost_leg.period = 0; // Reset PWM period of the buck leg
-    pInstance->boost_leg.phase = 0; // Clear PWM phase of the buck leg
-    pInstance->boost_leg.leb_period = 0; // Clear PWM LEB period of the buck leg
-    pInstance->boost_leg.duty_ratio_min = 0; // Clear minimum PWM duty cycle of the buck leg
-    pInstance->boost_leg.duty_ratio_max = 0; // Clear maximum PWM duty cycle of the buck leg
-    pInstance->boost_leg.duty_ratio_init = 0; // Clear initial PWM duty cycle of the buck leg
-    pInstance->boost_leg.dead_time_rising = 0; // Clear PWM leading edge half-bridge dead time of the buck leg
-    pInstance->boost_leg.dead_time_falling = 0; // Clear PWM falling edge half-bridge dead time of the buck leg
+    pInstance->boost_leg.pwm_instance = 0; // Clear PWM instance of the boost leg
+    pInstance->boost_leg.period = 0; // Reset PWM period of the boost leg
+    pInstance->boost_leg.phase = 0; // Clear PWM phase of the boost leg
+    pInstance->boost_leg.leb_period = 0; // Clear PWM LEB period of the boost leg
+    pInstance->boost_leg.duty_ratio_min = 0; // Clear minimum PWM duty cycle of the boost leg
+    pInstance->boost_leg.duty_ratio_max = 0; // Clear maximum PWM duty cycle of the boost leg
+    pInstance->boost_leg.duty_ratio_init = 0; // Clear initial PWM duty cycle of the boost leg
+    pInstance->boost_leg.dead_time_rising = 0; // Clear PWM leading edge half-bridge dead time of the boost leg
+    pInstance->boost_leg.dead_time_falling = 0; // Clear PWM falling edge half-bridge dead time of the boost leg
+    pInstance->boost_leg.pwm_swap = 0; // Reset PWMxH/PWMxL swap setting of the boost leg
 
     // Reset Controller Settings
     pInstance->v_loop.controller = 0; // Clear pointer to voltage control loop object
     pInstance->v_loop.ctrl_Init = 0; // Clear function pointer to voltage control loop initialization routine
-    pInstance->v_loop.ctrl_Precharge = 0; // Clear function pointer to voltage control loop precharge routine
+    pInstance->v_loop.ctrl_Precharge = 0; // Clear function pointer to voltage control loop pre-charge routine
     pInstance->v_loop.ctrl_Reset = 0; // Clear function pointer to voltage control loop reset routine
     pInstance->v_loop.ctrl_Update = 0; // Clear function pointer to voltage control loop update routine
     pInstance->v_loop.feedback_offset = 0; // Reset the feedback offset setting of the voltage control loop
@@ -502,7 +504,7 @@ volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t
         
     pInstance->i_loop.controller = 0; // Clear pointer to current control loop object
     pInstance->i_loop.ctrl_Init = 0; // Clear function pointer to current control loop initialization routine
-    pInstance->i_loop.ctrl_Precharge = 0; // Clear function pointer to current control loop precharge routine
+    pInstance->i_loop.ctrl_Precharge = 0; // Clear function pointer to current control loop pre-charge routine
     pInstance->i_loop.ctrl_Reset = 0; // Clear function pointer to current control loop reset routine
     pInstance->i_loop.ctrl_Update = 0; // Clear function pointer to current control loop update routine
     pInstance->i_loop.feedback_offset = 0; // Reset the feedback offset setting of the current control loop

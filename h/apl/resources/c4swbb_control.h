@@ -175,6 +175,7 @@ typedef struct {
  * *************************************************************************************************** */
 typedef struct {
     volatile uint16_t pwm_instance; // Instance of the PWM peripheral used (e.g. 1=PG1, 2=PG2, etc.)
+    volatile uint16_t pwm_swap; // Setting if PWM outputs PWMxH and PWMxL should be swapped or not
     volatile uint16_t period; // Switching period
     volatile uint16_t phase; // Switching signal phase-shift
     volatile uint16_t duty_ratio_init; // Initial duty cycle when the PWM module is being turned on
