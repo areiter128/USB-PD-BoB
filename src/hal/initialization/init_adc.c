@@ -37,45 +37,45 @@ volatile uint16_t initialize_adc(void) {
 
     
     // Run basic initialization of ADC module features
-    adcon1.ADCON1.ADON = ADCON1_ADON_DISABLED; // Make sure ADC module is off
-    adcon1.ADCON1.ADSIDL = ADCON1_ADSIDL_RUN; // Run core in doze mode
-    adcon1.ADCON1.SHRRES = ADCON1_SHRRES_12BIT; // ADC resolution = 12-bit (0...4095 ticks)
-    adcon1.ADCON1.FORM = ADCON1_FORM_INTEGER; // Produce integer (right-aligned) numbers
+    adcon1.bits.ADON = ADCON1_ADON_DISABLED; // Make sure ADC module is off
+    adcon1.bits.ADSIDL = ADCON1_ADSIDL_RUN; // Run core in doze mode
+    adcon1.bits.SHRRES = ADCON1_SHRRES_12BIT; // ADC resolution = 12-bit (0...4095 ticks)
+    adcon1.bits.FORM = ADCON1_FORM_INTEGER; // Produce integer (right-aligned) numbers
     
-    adcon2.ADCON2.SHRADCS = ADCON2_SHRADCS_DIV_MIN; // shared core clock divider = 2:1 (minimum)
-    adcon2.ADCON2.SHRSAMC = ADCON2_SHRSAMC_0010; // 10x TAD sampling time 
-    adcon2.ADCON2.REFCIE = ADCON2_REFCIE_OFF; // no error interrupt is triggered when Vref becomes available
-    adcon2.ADCON2.REFERCIE = ADCON2_REFERCIE_OFF; // no error interrupt is triggered when Vref fails
-    adcon2.ADCON2.REFERR = ADCON2_REFERR_OK; // reset error flag
-    adcon2.ADCON2.REFRDY = ADCON2_REFRDY_NOT_READY; // reset bandgap status bit
-    adcon2.ADCON2.EIEN = ADCON2_EIEN_ON; // enable early interrupts
-    adcon2.ADCON2.SHREISEL = ADCON2_SHREISEL_8TAD; // ADC interrupts are triggered 8 TAD clocks ahead of completion
+    adcon2.bits.SHRADCS = ADCON2_SHRADCS_DIV_MIN; // shared core clock divider = 2:1 (minimum)
+    adcon2.bits.SHRSAMC = ADCON2_SHRSAMC_0010; // 10x TAD sampling time 
+    adcon2.bits.REFCIE = ADCON2_REFCIE_OFF; // no error interrupt is triggered when Vref becomes available
+    adcon2.bits.REFERCIE = ADCON2_REFERCIE_OFF; // no error interrupt is triggered when Vref fails
+    adcon2.bits.REFERR = ADCON2_REFERR_OK; // reset error flag
+    adcon2.bits.REFRDY = ADCON2_REFRDY_NOT_READY; // reset bandgap status bit
+    adcon2.bits.EIEN = ADCON2_EIEN_ON; // enable early interrupts
+    adcon2.bits.SHREISEL = ADCON2_SHREISEL_8TAD; // ADC interrupts are triggered 8 TAD clocks ahead of completion
     
-    adcon3.ADCON3.CLKSEL = ADCON3_CLKSEL_FOSC; //ADCON3_CLKSEL_AFVCODIV; // set ADC clock to auxiliary clock (common clock with PWM)
-    adcon3.ADCON3.CLKDIV = ADCON3_CLKDIV_1; // set ADC input clock divider
-    adcon3.ADCON3.SHREN = ADCON3_CxEN_ENABLED; // enable shared ADC core
-    adcon3.ADCON3.CNVCHSEL = ADCON3_CNVCHSEL_AN0; // set AN0 to be target for software triggers (not used)
-    adcon3.ADCON3.CNVRTCH = ADCON3_CNVRTCH_READY; // reset TRIGGER READY flag bit
-    adcon3.ADCON3.REFSEL = ADCON3_REFSEL_AVDD_AVSS; // set ADC reference to AVDD-toAVSS
-    adcon3.ADCON3.SHRSAMP = ADCON3_SHRSAMP_HWTRIG; // use hardware trigger
-    adcon3.ADCON3.SUSPCIE = ADCON3_SUSPCIE_DISABLED; // disable ISR SUSPEND interrupt 
-    adcon3.ADCON3.SUSPEND = ADCON3_SUSPEND_RUN; // disable SUSPEND MODE
-    adcon3.ADCON3.SUSPRDY = ADCON3_SUSPRDY_RUNNING; // reset SUSPEND mode status flag bit
-    adcon3.ADCON3.SWCTRG = ADCON3_SWCTRG_READY; // set software trigger to READY
-    adcon3.ADCON3.SWLCTRG = ADCON3_SWLCTRG_LVLTRG_BY_HW; // set level sensitive triggers for hardware
-    adcon3.ADCON3.CNVCHSEL = ADCON3_CNVCHSEL_AN0; // configure the ADC inputs used (not used))
+    adcon3.bits.CLKSEL = ADCON3_CLKSEL_FOSC; //ADCON3_CLKSEL_AFVCODIV; // set ADC clock to auxiliary clock (common clock with PWM)
+    adcon3.bits.CLKDIV = ADCON3_CLKDIV_1; // set ADC input clock divider
+    adcon3.bits.SHREN = ADCON3_CxEN_ENABLED; // enable shared ADC core
+    adcon3.bits.CNVCHSEL = ADCON3_CNVCHSEL_AN0; // set AN0 to be target for software triggers (not used)
+    adcon3.bits.CNVRTCH = ADCON3_CNVRTCH_READY; // reset TRIGGER READY flag bit
+    adcon3.bits.REFSEL = ADCON3_REFSEL_AVDD_AVSS; // set ADC reference to AVDD-toAVSS
+    adcon3.bits.SHRSAMP = ADCON3_SHRSAMP_HWTRIG; // use hardware trigger
+    adcon3.bits.SUSPCIE = ADCON3_SUSPCIE_DISABLED; // disable ISR SUSPEND interrupt 
+    adcon3.bits.SUSPEND = ADCON3_SUSPEND_RUN; // disable SUSPEND MODE
+    adcon3.bits.SUSPRDY = ADCON3_SUSPRDY_RUNNING; // reset SUSPEND mode status flag bit
+    adcon3.bits.SWCTRG = ADCON3_SWCTRG_READY; // set software trigger to READY
+    adcon3.bits.SWLCTRG = ADCON3_SWLCTRG_LVLTRG_BY_HW; // set level sensitive triggers for hardware
+    adcon3.bits.CNVCHSEL = ADCON3_CNVCHSEL_AN0; // configure the ADC inputs used (not used))
     
     adcon4.value = 0;
-    adcon4.ADCON4.C0CHS = ADCON4_C0CHS_S1AN0;
-    adcon4.ADCON4.C1CHS = ADCON4_C1CHS_S1AN1;
-    adcon4.ADCON4.SAMC0EN = ADCON4_SAMCxEN_DISABLED;
-    adcon4.ADCON4.SAMC1EN = ADCON4_SAMCxEN_DISABLED;
-//    adcon4.ADCON4.SYNCTRG0 = ADCON4_SYNCTRGx_SYNC_TO_SOURCE;
-//    adcon4.ADCON4.SYNCTRG1 = ADCON4_SYNCTRGx_SYNC_TO_SOURCE;
+    adcon4.bits.C0CHS = ADCON4_C0CHS_S1AN0;
+    adcon4.bits.C1CHS = ADCON4_C1CHS_S1AN1;
+    adcon4.bits.SAMC0EN = ADCON4_SAMCxEN_DISABLED;
+    adcon4.bits.SAMC1EN = ADCON4_SAMCxEN_DISABLED;
+//    adcon4.bits.SYNCTRG0 = ADCON4_SYNCTRGx_SYNC_TO_SOURCE;
+//    adcon4.bits.SYNCTRG1 = ADCON4_SYNCTRGx_SYNC_TO_SOURCE;
     
-    adcon5.ADCON5.SHRCIE = ADCON5L_CxCIE_DISABLED; // enable shared core to generate common interrupts
-    adcon5.ADCON5.SHRPWR = ADCON5_CxPWR_OFF; // Power off Shared Core => will be turned on later
-    adcon5.ADCON5.WARMTIME = ADCON5H_WARMTIME_CLK_32768;
+    adcon5.bits.SHRCIE = ADCON5L_CxCIE_DISABLED; // enable shared core to generate common interrupts
+    adcon5.bits.SHRPWR = ADCON5_CxPWR_OFF; // Power off Shared Core => will be turned on later
+    adcon5.bits.WARMTIME = ADCON5H_WARMTIME_CLK_32768;
 
     // Turn on ADC module power
     fres = hsadc_module_power_up();
