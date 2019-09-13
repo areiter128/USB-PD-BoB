@@ -65,7 +65,7 @@ typedef enum {
     CONVERTER_STATE_INITIALIZE = 0b0000, // converter state machine step #0: initialize peripherals, variables and hijack controller reference
     CONVERTER_STATE_STANDBY = 0b0001, // converter state machine step #1: standby mode, power supply is disabled waiting for being enabled (no action)
     CONVERTER_STATE_POWER_ON_DELAY = 0b0010, // converter state machine step #2: power on delay (no action)
-    CONVERTER_STATE_PRECHARGE = 0b0011, // converter state machine step #3: pre-charge bootstrap capacitor to ensure proper function of half-bridge switch node
+    CONVERTER_STATE_BOOTSTRAP_PRECHARGE = 0b0011, // converter state machine step #3: pre-charge bootstrap capacitor to ensure proper function of half-bridge switch node
     CONVERTER_STATE_LAUNCH_V_RAMP = 0b0100, // converter state machine step #4: turn on PWM outputs and enable controller
     CONVERTER_STATE_V_RAMP_UP = 0b0101, // converter state machine step #5: perform output voltage ramp up based on parameters and system response 
     CONVERTER_STATE_I_RAMP_UP = 0b0110, // converter state machine step #6: perform output current ramp up based on parameters and system response (average current mode only)
