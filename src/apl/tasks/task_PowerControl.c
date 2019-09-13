@@ -39,24 +39,26 @@ volatile uint16_t init_PowerControl(void) {
 
     volatile uint16_t fres = 1;
 
-    // Initialize the 4-switch buck/boost power controller objects
-    fres &= init_USBport_1();
-    fres &= init_USBport_2();
+    // Initialize the 4-switch buck/boost power controller objects for USB port A and B
+    fres &= init_USBport_1(); // Initialize complete configuration of USB Port 1 power controller
+    fres &= init_USBport_2(); // Initialize complete configuration of USB Port 2 power controller
     
-    // Run global/common, non-converter specific peripheral module configuration
-//    fres &= initialize_adc();
-//    fres &= c4swbb_pwm_initialize();
-    
-    // Initialize PWM module base registers 
-    // This only needs to be called once and applies to both USB PD ports.
+    // Initialize PWM module base registers:
+    // =====================================
+    // This only needs to be called once at startup and applies to both USB PD ports.
     // The only setting of the data structure used in this routine is the 
     // PWM period, which is written into the master time base period register MPER
     fres &= c4swbb_pwm_module_initialize(&c4swbb_1);
     
     // Load PWM configurations for PWM generators for both ports
-    fres &= c4swbb_pwm_generators_initialize(&c4swbb_1); // Initialize PWM generators of Port A
-    fres &= c4swbb_pwm_generators_initialize(&c4swbb_2); // Initialize PWM generators of Port B
+    fres &= c4swbb_pwm_generators_initialize(&c4swbb_1); // Initialize PWM generators of USB Port A
+    fres &= c4swbb_pwm_generators_initialize(&c4swbb_2); // Initialize PWM generators of USB Port B
     
+    // Initialize ADC Converter
+    // ========================
+    // The ADC channels configured here are covering sampling of input voltage, output voltage, 
+    // output current and temperature of each converter. All other ADC configurations for other 
+    // functions outside the power control scope need to be done elsewhere
     
     
     return (fres);
