@@ -150,8 +150,8 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_POWER_CONTROL
                              ((uint32_t)pInstance->buck_leg.dead_time_falling));      // Falling edge dead time
     pg_config.PGxDC.value = pInstance->buck_leg.duty_ratio_init;   // initial PWM duty cycle
     pg_config.PGxPHASE.value = pInstance->buck_leg.phase;   // initial PWM phase shift
-    pg_config.PGxIOCON.bits.SWAP = pInstance->buck_leg.pwm_swap; // PWMxH/PWMxL output pin swap setting
-    pg_config.PGxIOCON.bits.OVRDAT = pInstance->buck_leg.pwm_ovrdat; // Override OVR pin-state of PWMxH/PWMxL
+    pg_config.PGxIOCON.bits.SWAP = (pInstance->buck_leg.pwm_swap & 0x0001); // PWMxH/PWMxL output pin swap setting
+    pg_config.PGxIOCON.bits.OVRDAT = (pInstance->buck_leg.pwm_ovrdat & 0x0003); // Override OVR pin-state of PWMxH/PWMxL
     
     // Write PWM generator configuration to PWM module
     fres &= hspwm_init_pwm_generator(pInstance->buck_leg.pwm_instance, pg_config);
@@ -186,8 +186,8 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_POWER_CONTROL
                              ((uint32_t)pInstance->boost_leg.dead_time_falling));      // Falling edge dead time
     pg_config.PGxDC.value = pInstance->boost_leg.duty_ratio_init;   // initial PWM duty cycle
     pg_config.PGxPHASE.value = pInstance->boost_leg.phase;   // initial PWM phase shift
-    pg_config.PGxIOCON.bits.SWAP = pInstance->boost_leg.pwm_swap; // PWMxH/PWMxL output pin swap setting
-    pg_config.PGxIOCON.bits.OVRDAT = pInstance->boost_leg.pwm_ovrdat; // Override OVR pin-state of PWMxH/PWMxL
+    pg_config.PGxIOCON.bits.SWAP = (pInstance->boost_leg.pwm_swap & 0x0001); // PWMxH/PWMxL output pin swap setting
+    pg_config.PGxIOCON.bits.OVRDAT = (pInstance->boost_leg.pwm_ovrdat & 0x0003); // Override OVR pin-state of PWMxH/PWMxL
     
     // Write PWM generator configuration to PWM module
     fres &= hspwm_init_pwm_generator(pInstance->boost_leg.pwm_instance, pg_config);
