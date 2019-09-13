@@ -94,7 +94,6 @@ volatile uint16_t init_USBport_1(void) {
     
     // Initialize converter #1 voltage loop settings
 
-    // Initializing the hardware-specific settings into data structure
     // Initialize basic controller settings of voltage loop object
     cha_vloop_Init(&cha_vloop);
 
@@ -115,10 +114,6 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.ctrl_Reset = &cha_vloop_Reset;     // Function pointer to CONTROL RESET routine
     
 
-    
-    
-
-    
     // Initialize converter #1 current loop settings
     cha_iloop_Init(&cha_iloop);
     
@@ -135,7 +130,9 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.soft_start.pwr_good_delay = C4SWBB_PGDLY;  // Power-Good Delay
     c4swbb_1.soft_start.ramp_v_ref_increment = C4SWBB_VREF_STEP; // Voltage reference tick increment to meet ramp period setting
     c4swbb_1.soft_start.ramp_i_ref_increment = C4SWBB_IREF_STEP; // Current reference tick increment to meet ramp period setting
+    c4swbb_1.soft_start.inrush_limit = IOUT_INRUSH_CLAMP; // Set soft-start inrush current limit
 
+    
     // Reset runtime data output of USB port #1
     c4swbb_1.data.v_in = 0;     // Reset input current value
     c4swbb_1.data.i_out = 0;    // Reset output current value

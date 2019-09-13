@@ -43,7 +43,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
     
     switch (pInstance->status.flags.op_status) {
 
-        /* @@CONVERTER_STATE_INITIALIZE
+        /*!CONVERTER_STATE_INITIALIZE
          * ============================
          * In this step the startup procedure and control loops are reset. The soft-start ramp
          * is defined by a power on delay, pre-charge delay, ramp-up period and power good delay. 
@@ -60,7 +60,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
 
             break;
 
-        /* @@CONVERTER_STATE_STANDBY
+        /*!CONVERTER_STATE_STANDBY
          * ============================
          * In this step the power controller is waiting for being enabled. No action will be taken
          * until c4swbb.status.flags.enable = true and c4swbb.status.flags.GO = 1. The AUTORUN option
@@ -78,7 +78,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             }            
             break;
             
-        /* @@CONVERTER_STATE_POWER_ON_DELAY
+        /*!CONVERTER_STATE_POWER_ON_DELAY
          * ================================
          * During the POWER ON DELAY the power controller waits until the programmed delay 
          * period has expired. Neither control loop nor power converter are active.
@@ -100,7 +100,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
                 
             break;
 
-        /* @@CONVERTER_STATE_PRECHARGE
+        /*!CONVERTER_STATE_PRECHARGE
          * ===========================
          * In this step the soft-start procedure continues with performing the manual pre-charge 
          * process which produces ~120ns wide pulses on the low side PWM signal pre-charging the 
@@ -129,7 +129,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             
             break;
 
-        /* @@CONVERTER_STATE_LAUNCH_V_RAMP
+        /*!CONVERTER_STATE_LAUNCH_V_RAMP
          * ================================
          * In this step the ramp up starting point is determined by measuring the input and output 
          * voltage and calculates the ideal duty ratio of the PWM. This value is then programmed into
@@ -141,15 +141,15 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
          *  */
         case CONVERTER_STATE_LAUNCH_V_RAMP:
 
- /*           // Hijack voltage loop controller reference
+            // Set the BUSY bit indicating a delay/ramp period being executed
+            pInstance->status.flags.busy = true;
+
+            // Hijack voltage loop controller reference
             pInstance->soft_start.v_reference = 0; // Reset Soft-Start Voltage Reference
             pInstance->soft_start.i_reference = 0; // Reset Soft-Start Current Reference
             
             // Voltage loop reference is hijacked by the soft-start reference
             pInstance->v_loop.controller->ptrControlReference = &pInstance->soft_start.v_reference;
-*/            
-            // Set the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.busy = true;
             
             // Determine, if the soft-start needs to ramp up or down
             if(pInstance->data.v_out <= pInstance->data.v_ref) {
@@ -215,7 +215,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             
             break;
             
-        /* @@CONVERTER_STATE_V_RAMP_UP
+        /*!CONVERTER_STATE_V_RAMP_UP
          * ===========================
          * This is the essential step in which the output voltage is ramped up by incrementing the 
          * outer control loop reference. In voltage mode the output voltage will ramp up to the 
@@ -301,7 +301,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
 
             break;
 
-        /* @@CONVERTER_STATE_POWER_GOOD
+        /*!CONVERTER_STATE_POWER_GOOD
          * =============================
          * In this phase of the soft-start procedure the power supply should have reached nominal 
          * level, providing a stable, constant output voltage. A counter is incremented until the 
@@ -339,7 +339,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
                 { pInstance->status.flags.op_status = CONVERTER_STATE_RESET; } // Always Auto-Clear GO bit
             }
                 
-            /*! Runtime Reference Tuning
+            /*!Runtime Reference Tuning
              * ==================================================================================
              * Description:
              * If the user reference setting has been changed and different from the most recent 
@@ -442,7 +442,7 @@ volatile uint16_t c4SWBB_shut_down(volatile C4SWBB_POWER_CONTROLLER_t* pInstance
     fres &= hspwm_ovr_hold(pInstance->buck_leg.pwm_instance);
     fres &= hspwm_ovr_hold(pInstance->boost_leg.pwm_instance);
     
-    // void functions don't get checked
+    // void functions don't return values and therefore their execution doesn't get checked
     pInstance->v_loop.ctrl_Reset(pInstance->v_loop.controller);
     pInstance->i_loop.ctrl_Reset(pInstance->i_loop.controller);
     
@@ -518,6 +518,7 @@ volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t
     pInstance->soft_start.counter = 0; // reset startup counter
     pInstance->soft_start.v_reference = 0;  // reset voltage tuning reference
     pInstance->soft_start.i_reference = 0;  // reset current tuning reference
+    pInstance->soft_start.inrush_limit = 0; // reset soft-start inrush current limit
     pInstance->soft_start.pwr_on_delay = 0;  // set power-on delay
     pInstance->soft_start.precharge_delay = 10;  // set pre-charge delay
     pInstance->soft_start.ramp_period = 0;  // set ramp up period
@@ -612,6 +613,7 @@ volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
     pInstance->soft_start.counter = 0; // reset startup counter
     pInstance->soft_start.v_reference = 0;  // reset voltage tuning reference
     pInstance->soft_start.i_reference = 0;  // reset current tuning reference
+    pInstance->soft_start.inrush_limit = 0; // reset soft-start inrush current limit
     pInstance->soft_start.pwr_on_delay = 0;  // set power-on delay
     pInstance->soft_start.precharge_delay = 10;  // set pre-charge delay
     pInstance->soft_start.ramp_period = 0;  // set ramp up period

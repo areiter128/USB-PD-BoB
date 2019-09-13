@@ -150,7 +150,7 @@ typedef struct {
 
 typedef struct {
     volatile uint16_t counter; // Soft-Start Execution Counter (read only)
-    volatile uint16_t pwr_on_delay; // Soft-Start POwer On Delay
+    volatile uint16_t pwr_on_delay; // Soft-Start Power On Delay
     volatile uint16_t precharge_delay; // Soft-Start Bootstrap Capacitor pre-charge delay
     volatile uint16_t ramp_period; // Soft-Start Ramp-Up Duration
     volatile uint16_t ramp_v_ref_increment; // Soft-Start Single Voltage Reference Increment per Step
@@ -158,6 +158,7 @@ typedef struct {
     volatile uint16_t pwr_good_delay; // Soft-Start Power Good Delay
     volatile uint16_t v_reference; // Soft-Start target voltage loop reference value (read only)
     volatile uint16_t i_reference; // Soft-Start target current loop reference value (read only)
+    volatile uint16_t inrush_limit; // User defined setting of additional inrush current limit during startup 
 }  __attribute__((packed)) C4SWBB_STARTUP_SETTINGS_t; // Power converter soft-start settings and variables
 
 /*!C4SWBB_SWITCH_NODE_SETTINGS_t

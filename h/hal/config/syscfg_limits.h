@@ -60,6 +60,7 @@
 #define VOUT_MAXIMUM_HYST       0.500       // output voltage maximum (Under-Voltage-Lockout Hysteresis Level)
 
 #define IOUT_MINIMUM            0.000       // absolute minimum average output current during normal operation
+#define IOUT_MAX_STARTUP        1.000       // absolute minimum average output current during startup (inrush current limit)
 #define IOUT_MAXIMUM            3.500       // absolute maximum average output current during normal operation
     
 #define IOUT_4SWBB_TRIP_CONV1   1.100       // [A] Upper boost switch threshold for output current - PWM1&PWM2 Buck-Boost leg
@@ -99,6 +100,7 @@
 #define VOUT_MAX_DEV            (uint16_t)((float)VOUT_DIVIDER_RATIO * (float)VOUT_MAX_DEVIATION * ADC_SCALER)   // Maximum allowed output voltage deviation in ADC ticks 
 
 #define IOUT_LCL_CLAMP          (uint16_t)((((float)IOUT_MINIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)ADC_SCALER) // Output voltage sense ADC ticks
+#define IOUT_INRUSH_CLAMP       (uint16_t)((((float)IOUT_MAX_STARTUP * (float)IOUT_SCALER_RATIO_I2V)) * (float)ADC_SCALER) // Output voltage sense ADC ticks
 #define IOUT_OCL_TRIP           (uint16_t)((((float)IOUT_MAXIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)ADC_SCALER) // Output voltage sense ADC ticks
 
 // 4-Switch Buck/Boost operation PWM-leg control
