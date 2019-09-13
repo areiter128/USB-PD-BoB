@@ -168,7 +168,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             // Hijack voltage loop controller reference
             #if (C4SWBB_CONTROL_MODE == C4SWBB_VMC)
             pInstance->soft_start.v_reference = 0; // Reset Soft-Start Voltage Reference
-            #if (C4SWBB_CONTROL_MODE == C4SWBB_ACMC)
+            #elif (C4SWBB_CONTROL_MODE == C4SWBB_ACMC)
             pInstance->soft_start.v_reference = 0; // Reset Soft-Start Voltage Reference
             pInstance->soft_start.i_reference = 0; // Reset Soft-Start Current Reference
             #endif
@@ -287,7 +287,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             // When soft-start reference hits/exceeds user reference and output voltage feedback
             // signal is within ~50mV of regulation, end ramp
             if ( (pInstance->soft_start.v_reference >= pInstance->v_loop.reference) &&              
-                 ((pInstance->data.v_out & 0x003F) == pInstance->soft_start.v_reference & 0x003F) )
+                 ((pInstance->data.v_out & 0x003F) == (pInstance->soft_start.v_reference & 0x003F)) )
             {
             
                 // Match voltage loop reference
@@ -406,13 +406,24 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
          * From this point  forward the power supply will exclusively be running in interrupt   
          * instances executing the control loops. The state machine performs the following tasks:
          * 
-         * a) Enable/Disable
+         * a) Enable/Disable:
+         *    The state machine monitors the state of the ENABLE bit in pInstance->status.
+         *    If the AUTORUN option is disabled and the conter is 
          * 
          * b) Voltage Reference Change Monitoring:
-         *    Detects changes of the user reference setting. Once a change has
-         * been detected, the state machine tunes the voltage loop reference into the new level 
-         * directly and without ramp-up and power good delays. The fault handler is kept running
-         * and no further current limiting functions (like during soft-start) are performed.
+         *    Detects changes of the user reference setting. Once a change has been detected,
+         *    the state machine tunes the voltage loop reference into the new value driving 
+         *    up/down in a linear ramp. 
+         * 
+         *    The ramp slew rate uses the slew rate setting of the soft-start, but without 
+         *    power-on or power good delays. The fault handler is kept running and no further 
+         *    current limiting functions (such as inrush current limits during soft-start) 
+         *    are applied.
+         *    
+         *    ToDo: runtime reference tuning slew rate
+         *    Add additional setting for adjusting runtime-ramp slew rate, decoupling soft-start
+         *    settings from runtime reference tuning
+         * 
          */
         case CONVERTER_STATE_COMPLETE:
 
