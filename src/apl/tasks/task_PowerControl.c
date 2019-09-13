@@ -79,7 +79,8 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.buck_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
     c4swbb_1.buck_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
     c4swbb_1.buck_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
-    c4swbb_1.boost_leg.pwm_swap = 0; // PWMxH and PWMxL are not swapped for buck converter operation
+    c4swbb_1.buck_leg.pwm_swap = 0; // PWMxH and PWMxL are not swapped for buck converter operation
+    c4swbb_1.buck_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
 
     c4swbb_1.boost_leg.pwm_instance = BOOSTH1_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_1.boost_leg.period = SWITCHING_PERIOD; // set switching period 
@@ -91,6 +92,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.boost_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
     c4swbb_1.boost_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     c4swbb_1.boost_leg.pwm_swap = 1; // PWMxH and PWMxL are swapped for boost converter operation
+    c4swbb_1.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
     
     // Initialize converter #1 voltage loop settings
 
@@ -160,6 +162,8 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.buck_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
     c4swbb_2.buck_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
     c4swbb_2.buck_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
+    c4swbb_2.buck_leg.pwm_swap = 0; // PWMxH and PWMxL are not swapped for buck converter operation
+    c4swbb_2.buck_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
 
     c4swbb_2.boost_leg.pwm_instance = BOOSTH2_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_2.boost_leg.period = SWITCHING_PERIOD; // set switching period 
@@ -170,6 +174,8 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.boost_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
     c4swbb_2.boost_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
     c4swbb_2.boost_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
+    c4swbb_2.boost_leg.pwm_swap = 0; // PWMxH and PWMxL are not swapped for buck converter operation
+    c4swbb_2.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
    
     // Initialize converter #1 voltage loop settings
     chb_vloop_Init(&chb_vloop);

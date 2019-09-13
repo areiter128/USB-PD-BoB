@@ -185,6 +185,8 @@ typedef struct {
     volatile uint16_t dead_time_rising; // Dead time setting at rising edge of a half-bridge drive
     volatile uint16_t dead_time_falling; // Dead time setting at falling edge of a half-bridge drive
     volatile uint16_t leb_period; // Leading Edge Blanking period 
+    volatile uint16_t pwm_ovrdat; // Override data defines the complementary PWM output status of pins PWMxH/PWMxL while in 'off-mode'
+                                  // (only values of 1, 2 and 3 are allowed, where 0b00 = LOW/LOW, 0b01=LOW/HIGH, 0b10=HIGH/LOW and 0b11 = HIGH/HIGH)
 }  __attribute__((packed)) C4SWBB_SWITCH_NODE_SETTINGS_t; // Switching signal timing settings
 
 /*!C4SWBB_DATA_t
