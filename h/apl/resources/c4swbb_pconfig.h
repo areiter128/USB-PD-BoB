@@ -825,8 +825,8 @@ Description:
     bit 10-0 Unimplemented: Read as ?0?
  */
     
-#define C4SWBB_ADC_ADCON1L          (   ADCON1_ADON_DISABLED | \
-                                        ADCON1_ADSIDL_RUN \
+#define C4SWBB_ADC_ADCON1L          (   REG_ADCON1L_ADON_DISABLED | \
+                                        REG_ADCON1L_ADSIDL_RUN \
                                     )  // 0b0000000000000000
 
 /*!ADCON1H: ADC CONTROL REGISTER 1 HIGH
@@ -836,10 +836,139 @@ Description:
     bit 6-5 SHRRES<1:0>: Shared ADC Core Resolution Selection bits
     bit 4-0 Unimplemented: Read as ?0? 
   */
-#define C4SWBB_ADC_ADCON1H          (   ADCON1_FORM_INTEGER | \
-                                        ADCON1_SHRRES_12BIT \
-                                    )  // 0b0000000000000000
+#define C4SWBB_ADC_ADCON1H          (   REG_ADCON1H_FORM_INTEGER | \
+                                        REG_ADCON1H_SHRRES_12BIT \
+                                    )  // 0b0000000001100000
    
+/*!ADCON2L: ADC CONTROL REGISTER 2 LOW
+
+    bit 15 REFCIE: Band Gap and Reference Voltage Ready Common Interrupt Enable bit
+    bit 14 REFERCIE: Band Gap or Reference Voltage Error Common Interrupt Enable bit
+    bit 13 Unimplemented: Read as ?0?
+    bit 12 EIEN: Early Interrupts Enable bit
+    bit 11 PTGEN: External Conversion Request Interface bit
+    bit 10-8 SHREISEL<2:0>: Shared Core Early Interrupt Time Selection bits(1)
+    bit 7 Unimplemented: Read as ?0?
+    bit 6-0 SHRADCS<6:0>: Shared ADC Core Input Clock Divider bits
+ */
+#define C4SWBB_ADC_ADCON2L          (   REG_ADCON2L_REFCIE_OFF | \
+                                        REG_ADCON2L_REFERCIE_OFF | \
+                                        REG_ADCON2L_EIEN_ON | \
+                                        REG_ADCON2L_PTGEN_OFF | \
+                                        REG_ADCON2L_SHREISEL_8TAD | \
+                                        REG_SHRADCS(1) \
+                                    )  // 0b0001011100000001
+   
+/*!ADCON2H: ADC CONTROL REGISTER 2 HIGH
+
+    bit 15 REFRDY: Band Gap and Reference Voltage Ready Flag bit
+    bit 14 REFERR: Band Gap or Reference Voltage Error Flag bit
+    bit 13 Unimplemented: Read as ?0?
+    bit 12-10 Reserved: Maintain as ?0?
+    bit 9-0 SHRSAMC<9:0>: Shared ADC Core Sample Time Selection bits
+ */
+#define C4SWBB_ADC_ADCON2H          (   REG_ADCON2H_REFRDY_NOT_READY | \
+                                        REG_ADCON2H_REFERR_OK | \
+                                        REG_ADCON2H_SHRSAMC(10) \
+                                    )  // 0b0000000000001000
+
+/*!ADCON3L: ADC CONTROL REGISTER 3 LOW
+
+    bit 15-13 REFSEL<2:0>: ADC Reference Voltage Selection bits
+    bit 12 SUSPEND: All ADC Core Triggers Disable bit
+    bit 11 SUSPCIE: Suspend All ADC Cores Common Interrupt Enable bit
+    bit 10 SUSPRDY: All ADC Cores Suspended Flag bit
+    bit 9 SHRSAMP: Shared ADC Core Sampling Direct Control bit
+    bit 8 CNVRTCH: Software Individual Channel Conversion Trigger bit
+    bit 7 SWLCTRG: Software Level-Sensitive Common Trigger bit
+    bit 6 SWCTRG: Software Common Trigger bit
+    bit 5-0 CNVCHSEL <5:0>: Channel Number Selection for Software Individual Channel Conversion Trigger bits
+ */
+#define C4SWBB_ADC_ADCON3L          (   REG_ADCON3L_REFSEL_AVDD_AVSS | \
+                                        REG_ADCON3L_SUSPEND_RUN | \
+                                        REG_ADCON3L_SUSPCIE_DISABLED | \
+                                        REG_ADCON3L_SUSPRDY_RUNNING | \
+                                        REG_ADCON3L_SHRSAMP_HWTRIG | \
+                                        REG_ADCON3L_CNVRTCH_READY | \
+                                        REG_ADCON3L_SWLCTRG_LVLTRG_BY_HW | \
+                                        REG_ADCON3L_SWCTRG_READY | \
+                                        REG_ADCON3L_CNVCHSEL(0) \
+                                    )  // 0b0000000000000000
+    
+/*!ADCON3H: ADC CONTROL REGISTER 3 HIGH
+
+    bit 15-14 CLKSEL<1:0>: ADC Module Clock Source Selection bits(1)
+    bit 13-8 CLKDIV<5:0>: ADC Module Clock Source Divider bits(2)
+    bit 7 SHREN: Shared ADC Core Enable bit
+    bit 6-2 Unimplemented: Read as ?0?
+    bit 1 C1EN: Dedicated ADC Core 1 Enable bits
+    bit 0 C0EN: Dedicated ADC Core 0 Enable bits    
+ */
+#define C4SWBB_ADC_ADCON3H          (   REG_ADCON3H_CLKSEL_AFVCODIV | \
+                                        REG_ADCON3H_CLKDIV(1) | \
+                                        REG_ADCON3H_SHREN_DISABLED | \
+                                        REG_ADCON3H_C1EN_DISABLED | \
+                                        REG_ADCON3H_C0EN_DISABLED \
+                                    )  // 0b1100000000000000
+
+/*!ADCON4L: ADC CONTROL REGISTER 4 LOW
+
+    bit 15-10 Unimplemented: Read as ?0?
+    bit 9-8 Reserved: Must be written as ?0?
+    bit 7-2 Unimplemented: Read as ?0?
+    bit 1 SAMC1EN: Dedicated ADC Core 1 Conversion Delay Enable bit
+    bit 0 SAMC0EN: Dedicated ADC Core 0 Conversion Delay Enable bit        
+ */
+#define C4SWBB_ADC_ADCON4L          (   REG_SAMC1EN_DISABLED | \
+                                        REG_SAMC0EN_DISABLED | \
+                                        REG_SYNCTRG1_INDEPENDENT | \
+                                        REG_SYNCTRG0_INDEPENDENT \
+                                    )  // 0b0000000000000000
+    
+/*!ADCON4H: ADC CONTROL REGISTER 4 HIGH
+
+    bit 15-4 Unimplemented: Read as ?0?
+    bit 3-2 C1CHS<1:0>: Dedicated ADC Core 1 Input Channel Selection bits
+    bit 1-0 C0CHS<1:0>: Dedicated ADC Core 0 Input Channel Selection bits        
+ */
+#define C4SWBB_ADC_ADCON4H          (   REG_ADCON4H_C0CHS_AN0 | \
+                                        REG_ADCON4H_C1CHS_AN1 \
+                                    )  // 0b0000000000000000
+
+/*!ADCON5L: ADC CONTROL REGISTER 5 LOW
+
+    bit 15 SHRRDY: Shared ADC Core Ready Flag bit
+    bit 14-10 Unimplemented: Read as ?0?
+    bit 9 C1RDY: Dedicated ADC Core 1 Ready Flag bit
+    bit 8 C0RDY: Dedicated ADC Core 0 Ready Flag bit
+    bit 7 SHRPWR: Shared ADC Core Power Enable bit
+    bit 6-2 Unimplemented: Read as ?0?
+    bit 1 C1PWR: Dedicated ADC Core 1 Power Enable bit
+    bit 0 C0PWR: Dedicated ADC Core 0 Power Enable bit       
+ */
+#define C4SWBB_ADC_ADCON5L          (   REG_ADCON5L_SHRRDY_FF | \
+                                        REG_ADCON5L_C1RDY_FF | \
+                                        REG_ADCON5L_C0RDY_FF | \
+                                        REG_ADCON5L_SHRPWR_OFF | \
+                                        REG_ADCON5L_C1PWR_OFF | \
+                                        REG_ADCON5L_C0PWR_OFF \
+                                    )  // 0b0000000000000000
+    
+/*!ADCON5H: ADC CONTROL REGISTER 5 HIGH
+
+    bit 15-12 Unimplemented: Read as ?0?
+    bit 11-8 WARMTIME<3:0>: ADC Dedicated Core x Power-up Delay bits
+    bit 7 SHRCIE: Shared ADC Core Ready Common Interrupt Enable bit
+    bit 6-2 Unimplemented: Read as ?0?
+    bit 1 C1CIE: Dedicated ADC Core 1 Ready Common Interrupt Enable bit
+    bit 0 C0CIE: Dedicated ADC Core 0 Ready Common Interrupt Enable bit
+ */
+#define C4SWBB_ADC_ADCON5H          (   REG_ADCON5H_WARMTIME_CLK_32768 | \
+                                        REG_ADCON5H_SHRCIE_DISABLED | \
+                                        REG_ADCON5H_C1CIE_DISABLED | \
+                                        REG_ADCON5H_C0CIE_DISABLED \
+                                    )  // 0b0000111100000000
+
 
     
 #ifdef	__cplusplus

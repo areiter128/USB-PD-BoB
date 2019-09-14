@@ -263,6 +263,10 @@ volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_
     volatile HSADC_MODULE_CONFIG_t adcmod_cfg;
     
     adcmod_cfg.ADCON1.value = (((uint32_t)C4SWBB_ADC_ADCON1H << 16) | ((uint32_t)C4SWBB_ADC_ADCON1L));
+    adcmod_cfg.ADCON2.value = (((uint32_t)C4SWBB_ADC_ADCON2H << 16) | ((uint32_t)C4SWBB_ADC_ADCON2L));
+    adcmod_cfg.ADCON3.value = (((uint32_t)C4SWBB_ADC_ADCON3H << 16) | ((uint32_t)C4SWBB_ADC_ADCON3L));
+    adcmod_cfg.ADCON4.value = (((uint32_t)C4SWBB_ADC_ADCON4H << 16) | ((uint32_t)C4SWBB_ADC_ADCON4L));
+    adcmod_cfg.ADCON5.value = (((uint32_t)C4SWBB_ADC_ADCON5H << 16) | ((uint32_t)C4SWBB_ADC_ADCON5L));
     
     return(fres);
 }
