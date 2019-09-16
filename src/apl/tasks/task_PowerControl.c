@@ -7,6 +7,7 @@
 
 
 #include <xc.h>
+
 #include "apl/tasks/task_PowerControl.h"
 
 // Declare two 4-Switch Buck/Boost DC/DC converter objects
@@ -38,27 +39,27 @@ volatile uint16_t init_PowerControl(void) {
 
     volatile uint16_t fres = 1;
 
-    // Initialize the 4-switch buck/boost power controller objects
-    fres &= init_USBport_1();
-    fres &= init_USBport_2();
+    // Initialize the 4-switch buck/boost power controller objects for USB port A and B
+    fres &= init_USBport_1(); // Initialize complete configuration of USB Port 1 power controller
+    fres &= init_USBport_2(); // Initialize complete configuration of USB Port 2 power controller
     
-    // Run global/common, non-converter specific peripheral module configuration
-//    fres &= initialize_adc();
-//    fres &= c4swbb_pwm_initialize();
-    
-    // Initialize PWM module base registers 
-    // This only needs to be called once and applies to both USB PD ports.
+    // Initialize PWM module base registers:
+    // =====================================
+    // This only needs to be called once at startup and applies to both USB PD ports.
     // The only setting of the data structure used in this routine is the 
     // PWM period, which is written into the master time base period register MPER
     fres &= c4swbb_pwm_module_initialize(&c4swbb_1);
     
     // Load PWM configurations for PWM generators for both ports
-    fres &= c4swbb_pwm_generators_initialize(&c4swbb_1); // Initialize PWM generators of Port A
-    fres &= c4swbb_pwm_generators_initialize(&c4swbb_2); // Initialize PWM generators of Port B
+    fres &= c4swbb_pwm_generators_initialize(&c4swbb_1); // Initialize PWM generators of USB Port A
+    fres &= c4swbb_pwm_generators_initialize(&c4swbb_2); // Initialize PWM generators of USB Port B
     
-    //    c4swbb_2 = c4swbb_1;
+    // Initialize ADC Converter
+    // ========================
+    // The ADC channels configured here are covering sampling of input voltage, output voltage, 
+    // output current and temperature of each converter. All other ADC configurations for other 
+    // functions outside the power control scope need to be done elsewhere
     
-//    init_4SWBB_PowerController(&c4swbb_2);  // Initialize power controller of USB port 2
     
     return (fres);
 }
@@ -80,6 +81,8 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.buck_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
     c4swbb_1.buck_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
     c4swbb_1.buck_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
+    c4swbb_1.buck_leg.pwm_swap = 0; // PWMxH and PWMxL are not swapped for buck converter operation
+    c4swbb_1.buck_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
 
     c4swbb_1.boost_leg.pwm_instance = BOOSTH1_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_1.boost_leg.period = SWITCHING_PERIOD; // set switching period 
@@ -90,10 +93,11 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.boost_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
     c4swbb_1.boost_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
     c4swbb_1.boost_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
+    c4swbb_1.boost_leg.pwm_swap = 1; // PWMxH and PWMxL are swapped for boost converter operation
+    c4swbb_1.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
     
     // Initialize converter #1 voltage loop settings
 
-    // Initializing the hardware-specific settings into data structure
     // Initialize basic controller settings of voltage loop object
     cha_vloop_Init(&cha_vloop);
 
@@ -114,10 +118,6 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.ctrl_Reset = &cha_vloop_Reset;     // Function pointer to CONTROL RESET routine
     
 
-    
-    
-
-    
     // Initialize converter #1 current loop settings
     cha_iloop_Init(&cha_iloop);
     
@@ -134,7 +134,9 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.soft_start.pwr_good_delay = C4SWBB_PGDLY;  // Power-Good Delay
     c4swbb_1.soft_start.ramp_v_ref_increment = C4SWBB_VREF_STEP; // Voltage reference tick increment to meet ramp period setting
     c4swbb_1.soft_start.ramp_i_ref_increment = C4SWBB_IREF_STEP; // Current reference tick increment to meet ramp period setting
+    c4swbb_1.soft_start.inrush_limit = IOUT_INRUSH_CLAMP; // Set soft-start inrush current limit
 
+    
     // Reset runtime data output of USB port #1
     c4swbb_1.data.v_in = 0;     // Reset input current value
     c4swbb_1.data.i_out = 0;    // Reset output current value
@@ -162,6 +164,8 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.buck_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
     c4swbb_2.buck_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
     c4swbb_2.buck_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
+    c4swbb_2.buck_leg.pwm_swap = 0; // PWMxH and PWMxL are not swapped for buck converter operation
+    c4swbb_2.buck_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
 
     c4swbb_2.boost_leg.pwm_instance = BOOSTH2_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_2.boost_leg.period = SWITCHING_PERIOD; // set switching period 
@@ -172,6 +176,8 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.boost_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
     c4swbb_2.boost_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
     c4swbb_2.boost_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
+    c4swbb_2.boost_leg.pwm_swap = 0; // PWMxH and PWMxL are not swapped for buck converter operation
+    c4swbb_2.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
    
     // Initialize converter #1 voltage loop settings
     chb_vloop_Init(&chb_vloop);

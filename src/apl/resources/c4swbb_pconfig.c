@@ -150,10 +150,12 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_POWER_CONTROL
                              ((uint32_t)pInstance->buck_leg.dead_time_falling));      // Falling edge dead time
     pg_config.PGxDC.value = pInstance->buck_leg.duty_ratio_init;   // initial PWM duty cycle
     pg_config.PGxPHASE.value = pInstance->buck_leg.phase;   // initial PWM phase shift
+    pg_config.PGxIOCON.bits.SWAP = (pInstance->buck_leg.pwm_swap & 0x0001); // PWMxH/PWMxL output pin swap setting
+    pg_config.PGxIOCON.bits.OVRDAT = (pInstance->buck_leg.pwm_ovrdat & 0x0003); // Override OVR pin-state of PWMxH/PWMxL
     
-
     // Write PWM generator configuration to PWM module
     fres &= hspwm_init_pwm_generator(pInstance->buck_leg.pwm_instance, pg_config);
+
 
     // Initialize PWM generator for Boost leg
     pg_config.PGxCON.value = (((uint32_t)C4SWBB_BUCKLEG_PGxCONH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxCONL));
@@ -179,9 +181,13 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_POWER_CONTROL
     pg_config.PGxCAP.value = C4SWBB_BOOSTLEG_PGxCAP;
 
     // Overriding pre-configured settings with user settings
-    pg_config.PGxLEB.value = pInstance->buck_leg.leb_period;   // leading edge blanking period
-    pg_config.PGxDT.value = (((uint32_t)pInstance->buck_leg.dead_time_rising << 16) | // Rising edge dead time
-                            ((uint32_t)pInstance->buck_leg.dead_time_falling));       // Falling edge dead time
+    pg_config.PGxLEB.value = pInstance->boost_leg.leb_period;   // leading edge blanking period
+    pg_config.PGxDT.value = (((uint32_t)pInstance->boost_leg.dead_time_rising << 16) | // Rising edge dead time
+                             ((uint32_t)pInstance->boost_leg.dead_time_falling));      // Falling edge dead time
+    pg_config.PGxDC.value = pInstance->boost_leg.duty_ratio_init;   // initial PWM duty cycle
+    pg_config.PGxPHASE.value = pInstance->boost_leg.phase;   // initial PWM phase shift
+    pg_config.PGxIOCON.bits.SWAP = (pInstance->boost_leg.pwm_swap & 0x0001); // PWMxH/PWMxL output pin swap setting
+    pg_config.PGxIOCON.bits.OVRDAT = (pInstance->boost_leg.pwm_ovrdat & 0x0003); // Override OVR pin-state of PWMxH/PWMxL
     
     // Write PWM generator configuration to PWM module
     fres &= hspwm_init_pwm_generator(pInstance->boost_leg.pwm_instance, pg_config);
@@ -251,3 +257,16 @@ volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_POWER_CONTROLLER_t* pInstan
     
 }
 
+volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+    
+    volatile uint16_t fres = 1;
+    volatile HSADC_MODULE_CONFIG_t adcmod_cfg;
+    
+    adcmod_cfg.ADCON1.value = (((uint32_t)C4SWBB_ADC_ADCON1H << 16) | ((uint32_t)C4SWBB_ADC_ADCON1L));
+    adcmod_cfg.ADCON2.value = (((uint32_t)C4SWBB_ADC_ADCON2H << 16) | ((uint32_t)C4SWBB_ADC_ADCON2L));
+    adcmod_cfg.ADCON3.value = (((uint32_t)C4SWBB_ADC_ADCON3H << 16) | ((uint32_t)C4SWBB_ADC_ADCON3L));
+    adcmod_cfg.ADCON4.value = (((uint32_t)C4SWBB_ADC_ADCON4H << 16) | ((uint32_t)C4SWBB_ADC_ADCON4L));
+    adcmod_cfg.ADCON5.value = (((uint32_t)C4SWBB_ADC_ADCON5H << 16) | ((uint32_t)C4SWBB_ADC_ADCON5L));
+    
+    return(fres);
+}

@@ -65,7 +65,7 @@ typedef enum {
     CONVERTER_STATE_INITIALIZE = 0b0000, // converter state machine step #0: initialize peripherals, variables and hijack controller reference
     CONVERTER_STATE_STANDBY = 0b0001, // converter state machine step #1: standby mode, power supply is disabled waiting for being enabled (no action)
     CONVERTER_STATE_POWER_ON_DELAY = 0b0010, // converter state machine step #2: power on delay (no action)
-    CONVERTER_STATE_PRECHARGE = 0b0011, // converter state machine step #3: pre-charge bootstrap capacitor to ensure proper function of half-bridge switch node
+    CONVERTER_STATE_BOOTSTRAP_PRECHARGE = 0b0011, // converter state machine step #3: pre-charge bootstrap capacitor to ensure proper function of half-bridge switch node
     CONVERTER_STATE_LAUNCH_V_RAMP = 0b0100, // converter state machine step #4: turn on PWM outputs and enable controller
     CONVERTER_STATE_V_RAMP_UP = 0b0101, // converter state machine step #5: perform output voltage ramp up based on parameters and system response 
     CONVERTER_STATE_I_RAMP_UP = 0b0110, // converter state machine step #6: perform output current ramp up based on parameters and system response (average current mode only)
@@ -150,7 +150,7 @@ typedef struct {
 
 typedef struct {
     volatile uint16_t counter; // Soft-Start Execution Counter (read only)
-    volatile uint16_t pwr_on_delay; // Soft-Start POwer On Delay
+    volatile uint16_t pwr_on_delay; // Soft-Start Power On Delay
     volatile uint16_t precharge_delay; // Soft-Start Bootstrap Capacitor pre-charge delay
     volatile uint16_t ramp_period; // Soft-Start Ramp-Up Duration
     volatile uint16_t ramp_v_ref_increment; // Soft-Start Single Voltage Reference Increment per Step
@@ -158,6 +158,7 @@ typedef struct {
     volatile uint16_t pwr_good_delay; // Soft-Start Power Good Delay
     volatile uint16_t v_reference; // Soft-Start target voltage loop reference value (read only)
     volatile uint16_t i_reference; // Soft-Start target current loop reference value (read only)
+    volatile uint16_t inrush_limit; // User defined setting of additional inrush current limit during startup 
 }  __attribute__((packed)) C4SWBB_STARTUP_SETTINGS_t; // Power converter soft-start settings and variables
 
 /*!C4SWBB_SWITCH_NODE_SETTINGS_t
@@ -175,6 +176,7 @@ typedef struct {
  * *************************************************************************************************** */
 typedef struct {
     volatile uint16_t pwm_instance; // Instance of the PWM peripheral used (e.g. 1=PG1, 2=PG2, etc.)
+    volatile uint16_t pwm_swap; // Setting if PWM outputs PWMxH and PWMxL should be swapped or not
     volatile uint16_t period; // Switching period
     volatile uint16_t phase; // Switching signal phase-shift
     volatile uint16_t duty_ratio_init; // Initial duty cycle when the PWM module is being turned on
@@ -183,6 +185,8 @@ typedef struct {
     volatile uint16_t dead_time_rising; // Dead time setting at rising edge of a half-bridge drive
     volatile uint16_t dead_time_falling; // Dead time setting at falling edge of a half-bridge drive
     volatile uint16_t leb_period; // Leading Edge Blanking period 
+    volatile uint16_t pwm_ovrdat; // Override data defines the complementary PWM output status of pins PWMxH/PWMxL while in 'off-mode'
+                                  // (only values of 1, 2 and 3 are allowed, where 0b00 = LOW/LOW, 0b01=LOW/HIGH, 0b10=HIGH/LOW and 0b11 = HIGH/HIGH)
 }  __attribute__((packed)) C4SWBB_SWITCH_NODE_SETTINGS_t; // Switching signal timing settings
 
 /*!C4SWBB_DATA_t
@@ -294,6 +298,7 @@ extern volatile uint16_t c4swbb_pwm_disable(volatile C4SWBB_POWER_CONTROLLER_t* 
 extern volatile uint16_t c4swbb_pwm_hold(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
 extern volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
 
+extern volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
 
 #endif	/* _APL_RESOURCES_SOFT_START_H_ */
 
