@@ -851,10 +851,10 @@ Description:
     bit 7 Unimplemented: Read as ?0?
     bit 6-0 SHRADCS<6:0>: Shared ADC Core Input Clock Divider bits
  */
-#define C4SWBB_ADC_ADCON2L          (   REG_ADCON2L_REFCIE_OFF | \
-                                        REG_ADCON2L_REFERCIE_OFF | \
-                                        REG_ADCON2L_EIEN_ON | \
-                                        REG_ADCON2L_PTGEN_OFF | \
+#define C4SWBB_ADC_ADCON2L          (   REG_ADCON2L_REFCIE_ENABLED | \
+                                        REG_ADCON2L_REFERCIE_DISABLED | \
+                                        REG_ADCON2L_EIEN_ENABLED | \
+                                        REG_ADCON2L_PTGEN_DISABLED | \
                                         REG_ADCON2L_SHREISEL_8TAD | \
                                         REG_SHRADCS(1) \
                                     )  // 0b0001011100000001

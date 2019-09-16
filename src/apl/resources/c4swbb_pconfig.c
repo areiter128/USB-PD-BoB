@@ -268,5 +268,7 @@ volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_
     adcmod_cfg.ADCON4.value = (((uint32_t)C4SWBB_ADC_ADCON4H << 16) | ((uint32_t)C4SWBB_ADC_ADCON4L));
     adcmod_cfg.ADCON5.value = (((uint32_t)C4SWBB_ADC_ADCON5H << 16) | ((uint32_t)C4SWBB_ADC_ADCON5L));
     
+    fres &= hsadc_init_adc_module(adcmod_cfg);  // Write ADC module configuration to registers
+    
     return(fres);
 }
