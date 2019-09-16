@@ -386,11 +386,12 @@ extern "C" {
         bit 1 PLR: PWMxL Rising Edge Trigger Enable bit: 0 = LEB ignores the rising edge of PWMxL
         bit 0 PLF: PWMxL Falling Edge Trigger Enable bit: 0 = LEB ignores the falling edge of PWMxL
      */
-#define C4SWBB_BUCKLEG_PGxLEBH      (   REG_LEBCON_PWMPCI_PG1 | \
+// TODO: Fix the commented out definitions below.    
+#define C4SWBB_BUCKLEG_PGxLEBH      (   REG_LEBCON_PWMPCI_PG1 /*| \
                                         REG_PGxLEBCON_LEBTRG_PHR_DISABLE | \
                                         REG_PGxLEBCON_LEBTRG_PHF_DISABLE | \
                                         REG_PGxLEBCON_LEBTRG_PLR_DISABLE | \
-                                        REG_PGxLEBCON_LEBTRG_PLF_DISABLE \
+                                        REG_PGxLEBCON_LEBTRG_PLF_DISABLE*/ \
                                     )  // 0b0000000000000000
 
     /*!PWM Generator Timing Registers
