@@ -189,6 +189,35 @@ typedef struct {
                                   // (only values of 1, 2 and 3 are allowed, where 0b00 = LOW/LOW, 0b01=LOW/HIGH, 0b10=HIGH/LOW and 0b11 = HIGH/HIGH)
 }  __attribute__((packed)) C4SWBB_SWITCH_NODE_SETTINGS_t; // Switching signal timing settings
 
+/*!C4SWBB_FEEDBACK_t
+ * ***************************************************************************************************
+ * Summary:
+ * Data structure holding chip-specific feedback specifications
+ * 
+ * Description:
+ * This data structure holds chip-specific feedback specifications such as ADC input numbers of
+ * all required signals. These settings will be configured in user code and will be used by the 
+ * initialization routines.
+ * 
+ * *************************************************************************************************** */
+typedef struct {
+    volatile uint16_t adin_no;   // Number of the analog input used (e.g. '3' for 'AN3')
+    volatile uint16_t adc_core;  // Number of the ADC core the input is connected to
+    volatile uint16_t* ptrADBUF; // Pointer to analog input result buffer
+    volatile bool interrupt_enable; // Interrupt Enable setting (true = enabled, false = disabled)
+    volatile bool early_interrupt_enable; // Early Interrupt Enable setting (true = enabled, false = disabled)
+    volatile bool early_interrupt_tad; // Number of Tads  by which the interrupt is pulled in (generated early)
+    volatile uint16_t trigger_source; // Trigger generating source for this AND input (see device data sheet for details)
+}C4SWBB_ADC_FEEDBACK_INTERFACE_t;
+
+
+typedef struct {
+    volatile C4SWBB_ADC_FEEDBACK_INTERFACE_t ad_iout; // Power converter 'Output Current'
+    volatile C4SWBB_ADC_FEEDBACK_INTERFACE_t ad_vin;  // Power converter 'Input Voltage'
+    volatile C4SWBB_ADC_FEEDBACK_INTERFACE_t ad_vout; // Power converter 'Output Voltage'
+    volatile C4SWBB_ADC_FEEDBACK_INTERFACE_t ad_temp;  // feedback signal 'Temperature'
+}C4SWBB_FEEDBACK_t;
+
 /*!C4SWBB_DATA_t
  * ***************************************************************************************************
  * Summary:
