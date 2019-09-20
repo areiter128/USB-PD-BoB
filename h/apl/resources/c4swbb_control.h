@@ -250,6 +250,7 @@ typedef struct {
 
 typedef struct {
     volatile C4SWBB_STATUS_t status; // Operating status information
+    volatile C4SWBB_FEEDBACK_t feedback; // Data structure providing the feedback signal configuration
     volatile C4SWBB_DATA_t data; // Data structure providing real-time operating data
     volatile C4SWBB_LOOP_SETTINGS_t i_loop; // Current loop control data structure
     volatile C4SWBB_LOOP_SETTINGS_t v_loop; // Voltage loop control data structure
@@ -328,6 +329,7 @@ extern volatile uint16_t c4swbb_pwm_hold(volatile C4SWBB_POWER_CONTROLLER_t* pIn
 extern volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
 
 extern volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
+extern volatile uint16_t c4swbb_adc_channels_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
 
 #endif	/* _APL_RESOURCES_SOFT_START_H_ */
 
