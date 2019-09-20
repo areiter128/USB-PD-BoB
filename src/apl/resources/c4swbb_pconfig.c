@@ -262,6 +262,7 @@ volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_
     volatile uint16_t fres = 1;
     volatile HSADC_MODULE_CONFIG_t adcmod_cfg;
     
+    // Load configuration preset from header file
     adcmod_cfg.ADCON1.value = (((uint32_t)C4SWBB_ADC_ADCON1H << 16) | ((uint32_t)C4SWBB_ADC_ADCON1L));
     adcmod_cfg.ADCON2.value = (((uint32_t)C4SWBB_ADC_ADCON2H << 16) | ((uint32_t)C4SWBB_ADC_ADCON2L));
     adcmod_cfg.ADCON3.value = (((uint32_t)C4SWBB_ADC_ADCON3H << 16) | ((uint32_t)C4SWBB_ADC_ADCON3L));
@@ -272,3 +273,45 @@ volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_
     
     return(fres);
 }
+
+volatile uint16_t c4swbb_adc_channels_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+    
+    volatile uint16_t fres = 1;
+    volatile HSADC_CHANNEL_CONFIG_t adin_cfg;
+
+
+    // Reset/load defaults
+    adin_cfg.config.bits.early_interrupt_enable = ADEIE_ANx_DISABLED; // Always disable early interrupts
+    adin_cfg.config.bits.interrupt_enable = ADIE_ANx_DISABLED; // Always disable interrupt generation
+    adin_cfg.config.bits.trigger_mode = ADLVLTRG_ANx_EDGE; // Always set trigger to EDGE TRIGGER mode
+    adin_cfg.config.bits.trigger_source = ADTRIGx_TRGSRC_NONE; // Always clear interrupt source
+    
+    adin_cfg.config.bits.data_mode = ANx_DATA_UNSIGNED; // Always use unsigned numbers
+    adin_cfg.config.bits.input_mode = ANx_SINGLE_ENDED; // Always use single ended ADC channels
+
+    // Extract/Load user settings controller from object
+    adin_cfg.ad_input = pInstance->feedback.ad_vout.adin_no;    // Load analog input number from user object
+
+    // Load analog input core assignment
+    if (pInstance->feedback.ad_vout.adc_core != (ADC_CORE_COUNT-1)) {
+        adin_cfg.config.bits.core_assigmnment = ANx_CORE_ASSIGNMENT_DEDICATED; // Input is connected to dedicated ADC core
+    }
+    else {
+        adin_cfg.config.bits.core_assigmnment = ANx_CORE_ASSIGNMENT_SHARED; // Input is connected to shared ADC core
+    }
+    
+    // set interrupt configuration
+    adin_cfg.config.bits.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vout.interrupt_enable);
+    adin_cfg.config.bits.early_interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vout.early_interrupt_enable);
+    adin_cfg.config.bits.early_interrupt_tad = (volatile uint16_t)(pInstance->feedback.ad_vout.early_interrupt_tad);
+    adin_cfg.config.bits.trigger_source = (volatile uint16_t)(pInstance->feedback.ad_vout.trigger_source);
+
+    hsadc_init_adc_channel(adin_cfg);
+    
+    
+    return(fres);
+}
+
+
+// EOF
+
