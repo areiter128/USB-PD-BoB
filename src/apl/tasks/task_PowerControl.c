@@ -59,7 +59,10 @@ volatile uint16_t init_PowerControl(void) {
     // The ADC channels configured here are covering sampling of input voltage, output voltage, 
     // output current and temperature of each converter. All other ADC configurations for other 
     // functions outside the power control scope need to be done elsewhere
+    fres &= c4swbb_adc_module_initialize(&c4swbb_1);
     
+    // Initialize all ADC input channels of one power controller
+    fres &= c4swbb_adc_channels_initialize(&c4swbb_1);
     
     return (fres);
 }
@@ -67,11 +70,12 @@ volatile uint16_t init_PowerControl(void) {
 volatile uint16_t init_USBport_1(void) {
 
     volatile uint16_t fres=1;
+
     
     /* Initializing 4SW-BB DC/DC converter at USB port A */
     reset_4SWBB_PowerController(&c4swbb_1);  // Initialize power controller of USB port 1
     
-    // Set PWM settings
+    // Load PWM settings from hardware and microcontroller abstraction layers (HAL and MCAL)
     c4swbb_1.buck_leg.pwm_instance = BUCKH1_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_1.buck_leg.period = SWITCHING_PERIOD; // set switching period 
     c4swbb_1.buck_leg.phase = PWM_PHASE_SFT; // Phase shift of the PWM switching frequency 
@@ -96,6 +100,30 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.boost_leg.pwm_swap = 1; // PWMxH and PWMxL are swapped for boost converter operation
     c4swbb_1.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
     
+    // Load ADC settings from hardware and microcontroller abstraction layers (HAL and MCAL)
+    c4swbb_1.feedback.ad_vout.adin_no = FB_VOUT1_ADC_AN_INPUT;
+    c4swbb_1.feedback.ad_vout.adc_core = FB_VOUT1_ADCCORE;
+    c4swbb_1.feedback.ad_vout.ptrADBUF = &FB_VOUT1_ADCBUF;
+
+    /* ToDo: trigger and interrupt configuration needs to be added*/
+    c4swbb_1.feedback.ad_vout.trigger_source = BUCKH1_ADC_TRGSRC_1;
+    c4swbb_1.feedback.ad_vout.interrupt_enable = true;
+//    c4swbb_1.feedback.ad_vout.interrupt_priority = FB_VOUT1_ADC_IP;
+    c4swbb_1.feedback.ad_vout.early_interrupt_enable = true;
+    c4swbb_1.feedback.ad_vout.early_interrupt_tad = FB_VOUT1_EISEL_TAD;
+    
+    c4swbb_1.feedback.ad_iout.adin_no = FB_IOUT1_ADC_AN_INPUT;
+    c4swbb_1.feedback.ad_iout.adc_core = FB_IOUT1_ADCCORE;
+    c4swbb_1.feedback.ad_iout.ptrADBUF = &FB_IOUT1_ADCBUF;
+    
+    c4swbb_1.feedback.ad_vin.adin_no = FB_VBAT_ADC_AN_INPUT;
+    c4swbb_1.feedback.ad_vin.adc_core = FB_VBAT_ADCCORE;
+    c4swbb_1.feedback.ad_vin.ptrADBUF = &FB_VBAT_ADCBUF;
+    
+    c4swbb_1.feedback.ad_temp.adin_no = FB_TEMP1_ADC_AN_INPUT;
+    c4swbb_1.feedback.ad_temp.adc_core = FB_TEMP1_ADCCORE;
+    c4swbb_1.feedback.ad_temp.ptrADBUF = &FB_TEMP1_ADCBUF;
+
     // Initialize converter #1 voltage loop settings
 
     // Initialize basic controller settings of voltage loop object
@@ -110,6 +138,8 @@ volatile uint16_t init_USBport_1(void) {
     
     // Assign voltage loop object to 4-switch buck/boost converter instance
     c4swbb_1.v_loop.controller = &cha_vloop;        // 4-Switch Buck/Boost converter voltage loop controller
+    c4swbb_1.v_loop.controller->ptrSource = &FB_VOUT1_ADCBUF; // Set pointer to data input source
+    c4swbb_1.v_loop.controller->ptrTarget = &c4swbb_1.i_loop.reference; // Set pointer to data output target
 
     // Assign control functions by loading function pointers into the data structure
     c4swbb_1.v_loop.ctrl_Init = &cha_vloop_Init;        // Function pointer to CONTROL INIT routine
@@ -122,6 +152,9 @@ volatile uint16_t init_USBport_1(void) {
     cha_iloop_Init(&cha_iloop);
     
     c4swbb_1.i_loop.controller = &cha_iloop;   // 4-Switch Buck/Boost converter voltage loop controller
+    c4swbb_1.i_loop.controller->ptrSource = &FB_IOUT1_ADCBUF; // Set pointer to data input source
+    c4swbb_1.i_loop.controller->ptrTarget = &BUCKH1_PGx_DC; // Set pointer to data output target
+    
     c4swbb_1.i_loop.minimum = DUTY_RATIO_MIN_REG;   // Minimum duty ratio is absolute clamping limit of current loop
     c4swbb_1.i_loop.maximum = DUTY_RATIO_MAX_REG;   // Maximum duty ratio is absolute clamping limit of current loop
     c4swbb_1.i_loop.feedback_offset = C4SWBB_IOUT_FEEDBACK_OFFSET;   // Current feedback signal offset
@@ -215,4 +248,80 @@ volatile uint16_t init_USBport_2(void) {
     return(fres);
     
 }
+
+
+void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_IOUT2_ADC_Interrupt ( void )
+{
+    static volatile uint16_t counter = 0;
+    static volatile uint16_t accADCAN9 =0;
+    volatile uint16_t valADCAN9, avgADCAN9;
+    
+    valADCAN9  = ADCBUF9;   // Read the ADC value from the ADCBUF (ADSTATLbits.AN9RDY is cleared at the same time)
+    
+    if(++counter == 8){
+        
+        accADCAN9 += valADCAN9;
+        avgADCAN9  = accADCAN9 >> 3;
+        
+        if (avgADCAN9 >= IOUT_4SWBB_UTH_CONV1) {
+            // Enable PWM2 
+            hspwm_ovr_release(BOOSTH1_PGx_CHANNEL);
+            
+            PG2CONLbits.ON = 0b1;           // PWM2 Module is enabled
+//            UTH_ADCAN9_TRIPPED  = 1; 
+//            LTH_ADCAN9_TRIPPED  = 0;
+        }
+        if (avgADCAN9 <= IOUT_4SWBB_LTH_CONV1) {
+            // Disable PWM2 
+            PG2CONLbits.ON      = 0b0;     // PWM2 Module is disabled 
+//            UTH_ADCAN9_TRIPPED  = 0; 
+//            LTH_ADCAN9_TRIPPED  = 1;
+        }
+        counter = 0;
+        accADCAN9 = 0;
+    } 
+    else {
+        accADCAN9 += valADCAN9;
+    }
+    FB_IOUT2_ADC_IF = 0;  // Clear the ADCAN9 interrupt flag 
+}
+
+void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_IOUT1_ADC_Interrupt ( void )
+{
+    static volatile uint16_t counter = 0;
+    static volatile uint16_t accADCAN18 =0;
+    volatile uint16_t valADCAN18, avgADCAN18;
+   
+    valADCAN18  = ADCBUF18;   // Read the ADC value from the ADCBUF (ADSTATLbits.AN18RDY is cleared at the same time)
+    
+    if(++counter == 8){
+        accADCAN18 += valADCAN18;
+        avgADCAN18  = accADCAN18 >> 3;
+        
+        if (avgADCAN18 >= IOUT_4SWBB_UTH_CONV2) {
+            // Enable PWM7 outputs
+            hspwm_ovr_release(BOOSTH1_PGx_CHANNEL);
+            
+// Remove:            PG7CONLbits.ON = 0b1;           // PWM7 Module is enabled
+// Remove:            UTH_ADCAN18_TRIPPED = 1; 
+// Remove:            LTH_ADCAN18_TRIPPED = 0; 
+        }
+        if (avgADCAN18 <= IOUT_4SWBB_LTH_CONV2) {
+            // Disable PWM7 outputs
+            hspwm_ovr_hold(BOOSTH1_PGx_CHANNEL);
+
+// Remove:            PG7CONLbits.ON      = 0b0;     // PWM7 Module is disabled 
+// Remove:            UTH_ADCAN18_TRIPPED = 0; 
+// Remove:            LTH_ADCAN18_TRIPPED = 1; 
+        }
+        
+        counter = 0;
+        accADCAN18 = 0;
+    } 
+    else {
+        accADCAN18 += valADCAN18;
+    }
+    FB_IOUT1_ADC_IF = 0;  // Clear the ADCAN18 interrupt flag 
+}
+
 
