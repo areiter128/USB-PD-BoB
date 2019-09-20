@@ -102,6 +102,12 @@
 #ifndef PINCFG_PUSH_PULL
     #define PINCFG_PUSH_PULL 0
 #endif
+#ifndef PINFUN_ANALOG
+    #define PINFUN_ANALOG 1
+#endif
+#ifndef PINFUN_DIGITAL
+    #define PINFUN_DIGITAL 0
+#endif
 
 #ifndef LED_ON
     #define LED_ON 0
@@ -731,6 +737,8 @@
 #define FB_VOUT1_INIT_OUTPUT  {FB_VOUT1_WR = PINSTATE_LOW; FB_VOUT1_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define FB_VOUT1_INIT_INPUT   {FB_VOUT1_WR = PINSTATE_HIGH; FB_VOUT1_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
+#define FB_VOUT1_EISEL_TAD     8    // Number of Tad cycles by which the interrupts should be generated early to conversion completion (0-8)
+
 // Device Pin #25 is RB2
 #define FB_IIN1_TRIS    TRISBbits.TRISB2 // GPIO direction register bit
 #define FB_IIN1_WR      LATBbits.LATB2 // GPIO port latch register bit
@@ -1068,12 +1076,17 @@
 #define BUCKH1_PGx_PENH     PG5IOCONLbits.PENH // PWM channel IO config register pin enable high control bit
 #define BUCKH1_PGxUPDREQ    PG5STATbits.UPDREQ // PWM channel ADC trigger A register
 #define BUCKH1_PGxTRIGA     PG5TRIGA // PWM channel ADC trigger A register
-#define BUCKH1_PGxTRIGB     PG5TRIGB // PWM channel ADC trigger A register
-#define BUCKH1_PGxTRIGC     PG5TRIGC // PWM channel ADC trigger A register
+#define BUCKH1_PGxTRIGB     PG5TRIGB // PWM channel ADC trigger B register
+#define BUCKH1_PGxTRIGC     PG5TRIGC // PWM channel ADC trigger C register
 #define BUCKH1_PWM_IF       _PWM5IF // interrupt flag bit
 #define BUCKH1_PWM_IE       _PWM5IE // interrupt enable bit
 #define BUCKH1_PWM_IP       _PWM5IP // interrupt priority for this analog input
 #define _BUCKH1_PWM_Interrupt _PWM5Interrupt // Interrupt Service Routine name declaration
+
+// ToDo: User defined settings need to be incorporated into code generator
+#define BUCKH1_ADC_TRGSRC_1 0b01100 //ADTRIGx_TRGSRC_PWM5_TRIG1
+#define BUCKH1_ADC_TRGSRC_2 0b01101 //ADTRIGx_TRGSRC_PWM5_TRIG2
+
 
 // Device Pin #39 is RC5
 #define BUCKL1_TRIS    TRISCbits.TRISC5 // GPIO direction register bit
@@ -1142,6 +1155,10 @@
 #define BOOSTH1_PWM_IE       _PWM7IE // interrupt enable bit
 #define BOOSTH1_PWM_IP       _PWM7IP // interrupt priority for this analog input
 #define _BOOSTH1_PWM_Interrupt _PWM7Interrupt // Interrupt Service Routine name declaration
+
+// ToDo: User defined settings need to be incorporated into code generator
+#define BOOSTH1_ADC_TRGSRC_1 0b10000 //ADTRIGx_TRGSRC_PWM7_TRIG1
+#define BOOSTH1_ADC_TRGSRC_2 0b10001 //ADTRIGx_TRGSRC_PWM7_TRIG2
 
 // Device Pin #41 is RC11
 #define BOOSTL1_TRIS    TRISCbits.TRISC11 // GPIO direction register bit
