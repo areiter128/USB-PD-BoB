@@ -185,7 +185,7 @@ inline volatile uint16_t DEVICE_Reset(void){
     volatile uint16_t fres = 1;
     
     // Device reset
-    fres &= gpio_reset();               // Sets all device pins to DIGITAL INPUT, disabling all open-drain and pull-up/-down settings
+    fres &= gpio_init();               // Sets all device pins to DIGITAL INPUT, disabling all open-drain and pull-up/-down settings
     fres &= pmd_reset(PMD_POWER_OFF);   // Turns off power and clocks to all peripheral modules offering a PMD control bit
     
     return(fres);
