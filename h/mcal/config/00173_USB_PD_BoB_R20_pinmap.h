@@ -443,35 +443,35 @@
 #define TESTPOINT_INIT_INPUT   {TESTPOINT_WR = PINSTATE_HIGH; TESTPOINT_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
 // Device Pin #12 is RA4
-#define VOUT2_TRIS    TRISAbits.TRISA4 // GPIO direction register bit
-#define VOUT2_WR      LATAbits.LATA4 // GPIO port latch register bit
-#define VOUT2_RD      PORTAbits.RA4 // GPIO port register bit
-#define VOUT2_ODC     ODCAbits.ODCA4 // GPIO port open drain configuration register bit
-#define VOUT2_CNPU    CNPUAbits.CNPUA4 // GPIO port pull-up resistor register bit
-#define VOUT2_CNPD    CNPDAbits.CNPDA4 // GPIO port pull-down resistor register bit
-#define VOUT2_CNEN0   CNEN0Abits.CNEN0A4 // GPIO port change notification Enable register bit
-#define VOUT2_CNSTAT  CNSTATAbits.CNSTATA4 // GPIO port change notification Status register bit
-#define VOUT2_CNEN1   CNEN1Abits.CNEN1A4 // GPIO port change notification Edge Select Enable register bit
-#define VOUT2_CNF     CNFAbits.CNFA4 // GPIO port change notification flag bit register bit
-#define VOUT2_SET     { asm volatile ("bset _LATA, #4 \n"); }
-#define VOUT2_CLEAR   { asm volatile ("bclr _LATA, #4 \n"); }
-#define VOUT2_TOGGLE  { asm volatile ("btg  _LATA, #4 \n"); }
-#define VOUT2_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
-#define VOUT2_ANSEL   _ANSELA4 // analog/digital pin configuration register bit
-#define VOUT2_ADCCORE 2 // index starts from zero, last index indicated shared adC core
-#define VOUT2_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
-#define VOUT2_ADC_AN_INPUT 4   // ANx input pin number
-#define VOUT2_ADCBUF  ADCBUF4 // ADC buffer register for this input
-#define VOUT2_ADC_ANIE ADIELbits.IE4
-#define VOUT2_ADC_ANEIE ADEIELbits.EIEN4
-#define VOUT2_ADC_IF   _ADCAN4IF // interrupt flag bit
-#define VOUT2_ADC_IE   _ADCAN4IE // interrupt enable bit
-#define VOUT2_ADC_IP   _ADCAN4IP // interrupt priority for this analog input
-#define VOUT2_ADC_RDY  _AN4RDY // ADC buffer ready bit
-#define _VOUT2_ADC_Interrupt _ADCAN4Interrupt
-#define VOUT2_INIT_ANALOG	{VOUT2_ANSEL = 1; VOUT2_WR = PINSTATE_HIGH; VOUT2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
-#define VOUT2_INIT_OUTPUT  {VOUT2_WR = PINSTATE_LOW; VOUT2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
-#define VOUT2_INIT_INPUT   {VOUT2_WR = PINSTATE_HIGH; VOUT2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
+#define FB_VOUT2_TRIS    TRISAbits.TRISA4 // GPIO direction register bit
+#define FB_VOUT2_WR      LATAbits.LATA4 // GPIO port latch register bit
+#define FB_VOUT2_RD      PORTAbits.RA4 // GPIO port register bit
+#define FB_VOUT2_ODC     ODCAbits.ODCA4 // GPIO port open drain configuration register bit
+#define FB_VOUT2_CNPU    CNPUAbits.CNPUA4 // GPIO port pull-up resistor register bit
+#define FB_VOUT2_CNPD    CNPDAbits.CNPDA4 // GPIO port pull-down resistor register bit
+#define FB_VOUT2_CNEN0   CNEN0Abits.CNEN0A4 // GPIO port change notification Enable register bit
+#define FB_VOUT2_CNSTAT  CNSTATAbits.CNSTATA4 // GPIO port change notification Status register bit
+#define FB_VOUT2_CNEN1   CNEN1Abits.CNEN1A4 // GPIO port change notification Edge Select Enable register bit
+#define FB_VOUT2_CNF     CNFAbits.CNFA4 // GPIO port change notification flag bit register bit
+#define FB_VOUT2_SET     { asm volatile ("bset _LATA, #4 \n"); }
+#define FB_VOUT2_CLEAR   { asm volatile ("bclr _LATA, #4 \n"); }
+#define FB_VOUT2_TOGGLE  { asm volatile ("btg  _LATA, #4 \n"); }
+#define FB_VOUT2_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define FB_VOUT2_ANSEL   _ANSELA4 // analog/digital pin configuration register bit
+#define FB_VOUT2_ADCCORE 2 // index starts from zero, last index indicated shared adC core
+#define FB_VOUT2_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define FB_VOUT2_ADC_AN_INPUT 4   // ANx input pin number
+#define FB_VOUT2_ADCBUF  ADCBUF4 // ADC buffer register for this input
+#define FB_VOUT2_ADC_ANIE ADIELbits.IE4
+#define FB_VOUT2_ADC_ANEIE ADEIELbits.EIEN4
+#define FB_VOUT2_ADC_IF   _ADCAN4IF // interrupt flag bit
+#define FB_VOUT2_ADC_IE   _ADCAN4IE // interrupt enable bit
+#define FB_VOUT2_ADC_IP   _ADCAN4IP // interrupt priority for this analog input
+#define FB_VOUT2_ADC_RDY  _AN4RDY // ADC buffer ready bit
+#define _FB_VOUT2_ADC_Interrupt _ADCAN4Interrupt
+#define FB_VOUT2_INIT_ANALOG	{FB_VOUT2_ANSEL = 1; FB_VOUT2_WR = PINSTATE_HIGH; FB_VOUT2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
+#define FB_VOUT2_INIT_OUTPUT  {FB_VOUT2_WR = PINSTATE_LOW; FB_VOUT2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
+#define FB_VOUT2_INIT_INPUT   {FB_VOUT2_WR = PINSTATE_HIGH; FB_VOUT2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
 // Device Pin #13 is AVDD
 
@@ -730,14 +730,15 @@
 #define FB_VOUT1_ADC_ANEIE ADEIEHbits.EIEN16
 #define FB_VOUT1_ADC_IF   _ADCAN16IF // interrupt flag bit
 #define FB_VOUT1_ADC_IE   _ADCAN16IE // interrupt enable bit
-#define FB_VOUT1_ADC_IP   _ADCAN16IP // interrupt priority for this analog input
+#define FB_VOUT1_ADC_IP   _ADCAN16IP // interrupt priority register value (0-7) for this analog input
 #define FB_VOUT1_ADC_RDY  _AN16RDY // ADC buffer ready bit
 #define _FB_VOUT1_ADC_Interrupt _ADCAN16Interrupt
 #define FB_VOUT1_INIT_ANALOG	{FB_VOUT1_ANSEL = 1; FB_VOUT1_WR = PINSTATE_HIGH; FB_VOUT1_TRIS = PINDIR_INPUT;} // initialization macro for analog input
 #define FB_VOUT1_INIT_OUTPUT  {FB_VOUT1_WR = PINSTATE_LOW; FB_VOUT1_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define FB_VOUT1_INIT_INPUT   {FB_VOUT1_WR = PINSTATE_HIGH; FB_VOUT1_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
-#define FB_VOUT1_EISEL_TAD     8    // Number of Tad cycles by which the interrupts should be generated early to conversion completion (0-8)
+#define FB_VOUT1_EISEL_TAD     8 // Number of Tad cycles by which the interrupts should be generated early to conversion completion (0-8)
+#define FB_VOUT1_ISR_PRIORITY  5 // interrupt priority for this analog input
 
 // Device Pin #25 is RB2
 #define FB_IIN1_TRIS    TRISBbits.TRISB2 // GPIO direction register bit
@@ -1337,36 +1338,36 @@
 #define _BOOSTH2_PWM_Interrupt _PWM2Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #48 is RB13
-#define POOSTL2_TRIS    TRISBbits.TRISB13 // GPIO direction register bit
-#define POOSTL2_WR      LATBbits.LATB13 // GPIO port latch register bit
-#define POOSTL2_RD      PORTBbits.RB13 // GPIO port register bit
-#define POOSTL2_ODC     ODCBbits.ODCB13 // GPIO port open drain configuration register bit
-#define POOSTL2_CNPU    CNPUBbits.CNPUB13 // GPIO port pull-up resistor register bit
-#define POOSTL2_CNPD    CNPDBbits.CNPDB13 // GPIO port pull-down resistor register bit
-#define POOSTL2_CNEN0   CNEN0Bbits.CNEN0B13 // GPIO port change notification Enable register bit
-#define POOSTL2_CNSTAT  CNSTATBbits.CNSTATB13 // GPIO port change notification Status register bit
-#define POOSTL2_CNEN1   CNEN1Bbits.CNEN1B13 // GPIO port change notification Edge Select Enable register bit
-#define POOSTL2_CNF     CNFBbits.CNFB13 // GPIO port change notification flag bit register bit
-#define POOSTL2_RP      45 // Number of Remappable Pin
-#define POOSTL2_SET     { asm volatile ("bset _LATB, #13 \n"); }
-#define POOSTL2_CLEAR   { asm volatile ("bclr _LATB, #13 \n"); }
-#define POOSTL2_TOGGLE  { asm volatile ("btg  _LATB, #13 \n"); }
-#define POOSTL2_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
-#define POOSTL2_INIT_OUTPUT  {POOSTL2_WR = PINSTATE_LOW; POOSTL2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
-#define POOSTL2_INIT_INPUT   {POOSTL2_WR = PINSTATE_HIGH; POOSTL2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
-#define POOSTL2_PGx_CHANNEL  2 // PWM channel index
-#define POOSTL2_PGx_PER      PG2PER // PWM channel period register
-#define POOSTL2_PGx_PHASE    PG2PHASE // PWM channel phase register
-#define POOSTL2_PGx_DC       PG2DC // PWM channel duty cycle register
-#define POOSTL2_PGx_DCA      PG2DCA// PWM channel duty cycle A register
-#define POOSTL2_PGx_DTH      PG2DTH // PWM channel rising edge dead time register
-#define POOSTL2_PGx_DTL      PG2DTL // PWM channel falling edge dead time register
-#define POOSTL2_PGx_OVRENL   PG2IOCONLbits.OVRENL // PWM channel IO config register override low control bit
-#define POOSTL2_PGx_PENL     PG2IOCONLbits.PENL // PWM channel IO config register pin enable low control bit
-#define POOSTL2_PGxUPDREQ    PG2STATbits.UPDREQ // PWM channel ADC trigger A register
-#define POOSTL2_PGxTRIGA     PG2TRIGA // PWM channel ADC trigger A register
-#define POOSTL2_PGxTRIGB     PG2TRIGB // PWM channel ADC trigger A register
-#define POOSTL2_PGxTRIGC     PG2TRIGC // PWM channel ADC trigger A register
+#define BOOSTL2_TRIS    TRISBbits.TRISB13 // GPIO direction register bit
+#define BOOSTL2_WR      LATBbits.LATB13 // GPIO port latch register bit
+#define BOOSTL2_RD      PORTBbits.RB13 // GPIO port register bit
+#define BOOSTL2_ODC     ODCBbits.ODCB13 // GPIO port open drain configuration register bit
+#define BOOSTL2_CNPU    CNPUBbits.CNPUB13 // GPIO port pull-up resistor register bit
+#define BOOSTL2_CNPD    CNPDBbits.CNPDB13 // GPIO port pull-down resistor register bit
+#define BOOSTL2_CNEN0   CNEN0Bbits.CNEN0B13 // GPIO port change notification Enable register bit
+#define BOOSTL2_CNSTAT  CNSTATBbits.CNSTATB13 // GPIO port change notification Status register bit
+#define BOOSTL2_CNEN1   CNEN1Bbits.CNEN1B13 // GPIO port change notification Edge Select Enable register bit
+#define BOOSTL2_CNF     CNFBbits.CNFB13 // GPIO port change notification flag bit register bit
+#define BOOSTL2_RP      45 // Number of Remappable Pin
+#define BOOSTL2_SET     { asm volatile ("bset _LATB, #13 \n"); }
+#define BOOSTL2_CLEAR   { asm volatile ("bclr _LATB, #13 \n"); }
+#define BOOSTL2_TOGGLE  { asm volatile ("btg  _LATB, #13 \n"); }
+#define BOOSTL2_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define BOOSTL2_INIT_OUTPUT  {BOOSTL2_WR = PINSTATE_LOW; BOOSTL2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
+#define BOOSTL2_INIT_INPUT   {BOOSTL2_WR = PINSTATE_HIGH; BOOSTL2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
+#define BOOSTL2_PGx_CHANNEL  2 // PWM channel index
+#define BOOSTL2_PGx_PER      PG2PER // PWM channel period register
+#define BOOSTL2_PGx_PHASE    PG2PHASE // PWM channel phase register
+#define BOOSTL2_PGx_DC       PG2DC // PWM channel duty cycle register
+#define BOOSTL2_PGx_DCA      PG2DCA// PWM channel duty cycle A register
+#define BOOSTL2_PGx_DTH      PG2DTH // PWM channel rising edge dead time register
+#define BOOSTL2_PGx_DTL      PG2DTL // PWM channel falling edge dead time register
+#define BOOSTL2_PGx_OVRENL   PG2IOCONLbits.OVRENL // PWM channel IO config register override low control bit
+#define BOOSTL2_PGx_PENL     PG2IOCONLbits.PENL // PWM channel IO config register pin enable low control bit
+#define BOOSTL2_PGxUPDREQ    PG2STATbits.UPDREQ // PWM channel ADC trigger A register
+#define BOOSTL2_PGxTRIGA     PG2TRIGA // PWM channel ADC trigger A register
+#define BOOSTL2_PGxTRIGB     PG2TRIGB // PWM channel ADC trigger A register
+#define BOOSTL2_PGxTRIGC     PG2TRIGC // PWM channel ADC trigger A register
 
 
 
