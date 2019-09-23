@@ -180,7 +180,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.feedback.ad_vout.interrupt_enable = true;
     c4swbb_1.feedback.ad_vout.interrupt_priority = FB_VOUT1_ISR_PRIORITY;
     c4swbb_1.feedback.ad_vout.early_interrupt_enable = true;
-    c4swbb_1.feedback.ad_vout.early_interrupt_tad = FB_VOUT1_EISEL_TAD;
+    c4swbb_1.feedback.ad_vout.early_interrupt_tad = ADCORE_EISEL_TAD;
     
     c4swbb_1.feedback.ad_iout.adin_no = FB_IOUT1_ADC_AN_INPUT;
     c4swbb_1.feedback.ad_iout.adc_core = FB_IOUT1_ADCCORE;
@@ -204,7 +204,6 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.feedback_offset = C4SWBB_VOUT_OFFSET;   // Voltage feedback signal offset
     c4swbb_1.v_loop.reference = C4SWBB_VOUT_REF; // Voltage loop reference value
     c4swbb_1.v_loop.trigger_offset = ADC_TRIG_OFFSET_VOUT; // Voltage sample ADC trigger offset (offset from 50% on-time)
-
     
     // Assign voltage loop object to 4-switch buck/boost converter instance
     c4swbb_1.v_loop.controller = &cha_vloop;        // 4-Switch Buck/Boost converter voltage loop controller
