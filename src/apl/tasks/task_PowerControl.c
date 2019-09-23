@@ -64,14 +64,75 @@ volatile uint16_t init_PowerControl(void) {
     fres &= c4swbb_adc_module_initialize(&c4swbb_1);
     
     // Initialize all ADC input channels of one power controller
-    fres &= c4swbb_adc_channels_initialize(&c4swbb_1);
+    fres &= c4swbb_adc_inputs_initialize(&c4swbb_1);
     
     // Initialize ADC cores
-    adcore_cfg.ADCORE0.config.bits.ADCS = ADCS_DEFAULT;
-    adcore_cfg.ADCORE0.config.bits.EISEL = EISEL_1TAD;
-    adcore_cfg.ADCORE0.config.bits.RES = RES_12BIT;
-    adcore_cfg.ADCORE0.config.bits.SAMC.;
-    fres &=     
+    
+    // Dedicated ADC core #0
+    adcore_cfg.ADCORE0.config.bits.ADCS = ADCORE_ADCS_DEFAULT;
+    adcore_cfg.ADCORE0.config.bits.EISEL = ADCORE_EISEL_8TAD;
+    adcore_cfg.ADCORE0.config.bits.RES = ADCORE_RES_12BIT;
+    adcore_cfg.ADCORE0.config.bits.SAMC = ADCORE_SAMC_DEFAULT;
+
+    fres &= hsadc_init_adc_core(0, adcore_cfg.ADCORE0);
+    fres &= hsadc_power_on_adc_core(0);
+    
+    // Dedicated ADC core #1
+    adcore_cfg.ADCORE1.config.bits.ADCS = ADCORE_ADCS_DEFAULT;
+    adcore_cfg.ADCORE1.config.bits.EISEL = ADCORE_EISEL_8TAD;
+    adcore_cfg.ADCORE1.config.bits.RES = ADCORE_RES_12BIT;
+    adcore_cfg.ADCORE1.config.bits.SAMC = ADCORE_SAMC_DEFAULT;
+
+    fres &= hsadc_init_adc_core(1, adcore_cfg.ADCORE1);
+    fres &= hsadc_power_on_adc_core(1);
+
+    // Shared ADC core
+    adcore_cfg.SHRADCORE.config.bits.ADCS = ADCORE_ADCS_DEFAULT;
+    adcore_cfg.SHRADCORE.config.bits.EISEL = ADCORE_EISEL_8TAD;
+    adcore_cfg.SHRADCORE.config.bits.RES = ADCORE_RES_12BIT;
+    adcore_cfg.SHRADCORE.config.bits.SAMC = ADCORE_SAMC_0010;
+    
+    fres &= hsadc_init_adc_core(2, adcore_cfg.SHRADCORE);
+    fres &= hsadc_power_on_adc_core(2);
+
+    // Configure device pins
+    FB_VOUT1_INIT_ANALOG; // Output voltage converter #1 feedback pin
+    FB_VOUT1_ADC_IP = 5; // Set interrupt priority
+    FB_VOUT1_ADC_IF = 0; // Clear interrupt flag bit
+    FB_VOUT1_ADC_IE = 1; // Enable interrupt service routine
+    
+    FB_IOUT1_INIT_ANALOG; // Output current converter #1 feedback pin
+    FB_IOUT1_ADC_IP = 5; // Set interrupt priority
+    FB_IOUT1_ADC_IF = 0; // Clear interrupt flag bit
+    FB_IOUT1_ADC_IE = 1; // Enable interrupt service routine
+
+    FB_TEMP1_INIT_ANALOG; // Temperature converter #1 feedback pin
+    FB_TEMP1_ADC_IP = 5; // Set interrupt priority
+    FB_TEMP1_ADC_IF = 0; // Clear interrupt flag bit
+    FB_TEMP1_ADC_IE = 0; // Disable interrupt service routine
+
+    FB_VOUT2_INIT_ANALOG; // Output voltage converter #2 feedback pin
+    FB_VOUT2_ADC_IP = 5; // Set interrupt priority
+    FB_VOUT2_ADC_IF = 0; // Clear interrupt flag bit
+    FB_VOUT2_ADC_IE = 1; // Enable interrupt service routine
+
+    FB_IOUT2_INIT_ANALOG; // Output current converter #2 feedback pin
+    FB_IOUT2_ADC_IP = 5; // Set interrupt priority
+    FB_IOUT2_ADC_IF = 0; // Clear interrupt flag bit
+    FB_IOUT2_ADC_IE = 1; // Enable interrupt service routine
+
+    FB_TEMP2_INIT_ANALOG; // Temperature converter #2 feedback pin
+    FB_TEMP2_ADC_IP = 5; // Set interrupt priority
+    FB_TEMP2_ADC_IF = 0; // Clear interrupt flag bit
+    FB_TEMP2_ADC_IE = 0; // Disable interrupt service routine
+
+    FB_VBAT_INIT_ANALOG; // Input voltage feedback pin
+    FB_VBAT_ADC_IP = 5;  // Set interrupt priority
+    FB_VBAT_ADC_IF = 0;  // Clear interrupt flag bit
+    FB_VBAT_ADC_IE = 0;  // Disable interrupt service routine
+    
+    // Enable ADC Interrupts in Interrupt Controller
+    
     
     return (fres);
 }
@@ -147,9 +208,15 @@ volatile uint16_t init_USBport_1(void) {
     
     // Assign voltage loop object to 4-switch buck/boost converter instance
     c4swbb_1.v_loop.controller = &cha_vloop;        // 4-Switch Buck/Boost converter voltage loop controller
-    c4swbb_1.v_loop.controller->ptrSource = &FB_VOUT1_ADCBUF; // Set pointer to data input source
-    c4swbb_1.v_loop.controller->ptrTarget = &c4swbb_1.i_loop.reference; // Set pointer to data output target
-
+    c4swbb_1.v_loop.controller->ptrSource = &FB_VOUT1_ADCBUF; // Load pointer to user data input source
+    c4swbb_1.v_loop.controller->ptrTarget = &c4swbb_1.i_loop.reference; // Load pointer to user data output target
+    c4swbb_1.v_loop.controller->ptrControlReference = &c4swbb_1.v_loop.reference; // Set pointer to user reference
+    c4swbb_1.v_loop.controller->MinOutput = c4swbb_1.v_loop.minimum; // Load user minimum value
+    c4swbb_1.v_loop.controller->MaxOutput = c4swbb_1.v_loop.maximum; // Load user maximum value
+    c4swbb_1.v_loop.controller->InputOffset = c4swbb_1.v_loop.feedback_offset; // Load user feedback offset value
+    c4swbb_1.v_loop.controller->ADCTriggerOffset = c4swbb_1.v_loop.trigger_offset; // Load user trigger offset value
+    c4swbb_1.v_loop.controller->ptrADCTriggerRegister = &BUCKH1_PGxTRIGA; // Load pointer to ADC trigger register
+    
     // Assign control functions by loading function pointers into the data structure
     c4swbb_1.v_loop.ctrl_Init = &cha_vloop_Init;        // Function pointer to CONTROL INIT routine
     c4swbb_1.v_loop.ctrl_Update = &cha_vloop_Update;    // Function pointer to CONTROL UPDATE routine
