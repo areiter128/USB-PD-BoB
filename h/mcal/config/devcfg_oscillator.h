@@ -33,8 +33,8 @@
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
+#include <stdbool.h>
 
-#include "mcal/mcal.h"
 
 
 #endif	/* _DEVICE_CONFIGURATION_OSCILLATOR_H_ */
