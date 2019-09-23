@@ -181,7 +181,6 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.feedback.ad_vout.interrupt_enable = true;
     c4swbb_1.feedback.ad_vout.interrupt_priority = FB_VOUT1_ISR_PRIORITY;
     c4swbb_1.feedback.ad_vout.early_interrupt_enable = true;
-    c4swbb_1.feedback.ad_vout.early_interrupt_tad = ADCORE_EISEL_TAD;
     
     c4swbb_1.feedback.ad_iout.adin_no = FB_IOUT1_ADC_AN_INPUT;
     c4swbb_1.feedback.ad_iout.adc_core = FB_IOUT1_ADCCORE;
