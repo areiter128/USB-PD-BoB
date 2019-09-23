@@ -152,6 +152,10 @@
 #define BUCKH2_PWM_IP       _PWM1IP // interrupt priority register value (0-7) for this analog input
 #define _BUCKH2_PWM_Interrupt _PWM1Interrupt // Interrupt Service Routine name declaration
 
+// ToDo: User defined settings need to be incorporated into code generator
+#define BUCKH2_ADC_TRGSRC_1 0b00100 //ADTRIGx_TRGSRC_PWM1_TRIG1
+#define BUCKH2_ADC_TRGSRC_2 0b00101 //ADTRIGx_TRGSRC_PWM1_TRIG2
+
 // Device Pin #2 is RB15
 #define BUCKL2_TRIS    TRISBbits.TRISB15 // GPIO direction register bit
 #define BUCKL2_WR      LATBbits.LATB15 // GPIO port latch register bit
@@ -720,12 +724,9 @@
 #define FB_VOUT1_ADC_IP   _ADCAN16IP // interrupt priority register value (0-7) register value (0-7) for this analog input
 #define FB_VOUT1_ADC_RDY  _AN16RDY // ADC buffer ready bit
 #define _FB_VOUT1_ADC_Interrupt _ADCAN16Interrupt
-#define FB_VOUT1_INIT_ANALOG	{FB_VOUT1_ANSEL = 1; FB_VOUT1_WR = PINSTATE_HIGH; FB_VOUT1_TRIS = PINDIR_INPUT;} // initialization macro for analog input
+#define FB_VOUT1_INIT_ANALOG  {FB_VOUT1_ANSEL = 1; FB_VOUT1_WR = PINSTATE_HIGH; FB_VOUT1_TRIS = PINDIR_INPUT;} // initialization macro for analog input
 #define FB_VOUT1_INIT_OUTPUT  {FB_VOUT1_WR = PINSTATE_LOW; FB_VOUT1_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define FB_VOUT1_INIT_INPUT   {FB_VOUT1_WR = PINSTATE_HIGH; FB_VOUT1_TRIS = PINDIR_INPUT;} // initialization macro for digital input
-
-#define FB_VOUT1_EISEL_TAD     8 // Number of Tad cycles by which the interrupts should be generated early to conversion completion (0-8)
-#define FB_VOUT1_ISR_PRIORITY  5 // interrupt priority for this analog input
 
 // Device Pin #25 is RB2
 #define FB_IIN1_TRIS    TRISBbits.TRISB2 // GPIO direction register bit
@@ -1323,6 +1324,10 @@
 #define BOOSTH2_PWM_IE       _PWM2IE // interrupt enable bit
 #define BOOSTH2_PWM_IP       _PWM2IP // interrupt priority register value (0-7) for this analog input
 #define _BOOSTH2_PWM_Interrupt _PWM2Interrupt // Interrupt Service Routine name declaration
+
+// ToDo: User defined settings need to be incorporated into code generator
+#define BOOSTH2_ADC_TRGSRC_1 0b00110 //ADTRIGx_TRGSRC_PWM2_TRIG1
+#define BOOSTH2_ADC_TRGSRC_2 0b00111 //ADTRIGx_TRGSRC_PWM2_TRIG2
 
 // Device Pin #48 is RB13
 #define BOOSTL2_TRIS    TRISBbits.TRISB13 // GPIO direction register bit
