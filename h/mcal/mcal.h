@@ -59,6 +59,8 @@ extern "C" {
 */
 
 /* Include hardware descriptor file */
+#include "mcal/config/devcfg_irq.h"
+#include "mcal/config/devcfg_oscillator.h"
 #include "mcal/config/devcfg_pinmap.h"
 
 /* generic peripheral drives */    
