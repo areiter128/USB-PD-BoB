@@ -296,10 +296,9 @@ volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_
 volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
     
     volatile uint16_t fres = 1;
-    volatile HSADC_CHANNEL_CONFIG_t adin_cfg;
+    volatile HSADC_INPUT_CONFIG_t adin_cfg;
 
-
-    // Reset/load defaults
+    // Reset/Load defaults from header file
     adin_cfg.config.bits.early_interrupt_enable = ADEIE_ANx_DISABLED; // Always disable early interrupts
     adin_cfg.config.bits.interrupt_enable = ADIE_ANx_DISABLED; // Always disable interrupt generation
     adin_cfg.config.bits.trigger_mode = ADLVLTRG_ANx_EDGE; // Always set trigger to EDGE TRIGGER mode
@@ -322,10 +321,9 @@ volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_POWER_CONTROLLER_
     // set interrupt configuration
     adin_cfg.config.bits.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vout.interrupt_enable);
     adin_cfg.config.bits.early_interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vout.early_interrupt_enable);
-    adin_cfg.config.bits.early_interrupt_tad = (volatile uint16_t)(pInstance->feedback.ad_vout.early_interrupt_tad);
     adin_cfg.config.bits.trigger_source = (volatile uint16_t)(pInstance->feedback.ad_vout.trigger_source);
 
-    hsadc_init_adc_channel(adin_cfg);
+    hsadc_adc_input_initialize(adin_cfg);
     
     
     return(fres);
