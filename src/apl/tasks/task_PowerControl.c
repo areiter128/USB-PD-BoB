@@ -74,8 +74,8 @@ volatile uint16_t init_PowerControl(void) {
     adcore_cfg.ADCORE0.config.bits.RES = ADCORE_RES_12BIT;
     adcore_cfg.ADCORE0.config.bits.SAMC = ADCORE_SAMC_DEFAULT;
 
-    fres &= hsadc_init_adc_core(0, adcore_cfg.ADCORE0);
-    fres &= hsadc_power_on_adc_core(0);
+    fres &= hsadc_adc_core_initialize(adcore_cfg.ADCORE0);
+    fres &= hsadc_adc_core_power_on(adcore_cfg.ADCORE0.index);
     
     // Dedicated ADC core #1
     adcore_cfg.ADCORE1.config.bits.ADCS = ADCORE_ADCS_DEFAULT;
@@ -83,17 +83,18 @@ volatile uint16_t init_PowerControl(void) {
     adcore_cfg.ADCORE1.config.bits.RES = ADCORE_RES_12BIT;
     adcore_cfg.ADCORE1.config.bits.SAMC = ADCORE_SAMC_DEFAULT;
 
-    fres &= hsadc_init_adc_core(1, adcore_cfg.ADCORE1);
-    fres &= hsadc_power_on_adc_core(1);
+    fres &= hsadc_adc_core_initialize(adcore_cfg.ADCORE1);
+    fres &= hsadc_adc_core_power_on(adcore_cfg.ADCORE1.index);
 
     // Shared ADC core
+    adcore_cfg.SHRADCORE.index = (ADC_CORE_COUNT - 1);
     adcore_cfg.SHRADCORE.config.bits.ADCS = ADCORE_ADCS_DEFAULT;
     adcore_cfg.SHRADCORE.config.bits.EISEL = ADCORE_EISEL_8TAD;
     adcore_cfg.SHRADCORE.config.bits.RES = ADCORE_RES_12BIT;
     adcore_cfg.SHRADCORE.config.bits.SAMC = ADCORE_SAMC_0010;
     
-    fres &= hsadc_init_adc_core(2, adcore_cfg.SHRADCORE);
-    fres &= hsadc_power_on_adc_core(2);
+    fres &= hsadc_adc_core_initialize(adcore_cfg.SHRADCORE);
+    fres &= hsadc_adc_core_power_on(adcore_cfg.SHRADCORE.index);
 
     // Configure device pins
     FB_VOUT1_INIT_ANALOG; // Output voltage converter #1 feedback pin
