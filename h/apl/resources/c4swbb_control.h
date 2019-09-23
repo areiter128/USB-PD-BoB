@@ -206,7 +206,6 @@ typedef struct {
     volatile uint16_t* ptrADBUF; // Pointer to analog input result buffer
     volatile bool interrupt_enable; // Interrupt Enable setting (true = enabled, false = disabled)
     volatile bool early_interrupt_enable; // Early Interrupt Enable setting (true = enabled, false = disabled)
-    volatile bool early_interrupt_tad; // Number of Tads  by which the interrupt is pulled in (generated early)
     volatile uint16_t interrupt_priority; // Interrupt Service Routine (ISR) priority level (0-7)
     volatile uint16_t trigger_source; // Trigger generating source for this AND input (see device data sheet for details)
 }C4SWBB_ADC_FEEDBACK_INTERFACE_t;
