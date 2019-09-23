@@ -108,7 +108,7 @@ volatile uint16_t init_USBport_1(void) {
     /* ToDo: trigger and interrupt configuration needs to be added*/
     c4swbb_1.feedback.ad_vout.trigger_source = BUCKH1_ADC_TRGSRC_1;
     c4swbb_1.feedback.ad_vout.interrupt_enable = true;
-//    c4swbb_1.feedback.ad_vout.interrupt_priority = FB_VOUT1_ADC_IP;
+    c4swbb_1.feedback.ad_vout.interrupt_priority = FB_VOUT1_ISR_PRIORITY;
     c4swbb_1.feedback.ad_vout.early_interrupt_enable = true;
     c4swbb_1.feedback.ad_vout.early_interrupt_tad = FB_VOUT1_EISEL_TAD;
     
