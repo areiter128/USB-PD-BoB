@@ -39,6 +39,8 @@ volatile uint16_t init_PowerControl(void) {
 
     volatile uint16_t fres = 1;
 
+    volatile HSADC_MODULE_ADCORE_CONFIG_t adcore_cfg;
+    
     // Initialize the 4-switch buck/boost power controller objects for USB port A and B
     fres &= init_USBport_1(); // Initialize complete configuration of USB Port 1 power controller
     fres &= init_USBport_2(); // Initialize complete configuration of USB Port 2 power controller
@@ -63,6 +65,13 @@ volatile uint16_t init_PowerControl(void) {
     
     // Initialize all ADC input channels of one power controller
     fres &= c4swbb_adc_channels_initialize(&c4swbb_1);
+    
+    // Initialize ADC cores
+    adcore_cfg.ADCORE0.config.bits.ADCS = ADCS_DEFAULT;
+    adcore_cfg.ADCORE0.config.bits.EISEL = EISEL_1TAD;
+    adcore_cfg.ADCORE0.config.bits.RES = RES_12BIT;
+    adcore_cfg.ADCORE0.config.bits.SAMC.;
+    fres &=     
     
     return (fres);
 }
