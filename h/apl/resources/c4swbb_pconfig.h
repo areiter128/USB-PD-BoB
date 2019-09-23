@@ -969,7 +969,30 @@ Description:
                                         REG_ADCON5H_C0CIE_DISABLED \
                                     )  // 0b0000111100000000
 
+    
+/*!ADCORExL: DEDICATED ADC CORE x CONTROL REGISTER LOW
 
+    bit 15-10 Unimplemented: Read as "0"
+    bit 9-0 SAMC<9:0>: Dedicated ADC Core x Conversion Delay Selection bits
+ */
+#define C4SWBB_ADC_ADCORExL         (   REG_SAMC(2) \
+                                    )  // 0b0000000000000000
+
+/*!ADCORExH: DEDICATED ADC CORE x CONTROL REGISTER HIGH
+
+    bit 15-13 Unimplemented: Read as ?0?
+    bit 12-10 EISEL<2:0>: ADC Core x Early Interrupt Time Selection bits
+    bit 9-8 RES<1:0>: ADC Core x Resolution Selection bits
+    bit 7 Unimplemented: Read as ?0?
+    bit 6-0 ADCS<6:0>: ADC Core x Input Clock Divider bits
+ */
+#define C4SWBB_ADC_ADCORExH         (   REG_EISEL_8TAD | \
+                                        REG_ADC_RES_12BIT | \
+                                        REG_ADCS(2) \
+                                    )  // 0b0001111100000000
+
+    
+    
     
 #ifdef	__cplusplus
 }
