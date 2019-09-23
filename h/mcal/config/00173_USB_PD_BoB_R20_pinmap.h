@@ -149,7 +149,7 @@
 #define BUCKH2_PGxTRIGC     PG1TRIGC // PWM channel ADC trigger A register
 #define BUCKH2_PWM_IF       _PWM1IF // interrupt flag bit
 #define BUCKH2_PWM_IE       _PWM1IE // interrupt enable bit
-#define BUCKH2_PWM_IP       _PWM1IP // interrupt priority for this analog input
+#define BUCKH2_PWM_IP       _PWM1IP // interrupt priority register value (0-7) for this analog input
 #define _BUCKH2_PWM_Interrupt _PWM1Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #2 is RB15
@@ -217,7 +217,7 @@
 #define HUB_RST_PGxTRIGC     PG8TRIGC // PWM channel ADC trigger A register
 #define HUB_RST_PWM_IF       _PWM8IF // interrupt flag bit
 #define HUB_RST_PWM_IE       _PWM8IE // interrupt enable bit
-#define HUB_RST_PWM_IP       _PWM8IP // interrupt priority for this analog input
+#define HUB_RST_PWM_IP       _PWM8IP // interrupt priority register value (0-7) for this analog input
 #define _HUB_RST_PWM_Interrupt _PWM8Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #4 is RC13
@@ -279,7 +279,7 @@
 #define SPI_CS2_ADC_ANEIE ADEIEHbits.EIENN2
 #define SPI_CS2_ADC_IF   _ADCANN2IF // interrupt flag bit
 #define SPI_CS2_ADC_IE   _ADCANN2IE // interrupt enable bit
-#define SPI_CS2_ADC_IP   _ADCANN2IP // interrupt priority for this analog input
+#define SPI_CS2_ADC_IP   _ADCANN2IP // interrupt priority register value (0-7) for this analog input
 #define SPI_CS2_ADC_RDY  _ANN2RDY // ADC buffer ready bit
 #define _SPI_CS2_ADC_Interrupt _ADCANN2Interrupt
 #define SPI_CS2_INIT_ANALOG	{SPI_CS2_ANSEL = 1; SPI_CS2_WR = PINSTATE_HIGH; SPI_CS2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -311,7 +311,7 @@
 #define PPC_IRQ2_ADC_ANEIE ADEIEHbits.EIENN0
 #define PPC_IRQ2_ADC_IF   _ADCANN0IF // interrupt flag bit
 #define PPC_IRQ2_ADC_IE   _ADCANN0IE // interrupt enable bit
-#define PPC_IRQ2_ADC_IP   _ADCANN0IP // interrupt priority for this analog input
+#define PPC_IRQ2_ADC_IP   _ADCANN0IP // interrupt priority register value (0-7) for this analog input
 #define PPC_IRQ2_ADC_RDY  _ANN0RDY // ADC buffer ready bit
 #define _PPC_IRQ2_ADC_Interrupt _ADCANN0Interrupt
 #define PPC_IRQ2_INIT_ANALOG	{PPC_IRQ2_ANSEL = 1; PPC_IRQ2_WR = PINSTATE_HIGH; PPC_IRQ2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -342,7 +342,7 @@
 #define FB_IIN2_ADC_ANEIE ADEIELbits.EIEN0
 #define FB_IIN2_ADC_IF   _ADCAN0IF // interrupt flag bit
 #define FB_IIN2_ADC_IE   _ADCAN0IE // interrupt enable bit
-#define FB_IIN2_ADC_IP   _ADCAN0IP // interrupt priority for this analog input
+#define FB_IIN2_ADC_IP   _ADCAN0IP // interrupt priority register value (0-7) for this analog input
 #define FB_IIN2_ADC_RDY  _AN0RDY // ADC buffer ready bit
 #define _FB_IIN2_ADC_Interrupt _ADCAN0Interrupt
 #define FB_IIN2_INIT_ANALOG	{FB_IIN2_ANSEL = 1; FB_IIN2_WR = PINSTATE_HIGH; FB_IIN2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -373,7 +373,7 @@
 #define PPC_RST2_ADC_ANEIE ADEIEHbits.EIENA1
 #define PPC_RST2_ADC_IF   _ADCANA1IF // interrupt flag bit
 #define PPC_RST2_ADC_IE   _ADCANA1IE // interrupt enable bit
-#define PPC_RST2_ADC_IP   _ADCANA1IP // interrupt priority for this analog input
+#define PPC_RST2_ADC_IP   _ADCANA1IP // interrupt priority register value (0-7) for this analog input
 #define PPC_RST2_ADC_RDY  _ANA1RDY // ADC buffer ready bit
 #define _PPC_RST2_ADC_Interrupt _ADCANA1Interrupt
 #define PPC_RST2_INIT_ANALOG	{PPC_RST2_ANSEL = 1; PPC_RST2_WR = PINSTATE_HIGH; PPC_RST2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -404,7 +404,7 @@
 #define FB_IOUT2_ADC_ANEIE ADEIELbits.EIEN9
 #define FB_IOUT2_ADC_IF   _ADCAN9IF // interrupt flag bit
 #define FB_IOUT2_ADC_IE   _ADCAN9IE // interrupt enable bit
-#define FB_IOUT2_ADC_IP   _ADCAN9IP // interrupt priority for this analog input
+#define FB_IOUT2_ADC_IP   _ADCAN9IP // interrupt priority register value (0-7) for this analog input
 #define FB_IOUT2_ADC_RDY  _AN9RDY // ADC buffer ready bit
 #define _FB_IOUT2_ADC_Interrupt _ADCAN9Interrupt
 #define FB_IOUT2_INIT_ANALOG	{FB_IOUT2_ANSEL = 1; FB_IOUT2_WR = PINSTATE_HIGH; FB_IOUT2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -435,7 +435,7 @@
 #define TESTPOINT_ADC_ANEIE ADEIELbits.EIEN3
 #define TESTPOINT_ADC_IF   _ADCAN3IF // interrupt flag bit
 #define TESTPOINT_ADC_IE   _ADCAN3IE // interrupt enable bit
-#define TESTPOINT_ADC_IP   _ADCAN3IP // interrupt priority for this analog input
+#define TESTPOINT_ADC_IP   _ADCAN3IP // interrupt priority register value (0-7) for this analog input
 #define TESTPOINT_ADC_RDY  _AN3RDY // ADC buffer ready bit
 #define _TESTPOINT_ADC_Interrupt _ADCAN3Interrupt
 #define TESTPOINT_INIT_ANALOG	{TESTPOINT_ANSEL = 1; TESTPOINT_WR = PINSTATE_HIGH; TESTPOINT_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -466,7 +466,7 @@
 #define FB_VOUT2_ADC_ANEIE ADEIELbits.EIEN4
 #define FB_VOUT2_ADC_IF   _ADCAN4IF // interrupt flag bit
 #define FB_VOUT2_ADC_IE   _ADCAN4IE // interrupt enable bit
-#define FB_VOUT2_ADC_IP   _ADCAN4IP // interrupt priority for this analog input
+#define FB_VOUT2_ADC_IP   _ADCAN4IP // interrupt priority register value (0-7) for this analog input
 #define FB_VOUT2_ADC_RDY  _AN4RDY // ADC buffer ready bit
 #define _FB_VOUT2_ADC_Interrupt _ADCAN4Interrupt
 #define FB_VOUT2_INIT_ANALOG	{FB_VOUT2_ANSEL = 1; FB_VOUT2_WR = PINSTATE_HIGH; FB_VOUT2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -502,7 +502,7 @@
 #define UART_TX_ADC_ANEIE ADEIELbits.EIEN13
 #define UART_TX_ADC_IF   _ADCAN13IF // interrupt flag bit
 #define UART_TX_ADC_IE   _ADCAN13IE // interrupt enable bit
-#define UART_TX_ADC_IP   _ADCAN13IP // interrupt priority for this analog input
+#define UART_TX_ADC_IP   _ADCAN13IP // interrupt priority register value (0-7) for this analog input
 #define UART_TX_ADC_RDY  _AN13RDY // ADC buffer ready bit
 #define _UART_TX_ADC_Interrupt _ADCAN13Interrupt
 #define UART_TX_INIT_ANALOG	{UART_TX_ANSEL = 1; UART_TX_WR = PINSTATE_HIGH; UART_TX_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -534,7 +534,7 @@
 #define UART_RX_ADC_ANEIE ADEIELbits.EIEN14
 #define UART_RX_ADC_IF   _ADCAN14IF // interrupt flag bit
 #define UART_RX_ADC_IE   _ADCAN14IE // interrupt enable bit
-#define UART_RX_ADC_IP   _ADCAN14IP // interrupt priority for this analog input
+#define UART_RX_ADC_IP   _ADCAN14IP // interrupt priority register value (0-7) for this analog input
 #define UART_RX_ADC_RDY  _AN14RDY // ADC buffer ready bit
 #define _UART_RX_ADC_Interrupt _ADCAN14Interrupt
 #define UART_RX_INIT_ANALOG	{UART_RX_ANSEL = 1; UART_RX_WR = PINSTATE_HIGH; UART_RX_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -566,7 +566,7 @@
 #define FB_TEMP2_ADC_ANEIE ADEIEHbits.EIENN1
 #define FB_TEMP2_ADC_IF   _ADCANN1IF // interrupt flag bit
 #define FB_TEMP2_ADC_IE   _ADCANN1IE // interrupt enable bit
-#define FB_TEMP2_ADC_IP   _ADCANN1IP // interrupt priority for this analog input
+#define FB_TEMP2_ADC_IP   _ADCANN1IP // interrupt priority register value (0-7) for this analog input
 #define FB_TEMP2_ADC_RDY  _ANN1RDY // ADC buffer ready bit
 #define _FB_TEMP2_ADC_Interrupt _ADCANN1Interrupt
 #define FB_TEMP2_INIT_ANALOG	{FB_TEMP2_ANSEL = 1; FB_TEMP2_WR = PINSTATE_HIGH; FB_TEMP2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -602,7 +602,7 @@
 #define LED_AUX_CTRL_ADC_ANEIE ADEIELbits.EIEN15
 #define LED_AUX_CTRL_ADC_IF   _ADCAN15IF // interrupt flag bit
 #define LED_AUX_CTRL_ADC_IE   _ADCAN15IE // interrupt enable bit
-#define LED_AUX_CTRL_ADC_IP   _ADCAN15IP // interrupt priority for this analog input
+#define LED_AUX_CTRL_ADC_IP   _ADCAN15IP // interrupt priority register value (0-7) for this analog input
 #define LED_AUX_CTRL_ADC_RDY  _AN15RDY // ADC buffer ready bit
 #define _LED_AUX_CTRL_ADC_Interrupt _ADCAN15Interrupt
 #define LED_AUX_CTRL_INIT_ANALOG	{LED_AUX_CTRL_ANSEL = 1; LED_AUX_CTRL_WR = PINSTATE_HIGH; LED_AUX_CTRL_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -634,7 +634,7 @@
 #define FB_VBAT_ADC_ANEIE ADEIELbits.EIEN5
 #define FB_VBAT_ADC_IF   _ADCAN5IF // interrupt flag bit
 #define FB_VBAT_ADC_IE   _ADCAN5IE // interrupt enable bit
-#define FB_VBAT_ADC_IP   _ADCAN5IP // interrupt priority for this analog input
+#define FB_VBAT_ADC_IP   _ADCAN5IP // interrupt priority register value (0-7) for this analog input
 #define FB_VBAT_ADC_RDY  _AN5RDY // ADC buffer ready bit
 #define _FB_VBAT_ADC_Interrupt _ADCAN5Interrupt
 #define FB_VBAT_INIT_ANALOG	{FB_VBAT_ANSEL = 1; FB_VBAT_WR = PINSTATE_HIGH; FB_VBAT_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -666,7 +666,7 @@
 #define FB_TEMP1_ADC_ANEIE ADEIELbits.EIEN6
 #define FB_TEMP1_ADC_IF   _ADCAN6IF // interrupt flag bit
 #define FB_TEMP1_ADC_IE   _ADCAN6IE // interrupt enable bit
-#define FB_TEMP1_ADC_IP   _ADCAN6IP // interrupt priority for this analog input
+#define FB_TEMP1_ADC_IP   _ADCAN6IP // interrupt priority register value (0-7) for this analog input
 #define FB_TEMP1_ADC_RDY  _AN6RDY // ADC buffer ready bit
 #define _FB_TEMP1_ADC_Interrupt _ADCAN6Interrupt
 #define FB_TEMP1_INIT_ANALOG	{FB_TEMP1_ANSEL = 1; FB_TEMP1_WR = PINSTATE_HIGH; FB_TEMP1_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -698,7 +698,7 @@
 #define FB_IOUT1_ADC_ANEIE ADEIEHbits.EIEN18
 #define FB_IOUT1_ADC_IF   _ADCAN18IF // interrupt flag bit
 #define FB_IOUT1_ADC_IE   _ADCAN18IE // interrupt enable bit
-#define FB_IOUT1_ADC_IP   _ADCAN18IP // interrupt priority for this analog input
+#define FB_IOUT1_ADC_IP   _ADCAN18IP // interrupt priority register value (0-7) for this analog input
 #define FB_IOUT1_ADC_RDY  _AN18RDY // ADC buffer ready bit
 #define _FB_IOUT1_ADC_Interrupt _ADCAN18Interrupt
 #define FB_IOUT1_INIT_ANALOG	{FB_IOUT1_ANSEL = 1; FB_IOUT1_WR = PINSTATE_HIGH; FB_IOUT1_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -730,7 +730,7 @@
 #define FB_VOUT1_ADC_ANEIE ADEIEHbits.EIEN16
 #define FB_VOUT1_ADC_IF   _ADCAN16IF // interrupt flag bit
 #define FB_VOUT1_ADC_IE   _ADCAN16IE // interrupt enable bit
-#define FB_VOUT1_ADC_IP   _ADCAN16IP // interrupt priority register value (0-7) for this analog input
+#define FB_VOUT1_ADC_IP   _ADCAN16IP // interrupt priority register value (0-7) register value (0-7) for this analog input
 #define FB_VOUT1_ADC_RDY  _AN16RDY // ADC buffer ready bit
 #define _FB_VOUT1_ADC_Interrupt _ADCAN16Interrupt
 #define FB_VOUT1_INIT_ANALOG	{FB_VOUT1_ANSEL = 1; FB_VOUT1_WR = PINSTATE_HIGH; FB_VOUT1_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -765,7 +765,7 @@
 #define FB_IIN1_ADC_ANEIE ADEIEHbits.EIENA0
 #define FB_IIN1_ADC_IF   _ADCANA0IF // interrupt flag bit
 #define FB_IIN1_ADC_IE   _ADCANA0IE // interrupt enable bit
-#define FB_IIN1_ADC_IP   _ADCANA0IP // interrupt priority for this analog input
+#define FB_IIN1_ADC_IP   _ADCANA0IP // interrupt priority register value (0-7) for this analog input
 #define FB_IIN1_ADC_RDY  _ANA0RDY // ADC buffer ready bit
 #define _FB_IIN1_ADC_Interrupt _ADCANA0Interrupt
 #define FB_IIN1_INIT_ANALOG	{FB_IIN1_ANSEL = 1; FB_IIN1_WR = PINSTATE_HIGH; FB_IIN1_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -797,7 +797,7 @@
 #define PGED_ADC_ANEIE ADEIELbits.EIEN8
 #define PGED_ADC_IF   _ADCAN8IF // interrupt flag bit
 #define PGED_ADC_IE   _ADCAN8IE // interrupt enable bit
-#define PGED_ADC_IP   _ADCAN8IP // interrupt priority for this analog input
+#define PGED_ADC_IP   _ADCAN8IP // interrupt priority register value (0-7) for this analog input
 #define PGED_ADC_RDY  _AN8RDY // ADC buffer ready bit
 #define _PGED_ADC_Interrupt _ADCAN8Interrupt
 #define PGED_INIT_ANALOG	{PGED_ANSEL = 1; PGED_WR = PINSTATE_HIGH; PGED_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -949,7 +949,7 @@
 #define SCL2_PGxTRIGC     PG6TRIGC // PWM channel ADC trigger A register
 #define SCL2_PWM_IF       _PWM6IF // interrupt flag bit
 #define SCL2_PWM_IE       _PWM6IE // interrupt enable bit
-#define SCL2_PWM_IP       _PWM6IP // interrupt priority for this analog input
+#define SCL2_PWM_IP       _PWM6IP // interrupt priority register value (0-7) for this analog input
 #define _SCL2_PWM_Interrupt _PWM6Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #35 is RB7
@@ -977,7 +977,7 @@
 #define SPI_CS1_ADC_ANEIE ADEIELbits.EIEN2
 #define SPI_CS1_ADC_IF   _ADCAN2IF // interrupt flag bit
 #define SPI_CS1_ADC_IE   _ADCAN2IE // interrupt enable bit
-#define SPI_CS1_ADC_IP   _ADCAN2IP // interrupt priority for this analog input
+#define SPI_CS1_ADC_IP   _ADCAN2IP // interrupt priority register value (0-7) for this analog input
 #define SPI_CS1_ADC_RDY  _AN2RDY // ADC buffer ready bit
 #define _SPI_CS1_ADC_Interrupt _ADCAN2Interrupt
 #define SPI_CS1_INIT_ANALOG	{SPI_CS1_ANSEL = 1; SPI_CS1_WR = PINSTATE_HIGH; SPI_CS1_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -1009,7 +1009,7 @@
 #define SCL1_ADC_ANEIE ADEIELbits.EIEN10
 #define SCL1_ADC_IF   _ADCAN10IF // interrupt flag bit
 #define SCL1_ADC_IE   _ADCAN10IE // interrupt enable bit
-#define SCL1_ADC_IP   _ADCAN10IP // interrupt priority for this analog input
+#define SCL1_ADC_IP   _ADCAN10IP // interrupt priority register value (0-7) for this analog input
 #define SCL1_ADC_RDY  _AN10RDY // ADC buffer ready bit
 #define _SCL1_ADC_Interrupt _ADCAN10Interrupt
 #define SCL1_INIT_ANALOG	{SCL1_ANSEL = 1; SCL1_WR = PINSTATE_HIGH; SCL1_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -1041,7 +1041,7 @@
 #define SDA1_ADC_ANEIE ADEIELbits.EIEN11
 #define SDA1_ADC_IF   _ADCAN11IF // interrupt flag bit
 #define SDA1_ADC_IE   _ADCAN11IE // interrupt enable bit
-#define SDA1_ADC_IP   _ADCAN11IP // interrupt priority for this analog input
+#define SDA1_ADC_IP   _ADCAN11IP // interrupt priority register value (0-7) for this analog input
 #define SDA1_ADC_RDY  _AN11RDY // ADC buffer ready bit
 #define _SDA1_ADC_Interrupt _ADCAN11Interrupt
 #define SDA1_INIT_ANALOG	{SDA1_ANSEL = 1; SDA1_WR = PINSTATE_HIGH; SDA1_TRIS = PINDIR_INPUT;} // initialization macro for analog input
@@ -1081,7 +1081,7 @@
 #define BUCKH1_PGxTRIGC     PG5TRIGC // PWM channel ADC trigger C register
 #define BUCKH1_PWM_IF       _PWM5IF // interrupt flag bit
 #define BUCKH1_PWM_IE       _PWM5IE // interrupt enable bit
-#define BUCKH1_PWM_IP       _PWM5IP // interrupt priority for this analog input
+#define BUCKH1_PWM_IP       _PWM5IP // interrupt priority register value (0-7) for this analog input
 #define _BUCKH1_PWM_Interrupt _PWM5Interrupt // Interrupt Service Routine name declaration
 
 // ToDo: User defined settings need to be incorporated into code generator
@@ -1154,7 +1154,7 @@
 #define BOOSTH1_PGxTRIGC     PG7TRIGC // PWM channel ADC trigger A register
 #define BOOSTH1_PWM_IF       _PWM7IF // interrupt flag bit
 #define BOOSTH1_PWM_IE       _PWM7IE // interrupt enable bit
-#define BOOSTH1_PWM_IP       _PWM7IP // interrupt priority for this analog input
+#define BOOSTH1_PWM_IP       _PWM7IP // interrupt priority register value (0-7) for this analog input
 #define _BOOSTH1_PWM_Interrupt _PWM7Interrupt // Interrupt Service Routine name declaration
 
 // ToDo: User defined settings need to be incorporated into code generator
@@ -1230,7 +1230,7 @@
 #define PPC_IRQ1_PGxTRIGC     PG4TRIGC // PWM channel ADC trigger A register
 #define PPC_IRQ1_PWM_IF       _PWM4IF // interrupt flag bit
 #define PPC_IRQ1_PWM_IE       _PWM4IE // interrupt enable bit
-#define PPC_IRQ1_PWM_IP       _PWM4IP // interrupt priority for this analog input
+#define PPC_IRQ1_PWM_IP       _PWM4IP // interrupt priority register value (0-7) for this analog input
 #define _PPC_IRQ1_PWM_Interrupt _PWM4Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #45 is RB10
@@ -1266,7 +1266,7 @@
 #define PPC_RST1_PGxTRIGC     PG3TRIGC // PWM channel ADC trigger A register
 #define PPC_RST1_PWM_IF       _PWM3IF // interrupt flag bit
 #define PPC_RST1_PWM_IE       _PWM3IE // interrupt enable bit
-#define PPC_RST1_PWM_IP       _PWM3IP // interrupt priority for this analog input
+#define PPC_RST1_PWM_IP       _PWM3IP // interrupt priority register value (0-7) for this analog input
 #define _PPC_RST1_PWM_Interrupt _PWM3Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #46 is RB11
@@ -1334,7 +1334,7 @@
 #define BOOSTH2_PGxTRIGC     PG2TRIGC // PWM channel ADC trigger A register
 #define BOOSTH2_PWM_IF       _PWM2IF // interrupt flag bit
 #define BOOSTH2_PWM_IE       _PWM2IE // interrupt enable bit
-#define BOOSTH2_PWM_IP       _PWM2IP // interrupt priority for this analog input
+#define BOOSTH2_PWM_IP       _PWM2IP // interrupt priority register value (0-7) for this analog input
 #define _BOOSTH2_PWM_Interrupt _PWM2Interrupt // Interrupt Service Routine name declaration
 
 // Device Pin #48 is RB13
