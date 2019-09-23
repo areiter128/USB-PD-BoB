@@ -130,9 +130,9 @@
 #define FB_IIN2_SET     { asm volatile ("bset _LATA, #0 \n"); }
 #define FB_IIN2_CLEAR   { asm volatile ("bclr _LATA, #0 \n"); }
 #define FB_IIN2_TOGGLE  { asm volatile ("btg  _LATA, #0 \n"); }
-#define FB_IIN2_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define FB_IIN2_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define FB_IIN2_ANSEL   _ANSELA0 // analog/digital pin configuration register bit
-#define FB_IIN2_ADCCORE  // index starts from zero, last index indicated shared adC core
+#define FB_IIN2_ADCCORE  0 // index starts from zero, last index indicated shared adC core
 #define FB_IIN2_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
 #define FB_IIN2_ADC_AN_INPUT 0   // ANx input pin number
 #define FB_IIN2_ADCBUF  ADCBUF0 // ADC buffer register for this input
@@ -161,19 +161,19 @@
 #define PPC_RST2_SET     { asm volatile ("bset _LATA, #1 \n"); }
 #define PPC_RST2_CLEAR   { asm volatile ("bclr _LATA, #1 \n"); }
 #define PPC_RST2_TOGGLE  { asm volatile ("btg  _LATA, #1 \n"); }
-#define PPC_RST2_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define PPC_RST2_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define PPC_RST2_ANSEL   _ANSELA1 // analog/digital pin configuration register bit
-#define PPC_RST2_ADCCORE  // index starts from zero, last index indicated shared adC core
+#define PPC_RST2_ADCCORE  1 // index starts from zero, last index indicated shared adC core
 #define PPC_RST2_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
-#define PPC_RST2_ADC_AN_INPUT A1   // ANx input pin number
-#define PPC_RST2_ADCBUF  ADCBUFA1 // ADC buffer register for this input
-#define PPC_RST2_ADC_ANIE ADIEHbits.IEA1
-#define PPC_RST2_ADC_ANEIE ADEIEHbits.EIENA1
-#define PPC_RST2_ADC_IF   _ADCANA1IF // interrupt flag bit
-#define PPC_RST2_ADC_IE   _ADCANA1IE // interrupt enable bit
-#define PPC_RST2_ADC_IP   _ADCANA1IP // interrupt priority for this analog input
-#define PPC_RST2_ADC_RDY  _ANA1RDY // ADC buffer ready bit
-#define _PPC_RST2_ADC_Interrupt _ADCANA1Interrupt
+#define PPC_RST2_ADC_AN_INPUT 1   // ANx input pin number
+#define PPC_RST2_ADCBUF  ADCBUF1 // ADC buffer register for this input
+#define PPC_RST2_ADC_ANIE ADIEHbits.IE1
+#define PPC_RST2_ADC_ANEIE ADEIEHbits.EIEN1
+#define PPC_RST2_ADC_IF   _ADCAN1IF // interrupt flag bit
+#define PPC_RST2_ADC_IE   _ADCAN1IE // interrupt enable bit
+#define PPC_RST2_ADC_IP   _ADCAN1IP // interrupt priority for this analog input
+#define PPC_RST2_ADC_RDY  _AN1RDY // ADC buffer ready bit
+#define _PPC_RST2_ADC_Interrupt _ADCAN1Interrupt
 #define PPC_RST2_INIT_ANALOG	{PPC_RST2_ANSEL = 1; PPC_RST2_WR = PINSTATE_HIGH; PPC_RST2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
 #define PPC_RST2_INIT_OUTPUT  {PPC_RST2_WR = PINSTATE_LOW; PPC_RST2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define PPC_RST2_INIT_INPUT   {PPC_RST2_WR = PINSTATE_HIGH; PPC_RST2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
@@ -192,10 +192,10 @@
 #define FB_IOUT2_SET     { asm volatile ("bset _LATA, #2 \n"); }
 #define FB_IOUT2_CLEAR   { asm volatile ("bclr _LATA, #2 \n"); }
 #define FB_IOUT2_TOGGLE  { asm volatile ("btg  _LATA, #2 \n"); }
-#define FB_IOUT2_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define FB_IOUT2_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define FB_IOUT2_ANSEL   _ANSELA2 // analog/digital pin configuration register bit
-#define FB_IOUT2_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define FB_IOUT2_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define FB_IOUT2_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define FB_IOUT2_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
 #define FB_IOUT2_ADC_AN_INPUT 9   // ANx input pin number
 #define FB_IOUT2_ADCBUF  ADCBUF9 // ADC buffer register for this input
 #define FB_IOUT2_ADC_ANIE ADIELbits.IE9
@@ -223,10 +223,10 @@
 #define TESTPOINT_SET     { asm volatile ("bset _LATA, #3 \n"); }
 #define TESTPOINT_CLEAR   { asm volatile ("bclr _LATA, #3 \n"); }
 #define TESTPOINT_TOGGLE  { asm volatile ("btg  _LATA, #3 \n"); }
-#define TESTPOINT_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define TESTPOINT_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define TESTPOINT_ANSEL   _ANSELA3 // analog/digital pin configuration register bit
-#define TESTPOINT_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define TESTPOINT_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define TESTPOINT_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define TESTPOINT_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
 #define TESTPOINT_ADC_AN_INPUT 3   // ANx input pin number
 #define TESTPOINT_ADCBUF  ADCBUF3 // ADC buffer register for this input
 #define TESTPOINT_ADC_ANIE ADIELbits.IE3
@@ -241,35 +241,35 @@
 #define TESTPOINT_INIT_INPUT   {TESTPOINT_WR = PINSTATE_HIGH; TESTPOINT_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
 // Device Pin #18 is RA4
-#define VOUT2_TRIS    TRISAbits.TRISA4 // GPIO direction register bit
-#define VOUT2_WR      LATAbits.LATA4 // GPIO port latch register bit
-#define VOUT2_RD      PORTAbits.RA4 // GPIO port register bit
-#define VOUT2_ODC     ODCAbits.ODCA4 // GPIO port open drain configuration register bit
-#define VOUT2_CNPU    CNPUAbits.CNPUA4 // GPIO port pull-up resistor register bit
-#define VOUT2_CNPD    CNPDAbits.CNPDA4 // GPIO port pull-down resistor register bit
-#define VOUT2_CNEN0   CNEN0Abits.CNEN0A4 // GPIO port change notification Enable register bit
-#define VOUT2_CNSTAT  CNSTATAbits.CNSTATA4 // GPIO port change notification Status register bit
-#define VOUT2_CNEN1   CNEN1Abits.CNEN1A4 // GPIO port change notification Edge Select Enable register bit
-#define VOUT2_CNF     CNFAbits.CNFA4 // GPIO port change notification flag bit register bit
-#define VOUT2_SET     { asm volatile ("bset _LATA, #4 \n"); }
-#define VOUT2_CLEAR   { asm volatile ("bclr _LATA, #4 \n"); }
-#define VOUT2_TOGGLE  { asm volatile ("btg  _LATA, #4 \n"); }
-#define VOUT2_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
-#define VOUT2_ANSEL   _ANSELA4 // analog/digital pin configuration register bit
-#define VOUT2_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define VOUT2_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
-#define VOUT2_ADC_AN_INPUT 4   // ANx input pin number
-#define VOUT2_ADCBUF  ADCBUF4 // ADC buffer register for this input
-#define VOUT2_ADC_ANIE ADIELbits.IE4
-#define VOUT2_ADC_ANEIE ADEIELbits.EIEN4
-#define VOUT2_ADC_IF   _ADCAN4IF // interrupt flag bit
-#define VOUT2_ADC_IE   _ADCAN4IE // interrupt enable bit
-#define VOUT2_ADC_IP   _ADCAN4IP // interrupt priority for this analog input
-#define VOUT2_ADC_RDY  _AN4RDY // ADC buffer ready bit
-#define _VOUT2_ADC_Interrupt _ADCAN4Interrupt
-#define VOUT2_INIT_ANALOG	{VOUT2_ANSEL = 1; VOUT2_WR = PINSTATE_HIGH; VOUT2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
-#define VOUT2_INIT_OUTPUT  {VOUT2_WR = PINSTATE_LOW; VOUT2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
-#define VOUT2_INIT_INPUT   {VOUT2_WR = PINSTATE_HIGH; VOUT2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
+#define FB_VOUT2_TRIS    TRISAbits.TRISA4 // GPIO direction register bit
+#define FB_VOUT2_WR      LATAbits.LATA4 // GPIO port latch register bit
+#define FB_VOUT2_RD      PORTAbits.RA4 // GPIO port register bit
+#define FB_VOUT2_ODC     ODCAbits.ODCA4 // GPIO port open drain configuration register bit
+#define FB_VOUT2_CNPU    CNPUAbits.CNPUA4 // GPIO port pull-up resistor register bit
+#define FB_VOUT2_CNPD    CNPDAbits.CNPDA4 // GPIO port pull-down resistor register bit
+#define FB_VOUT2_CNEN0   CNEN0Abits.CNEN0A4 // GPIO port change notification Enable register bit
+#define FB_VOUT2_CNSTAT  CNSTATAbits.CNSTATA4 // GPIO port change notification Status register bit
+#define FB_VOUT2_CNEN1   CNEN1Abits.CNEN1A4 // GPIO port change notification Edge Select Enable register bit
+#define FB_VOUT2_CNF     CNFAbits.CNFA4 // GPIO port change notification flag bit register bit
+#define FB_VOUT2_SET     { asm volatile ("bset _LATA, #4 \n"); }
+#define FB_VOUT2_CLEAR   { asm volatile ("bclr _LATA, #4 \n"); }
+#define FB_VOUT2_TOGGLE  { asm volatile ("btg  _LATA, #4 \n"); }
+#define FB_VOUT2_IS_ANALOG_INPUT  true // Pin is/is not analog input 
+#define FB_VOUT2_ANSEL   _ANSELA4 // analog/digital pin configuration register bit
+#define FB_VOUT2_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define FB_VOUT2_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
+#define FB_VOUT2_ADC_AN_INPUT 4   // ANx input pin number
+#define FB_VOUT2_ADCBUF  ADCBUF4 // ADC buffer register for this input
+#define FB_VOUT2_ADC_ANIE ADIELbits.IE4
+#define FB_VOUT2_ADC_ANEIE ADEIELbits.EIEN4
+#define FB_VOUT2_ADC_IF   _ADCAN4IF // interrupt flag bit
+#define FB_VOUT2_ADC_IE   _ADCAN4IE // interrupt enable bit
+#define FB_VOUT2_ADC_IP   _ADCAN4IP // interrupt priority for this analog input
+#define FB_VOUT2_ADC_RDY  _AN4RDY // ADC buffer ready bit
+#define _FB_VOUT2_ADC_Interrupt _ADCAN4Interrupt
+#define FB_VOUT2_INIT_ANALOG  {FB_VOUT2_ANSEL = 1; FB_VOUT2_WR = PINSTATE_HIGH; FB_VOUT2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
+#define FB_VOUT2_INIT_OUTPUT  {FB_VOUT2_WR = PINSTATE_LOW; FB_VOUT2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
+#define FB_VOUT2_INIT_INPUT   {FB_VOUT2_WR = PINSTATE_HIGH; FB_VOUT2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
 // Device Pin #28 is RB0
 #define FB_VBAT_TRIS    TRISBbits.TRISB0 // GPIO direction register bit
@@ -286,10 +286,10 @@
 #define FB_VBAT_SET     { asm volatile ("bset _LATB, #0 \n"); }
 #define FB_VBAT_CLEAR   { asm volatile ("bclr _LATB, #0 \n"); }
 #define FB_VBAT_TOGGLE  { asm volatile ("btg  _LATB, #0 \n"); }
-#define FB_VBAT_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define FB_VBAT_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define FB_VBAT_ANSEL   _ANSELB0 // analog/digital pin configuration register bit
-#define FB_VBAT_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define FB_VBAT_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define FB_VBAT_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define FB_VBAT_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
 #define FB_VBAT_ADC_AN_INPUT 5   // ANx input pin number
 #define FB_VBAT_ADCBUF  ADCBUF5 // ADC buffer register for this input
 #define FB_VBAT_ADC_ANIE ADIELbits.IE5
@@ -318,10 +318,10 @@
 #define FB_TEMP1_SET     { asm volatile ("bset _LATB, #1 \n"); }
 #define FB_TEMP1_CLEAR   { asm volatile ("bclr _LATB, #1 \n"); }
 #define FB_TEMP1_TOGGLE  { asm volatile ("btg  _LATB, #1 \n"); }
-#define FB_TEMP1_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define FB_TEMP1_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define FB_TEMP1_ANSEL   _ANSELB1 // analog/digital pin configuration register bit
-#define FB_TEMP1_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define FB_TEMP1_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define FB_TEMP1_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define FB_TEMP1_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
 #define FB_TEMP1_ADC_AN_INPUT 6   // ANx input pin number
 #define FB_TEMP1_ADCBUF  ADCBUF6 // ADC buffer register for this input
 #define FB_TEMP1_ADC_ANIE ADIELbits.IE6
@@ -350,7 +350,7 @@
 #define PPC_RST1_SET     { asm volatile ("bset _LATB, #10 \n"); }
 #define PPC_RST1_CLEAR   { asm volatile ("bclr _LATB, #10 \n"); }
 #define PPC_RST1_TOGGLE  { asm volatile ("btg  _LATB, #10 \n"); }
-#define PPC_RST1_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define PPC_RST1_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define PPC_RST1_INIT_OUTPUT  {PPC_RST1_WR = PINSTATE_LOW; PPC_RST1_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define PPC_RST1_INIT_INPUT   {PPC_RST1_WR = PINSTATE_HIGH; PPC_RST1_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define PPC_RST1_PGx_CHANNEL  3 // PWM channel index
@@ -386,7 +386,7 @@
 #define HUB_PRTPWR1_SET     { asm volatile ("bset _LATB, #11 \n"); }
 #define HUB_PRTPWR1_CLEAR   { asm volatile ("bclr _LATB, #11 \n"); }
 #define HUB_PRTPWR1_TOGGLE  { asm volatile ("btg  _LATB, #11 \n"); }
-#define HUB_PRTPWR1_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define HUB_PRTPWR1_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define HUB_PRTPWR1_INIT_OUTPUT  {HUB_PRTPWR1_WR = PINSTATE_LOW; HUB_PRTPWR1_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define HUB_PRTPWR1_INIT_INPUT   {HUB_PRTPWR1_WR = PINSTATE_HIGH; HUB_PRTPWR1_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define HUB_PRTPWR1_PGx_CHANNEL  3 // PWM channel index
@@ -418,7 +418,7 @@
 #define BOOSTH2_SET     { asm volatile ("bset _LATB, #12 \n"); }
 #define BOOSTH2_CLEAR   { asm volatile ("bclr _LATB, #12 \n"); }
 #define BOOSTH2_TOGGLE  { asm volatile ("btg  _LATB, #12 \n"); }
-#define BOOSTH2_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define BOOSTH2_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define BOOSTH2_INIT_OUTPUT  {BOOSTH2_WR = PINSTATE_LOW; BOOSTH2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define BOOSTH2_INIT_INPUT   {BOOSTH2_WR = PINSTATE_HIGH; BOOSTH2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define BOOSTH2_PGx_CHANNEL  2 // PWM channel index
@@ -439,6 +439,10 @@
 #define BOOSTH2_PWM_IP       _PWM2IP // interrupt priority for this analog input
 #define _BOOSTH2_PWM_Interrupt _PWM2Interrupt // Interrupt Service Routine name declaration
 
+// ToDo: User defined settings need to be incorporated into code generator
+#define BOOSTH2_ADC_TRGSRC_1 0b00110 //ADTRIGx_TRGSRC_PWM2_TRIG1
+#define BOOSTH2_ADC_TRGSRC_2 0b00111 //ADTRIGx_TRGSRC_PWM2_TRIG2
+
 // Device Pin #64 is RB13
 #define POOSTL2_TRIS    TRISBbits.TRISB13 // GPIO direction register bit
 #define POOSTL2_WR      LATBbits.LATB13 // GPIO port latch register bit
@@ -454,7 +458,7 @@
 #define POOSTL2_SET     { asm volatile ("bset _LATB, #13 \n"); }
 #define POOSTL2_CLEAR   { asm volatile ("bclr _LATB, #13 \n"); }
 #define POOSTL2_TOGGLE  { asm volatile ("btg  _LATB, #13 \n"); }
-#define POOSTL2_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define POOSTL2_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define POOSTL2_INIT_OUTPUT  {POOSTL2_WR = PINSTATE_LOW; POOSTL2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define POOSTL2_INIT_INPUT   {POOSTL2_WR = PINSTATE_HIGH; POOSTL2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define POOSTL2_PGx_CHANNEL  2 // PWM channel index
@@ -486,7 +490,7 @@
 #define BUCKH2_SET     { asm volatile ("bset _LATB, #14 \n"); }
 #define BUCKH2_CLEAR   { asm volatile ("bclr _LATB, #14 \n"); }
 #define BUCKH2_TOGGLE  { asm volatile ("btg  _LATB, #14 \n"); }
-#define BUCKH2_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define BUCKH2_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define BUCKH2_INIT_OUTPUT  {BUCKH2_WR = PINSTATE_LOW; BUCKH2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define BUCKH2_INIT_INPUT   {BUCKH2_WR = PINSTATE_HIGH; BUCKH2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define BUCKH2_PGx_CHANNEL  1 // PWM channel index
@@ -507,6 +511,10 @@
 #define BUCKH2_PWM_IP       _PWM1IP // interrupt priority for this analog input
 #define _BUCKH2_PWM_Interrupt _PWM1Interrupt // Interrupt Service Routine name declaration
 
+// ToDo: User defined settings need to be incorporated into code generator
+#define BUCKH2_ADC_TRGSRC_1 0b00100 //ADTRIGx_TRGSRC_PWM1_TRIG1
+#define BUCKH2_ADC_TRGSRC_2 0b00101 //ADTRIGx_TRGSRC_PWM1_TRIG2
+
 // Device Pin #2 is RB15
 #define BUCKL2_TRIS    TRISBbits.TRISB15 // GPIO direction register bit
 #define BUCKL2_WR      LATBbits.LATB15 // GPIO port latch register bit
@@ -522,7 +530,7 @@
 #define BUCKL2_SET     { asm volatile ("bset _LATB, #15 \n"); }
 #define BUCKL2_CLEAR   { asm volatile ("bclr _LATB, #15 \n"); }
 #define BUCKL2_TOGGLE  { asm volatile ("btg  _LATB, #15 \n"); }
-#define BUCKL2_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define BUCKL2_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define BUCKL2_INIT_OUTPUT  {BUCKL2_WR = PINSTATE_LOW; BUCKL2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define BUCKL2_INIT_INPUT   {BUCKL2_WR = PINSTATE_HIGH; BUCKL2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define BUCKL2_PGx_CHANNEL  1 // PWM channel index
@@ -554,19 +562,19 @@
 #define FB_IIN1_SET     { asm volatile ("bset _LATB, #2 \n"); }
 #define FB_IIN1_CLEAR   { asm volatile ("bclr _LATB, #2 \n"); }
 #define FB_IIN1_TOGGLE  { asm volatile ("btg  _LATB, #2 \n"); }
-#define FB_IIN1_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define FB_IIN1_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define FB_IIN1_ANSEL   _ANSELB2 // analog/digital pin configuration register bit
-#define FB_IIN1_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define FB_IIN1_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
-#define FB_IIN1_ADC_AN_INPUT A0   // ANx input pin number
-#define FB_IIN1_ADCBUF  ADCBUFA0 // ADC buffer register for this input
-#define FB_IIN1_ADC_ANIE ADIEHbits.IEA0
-#define FB_IIN1_ADC_ANEIE ADEIEHbits.EIENA0
-#define FB_IIN1_ADC_IF   _ADCANA0IF // interrupt flag bit
-#define FB_IIN1_ADC_IE   _ADCANA0IE // interrupt enable bit
-#define FB_IIN1_ADC_IP   _ADCANA0IP // interrupt priority for this analog input
-#define FB_IIN1_ADC_RDY  _ANA0RDY // ADC buffer ready bit
-#define _FB_IIN1_ADC_Interrupt _ADCANA0Interrupt
+#define FB_IIN1_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define FB_IIN1_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
+#define FB_IIN1_ADC_AN_INPUT 5   // ANx input pin number
+#define FB_IIN1_ADCBUF  ADCBUF5 // ADC buffer register for this input
+#define FB_IIN1_ADC_ANIE ADIEHbits.IE5
+#define FB_IIN1_ADC_ANEIE ADEIEHbits.EIEN5
+#define FB_IIN1_ADC_IF   _ADCAN5IF // interrupt flag bit
+#define FB_IIN1_ADC_IE   _ADCAN5IE // interrupt enable bit
+#define FB_IIN1_ADC_IP   _ADCAN5IP // interrupt priority for this analog input
+#define FB_IIN1_ADC_RDY  _AN5RDY // ADC buffer ready bit
+#define _FB_IIN1_ADC_Interrupt _ADCAN5Interrupt
 #define FB_IIN1_INIT_ANALOG	{FB_IIN1_ANSEL = 1; FB_IIN1_WR = PINSTATE_HIGH; FB_IIN1_TRIS = PINDIR_INPUT;} // initialization macro for analog input
 #define FB_IIN1_INIT_OUTPUT  {FB_IIN1_WR = PINSTATE_LOW; FB_IIN1_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define FB_IIN1_INIT_INPUT   {FB_IIN1_WR = PINSTATE_HIGH; FB_IIN1_TRIS = PINDIR_INPUT;} // initialization macro for digital input
@@ -586,10 +594,10 @@
 #define PGD2_SET     { asm volatile ("bset _LATB, #3 \n"); }
 #define PGD2_CLEAR   { asm volatile ("bclr _LATB, #3 \n"); }
 #define PGD2_TOGGLE  { asm volatile ("btg  _LATB, #3 \n"); }
-#define PGD2_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define PGD2_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define PGD2_ANSEL   _ANSELB3 // analog/digital pin configuration register bit
-#define PGD2_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define PGD2_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define PGD2_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define PGD2_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
 #define PGD2_ADC_AN_INPUT 8   // ANx input pin number
 #define PGD2_ADCBUF  ADCBUF8 // ADC buffer register for this input
 #define PGD2_ADC_ANIE ADIELbits.IE8
@@ -618,7 +626,7 @@
 #define PGC2_SET     { asm volatile ("bset _LATB, #4 \n"); }
 #define PGC2_CLEAR   { asm volatile ("bclr _LATB, #4 \n"); }
 #define PGC2_TOGGLE  { asm volatile ("btg  _LATB, #4 \n"); }
-#define PGC2_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define PGC2_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define PGC2_INIT_OUTPUT  {PGC2_WR = PINSTATE_LOW; PGC2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define PGC2_INIT_INPUT   {PGC2_WR = PINSTATE_HIGH; PGC2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -637,7 +645,7 @@
 #define SDA2_SET     { asm volatile ("bset _LATB, #5 \n"); }
 #define SDA2_CLEAR   { asm volatile ("bclr _LATB, #5 \n"); }
 #define SDA2_TOGGLE  { asm volatile ("btg  _LATB, #5 \n"); }
-#define SDA2_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define SDA2_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define SDA2_INIT_OUTPUT  {SDA2_WR = PINSTATE_LOW; SDA2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define SDA2_INIT_INPUT   {SDA2_WR = PINSTATE_HIGH; SDA2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -656,7 +664,7 @@
 #define SCL2_SET     { asm volatile ("bset _LATB, #6 \n"); }
 #define SCL2_CLEAR   { asm volatile ("bclr _LATB, #6 \n"); }
 #define SCL2_TOGGLE  { asm volatile ("btg  _LATB, #6 \n"); }
-#define SCL2_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define SCL2_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define SCL2_INIT_OUTPUT  {SCL2_WR = PINSTATE_LOW; SCL2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define SCL2_INIT_INPUT   {SCL2_WR = PINSTATE_HIGH; SCL2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -675,10 +683,10 @@
 #define SPI_CS1_SET     { asm volatile ("bset _LATB, #7 \n"); }
 #define SPI_CS1_CLEAR   { asm volatile ("bclr _LATB, #7 \n"); }
 #define SPI_CS1_TOGGLE  { asm volatile ("btg  _LATB, #7 \n"); }
-#define SPI_CS1_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define SPI_CS1_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define SPI_CS1_ANSEL   _ANSELB7 // analog/digital pin configuration register bit
-#define SPI_CS1_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define SPI_CS1_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define SPI_CS1_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define SPI_CS1_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
 #define SPI_CS1_ADC_AN_INPUT 2   // ANx input pin number
 #define SPI_CS1_ADCBUF  ADCBUF2 // ADC buffer register for this input
 #define SPI_CS1_ADC_ANIE ADIELbits.IE2
@@ -707,10 +715,10 @@
 #define SCL1_SET     { asm volatile ("bset _LATB, #8 \n"); }
 #define SCL1_CLEAR   { asm volatile ("bclr _LATB, #8 \n"); }
 #define SCL1_TOGGLE  { asm volatile ("btg  _LATB, #8 \n"); }
-#define SCL1_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define SCL1_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define SCL1_ANSEL   _ANSELB8 // analog/digital pin configuration register bit
-#define SCL1_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define SCL1_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define SCL1_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define SCL1_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
 #define SCL1_ADC_AN_INPUT 10   // ANx input pin number
 #define SCL1_ADCBUF  ADCBUF10 // ADC buffer register for this input
 #define SCL1_ADC_ANIE ADIELbits.IE10
@@ -739,10 +747,10 @@
 #define SDA1_SET     { asm volatile ("bset _LATB, #9 \n"); }
 #define SDA1_CLEAR   { asm volatile ("bclr _LATB, #9 \n"); }
 #define SDA1_TOGGLE  { asm volatile ("btg  _LATB, #9 \n"); }
-#define SDA1_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define SDA1_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define SDA1_ANSEL   _ANSELB9 // analog/digital pin configuration register bit
-#define SDA1_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define SDA1_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define SDA1_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define SDA1_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
 #define SDA1_ADC_AN_INPUT 11   // ANx input pin number
 #define SDA1_ADCBUF  ADCBUF11 // ADC buffer register for this input
 #define SDA1_ADC_ANIE ADIELbits.IE11
@@ -771,19 +779,19 @@
 #define PPC_IRQ2_SET     { asm volatile ("bset _LATC, #0 \n"); }
 #define PPC_IRQ2_CLEAR   { asm volatile ("bclr _LATC, #0 \n"); }
 #define PPC_IRQ2_TOGGLE  { asm volatile ("btg  _LATC, #0 \n"); }
-#define PPC_IRQ2_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define PPC_IRQ2_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define PPC_IRQ2_ANSEL   _ANSELC0 // analog/digital pin configuration register bit
-#define PPC_IRQ2_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define PPC_IRQ2_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
-#define PPC_IRQ2_ADC_AN_INPUT N0   // ANx input pin number
-#define PPC_IRQ2_ADCBUF  ADCBUFN0 // ADC buffer register for this input
-#define PPC_IRQ2_ADC_ANIE ADIEHbits.IEN0
-#define PPC_IRQ2_ADC_ANEIE ADEIEHbits.EIENN0
-#define PPC_IRQ2_ADC_IF   _ADCANN0IF // interrupt flag bit
-#define PPC_IRQ2_ADC_IE   _ADCANN0IE // interrupt enable bit
-#define PPC_IRQ2_ADC_IP   _ADCANN0IP // interrupt priority for this analog input
-#define PPC_IRQ2_ADC_RDY  _ANN0RDY // ADC buffer ready bit
-#define _PPC_IRQ2_ADC_Interrupt _ADCANN0Interrupt
+#define PPC_IRQ2_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define PPC_IRQ2_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
+#define PPC_IRQ2_ADC_AN_INPUT 12   // ANx input pin number
+#define PPC_IRQ2_ADCBUF  ADCBUF12 // ADC buffer register for this input
+#define PPC_IRQ2_ADC_ANIE ADIEHbits.IE12
+#define PPC_IRQ2_ADC_ANEIE ADEIEHbits.EIEN12
+#define PPC_IRQ2_ADC_IF   _ADCAN12IF // interrupt flag bit
+#define PPC_IRQ2_ADC_IE   _ADCAN12IE // interrupt enable bit
+#define PPC_IRQ2_ADC_IP   _ADCAN12IP // interrupt priority for this analog input
+#define PPC_IRQ2_ADC_RDY  _AN12RDY // ADC buffer ready bit
+#define _PPC_IRQ2_ADC_Interrupt _ADCAN12Interrupt
 #define PPC_IRQ2_INIT_ANALOG	{PPC_IRQ2_ANSEL = 1; PPC_IRQ2_WR = PINSTATE_HIGH; PPC_IRQ2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
 #define PPC_IRQ2_INIT_OUTPUT  {PPC_IRQ2_WR = PINSTATE_LOW; PPC_IRQ2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define PPC_IRQ2_INIT_INPUT   {PPC_IRQ2_WR = PINSTATE_HIGH; PPC_IRQ2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
@@ -803,10 +811,10 @@
 #define ECP18_SET     { asm volatile ("bset _LATC, #1 \n"); }
 #define ECP18_CLEAR   { asm volatile ("bclr _LATC, #1 \n"); }
 #define ECP18_TOGGLE  { asm volatile ("btg  _LATC, #1 \n"); }
-#define ECP18_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define ECP18_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define ECP18_ANSEL   _ANSELC1 // analog/digital pin configuration register bit
-#define ECP18_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define ECP18_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define ECP18_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define ECP18_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
 #define ECP18_ADC_AN_INPUT 13   // ANx input pin number
 #define ECP18_ADCBUF  ADCBUF13 // ADC buffer register for this input
 #define ECP18_ADC_ANIE ADIELbits.IE13
@@ -835,7 +843,7 @@
 #define BOOSTH1_SET     { asm volatile ("bset _LATC, #10 \n"); }
 #define BOOSTH1_CLEAR   { asm volatile ("bclr _LATC, #10 \n"); }
 #define BOOSTH1_TOGGLE  { asm volatile ("btg  _LATC, #10 \n"); }
-#define BOOSTH1_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define BOOSTH1_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define BOOSTH1_INIT_OUTPUT  {BOOSTH1_WR = PINSTATE_LOW; BOOSTH1_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define BOOSTH1_INIT_INPUT   {BOOSTH1_WR = PINSTATE_HIGH; BOOSTH1_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define BOOSTH1_PGx_CHANNEL  7 // PWM channel index
@@ -856,6 +864,10 @@
 #define BOOSTH1_PWM_IP       _PWM7IP // interrupt priority for this analog input
 #define _BOOSTH1_PWM_Interrupt _PWM7Interrupt // Interrupt Service Routine name declaration
 
+// ToDo: User defined settings need to be incorporated into code generator
+#define BOOSTH1_ADC_TRGSRC_1 0b10000 //ADTRIGx_TRGSRC_PWM7_TRIG1
+#define BOOSTH1_ADC_TRGSRC_2 0b10001 //ADTRIGx_TRGSRC_PWM7_TRIG2
+
 // Device Pin #53 is RC11
 #define BOOSTL1_TRIS    TRISCbits.TRISC11 // GPIO direction register bit
 #define BOOSTL1_WR      LATCbits.LATC11 // GPIO port latch register bit
@@ -871,7 +883,7 @@
 #define BOOSTL1_SET     { asm volatile ("bset _LATC, #11 \n"); }
 #define BOOSTL1_CLEAR   { asm volatile ("bclr _LATC, #11 \n"); }
 #define BOOSTL1_TOGGLE  { asm volatile ("btg  _LATC, #11 \n"); }
-#define BOOSTL1_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define BOOSTL1_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define BOOSTL1_INIT_OUTPUT  {BOOSTL1_WR = PINSTATE_LOW; BOOSTL1_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define BOOSTL1_INIT_INPUT   {BOOSTL1_WR = PINSTATE_HIGH; BOOSTL1_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define BOOSTL1_PGx_CHANNEL  7 // PWM channel index
@@ -903,7 +915,7 @@
 #define HUB_RST_SET     { asm volatile ("bset _LATC, #12 \n"); }
 #define HUB_RST_CLEAR   { asm volatile ("bclr _LATC, #12 \n"); }
 #define HUB_RST_TOGGLE  { asm volatile ("btg  _LATC, #12 \n"); }
-#define HUB_RST_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define HUB_RST_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define HUB_RST_INIT_OUTPUT  {HUB_RST_WR = PINSTATE_LOW; HUB_RST_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define HUB_RST_INIT_INPUT   {HUB_RST_WR = PINSTATE_HIGH; HUB_RST_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define HUB_RST_PGx_CHANNEL  8 // PWM channel index
@@ -939,7 +951,7 @@
 #define HUB_PRTPWR2_SET     { asm volatile ("bset _LATC, #13 \n"); }
 #define HUB_PRTPWR2_CLEAR   { asm volatile ("bclr _LATC, #13 \n"); }
 #define HUB_PRTPWR2_TOGGLE  { asm volatile ("btg  _LATC, #13 \n"); }
-#define HUB_PRTPWR2_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define HUB_PRTPWR2_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define HUB_PRTPWR2_INIT_OUTPUT  {HUB_PRTPWR2_WR = PINSTATE_LOW; HUB_PRTPWR2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define HUB_PRTPWR2_INIT_INPUT   {HUB_PRTPWR2_WR = PINSTATE_HIGH; HUB_PRTPWR2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define HUB_PRTPWR2_PGx_CHANNEL  8 // PWM channel index
@@ -971,7 +983,7 @@
 #define ECP31_SET     { asm volatile ("bset _LATC, #14 \n"); }
 #define ECP31_CLEAR   { asm volatile ("bclr _LATC, #14 \n"); }
 #define ECP31_TOGGLE  { asm volatile ("btg  _LATC, #14 \n"); }
-#define ECP31_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define ECP31_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define ECP31_INIT_OUTPUT  {ECP31_WR = PINSTATE_LOW; ECP31_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define ECP31_INIT_INPUT   {ECP31_WR = PINSTATE_HIGH; ECP31_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define ECP31_PGx_CHANNEL  6 // PWM channel index
@@ -1007,7 +1019,7 @@
 #define ECP33_SET     { asm volatile ("bset _LATC, #15 \n"); }
 #define ECP33_CLEAR   { asm volatile ("bclr _LATC, #15 \n"); }
 #define ECP33_TOGGLE  { asm volatile ("btg  _LATC, #15 \n"); }
-#define ECP33_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define ECP33_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define ECP33_INIT_OUTPUT  {ECP33_WR = PINSTATE_LOW; ECP33_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define ECP33_INIT_INPUT   {ECP33_WR = PINSTATE_HIGH; ECP33_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define ECP33_PGx_CHANNEL  6 // PWM channel index
@@ -1039,10 +1051,10 @@
 #define ECP17_SET     { asm volatile ("bset _LATC, #2 \n"); }
 #define ECP17_CLEAR   { asm volatile ("bclr _LATC, #2 \n"); }
 #define ECP17_TOGGLE  { asm volatile ("btg  _LATC, #2 \n"); }
-#define ECP17_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define ECP17_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define ECP17_ANSEL   _ANSELC2 // analog/digital pin configuration register bit
-#define ECP17_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define ECP17_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define ECP17_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define ECP17_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
 #define ECP17_ADC_AN_INPUT 14   // ANx input pin number
 #define ECP17_ADCBUF  ADCBUF14 // ADC buffer register for this input
 #define ECP17_ADC_ANIE ADIELbits.IE14
@@ -1071,10 +1083,10 @@
 #define LED_AUX_CTRL_SET     { asm volatile ("bset _LATC, #3 \n"); }
 #define LED_AUX_CTRL_CLEAR   { asm volatile ("bclr _LATC, #3 \n"); }
 #define LED_AUX_CTRL_TOGGLE  { asm volatile ("btg  _LATC, #3 \n"); }
-#define LED_AUX_CTRL_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define LED_AUX_CTRL_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define LED_AUX_CTRL_ANSEL   _ANSELC3 // analog/digital pin configuration register bit
-#define LED_AUX_CTRL_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define LED_AUX_CTRL_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define LED_AUX_CTRL_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define LED_AUX_CTRL_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
 #define LED_AUX_CTRL_ADC_AN_INPUT 15   // ANx input pin number
 #define LED_AUX_CTRL_ADCBUF  ADCBUF15 // ADC buffer register for this input
 #define LED_AUX_CTRL_ADC_ANIE ADIELbits.IE15
@@ -1103,7 +1115,7 @@
 #define BUCKH1_SET     { asm volatile ("bset _LATC, #4 \n"); }
 #define BUCKH1_CLEAR   { asm volatile ("bclr _LATC, #4 \n"); }
 #define BUCKH1_TOGGLE  { asm volatile ("btg  _LATC, #4 \n"); }
-#define BUCKH1_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define BUCKH1_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define BUCKH1_INIT_OUTPUT  {BUCKH1_WR = PINSTATE_LOW; BUCKH1_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define BUCKH1_INIT_INPUT   {BUCKH1_WR = PINSTATE_HIGH; BUCKH1_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define BUCKH1_PGx_CHANNEL  5 // PWM channel index
@@ -1124,6 +1136,10 @@
 #define BUCKH1_PWM_IP       _PWM5IP // interrupt priority for this analog input
 #define _BUCKH1_PWM_Interrupt _PWM5Interrupt // Interrupt Service Routine name declaration
 
+// ToDo: User defined settings need to be incorporated into code generator
+#define BUCKH1_ADC_TRGSRC_1 0b01100 //ADTRIGx_TRGSRC_PWM5_TRIG1
+#define BUCKH1_ADC_TRGSRC_2 0b01101 //ADTRIGx_TRGSRC_PWM5_TRIG2
+
 // Device Pin #51 is RC5
 #define BUCKL1_TRIS    TRISCbits.TRISC5 // GPIO direction register bit
 #define BUCKL1_WR      LATCbits.LATC5 // GPIO port latch register bit
@@ -1139,7 +1155,7 @@
 #define BUCKL1_SET     { asm volatile ("bset _LATC, #5 \n"); }
 #define BUCKL1_CLEAR   { asm volatile ("bclr _LATC, #5 \n"); }
 #define BUCKL1_TOGGLE  { asm volatile ("btg  _LATC, #5 \n"); }
-#define BUCKL1_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define BUCKL1_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define BUCKL1_INIT_OUTPUT  {BUCKL1_WR = PINSTATE_LOW; BUCKL1_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define BUCKL1_INIT_INPUT   {BUCKL1_WR = PINSTATE_HIGH; BUCKL1_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define BUCKL1_PGx_CHANNEL  5 // PWM channel index
@@ -1171,19 +1187,19 @@
 #define FB_TEMP2_SET     { asm volatile ("bset _LATC, #6 \n"); }
 #define FB_TEMP2_CLEAR   { asm volatile ("bclr _LATC, #6 \n"); }
 #define FB_TEMP2_TOGGLE  { asm volatile ("btg  _LATC, #6 \n"); }
-#define FB_TEMP2_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define FB_TEMP2_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define FB_TEMP2_ANSEL   _ANSELC6 // analog/digital pin configuration register bit
-#define FB_TEMP2_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define FB_TEMP2_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
-#define FB_TEMP2_ADC_AN_INPUT N1   // ANx input pin number
-#define FB_TEMP2_ADCBUF  ADCBUFN1 // ADC buffer register for this input
-#define FB_TEMP2_ADC_ANIE ADIEHbits.IEN1
-#define FB_TEMP2_ADC_ANEIE ADEIEHbits.EIENN1
-#define FB_TEMP2_ADC_IF   _ADCANN1IF // interrupt flag bit
-#define FB_TEMP2_ADC_IE   _ADCANN1IE // interrupt enable bit
-#define FB_TEMP2_ADC_IP   _ADCANN1IP // interrupt priority for this analog input
-#define FB_TEMP2_ADC_RDY  _ANN1RDY // ADC buffer ready bit
-#define _FB_TEMP2_ADC_Interrupt _ADCANN1Interrupt
+#define FB_TEMP2_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define FB_TEMP2_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
+#define FB_TEMP2_ADC_AN_INPUT 17   // ANx input pin number
+#define FB_TEMP2_ADCBUF  ADCBUF17 // ADC buffer register for this input
+#define FB_TEMP2_ADC_ANIE ADIEHbits.IE17
+#define FB_TEMP2_ADC_ANEIE ADEIEHbits.EIEN17
+#define FB_TEMP2_ADC_IF   _ADCAN17IF // interrupt flag bit
+#define FB_TEMP2_ADC_IE   _ADCAN17IE // interrupt enable bit
+#define FB_TEMP2_ADC_IP   _ADCAN17IP // interrupt priority for this analog input
+#define FB_TEMP2_ADC_RDY  _AN17RDY // ADC buffer ready bit
+#define _FB_TEMP2_ADC_Interrupt _ADCAN17Interrupt
 #define FB_TEMP2_INIT_ANALOG	{FB_TEMP2_ANSEL = 1; FB_TEMP2_WR = PINSTATE_HIGH; FB_TEMP2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
 #define FB_TEMP2_INIT_OUTPUT  {FB_TEMP2_WR = PINSTATE_LOW; FB_TEMP2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define FB_TEMP2_INIT_INPUT   {FB_TEMP2_WR = PINSTATE_HIGH; FB_TEMP2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
@@ -1203,10 +1219,10 @@
 #define FB_VOUT1_SET     { asm volatile ("bset _LATC, #7 \n"); }
 #define FB_VOUT1_CLEAR   { asm volatile ("bclr _LATC, #7 \n"); }
 #define FB_VOUT1_TOGGLE  { asm volatile ("btg  _LATC, #7 \n"); }
-#define FB_VOUT1_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define FB_VOUT1_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define FB_VOUT1_ANSEL   _ANSELC7 // analog/digital pin configuration register bit
-#define FB_VOUT1_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define FB_VOUT1_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define FB_VOUT1_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define FB_VOUT1_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
 #define FB_VOUT1_ADC_AN_INPUT 16   // ANx input pin number
 #define FB_VOUT1_ADCBUF  ADCBUF16 // ADC buffer register for this input
 #define FB_VOUT1_ADC_ANIE ADIEHbits.IE16
@@ -1235,7 +1251,7 @@
 #define SPI_CLK_SET     { asm volatile ("bset _LATC, #8 \n"); }
 #define SPI_CLK_CLEAR   { asm volatile ("bclr _LATC, #8 \n"); }
 #define SPI_CLK_TOGGLE  { asm volatile ("btg  _LATC, #8 \n"); }
-#define SPI_CLK_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define SPI_CLK_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define SPI_CLK_INIT_OUTPUT  {SPI_CLK_WR = PINSTATE_LOW; SPI_CLK_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define SPI_CLK_INIT_INPUT   {SPI_CLK_WR = PINSTATE_HIGH; SPI_CLK_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -1254,7 +1270,7 @@
 #define SPI_MISO_SET     { asm volatile ("bset _LATC, #9 \n"); }
 #define SPI_MISO_CLEAR   { asm volatile ("bclr _LATC, #9 \n"); }
 #define SPI_MISO_TOGGLE  { asm volatile ("btg  _LATC, #9 \n"); }
-#define SPI_MISO_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define SPI_MISO_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define SPI_MISO_INIT_OUTPUT  {SPI_MISO_WR = PINSTATE_LOW; SPI_MISO_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define SPI_MISO_INIT_INPUT   {SPI_MISO_WR = PINSTATE_HIGH; SPI_MISO_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -1273,7 +1289,7 @@
 #define ECP44_SET     { asm volatile ("bset _LATD, #0 \n"); }
 #define ECP44_CLEAR   { asm volatile ("bclr _LATD, #0 \n"); }
 #define ECP44_TOGGLE  { asm volatile ("btg  _LATD, #0 \n"); }
-#define ECP44_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define ECP44_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define ECP44_INIT_OUTPUT  {ECP44_WR = PINSTATE_LOW; ECP44_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define ECP44_INIT_INPUT   {ECP44_WR = PINSTATE_HIGH; ECP44_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define ECP44_PGx_CHANNEL  4 // PWM channel index
@@ -1305,7 +1321,7 @@
 #define PPC_IRQ1_SET     { asm volatile ("bset _LATD, #1 \n"); }
 #define PPC_IRQ1_CLEAR   { asm volatile ("bclr _LATD, #1 \n"); }
 #define PPC_IRQ1_TOGGLE  { asm volatile ("btg  _LATD, #1 \n"); }
-#define PPC_IRQ1_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define PPC_IRQ1_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define PPC_IRQ1_INIT_OUTPUT  {PPC_IRQ1_WR = PINSTATE_LOW; PPC_IRQ1_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define PPC_IRQ1_INIT_INPUT   {PPC_IRQ1_WR = PINSTATE_HIGH; PPC_IRQ1_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 #define PPC_IRQ1_PGx_CHANNEL  4 // PWM channel index
@@ -1341,10 +1357,10 @@
 #define FB_IOUT1_SET     { asm volatile ("bset _LATD, #10 \n"); }
 #define FB_IOUT1_CLEAR   { asm volatile ("bclr _LATD, #10 \n"); }
 #define FB_IOUT1_TOGGLE  { asm volatile ("btg  _LATD, #10 \n"); }
-#define FB_IOUT1_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define FB_IOUT1_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define FB_IOUT1_ANSEL   _ANSELD10 // analog/digital pin configuration register bit
-#define FB_IOUT1_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define FB_IOUT1_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define FB_IOUT1_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define FB_IOUT1_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
 #define FB_IOUT1_ADC_AN_INPUT 18   // ANx input pin number
 #define FB_IOUT1_ADCBUF  ADCBUF18 // ADC buffer register for this input
 #define FB_IOUT1_ADC_ANIE ADIEHbits.IE18
@@ -1373,10 +1389,10 @@
 #define ECP13_SET     { asm volatile ("bset _LATD, #11 \n"); }
 #define ECP13_CLEAR   { asm volatile ("bclr _LATD, #11 \n"); }
 #define ECP13_TOGGLE  { asm volatile ("btg  _LATD, #11 \n"); }
-#define ECP13_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
+#define ECP13_IS_ANALOG_INPUT  true // Pin is/is not analog input 
 #define ECP13_ANSEL   _ANSELD11 // analog/digital pin configuration register bit
-#define ECP13_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define ECP13_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
+#define ECP13_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+#define ECP13_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
 #define ECP13_ADC_AN_INPUT 19   // ANx input pin number
 #define ECP13_ADCBUF  ADCBUF19 // ADC buffer register for this input
 #define ECP13_ADC_ANIE ADIEHbits.IE19
@@ -1405,7 +1421,7 @@
 #define DBGPIN_SET     { asm volatile ("bset _LATD, #12 \n"); }
 #define DBGPIN_CLEAR   { asm volatile ("bclr _LATD, #12 \n"); }
 #define DBGPIN_TOGGLE  { asm volatile ("btg  _LATD, #12 \n"); }
-#define DBGPIN_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define DBGPIN_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define DBGPIN_INIT_OUTPUT  {DBGPIN_WR = PINSTATE_LOW; DBGPIN_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define DBGPIN_INIT_INPUT   {DBGPIN_WR = PINSTATE_HIGH; DBGPIN_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -1424,20 +1440,7 @@
 #define SPI_CS2_SET     { asm volatile ("bset _LATD, #13 \n"); }
 #define SPI_CS2_CLEAR   { asm volatile ("bclr _LATD, #13 \n"); }
 #define SPI_CS2_TOGGLE  { asm volatile ("btg  _LATD, #13 \n"); }
-#define SPI_CS2_IS_ANALOG_INPUT  1 // Pin is/is not analog input 
-#define SPI_CS2_ANSEL   _ANSELD13 // analog/digital pin configuration register bit
-#define SPI_CS2_ADCCORE  // index starts from zero, last index indicated shared adC core
-#define SPI_CS2_IS_SHARED_CORE false // AN input is routed to a dedicated or shared ACD core
-#define SPI_CS2_ADC_AN_INPUT N2   // ANx input pin number
-#define SPI_CS2_ADCBUF  ADCBUFN2 // ADC buffer register for this input
-#define SPI_CS2_ADC_ANIE ADIEHbits.IEN2
-#define SPI_CS2_ADC_ANEIE ADEIEHbits.EIENN2
-#define SPI_CS2_ADC_IF   _ADCANN2IF // interrupt flag bit
-#define SPI_CS2_ADC_IE   _ADCANN2IE // interrupt enable bit
-#define SPI_CS2_ADC_IP   _ADCANN2IP // interrupt priority for this analog input
-#define SPI_CS2_ADC_RDY  _ANN2RDY // ADC buffer ready bit
-#define _SPI_CS2_ADC_Interrupt _ADCANN2Interrupt
-#define SPI_CS2_INIT_ANALOG	{SPI_CS2_ANSEL = 1; SPI_CS2_WR = PINSTATE_HIGH; SPI_CS2_TRIS = PINDIR_INPUT;} // initialization macro for analog input
+#define SPI_CS2_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define SPI_CS2_INIT_OUTPUT  {SPI_CS2_WR = PINSTATE_LOW; SPI_CS2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define SPI_CS2_INIT_INPUT   {SPI_CS2_WR = PINSTATE_HIGH; SPI_CS2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -1456,7 +1459,7 @@
 #define ECP26_SET     { asm volatile ("bset _LATD, #14 \n"); }
 #define ECP26_CLEAR   { asm volatile ("bclr _LATD, #14 \n"); }
 #define ECP26_TOGGLE  { asm volatile ("btg  _LATD, #14 \n"); }
-#define ECP26_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define ECP26_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define ECP26_INIT_OUTPUT  {ECP26_WR = PINSTATE_LOW; ECP26_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define ECP26_INIT_INPUT   {ECP26_WR = PINSTATE_HIGH; ECP26_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -1475,7 +1478,7 @@
 #define DBGLED_SET     { asm volatile ("bset _LATD, #15 \n"); }
 #define DBGLED_CLEAR   { asm volatile ("bclr _LATD, #15 \n"); }
 #define DBGLED_TOGGLE  { asm volatile ("btg  _LATD, #15 \n"); }
-#define DBGLED_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define DBGLED_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define DBGLED_INIT_OUTPUT  {DBGLED_WR = PINSTATE_LOW; DBGLED_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define DBGLED_INIT_INPUT   {DBGLED_WR = PINSTATE_HIGH; DBGLED_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -1494,7 +1497,7 @@
 #define ECP39_SET     { asm volatile ("bset _LATD, #2 \n"); }
 #define ECP39_CLEAR   { asm volatile ("bclr _LATD, #2 \n"); }
 #define ECP39_TOGGLE  { asm volatile ("btg  _LATD, #2 \n"); }
-#define ECP39_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define ECP39_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define ECP39_INIT_OUTPUT  {ECP39_WR = PINSTATE_LOW; ECP39_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define ECP39_INIT_INPUT   {ECP39_WR = PINSTATE_HIGH; ECP39_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -1513,7 +1516,7 @@
 #define UART_TX_SET     { asm volatile ("bset _LATD, #3 \n"); }
 #define UART_TX_CLEAR   { asm volatile ("bclr _LATD, #3 \n"); }
 #define UART_TX_TOGGLE  { asm volatile ("btg  _LATD, #3 \n"); }
-#define UART_TX_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define UART_TX_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define UART_TX_INIT_OUTPUT  {UART_TX_WR = PINSTATE_LOW; UART_TX_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define UART_TX_INIT_INPUT   {UART_TX_WR = PINSTATE_HIGH; UART_TX_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -1532,7 +1535,7 @@
 #define UART_RX_SET     { asm volatile ("bset _LATD, #4 \n"); }
 #define UART_RX_CLEAR   { asm volatile ("bclr _LATD, #4 \n"); }
 #define UART_RX_TOGGLE  { asm volatile ("btg  _LATD, #4 \n"); }
-#define UART_RX_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define UART_RX_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define UART_RX_INIT_OUTPUT  {UART_RX_WR = PINSTATE_LOW; UART_RX_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define UART_RX_INIT_INPUT   {UART_RX_WR = PINSTATE_HIGH; UART_RX_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -1551,7 +1554,7 @@
 #define ECP34_SET     { asm volatile ("bset _LATD, #5 \n"); }
 #define ECP34_CLEAR   { asm volatile ("bclr _LATD, #5 \n"); }
 #define ECP34_TOGGLE  { asm volatile ("btg  _LATD, #5 \n"); }
-#define ECP34_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define ECP34_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define ECP34_INIT_OUTPUT  {ECP34_WR = PINSTATE_LOW; ECP34_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define ECP34_INIT_INPUT   {ECP34_WR = PINSTATE_HIGH; ECP34_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -1570,7 +1573,7 @@
 #define ECP36_SET     { asm volatile ("bset _LATD, #6 \n"); }
 #define ECP36_CLEAR   { asm volatile ("bclr _LATD, #6 \n"); }
 #define ECP36_TOGGLE  { asm volatile ("btg  _LATD, #6 \n"); }
-#define ECP36_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define ECP36_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define ECP36_INIT_OUTPUT  {ECP36_WR = PINSTATE_LOW; ECP36_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define ECP36_INIT_INPUT   {ECP36_WR = PINSTATE_HIGH; ECP36_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -1589,7 +1592,7 @@
 #define ECP50_SET     { asm volatile ("bset _LATD, #7 \n"); }
 #define ECP50_CLEAR   { asm volatile ("bclr _LATD, #7 \n"); }
 #define ECP50_TOGGLE  { asm volatile ("btg  _LATD, #7 \n"); }
-#define ECP50_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define ECP50_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define ECP50_INIT_OUTPUT  {ECP50_WR = PINSTATE_LOW; ECP50_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define ECP50_INIT_INPUT   {ECP50_WR = PINSTATE_HIGH; ECP50_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -1608,7 +1611,7 @@
 #define SPI_MOSI_SET     { asm volatile ("bset _LATD, #8 \n"); }
 #define SPI_MOSI_CLEAR   { asm volatile ("bclr _LATD, #8 \n"); }
 #define SPI_MOSI_TOGGLE  { asm volatile ("btg  _LATD, #8 \n"); }
-#define SPI_MOSI_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define SPI_MOSI_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define SPI_MOSI_INIT_OUTPUT  {SPI_MOSI_WR = PINSTATE_LOW; SPI_MOSI_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define SPI_MOSI_INIT_INPUT   {SPI_MOSI_WR = PINSTATE_HIGH; SPI_MOSI_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
@@ -1627,7 +1630,7 @@
 #define ECP28_SET     { asm volatile ("bset _LATD, #9 \n"); }
 #define ECP28_CLEAR   { asm volatile ("bclr _LATD, #9 \n"); }
 #define ECP28_TOGGLE  { asm volatile ("btg  _LATD, #9 \n"); }
-#define ECP28_IS_ANALOG_INPUT  0 // Pin is/is not analog input 
+#define ECP28_IS_ANALOG_INPUT  false // Pin is/is not analog input 
 #define ECP28_INIT_OUTPUT  {ECP28_WR = PINSTATE_LOW; ECP28_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
 #define ECP28_INIT_INPUT   {ECP28_WR = PINSTATE_HIGH; ECP28_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
