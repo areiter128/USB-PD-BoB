@@ -261,7 +261,7 @@ volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_
     
     volatile uint16_t fres = 1;
     volatile HSADC_MODULE_CONFIG_t adcmod_cfg;
-    
+   
     // Load configuration preset from header file
     adcmod_cfg.ADCON1.value = (((uint32_t)C4SWBB_ADC_ADCON1H << 16) | ((uint32_t)C4SWBB_ADC_ADCON1L));
     adcmod_cfg.ADCON2.value = (((uint32_t)C4SWBB_ADC_ADCON2H << 16) | ((uint32_t)C4SWBB_ADC_ADCON2L));
@@ -269,12 +269,14 @@ volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_
     adcmod_cfg.ADCON4.value = (((uint32_t)C4SWBB_ADC_ADCON4H << 16) | ((uint32_t)C4SWBB_ADC_ADCON4L));
     adcmod_cfg.ADCON5.value = (((uint32_t)C4SWBB_ADC_ADCON5H << 16) | ((uint32_t)C4SWBB_ADC_ADCON5L));
     
+
+    
     fres &= hsadc_init_adc_module(adcmod_cfg);  // Write ADC module configuration to registers
     
     return(fres);
 }
 
-volatile uint16_t c4swbb_adc_channels_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
     
     volatile uint16_t fres = 1;
     volatile HSADC_CHANNEL_CONFIG_t adin_cfg;
