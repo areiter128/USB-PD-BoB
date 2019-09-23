@@ -173,7 +173,7 @@
 // Macros are used to translate physical values into register values
 
 #define SWITCHING_PERIOD            ((uint16_t)(((float)((1.0/(float)(SWITCHING_FREQUENCY))/T_ACLK)-1)))
-#define PWM_PHASE_SFT               ((uint16_t)(((float)((1.0/(float)(PWM_PHASE_SHIFT))/T_ACLK)-1)))
+#define PWM_PHASE_SFT               ((uint16_t)(((float)(((float)(PWM_PHASE_SHIFT)/T_ACLK)-1))))
 #define PWM_DUTY_RATIO_MAX          ((uint16_t)(PWM_DUTY_RATIO_MAXIMUM * (float)SWITCHING_PERIOD))
 #define PWM_DUTY_RATIO_MIN          ((uint16_t)(PWM_DUTY_RATIO_MINIMUM * (float)SWITCHING_PERIOD))
 
