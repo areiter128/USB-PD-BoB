@@ -34,6 +34,37 @@
 #include <stdint.h>
 #include "mcal/mcal.h"
 
+/* Peripheral/Signal Interrupt Settings */
+
+#define ADCORE_EISEL_TAD        8 // Number of Tad cycles by which the interrupts should be generated early to conversion completion (0-8)
+
+#define FB_VOUT1_ISR_PRIORITY   5 // interrupt priority for this analog input
+#define FB_VOUT1_ISR_ENABLE     true // interrupt enable/disable for this analog input
+
+#define FB_IIN1_ISR_PRIORITY    5 // interrupt priority for this analog input
+#define FB_IIN1_ISR_ENABLE      false // interrupt enable/disable for this analog input
+
+#define FB_IOUT1_ISR_PRIORITY   5 // interrupt priority for this analog input
+#define FB_IOUT1_ISR_ENABLE     true // interrupt priority for this analog input
+
+#define FB_TEMP1_ISR_PRIORITY   1 // interrupt priority for this analog input
+#define FB_TEMP1_ISR_ENABLE     false // interrupt priority for this analog input
+
+#define FB_VOUT2_ISR_PRIORITY   5 // interrupt priority for this analog input
+#define FB_VOUT2_ISR_ENABLE     true // interrupt priority for this analog input
+
+#define FB_IIN2_ISR_PRIORITY    5 // interrupt priority for this analog input
+#define FB_IIN2_ISR_ENABLE      false // interrupt priority for this analog input
+
+#define FB_IOUT2_ISR_PRIORITY   1 // interrupt priority for this analog input
+#define FB_IOUT2_ISR_ENABLE     true // interrupt priority for this analog input
+
+#define FB_TEMP2_ISR_PRIORITY   1 // interrupt priority for this analog input
+#define FB_TEMP2_ISR_ENABLE     false // interrupt priority for this analog input
+
+#define FB_VBAT_ISR_PRIORITY    1 // interrupt priority for this analog input
+#define FB_VBAT_ISR_ENABLE      false // interrupt priority for this analog input
+
 /* INTCON1 Settings */
 
 #define IRQ_INTCON1_CFG    (REG_INTCON1_NSTDIS_ENABLED | \
