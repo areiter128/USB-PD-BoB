@@ -213,10 +213,10 @@ typedef struct {
 
 
 typedef struct {
-    volatile C4SWBB_ADC_FEEDBACK_INTERFACE_t ad_iout; // Power converter 'Output Current'
-    volatile C4SWBB_ADC_FEEDBACK_INTERFACE_t ad_vin;  // Power converter 'Input Voltage'
-    volatile C4SWBB_ADC_FEEDBACK_INTERFACE_t ad_vout; // Power converter 'Output Voltage'
-    volatile C4SWBB_ADC_FEEDBACK_INTERFACE_t ad_temp;  // feedback signal 'Temperature'
+    volatile C4SWBB_ADC_FEEDBACK_INTERFACE_t ad_iout; // Power converter "Output Current"
+    volatile C4SWBB_ADC_FEEDBACK_INTERFACE_t ad_vin;  // Power converter "Input Voltage"
+    volatile C4SWBB_ADC_FEEDBACK_INTERFACE_t ad_vout; // Power converter "Output Voltage"
+    volatile C4SWBB_ADC_FEEDBACK_INTERFACE_t ad_temp;  // feedback signal "Temperature"
 }C4SWBB_FEEDBACK_t;
 
 /*!C4SWBB_DATA_t
@@ -330,7 +330,7 @@ extern volatile uint16_t c4swbb_pwm_hold(volatile C4SWBB_POWER_CONTROLLER_t* pIn
 extern volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
 
 extern volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
-extern volatile uint16_t c4swbb_adc_channels_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
+extern volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
 
 #endif	/* _APL_RESOURCES_SOFT_START_H_ */
 
