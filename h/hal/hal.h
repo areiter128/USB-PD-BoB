@@ -45,11 +45,9 @@
 #include "hal/initialization/init_dsp.h"
 #include "hal/initialization/init_timer.h"
 #include "hal/initialization/init_fosc.h"
-#include "hal/initialization/init_adc.h"
-#include "hal/initialization/init_pwm.h"
 
 /* ***********************************************************************************************
- * PROTOTYPES
+ * FUNCTION PROTOTYPES
  * ***********************************************************************************************/
 
 #endif	/* HARDWARE_ABSTRACTION_LAYER_H */
