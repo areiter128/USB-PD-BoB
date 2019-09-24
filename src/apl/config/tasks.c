@@ -68,19 +68,19 @@ volatile uint16_t (*Task_Table[])(void) = {
     // Cross-function modules
     init_ApplicationSettings, // initialize system-wide application data structure
     init_FaultObjects, // call fault object initialization
-    exec_CaptureSystemStatus,           // Captures detection signals and analyzes voltages to determine the operating mode
+    exec_CaptureSystemStatus, // Captures detection signals and analyzes voltages to determine the operating mode
     
     /* ==================== USER FUNCTIONS LIST ==================== */
     
     // Chip level initialization
-    init_gpio,              // task initializing all used GPIOs in accordance to their application specific function
-    init_irq,               // task initializing the interrupt controller
-    initialize_dsp,         // task initializing all digital signal controller
+    gpio_initialize,              // task initializing all used GPIOs in accordance to their application specific function
+    irq_initialize,               // task initializing the interrupt controller
+    dsp_initialize,         // task initializing all digital signal controller
 
     // Board level initialization
             
     // Add System function / Special function initialization
-    init_PowerControl,      // Initializing the power controller engine
+//    init_PowerControl,      // Initializing the power controller engine
     exec_PowerControl,      // execute the power controller engine
 
     
