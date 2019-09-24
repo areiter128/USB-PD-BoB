@@ -16,8 +16,8 @@ volatile uint16_t init_irq(void)
 
     volatile uint16_t fres = 0;
     
-    fres = gsirq_init_irq(IRQ_INTCON1_CFG, IRQ_INTCON2_CFG, IRQ_INTCON3_CFG);
-    fres &= gsirq_init_soft_traps(0, 0, 0);
+    fres = gsirq_irq_initialize(IRQ_INTCON1_CFG, IRQ_INTCON2_CFG, IRQ_INTCON3_CFG);
+    fres &= gsirq_soft_traps_initialize(0, 0, 0);
     
 
     return(fres);
