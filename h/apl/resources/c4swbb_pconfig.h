@@ -919,11 +919,13 @@ Description:
     bit 1 SAMC1EN: Dedicated ADC Core 1 Conversion Delay Enable bit
     bit 0 SAMC0EN: Dedicated ADC Core 0 Conversion Delay Enable bit        
  */
+#if defined (ADCON4L)
 #define C4SWBB_ADC_ADCON4L          (   REG_SAMC1EN_DISABLED | \
                                         REG_SAMC0EN_DISABLED | \
                                         REG_SYNCTRG1_INDEPENDENT | \
                                         REG_SYNCTRG0_INDEPENDENT \
                                     )  // 0b0000000000000000
+#endif
     
 /*!ADCON4H: ADC CONTROL REGISTER 4 HIGH
 
@@ -931,10 +933,12 @@ Description:
     bit 3-2 C1CHS<1:0>: Dedicated ADC Core 1 Input Channel Selection bits
     bit 1-0 C0CHS<1:0>: Dedicated ADC Core 0 Input Channel Selection bits        
  */
+#if defined (ADCON4H)
 #define C4SWBB_ADC_ADCON4H          (   REG_ADCON4H_C0CHS_AN0 | \
                                         REG_ADCON4H_C1CHS_AN1 \
                                     )  // 0b0000000000000000
-
+#endif
+    
 /*!ADCON5L: ADC CONTROL REGISTER 5 LOW
 
     bit 15 SHRRDY: Shared ADC Core Ready Flag bit
