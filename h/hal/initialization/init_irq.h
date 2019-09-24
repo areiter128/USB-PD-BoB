@@ -34,7 +34,7 @@
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
 
-extern volatile uint16_t init_irq(void);
+extern volatile uint16_t irq_initialize(void);
     
 #endif	/* _HARDWARE_ABSTRACTION_LAYER_INITIALIZE_INTERRUPT_CONTROLLER_ */
 

@@ -26,7 +26,7 @@
 
 #include "hal/hal.h"
 
-volatile uint16_t init_gpio(void) {
+volatile uint16_t gpio_initialize(void) {
     
     Nop();
     

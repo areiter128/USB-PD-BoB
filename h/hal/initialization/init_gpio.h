@@ -40,7 +40,7 @@
 /* ***********************************************************************************************
  * PROTOTYPES
  * ***********************************************************************************************/
-extern volatile uint16_t init_gpio(void);
+extern volatile uint16_t gpio_initialize(void);
 
 #endif	/* _HARDWARE_ABSTRACTION_LAYER_PORT_AND_PIN_CONFIGURATION_H_ */
 

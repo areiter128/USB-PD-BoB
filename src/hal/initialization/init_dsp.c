@@ -10,7 +10,7 @@
 #include "mcal/mcal.h"
 
 /* === Initialize CPU ===================================================== */
-volatile uint16_t initialize_dsp(void) {
+volatile uint16_t dsp_initialize(void) {
 
     CORCONbits.ACCSAT = CORCON_ACCSAT_131;
 //    CORCONbits.DL is read only
