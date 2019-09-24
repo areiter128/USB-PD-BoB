@@ -91,11 +91,11 @@
 
 /* INTCON3 Settings */
 
-#define IRQ_INTCON3_CFG    (REG_INTCON3_STAT_CAN_CLEAR | \
-                            REG_INTCON3_STAT_NAE_CLEAR | \
-                            REG_INTCON3_STAT_CAN2_CLEAR | \
-                            REG_INTCON3_STAT_DOOVR_CLEAR | \
-                            REG_INTCON3_STAT_APLL_CLEAR \
+#define IRQ_INTCON3_CFG    (REG_INTCON3_CAN_CLEAR | \
+                            REG_INTCON3_NAE_CLEAR | \
+                            REG_INTCON3_CAN2_CLEAR | \
+                            REG_INTCON3_DOOVR_CLEAR | \
+                            REG_INTCON3_APLL_CLEAR \
                             )
 
 
