@@ -270,7 +270,9 @@ volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_
     adcmod_cfg.ADCON1.value = ((((uint32_t)C4SWBB_ADC_ADCON1H) << 16) | ((uint32_t)C4SWBB_ADC_ADCON1L));
     adcmod_cfg.ADCON2.value = ((((uint32_t)C4SWBB_ADC_ADCON2H) << 16) | ((uint32_t)C4SWBB_ADC_ADCON2L));
     adcmod_cfg.ADCON3.value = ((((uint32_t)C4SWBB_ADC_ADCON3H) << 16) | ((uint32_t)C4SWBB_ADC_ADCON3L));
+    #if defined (ADCON4L)
     adcmod_cfg.ADCON4.value = ((((uint32_t)C4SWBB_ADC_ADCON4H) << 16) | ((uint32_t)C4SWBB_ADC_ADCON4L));
+    #endif
     adcmod_cfg.ADCON5.value = ((((uint32_t)C4SWBB_ADC_ADCON5H) << 16) | ((uint32_t)C4SWBB_ADC_ADCON5L));
     
     fres &= hsadc_adc_module_initialize(adcmod_cfg);  // Write ADC module configuration to registers
@@ -298,6 +300,7 @@ volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_POWER_CONTROLLER_
     volatile uint16_t fres = 1;
     volatile HSADC_INPUT_CONFIG_t adin_cfg;
 
+    // -------------------------
     // Reset/Load defaults from header file
     adin_cfg.config.bits.early_interrupt_enable = ADEIE_ANx_DISABLED; // Always disable early interrupts
     adin_cfg.config.bits.interrupt_enable = ADIE_ANx_DISABLED; // Always disable interrupt generation
@@ -307,8 +310,11 @@ volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_POWER_CONTROLLER_
     adin_cfg.config.bits.data_mode = ANx_DATA_UNSIGNED; // Always use unsigned numbers
     adin_cfg.config.bits.input_mode = ANx_SINGLE_ENDED; // Always use single ended ADC channels
 
-    // Extract/Load user settings controller from object
+    // -------------------------
+    // Extract/Load VOUT user settings from controller object
     adin_cfg.ad_input = pInstance->feedback.ad_vout.adin_no;    // Load analog input number from user object
+    adin_cfg.config.bits.data_mode = pInstance->feedback.ad_vout.signed_data; // Signed or unsigned ADC conversion result
+    adin_cfg.config.bits.input_mode = pInstance->feedback.ad_vout.differential_input; // Single-ended of differential input
 
     // Load analog input core assignment
     if (pInstance->feedback.ad_vout.adc_core != (ADC_CORE_COUNT-1)) {
@@ -318,14 +324,77 @@ volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_POWER_CONTROLLER_
         adin_cfg.config.bits.core_assigmnment = ANx_CORE_ASSIGNMENT_SHARED; // Input is connected to shared ADC core
     }
     
-    // set interrupt configuration
-    adin_cfg.config.bits.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vout.interrupt_enable);
-    adin_cfg.config.bits.early_interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vout.early_interrupt_enable);
+    // Set interrupt configuration
     adin_cfg.config.bits.trigger_source = (volatile uint16_t)(pInstance->feedback.ad_vout.trigger_source);
+    adin_cfg.config.bits.early_interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vout.early_interrupt_enable);
+    adin_cfg.config.bits.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vout.interrupt_enable);
 
-    hsadc_adc_input_initialize(adin_cfg);
+    // Set output voltage ADC input configuration
+    fres &= hsadc_adc_input_initialize(adin_cfg); 
     
+    // Configure ADC input pin and interrupt
+    FB_VOUT1_INIT_ANALOG; // Output voltage converter #1 feedback pin
+    FB_VOUT1_ADC_IP = pInstance->feedback.ad_vout.interrupt_priority; // Set interrupt priority
+    FB_VOUT1_ADC_IF = 0; // Clear interrupt flag bit
+    FB_VOUT1_ADC_IE = pInstance->feedback.ad_vout.interrupt_enable; // Enable/Disable interrupt service routine
+
+    // -------------------------
+    // Extract/Load IOUT user settings from controller object
+    adin_cfg.ad_input = pInstance->feedback.ad_iout.adin_no;    // Load analog input number from user object
+    adin_cfg.config.bits.data_mode = pInstance->feedback.ad_iout.signed_data; // Signed or unsigned ADC conversion result
+    adin_cfg.config.bits.input_mode = pInstance->feedback.ad_iout.differential_input; // Single-ended of differential input
+
+    // Load analog input core assignment
+    if (pInstance->feedback.ad_iout.adc_core != (ADC_CORE_COUNT-1)) {
+        adin_cfg.config.bits.core_assigmnment = ANx_CORE_ASSIGNMENT_DEDICATED; // Input is connected to dedicated ADC core
+    }
+    else {
+        adin_cfg.config.bits.core_assigmnment = ANx_CORE_ASSIGNMENT_SHARED; // Input is connected to shared ADC core
+    }
     
+    // Set interrupt configuration
+    adin_cfg.config.bits.trigger_source = (volatile uint16_t)(pInstance->feedback.ad_iout.trigger_source);
+    adin_cfg.config.bits.early_interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_iout.early_interrupt_enable);
+    adin_cfg.config.bits.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_iout.interrupt_enable);
+
+    // Set output voltage ADC input configuration
+    fres &= hsadc_adc_input_initialize(adin_cfg); 
+    
+    // Configure ADC input pin and interrupt
+    FB_IOUT1_INIT_ANALOG; // Output current converter #1 feedback pin
+    FB_IOUT1_ADC_IP = pInstance->feedback.ad_iout.interrupt_priority; // Set interrupt priority
+    FB_IOUT1_ADC_IF = 0; // Clear interrupt flag bit
+    FB_IOUT1_ADC_IE = pInstance->feedback.ad_iout.interrupt_enable; // Enable/Disable interrupt service routine
+
+    // -------------------------
+    // Extract/Load TEMP user settings from controller object
+    adin_cfg.ad_input = pInstance->feedback.ad_temp.adin_no;    // Load analog input number from user object
+    adin_cfg.config.bits.data_mode = pInstance->feedback.ad_temp.signed_data; // Signed or unsigned ADC conversion result
+    adin_cfg.config.bits.input_mode = pInstance->feedback.ad_temp.differential_input; // Single-ended of differential input
+
+    // Load analog input core assignment
+    if (pInstance->feedback.ad_temp.adc_core != (ADC_CORE_COUNT-1)) {
+        adin_cfg.config.bits.core_assigmnment = ANx_CORE_ASSIGNMENT_DEDICATED; // Input is connected to dedicated ADC core
+    }
+    else {
+        adin_cfg.config.bits.core_assigmnment = ANx_CORE_ASSIGNMENT_SHARED; // Input is connected to shared ADC core
+    }
+    
+    // Set interrupt configuration
+    adin_cfg.config.bits.trigger_source = (volatile uint16_t)(pInstance->feedback.ad_temp.trigger_source);
+    adin_cfg.config.bits.early_interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_temp.early_interrupt_enable);
+    adin_cfg.config.bits.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_temp.interrupt_enable);
+
+    // Set output voltage ADC input configuration
+    fres &= hsadc_adc_input_initialize(adin_cfg); 
+    
+    // Configure ADC input pin and interrupt
+    FB_TEMP1_INIT_ANALOG; // Temperature converter #1 feedback pin
+    FB_TEMP1_ADC_IP = pInstance->feedback.ad_iout.interrupt_priority; // Set interrupt priority
+    FB_TEMP1_ADC_IF = 0; // Clear interrupt flag bit
+    FB_TEMP1_ADC_IE = pInstance->feedback.ad_iout.interrupt_enable; // Enable/Disable interrupt service routine
+    
+    // Return Success/Failure
     return(fres);
 }
 
