@@ -203,6 +203,8 @@ typedef struct {
 typedef struct {
     volatile uint16_t adin_no;   // Number of the analog input used (e.g. '3' for 'AN3')
     volatile uint16_t adc_core;  // Number of the ADC core the input is connected to
+    volatile bool differential_input; // Flag indicating if ADC input is differential or single ended
+    volatile bool signed_data;   // Flag indicating if ADC results should be signed or unsigned
     volatile uint16_t* ptrADBUF; // Pointer to analog input result buffer
     volatile bool interrupt_enable; // Interrupt Enable setting (true = enabled, false = disabled)
     volatile bool early_interrupt_enable; // Early Interrupt Enable setting (true = enabled, false = disabled)
