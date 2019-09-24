@@ -265,7 +265,6 @@ volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_
     volatile HSADC_MODULE_CONFIG_t adcmod_cfg;
     volatile HSADC_ADCOREx_CONFIG_t adcore_cfg;
 
-   
     // Load configuration preset from header file
     adcmod_cfg.ADCON1.value = ((((uint32_t)C4SWBB_ADC_ADCON1H) << 16) | ((uint32_t)C4SWBB_ADC_ADCON1L));
     adcmod_cfg.ADCON2.value = ((((uint32_t)C4SWBB_ADC_ADCON2H) << 16) | ((uint32_t)C4SWBB_ADC_ADCON2L));
@@ -278,19 +277,33 @@ volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_
     fres &= hsadc_adc_module_initialize(adcmod_cfg);  // Write ADC module configuration to registers
 
     // Load configuration presets for dedicated ADC cores
-    if (ADC_CORE_COUNT > 1) {
+    if (ADC_CORE_COUNT > 1) 
+    {
 
         adcore_cfg.config.value = ((((uint32_t)C4SWBB_ADC_ADCORExH) << 16) | ((uint32_t)C4SWBB_ADC_ADCORExL));
 
         // Load standard configuration into all ADC cores
         for (i=0; i<(ADC_CORE_COUNT-1); i++) 
         {
-            adcore_cfg.index = i;
-            adcore_cfg.type = ADCORE_TYPE_DEDICATED;
+            if ( (i == pInstance->feedback.ad_iout.adc_core) || 
+                 (i == pInstance->feedback.ad_temp.adc_core) ||
+                 (i == pInstance->feedback.ad_vin.adc_core)  ||
+                 (i == pInstance->feedback.ad_vout.adc_core) )
+               {
 
-            fres &= hsadc_adc_core_initialize(adcore_cfg);  // Write ADC module configuration to registers
+                // If the respective ADC core is used, configure and enable it
+                
+                adcore_cfg.index = i;
+                adcore_cfg.type = ADCORE_TYPE_DEDICATED;
+
+                fres &= hsadc_adc_core_initialize(adcore_cfg);  // Write ADC module configuration to registers
+                fres &= hsadc_adc_core_power_on(i); // Power on ADC Core x
+            }
         }
     }
+
+    // Check if all ADC cores are on and ready
+    fres &= hsadc_adc_cores_check_ready();
     
     return(fres);
 }
@@ -332,12 +345,6 @@ volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_POWER_CONTROLLER_
     // Set output voltage ADC input configuration
     fres &= hsadc_adc_input_initialize(adin_cfg); 
     
-    // Configure ADC input pin and interrupt
-    FB_VOUT1_INIT_ANALOG; // Output voltage converter #1 feedback pin
-    FB_VOUT1_ADC_IP = pInstance->feedback.ad_vout.interrupt_priority; // Set interrupt priority
-    FB_VOUT1_ADC_IF = 0; // Clear interrupt flag bit
-    FB_VOUT1_ADC_IE = pInstance->feedback.ad_vout.interrupt_enable; // Enable/Disable interrupt service routine
-
     // -------------------------
     // Extract/Load IOUT user settings from controller object
     adin_cfg.ad_input = pInstance->feedback.ad_iout.adin_no;    // Load analog input number from user object
@@ -360,12 +367,6 @@ volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_POWER_CONTROLLER_
     // Set output voltage ADC input configuration
     fres &= hsadc_adc_input_initialize(adin_cfg); 
     
-    // Configure ADC input pin and interrupt
-    FB_IOUT1_INIT_ANALOG; // Output current converter #1 feedback pin
-    FB_IOUT1_ADC_IP = pInstance->feedback.ad_iout.interrupt_priority; // Set interrupt priority
-    FB_IOUT1_ADC_IF = 0; // Clear interrupt flag bit
-    FB_IOUT1_ADC_IE = pInstance->feedback.ad_iout.interrupt_enable; // Enable/Disable interrupt service routine
-
     // -------------------------
     // Extract/Load TEMP user settings from controller object
     adin_cfg.ad_input = pInstance->feedback.ad_temp.adin_no;    // Load analog input number from user object
@@ -387,12 +388,6 @@ volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_POWER_CONTROLLER_
 
     // Set output voltage ADC input configuration
     fres &= hsadc_adc_input_initialize(adin_cfg); 
-    
-    // Configure ADC input pin and interrupt
-    FB_TEMP1_INIT_ANALOG; // Temperature converter #1 feedback pin
-    FB_TEMP1_ADC_IP = pInstance->feedback.ad_iout.interrupt_priority; // Set interrupt priority
-    FB_TEMP1_ADC_IF = 0; // Clear interrupt flag bit
-    FB_TEMP1_ADC_IE = pInstance->feedback.ad_iout.interrupt_enable; // Enable/Disable interrupt service routine
     
     // Return Success/Failure
     return(fres);

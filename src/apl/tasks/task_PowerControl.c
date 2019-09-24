@@ -61,30 +61,19 @@ volatile uint16_t init_PowerControl(void) {
     // The ADC channels configured here are covering sampling of input voltage, output voltage, 
     // output current and temperature of each converter. All other ADC configurations for other 
     // functions outside the power control scope need to be done elsewhere
-    fres &= c4swbb_adc_module_initialize(&c4swbb_1);
-    
-    // Initialize all ADC input channels of one power controller
-    fres &= c4swbb_adc_inputs_initialize(&c4swbb_1);
-    
+
     // Initialize ADC cores
-    
     // Dedicated ADC core #0
     adcore_cfg.ADCORE0.config.bits.ADCS = ADCORE_ADCS_DEFAULT;
     adcore_cfg.ADCORE0.config.bits.EISEL = ADCORE_EISEL_8TAD;
     adcore_cfg.ADCORE0.config.bits.RES = ADCORE_RES_12BIT;
     adcore_cfg.ADCORE0.config.bits.SAMC = ADCORE_SAMC_DEFAULT;
 
-    fres &= hsadc_adc_core_initialize(adcore_cfg.ADCORE0);
-    fres &= hsadc_adc_core_power_on(adcore_cfg.ADCORE0.index);
-    
     // Dedicated ADC core #1
     adcore_cfg.ADCORE1.config.bits.ADCS = ADCORE_ADCS_DEFAULT;
     adcore_cfg.ADCORE1.config.bits.EISEL = ADCORE_EISEL_8TAD;
     adcore_cfg.ADCORE1.config.bits.RES = ADCORE_RES_12BIT;
     adcore_cfg.ADCORE1.config.bits.SAMC = ADCORE_SAMC_DEFAULT;
-
-    fres &= hsadc_adc_core_initialize(adcore_cfg.ADCORE1);
-    fres &= hsadc_adc_core_power_on(adcore_cfg.ADCORE1.index);
 
     // Shared ADC core
     adcore_cfg.SHRADCORE.index = (ADC_CORE_COUNT - 1);
@@ -93,48 +82,48 @@ volatile uint16_t init_PowerControl(void) {
     adcore_cfg.SHRADCORE.config.bits.RES = ADCORE_RES_12BIT;
     adcore_cfg.SHRADCORE.config.bits.SAMC = ADCORE_SAMC_0010;
     
-    fres &= hsadc_adc_core_initialize(adcore_cfg.SHRADCORE);
-    fres &= hsadc_adc_core_power_on(adcore_cfg.SHRADCORE.index);
 
-    // Configure device pins
-    FB_VOUT1_INIT_ANALOG; // Output voltage converter #1 feedback pin
-    FB_VOUT1_ADC_IP = 5; // Set interrupt priority
-    FB_VOUT1_ADC_IF = 0; // Clear interrupt flag bit
-    FB_VOUT1_ADC_IE = 1; // Enable interrupt service routine
+    // Initialize all ADC module base registers
+    fres &= c4swbb_adc_module_initialize(&c4swbb_1);
+
+    // ADC core direct configuration
+//    fres &= hsadc_adc_core_initialize(adcore_cfg.ADCORE0);
+//    fres &= hsadc_adc_core_power_on(adcore_cfg.ADCORE0.index);
+//    fres &= hsadc_adc_core_initialize(adcore_cfg.ADCORE1);
+//    fres &= hsadc_adc_core_power_on(adcore_cfg.ADCORE1.index);
+//    fres &= hsadc_adc_core_initialize(adcore_cfg.SHRADCORE);
+//    fres &= hsadc_adc_core_power_on(adcore_cfg.SHRADCORE.index);
+
     
+    // Initialize all ADC input channels of one power controller
+    fres &= c4swbb_adc_inputs_initialize(&c4swbb_1);
+    
+    
+    
+    // Configure ADC input pins and interrupts
+    FB_VOUT1_INIT_ANALOG; // Output voltage converter #1 feedback pin
+    FB_VOUT1_ADC_IP = c4swbb_1.feedback.ad_vout.interrupt_priority; // Set interrupt priority
+    FB_VOUT1_ADC_IF = 0; // Clear interrupt flag bit
+    FB_VOUT1_ADC_IE = c4swbb_1.feedback.ad_vout.interrupt_enable; // Enable/Disable interrupt service routine
+
+    // Configure ADC input pin and interrupt
     FB_IOUT1_INIT_ANALOG; // Output current converter #1 feedback pin
-    FB_IOUT1_ADC_IP = 5; // Set interrupt priority
+    FB_IOUT1_ADC_IP = c4swbb_1.feedback.ad_iout.interrupt_priority; // Set interrupt priority
     FB_IOUT1_ADC_IF = 0; // Clear interrupt flag bit
-    FB_IOUT1_ADC_IE = 1; // Enable interrupt service routine
+    FB_IOUT1_ADC_IE = c4swbb_1.feedback.ad_iout.interrupt_enable; // Enable/Disable interrupt service routine
 
+    // Configure ADC input pin and interrupt
     FB_TEMP1_INIT_ANALOG; // Temperature converter #1 feedback pin
-    FB_TEMP1_ADC_IP = 5; // Set interrupt priority
+    FB_TEMP1_ADC_IP = c4swbb_1.feedback.ad_temp.interrupt_priority; // Set interrupt priority
     FB_TEMP1_ADC_IF = 0; // Clear interrupt flag bit
-    FB_TEMP1_ADC_IE = 0; // Disable interrupt service routine
-
-    FB_VOUT2_INIT_ANALOG; // Output voltage converter #2 feedback pin
-    FB_VOUT2_ADC_IP = 5; // Set interrupt priority
-    FB_VOUT2_ADC_IF = 0; // Clear interrupt flag bit
-    FB_VOUT2_ADC_IE = 1; // Enable interrupt service routine
-
-    FB_IOUT2_INIT_ANALOG; // Output current converter #2 feedback pin
-    FB_IOUT2_ADC_IP = 5; // Set interrupt priority
-    FB_IOUT2_ADC_IF = 0; // Clear interrupt flag bit
-    FB_IOUT2_ADC_IE = 1; // Enable interrupt service routine
-
-    FB_TEMP2_INIT_ANALOG; // Temperature converter #2 feedback pin
-    FB_TEMP2_ADC_IP = 5; // Set interrupt priority
-    FB_TEMP2_ADC_IF = 0; // Clear interrupt flag bit
-    FB_TEMP2_ADC_IE = 0; // Disable interrupt service routine
+    FB_TEMP1_ADC_IE = c4swbb_1.feedback.ad_temp.interrupt_enable; // Enable/Disable interrupt service routine
 
     FB_VBAT_INIT_ANALOG; // Input voltage feedback pin
-    FB_VBAT_ADC_IP = 5;  // Set interrupt priority
+    FB_VBAT_ADC_IP = c4swbb_1.feedback.ad_vin.interrupt_priority; // Set interrupt priority
     FB_VBAT_ADC_IF = 0;  // Clear interrupt flag bit
-    FB_VBAT_ADC_IE = 0;  // Disable interrupt service routine
+    FB_VBAT_ADC_IE = c4swbb_1.feedback.ad_vin.interrupt_enable; // Enable/Disable interrupt service routine
     
-    // Enable ADC Interrupts in Interrupt Controller
-    
-    
+    // return Success/Failure
     return (fres);
 }
 
@@ -144,7 +133,7 @@ volatile uint16_t init_USBport_1(void) {
 
     
     /* Initializing 4SW-BB DC/DC converter at USB port A */
-    reset_4SWBB_PowerController(&c4swbb_1);  // Initialize power controller of USB port 1
+    fres &= reset_4SWBB_PowerController(&c4swbb_1);  // Initialize power controller of USB port 1
     
     // Load PWM settings from hardware and microcontroller abstraction layers (HAL and MCAL)
     c4swbb_1.buck_leg.pwm_instance = BUCKH1_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
@@ -175,30 +164,41 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.feedback.ad_vout.adin_no = FB_VOUT1_ADC_AN_INPUT;
     c4swbb_1.feedback.ad_vout.adc_core = FB_VOUT1_ADCCORE;
     c4swbb_1.feedback.ad_vout.ptrADBUF = &FB_VOUT1_ADCBUF;
-
-    /* ToDo: trigger and interrupt configuration needs to be added*/
     c4swbb_1.feedback.ad_vout.trigger_source = BUCKH1_ADC_TRGSRC_1;
+    c4swbb_1.feedback.ad_vout.early_interrupt_enable = true;
     c4swbb_1.feedback.ad_vout.interrupt_enable = true;
     c4swbb_1.feedback.ad_vout.interrupt_priority = FB_VOUT1_ISR_PRIORITY;
-    c4swbb_1.feedback.ad_vout.early_interrupt_enable = true;
     
     c4swbb_1.feedback.ad_iout.adin_no = FB_IOUT1_ADC_AN_INPUT;
     c4swbb_1.feedback.ad_iout.adc_core = FB_IOUT1_ADCCORE;
     c4swbb_1.feedback.ad_iout.ptrADBUF = &FB_IOUT1_ADCBUF;
+    c4swbb_1.feedback.ad_iout.trigger_source = BUCKH1_ADC_TRGSRC_2;
+    c4swbb_1.feedback.ad_iout.early_interrupt_enable = true;
+    c4swbb_1.feedback.ad_iout.interrupt_enable = true;
+    c4swbb_1.feedback.ad_iout.interrupt_priority = FB_IOUT1_ISR_PRIORITY;
     
     c4swbb_1.feedback.ad_vin.adin_no = FB_VBAT_ADC_AN_INPUT;
     c4swbb_1.feedback.ad_vin.adc_core = FB_VBAT_ADCCORE;
     c4swbb_1.feedback.ad_vin.ptrADBUF = &FB_VBAT_ADCBUF;
+    c4swbb_1.feedback.ad_vin.trigger_source = BUCKH1_ADC_TRGSRC_2;
+    c4swbb_1.feedback.ad_vin.early_interrupt_enable = true;
+    c4swbb_1.feedback.ad_vin.interrupt_enable = false;
+    c4swbb_1.feedback.ad_vin.interrupt_priority = FB_VBAT_ISR_PRIORITY;
     
     c4swbb_1.feedback.ad_temp.adin_no = FB_TEMP1_ADC_AN_INPUT;
     c4swbb_1.feedback.ad_temp.adc_core = FB_TEMP1_ADCCORE;
     c4swbb_1.feedback.ad_temp.ptrADBUF = &FB_TEMP1_ADCBUF;
+    c4swbb_1.feedback.ad_temp.trigger_source = BUCKH1_ADC_TRGSRC_2;
+    c4swbb_1.feedback.ad_temp.early_interrupt_enable = true;
+    c4swbb_1.feedback.ad_temp.interrupt_enable = false;
+    c4swbb_1.feedback.ad_temp.interrupt_priority = FB_TEMP1_ISR_PRIORITY;
 
-    // Initialize converter #1 voltage loop settings
+    // Initialize converter #1 voltage loop controller settings
 
     // Initialize basic controller settings of voltage loop object
-    cha_vloop_Init(&cha_vloop);
+    fres &= cha_vloop_Init(&cha_vloop);
 
+    // Hardware-specific voltage loop controller settings
     c4swbb_1.v_loop.minimum = IOUT_LCL_CLAMP;   // Minimum output value of voltage loop is absolute current limit
     c4swbb_1.v_loop.maximum = IOUT_OCL_TRIP;    // Maximum output value of voltage loop is absolute current limit
     c4swbb_1.v_loop.feedback_offset = C4SWBB_VOUT_OFFSET;   // Voltage feedback signal offset
@@ -222,9 +222,10 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.ctrl_Precharge = &cha_vloop_Precharge; // Function pointer to CONTROL PRECHARGE routine
     c4swbb_1.v_loop.ctrl_Reset = &cha_vloop_Reset;     // Function pointer to CONTROL RESET routine
     
+    c4swbb_1.v_loop.ctrl_Reset(&cha_vloop); // Call RESET routine of voltage loop controller
 
     // Initialize converter #1 current loop settings
-    cha_iloop_Init(&cha_iloop);
+    fres &= cha_iloop_Init(&cha_iloop);
     
     c4swbb_1.i_loop.controller = &cha_iloop;   // 4-Switch Buck/Boost converter voltage loop controller
     c4swbb_1.i_loop.controller->ptrSource = &FB_IOUT1_ADCBUF; // Set pointer to data input source
