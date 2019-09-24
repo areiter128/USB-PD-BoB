@@ -97,7 +97,7 @@
     #define C4SWBB_VOUT_SENSE_OFFSET     0.000  // Output voltage sense offset
 
     //~~~~~~~~~~~~~~~~~ conversion macros ~~~~~~~~~~~~~~~~~~
-    #define C4SWBB_VOUT_FB_GAIN      (float)(C4SWBB_VOUT_AMP_GAIN * ((C4SWBB_VOUT_R2) / (C4SWBB_VOUT_R1 + C4SWBB_VOUT_R2)))
+    #define C4SWBB_VOUT_FB_GAIN      (float)(C4SWBB_VOUT_AMP_GAIN * (((float)C4SWBB_VOUT_R2) / (((float)C4SWBB_VOUT_R1) + ((float)C4SWBB_VOUT_R2))))
     #define C4SWBB_VOUT_OFFSET       (uint16_t)(C4SWBB_VOUT_SENSE_OFFSET * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
     #define C4SWBB_VOUT_REF          (uint16_t)(C4SWBB_VOUT_NOMINAL * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
     #define C4SWBB_VOUT_OVP          (uint16_t)(C4SWBB_VOUT_MAXIMUM * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)

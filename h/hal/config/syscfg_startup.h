@@ -62,9 +62,9 @@
 #define C4SWBB_ACMC             1           // Flag for average current mode control
 #define C4SWBB_CONTROL_MODE     C4SWBB_ACMC // Active control mode selection
 
-#define C4SWBB_PODLY     (uint16_t)((C4SWBB_POWER_ON_DELAY / TASK_MGR_PERIOD)-1.0)
-#define C4SWBB_RPER      (uint16_t)((C4SWBB_RAMP_PERIOD / TASK_MGR_PERIOD)-1.0)
-#define C4SWBB_PGDLY     (uint16_t)((C4SWBB_POWER_GOOD_DELAY / TASK_MGR_PERIOD)-1.0)
+#define C4SWBB_PODLY     (uint16_t)((C4SWBB_POWER_ON_DELAY / TASK_MGR_TIME_STEP)-1.0)
+#define C4SWBB_RPER      (uint16_t)((C4SWBB_RAMP_PERIOD / TASK_MGR_TIME_STEP)-1.0)
+#define C4SWBB_PGDLY     (uint16_t)((C4SWBB_POWER_GOOD_DELAY / TASK_MGR_TIME_STEP)-1.0)
 #define C4SWBB_VREF_STEP (uint16_t)((C4SWBB_VOUT_REF / (C4SWBB_RPER + 1.0)))
 #define C4SWBB_IREF_STEP (uint16_t)((C4SWBB_VOUT_REF / (C4SWBB_RPER + 1.0)))
 
