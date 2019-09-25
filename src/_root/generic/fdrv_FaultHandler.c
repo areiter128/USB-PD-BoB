@@ -268,6 +268,84 @@ inline volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     return(fres);
 }
 
+/*!CaptureCPUResetStatus
+ * ***********************************************************************************************
+ * Parameters: (none)
+ *      
+ * Return:
+ *      type: uint16_t
+ *      0: Failure
+ *      1: Success
+ * 
+ * Description:
+ * This routine captures the most recent status or the registers RCON and INTTREG as
+ * well as trap status bits into the persistent data structure of traplog of type TRAP_LOGGER_t.
+ * This information will be recover after the next CPU start (given that the device is kept 
+ * under power). This allows the software to enter a latched stop condition after a certain 
+ * number of restart attempts where unsuccessful.
+ * 
+ * ***********************************************************************************************/
+volatile uint16_t CaptureCPUResetStatus(void) 
+{
+    volatile uint16_t fres = 1;
+
+   // Capture recent interrupt vector and priority status
+    traplog.inttreg.value = INTTREG;
+    INTTREG = 0x0000; // Reset status flag bits
+
+    // Capture recent status of RESET CONTROL register RCON
+    traplog.rcon_reg.value = RCON;
+    RCON = 0x0000; // Reset status flag bits
+    
+    // Capture all available trap flag bits
+    traplog.trap_flags.ADDRERR = _ADDRERR;  // Address Error Trap Status bit
+    _ADDRERR = 0; // Reset flag bit
+    traplog.trap_flags.APLL = _APLL; // Auxiliary PLL Loss of Lock Soft Trap Status bit
+    _APLL = 0; // Reset flag bit
+    #if defined (_CAN)
+    traplog.trap_flags.CAN = _CAN; // CAN Address Error Soft Trap Status bit
+    _CAN = 0; // Reset flag bit
+    #endif
+    #if defined (_CAN2)
+    traplog.trap_flags.CAN2 = _CAN2; // CAN2 Address Error Soft Trap Status bit
+    _CAN2 = 0; // Reset flag bit
+    #endif
+    traplog.trap_flags.COVAERR = _COVAERR; // Accumulator A Catastrophic Overflow Trap Flag bit
+    _COVAERR = 0; // Reset flag bit
+    traplog.trap_flags.COVBERR = _COVBERR; // Accumulator B Catastrophic Overflow Trap Flag bit
+    _COVBERR = 0; // Reset flag bit
+    traplog.trap_flags.DIV0ERR = _DIV0ERR; // Divide-by-Zero Error Status bit
+    _DIV0ERR = 0; // Reset flag bit
+    #if defined (_DMACERR)
+    traplog.trap_flags.DMACERR = _DMACERR; // DMA Controller Trap Status bit
+    _DMACERR = 0; // Reset flag bit
+    #endif
+    traplog.trap_flags.DOOVR = _DOOVR; // DO Stack Overflow Soft Trap Status bit
+    _DOOVR = 0; // Reset flag bit
+    #if defined (_ECCDBE)
+    traplog.trap_flags.ECCDBE = _ECCDBE; // DO Stack Overflow Soft Trap Status bit
+    _ECCDBE = 0; // Reset flag bit
+    #endif
+    traplog.trap_flags.MATHERR = _MATHERR; // Math Error Status bit
+    _MATHERR = 0; // Reset flag bit
+    traplog.trap_flags.NAE = _NAE; // NVM Address Error Soft Trap Status bit
+    _NAE = 0; // Reset flag bit
+    traplog.trap_flags.OSCFAIL = _OSCFAIL; // Oscillator Failure Trap Status bit
+    _OSCFAIL = 0; // Reset flag bit
+    traplog.trap_flags.OVAERR = _OVAERR; // Accumulator A Overflow Trap Flag bit
+    _OVAERR = 0; // Reset flag bit
+    traplog.trap_flags.OVBERR = _OVBERR; // Accumulator B Overflow Trap Flag bit
+    _OVBERR = 0; // Reset flag bit
+    #if defined (_SFTACERR)
+    traplog.trap_flags.SFTACERR = _SFTACERR; // Shift Accumulator Error Status bit
+    _SFTACERR = 0; // Reset flag bit
+    #endif
+    traplog.trap_flags.SGHT = _SGHT; // Software Generated Hard Trap Status bit
+    _SGHT = 0; // Reset flag bit
+
+    return(fres);
+}
+
 /*!CheckCPUResetRootCause
  * ***********************************************************************************************
  * Parameters: (none)
@@ -282,42 +360,64 @@ inline volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj)
  * The register status is triaged in critical, warning and notification-level reset causes.
  * If a critical condition was detected, this functions returns 
  * 
- *     0 = Failure (critical-level reset condition)
- *     1 = Success (notification-level reset condition)
- *     2 = Warning (warning-level reset condition)
+ *     3 = (critical-level reset condition)
+ *     2 = (warning-level reset condition)
+ *     1 = (notification-level reset condition)
+ *     0 = unknown condition/function failure
  * ***********************************************************************************************/
-inline uint16_t CheckCPUResetRootCause(void)
+inline volatile uint16_t CheckCPUResetRootCause(void)
 {
     volatile uint16_t fres = 1;
-/*
+
+    // TODO: after reset, the RCON ; INTTRE AND trap flag bits need to be checked
+    // to determine the root cause of the previous CPU reset. If a software CPU reset
+    // was triggered, the number of enforced CPU RESETs need to be limited by the code
+    // and the application needs to be brought into a safe condition
+
+    // Check if CPU RESET root cause is different from logged status
+    if (traplog.rcon_reg.value != RCON) {
+        // TODO: handle condition after restart 
+        Nop();
+        Nop();
+    }
     
-    // TODO: return value needs to be properly defined and made accessible and fault handling 
-    // routines need to be installed
+    // Check if CPU RESET was tripped by software
+    if (traplog.sw_reset) {
+        // TODO: handle condition after restart 
+        Nop();
+        Nop();
+    }
     
-    traplog.rcon_reg.reg_block = RCON; // Copy contents of CPU RESET register into monitoring buffer
-    
-    if (traplog.rcon_reg.reg_block & FLT_CPU_RESET_CLASS_CRITICAL) {
+    // Check if previous CPU RESET was cause by critical causes
+    if (traplog.rcon_reg.value & FLT_CPU_RESET_CLASS_CRITICAL) {
         // TODO: handle exceptions after restart 
         Nop();    
         Nop();   
         
-        fres = 0;
+        fres = 3;
     }
-    else if (traplog.rcon_reg.reg_block & FLT_CPU_RESET_CLASS_WARNING) {
+    else if (traplog.rcon_reg.value & FLT_CPU_RESET_CLASS_WARNING) {
         // TODO: handle exceptions after restart 
         Nop();    
         Nop();    
 
         fres = 2;
     }
-    else {
+    else if (traplog.rcon_reg.value & FLT_CPU_RESET_CLASS_NORMAL) {
         // TODO: handle exceptions after restart 
         Nop();    
         Nop();    
 
         fres = 1;
     }
-*/
+    else {
+        // TODO: handle exceptions after restart 
+        Nop();    
+        Nop();    
+
+        fres = 0;
+    }
+
     return(fres);
 }
 
@@ -525,7 +625,7 @@ inline volatile uint16_t ExecFaultFlagReleaseHandler(volatile FAULT_OBJECT_t* fl
  * any fault action triggered will be executed immediately after every individual fault object 
  * check.
  * ***********************************************************************************************/
-uint16_t exec_FaultCheckAll(void)
+volatile uint16_t exec_FaultCheckAll(void)
 {
     volatile uint16_t i=0, global_fault_present=0, fres=1;
     
@@ -587,7 +687,7 @@ uint16_t exec_FaultCheckAll(void)
  * individual fault object check.
  * ***********************************************************************************************/
 /*
-uint16_t exec_FaultCheckSequential(void)
+volatile uint16_t exec_FaultCheckSequential(void)
 {
     volatile uint16_t fres = 0;
     

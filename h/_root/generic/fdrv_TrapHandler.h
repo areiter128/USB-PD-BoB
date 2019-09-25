@@ -58,6 +58,7 @@
 // Device header file
 #include <xc.h>
 #include <stdint.h>
+#include <stdbool.h>
 		
 // =================================================================================================
 //
@@ -66,7 +67,7 @@
 // =================================================================================================
 
 // Compile-switch determine if DMA is supported on selected device
-#ifdef DMA1CON
+#if defined (DMA1CON)
   #define TRAP_DMA_SUPPORT			1		// Device supports DMA
 #else
   #define TRAP_DMA_SUPPORT			0		// Device does not support DMA
@@ -152,8 +153,8 @@ typedef struct
 
 typedef union 
 {
-	volatile uint32_t reg_block;
-	volatile INTERRUPT_CONTROL_REGISTER_BIT_FIELD_t flags;
+	volatile uint32_t value;
+	volatile INTERRUPT_CONTROL_REGISTER_BIT_FIELD_t bits;
 }INTERRUPT_CONTROL_REGISTER_t;
 
 // Data structure for RCON status capturing
@@ -180,35 +181,35 @@ typedef struct
 
 typedef union 
 {
-	volatile uint16_t reg_block;
-	volatile RESET_CONTROL_REGISTER_BIT_FIELD_t flags;
-    
+	volatile RESET_CONTROL_REGISTER_BIT_FIELD_t bits;
+	volatile uint16_t value;
 }RESET_CONTROL_REGISTER_t;
 
 typedef struct
 {
-	volatile uint16_t count;
-	volatile TRAP_ID_e trap_id;
-    volatile TRAP_FLAG_IDENTIFIER_t trap_flags;
-	volatile RESET_CONTROL_REGISTER_t rcon_reg;
-    volatile INTERRUPT_CONTROL_REGISTER_t inttreg;
+    volatile bool     sw_reset;                     // Flag indicating CPU was reset by software
+    volatile uint16_t reset_count;                  // Counter of CPU RESET events
+	volatile TRAP_ID_e trap_id;                     // Trap-ID of the captured incident
+	volatile uint16_t trap_count;                   // Counter tracking the number of occurrences
+    volatile TRAP_FLAG_IDENTIFIER_t trap_flags;     // Complete list of trap flags (showing all trap flags)
+	volatile RESET_CONTROL_REGISTER_t rcon_reg;     // Captures the RESET CONTROL register
+    volatile INTERRUPT_CONTROL_REGISTER_t inttreg;  // Interrupt Vector and Priority register capture
     
 }TRAP_LOGGER_t;
 
-extern volatile TRAP_LOGGER_t __attribute__((__persistent__))traplog; // data structure used as buffer for trap monitoring
-//extern volatile TRAP_LOGGER_t traplog; // data structure used as buffer for trap monitoring
+// Global data structure used as buffer for trap monitoring
+extern volatile TRAP_LOGGER_t __attribute__((__persistent__))traplog; 
 
 // =================================================================================================
 //
 //	PROTOTYPES
 //
 // =================================================================================================
-extern volatile uint16_t init_SoftTraps(bool accumulator_a_overflow_trap_enable, 
+
+extern volatile uint16_t init_SoftTraps(
+                bool accumulator_a_overflow_trap_enable, 
                 bool accumulator_b_overflow_trap_enable, 
                 bool accumulator_catastrophic_overflow_trap_enable);
-
-extern volatile uint16_t GetTrapStatus();
-extern void DefaultTrapHandler(TRAP_ID_e trap_id);
 
 extern void __attribute__((__interrupt__)) _HardTrapError(void);
 extern void __attribute__((__interrupt__)) _SoftTrapError(void);

@@ -232,8 +232,8 @@ extern volatile uint16_t fltobj_list_size;
  * ***********************************************************************************************
  * Description:
  * CPU Reset Classes CPU_RESET_CLASS_xxx provides a set of bit filter masks for the 
- * RESET CONFIGURATION REGISTER (RCON),
- * which classify more or less critical root causes of the previous CPU reset. 
+ * RESET CONFIGURATION REGISTER (RCON), which classify more or less critical root 
+ * causes of the previous CPU reset. 
  * 
  *     - FLT_CPU_RESET_CLASS_CRITICAL:
  *       This flag is set when a critical reset root cause was detected, such as
@@ -258,10 +258,11 @@ extern volatile uint16_t fltobj_list_size;
  * Description:
  * The following function prototypes are publicly accessible.
  * ***********************************************************************************************/
-extern uint16_t CheckCPUResetRootCause(void);
+extern volatile uint16_t CaptureCPUResetStatus(void);
+extern volatile uint16_t CheckCPUResetRootCause(void);
 
-extern uint16_t exec_FaultCheckAll(void);
-extern uint16_t exec_FaultCheckSequential(void);
+extern volatile uint16_t exec_FaultCheckAll(void);
+extern volatile uint16_t exec_FaultCheckSequential(void);
 
 #endif	/* _APPLLICAITON_LAYER_FAULT_HANDLER_H_ */
 

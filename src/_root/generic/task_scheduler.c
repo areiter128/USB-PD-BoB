@@ -188,8 +188,12 @@ inline volatile uint16_t exec_scheduler(void) {
         
     }   // End of main loop
 
-    traplog.count++;  // increment the persistent soft-reset counter to stop restarting after certain number of restart attempts
+    
+    CaptureCPUResetStatus(); // Capture all relevant interrupt and reset status bits
+    traplog.sw_reset = true; // Set flag bit indicating CPU was restarted by software
+    traplog.reset_count++;  // Increment the persistent soft-reset counter to stop restarting after certain number of restart attempts
     CPU_RESET;  // If the fault handler skips execution of the main loop, this line will reset the CPU  
+    
     return(0);   // if this code line is ever reached, something really bad had happened...
 
 }
