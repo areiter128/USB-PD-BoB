@@ -58,6 +58,21 @@ int main(void) {
     Nop();
 #endif
     
+    /*!exec_scheduler()
+     * ****************************************************************
+     * Description:
+     * The main task scheduler engine is called as a single and sole
+     * function call placed here in main() of the user project.
+     * From this point forward the code will be executed within the 
+     * task-scheduler main loop. when this loop is terminated due to
+     * a device restart (e.g. triggered by a catastrophic fault event),
+     * the code will return to main().
+     * 
+     * Users can place additional startup or exit code as needed.
+     * However, fundamental device configurations like oscillator 
+     * of peripheral initialization will only take place within the
+     * main task scheduler execution.
+     * ***************************************************************/
     fres = exec_scheduler();
     
     return(fres);
