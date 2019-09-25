@@ -49,7 +49,6 @@ extern "C" {
  * INCLUDES
  * ***********************************************************************************************/
 /* generic drivers */
-//#include "../../../plib/p33SMPS_mcal.X/p33SMPS_plib.h"  //"../../../plib/p33SMPS_mcal.X/p33SMPS_plib.h"
 #include "../../../plib/p33SMPS_mcal.X/p33SMPS_plib.h"
     
 /* ***********************************************************************************************
@@ -59,6 +58,7 @@ extern "C" {
 */
 
 /* Include hardware descriptor file */
+#include "mcal/config/devcfg_dsp.h"
 #include "mcal/config/devcfg_irq.h"
 #include "mcal/config/devcfg_oscillator.h"
 #include "mcal/config/devcfg_pinmap.h"
