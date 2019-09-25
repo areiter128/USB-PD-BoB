@@ -130,9 +130,9 @@ inline volatile uint16_t init_FaultObjects(void)
     fres &= init_PowerControlFaultObject_PortB();
 
     // Set global fault flags (need to be cleared during operation)
-    task_mgr.status.flags.global_fault = 1;
-    task_mgr.status.flags.global_warning = 1;
-    task_mgr.status.flags.global_notify = 1;
+    task_mgr.status.bits.global_fault = 1;
+    task_mgr.status.bits.global_warning = 1;
+    task_mgr.status.bits.global_notify = 1;
     
     return(fres);
     
@@ -167,23 +167,23 @@ inline volatile uint16_t init_CPUFailureObject(void)
     fltobj_CPUFailure.criteria.reset_cnt_threshold = 1; // Set/reset number of successive resets before triggering fault release
     
     // specifying fault class, fault level and enable/disable status
-    fltobj_CPUFailure.classes.flags.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
-    fltobj_CPUFailure.classes.flags.warning = 0;  // Set =1 if this fault object triggers a warning fault condition response
-    fltobj_CPUFailure.classes.flags.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
-    fltobj_CPUFailure.classes.flags.catastrophic = 1; // Set =1 if this fault object triggers a catastrophic fault condition response
+    fltobj_CPUFailure.flt_class.bits.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
+    fltobj_CPUFailure.flt_class.bits.warning = 0;  // Set =1 if this fault object triggers a warning fault condition response
+    fltobj_CPUFailure.flt_class.bits.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
+    fltobj_CPUFailure.flt_class.bits.catastrophic = 1; // Set =1 if this fault object triggers a catastrophic fault condition response
 
-    fltobj_CPUFailure.classes.flags.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
+    fltobj_CPUFailure.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
     fltobj_CPUFailure.user_fault_action = &Application_reset; // Set =1 if this fault object triggers a user-defined fault condition response
     fltobj_CPUFailure.user_fault_reset = 0; // Set =1 if this fault object triggers a user-defined fault condition response
         
-    fltobj_CPUFailure.status.flags.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
-    fltobj_CPUFailure.status.flags.fltlvlsw = 1; // Set =1 if this fault condition is software-level fault condition
-    fltobj_CPUFailure.status.flags.fltlvlsi = 1; // Set =1 if this fault condition is silicon-level fault condition
-    fltobj_CPUFailure.status.flags.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
+    fltobj_CPUFailure.status.bits.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
+    fltobj_CPUFailure.status.bits.fltlvlsw = 1; // Set =1 if this fault condition is software-level fault condition
+    fltobj_CPUFailure.status.bits.fltlvlsi = 1; // Set =1 if this fault condition is silicon-level fault condition
+    fltobj_CPUFailure.status.bits.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
 
-    fltobj_CPUFailure.status.flags.fltstat = 1; // Set/ret fault condition as present/active
-    fltobj_CPUFailure.status.flags.fltactive = 1; // Set/reset fault condition as present/active
-    fltobj_CPUFailure.status.flags.fltchken = 1; // Enable/disable fault check
+    fltobj_CPUFailure.status.bits.fltstat = 1; // Set/ret fault condition as present/active
+    fltobj_CPUFailure.status.bits.fltactive = 1; // Set/reset fault condition as present/active
+    fltobj_CPUFailure.status.bits.fltchken = 1; // Enable/disable fault check
 
     return(fres);
 }
@@ -216,23 +216,23 @@ inline volatile uint16_t init_CPULoadOverrunFaultObject(void)
     fltobj_CPULoadOverrun.criteria.reset_cnt_threshold = 1; // Set/reset number of successive resets before triggering fault release
     
     // specifying fault class, fault level and enable/disable status
-    fltobj_CPULoadOverrun.classes.flags.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
-    fltobj_CPULoadOverrun.classes.flags.warning = 1;  // Set =1 if this fault object triggers a warning fault condition response
-    fltobj_CPULoadOverrun.classes.flags.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
-    fltobj_CPULoadOverrun.classes.flags.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
+    fltobj_CPULoadOverrun.flt_class.bits.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
+    fltobj_CPULoadOverrun.flt_class.bits.warning = 1;  // Set =1 if this fault object triggers a warning fault condition response
+    fltobj_CPULoadOverrun.flt_class.bits.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
+    fltobj_CPULoadOverrun.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
-    fltobj_CPULoadOverrun.classes.flags.user_class = 0; // Set =1 if this fault object triggers a user-defined fault condition response
+    fltobj_CPULoadOverrun.flt_class.bits.user_class = 0; // Set =1 if this fault object triggers a user-defined fault condition response
     fltobj_CPULoadOverrun.user_fault_action = 0; // Set =1 if this fault object triggers a user-defined fault condition response
     fltobj_CPULoadOverrun.user_fault_reset = 0; // Set =1 if this fault object triggers a user-defined fault condition response
         
-    fltobj_CPULoadOverrun.status.flags.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
-    fltobj_CPULoadOverrun.status.flags.fltlvlsw = 1; // Set =1 if this fault condition is software-level fault condition
-    fltobj_CPULoadOverrun.status.flags.fltlvlsi = 1; // Set =1 if this fault condition is silicon-level fault condition
-    fltobj_CPULoadOverrun.status.flags.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
+    fltobj_CPULoadOverrun.status.bits.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
+    fltobj_CPULoadOverrun.status.bits.fltlvlsw = 1; // Set =1 if this fault condition is software-level fault condition
+    fltobj_CPULoadOverrun.status.bits.fltlvlsi = 1; // Set =1 if this fault condition is silicon-level fault condition
+    fltobj_CPULoadOverrun.status.bits.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
 
-    fltobj_CPULoadOverrun.status.flags.fltstat = 1; // Set/ret fault condition as present/active
-    fltobj_CPULoadOverrun.status.flags.fltactive = 1; // Set/reset fault condition as present/active
-    fltobj_CPULoadOverrun.status.flags.fltchken = 1; // Enable/disable fault check
+    fltobj_CPULoadOverrun.status.bits.fltstat = 1; // Set/ret fault condition as present/active
+    fltobj_CPULoadOverrun.status.bits.fltactive = 1; // Set/reset fault condition as present/active
+    fltobj_CPULoadOverrun.status.bits.fltchken = 1; // Enable/disable fault check
 
     return(1);
     
@@ -264,23 +264,23 @@ inline volatile uint16_t init_TaskExecutionFaultObject(void)
     fltobj_TaskExecutionFailure.criteria.reset_cnt_threshold = 1; // Set/reset number of successive resets before triggering fault release
 
     // specifying fault class, fault level and enable/disable status
-    fltobj_TaskExecutionFailure.classes.flags.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
-    fltobj_TaskExecutionFailure.classes.flags.warning = 1;  // Set =1 if this fault object triggers a warning fault condition response
-    fltobj_TaskExecutionFailure.classes.flags.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
-    fltobj_TaskExecutionFailure.classes.flags.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
+    fltobj_TaskExecutionFailure.flt_class.bits.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
+    fltobj_TaskExecutionFailure.flt_class.bits.warning = 1;  // Set =1 if this fault object triggers a warning fault condition response
+    fltobj_TaskExecutionFailure.flt_class.bits.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
+    fltobj_TaskExecutionFailure.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
-    fltobj_TaskExecutionFailure.classes.flags.user_class = 0; // Set =1 if this fault object triggers a user-defined fault condition response
+    fltobj_TaskExecutionFailure.flt_class.bits.user_class = 0; // Set =1 if this fault object triggers a user-defined fault condition response
     fltobj_TaskExecutionFailure.user_fault_action = 0; // Set =1 if this fault object triggers a user-defined fault condition response
     fltobj_TaskExecutionFailure.user_fault_reset = 0; // Set =1 if this fault object triggers a user-defined fault condition response
         
-    fltobj_TaskExecutionFailure.status.flags.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
-    fltobj_TaskExecutionFailure.status.flags.fltlvlsw = 1; // Set =1 if this fault condition is software-level fault condition
-    fltobj_TaskExecutionFailure.status.flags.fltlvlsi = 0; // Set =1 if this fault condition is silicon-level fault condition
-    fltobj_TaskExecutionFailure.status.flags.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
+    fltobj_TaskExecutionFailure.status.bits.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
+    fltobj_TaskExecutionFailure.status.bits.fltlvlsw = 1; // Set =1 if this fault condition is software-level fault condition
+    fltobj_TaskExecutionFailure.status.bits.fltlvlsi = 0; // Set =1 if this fault condition is silicon-level fault condition
+    fltobj_TaskExecutionFailure.status.bits.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
 
-    fltobj_TaskExecutionFailure.status.flags.fltstat = 1; // Set/ret fault condition as present/active
-    fltobj_TaskExecutionFailure.status.flags.fltactive = 1; // Set/reset fault condition as present/active
-    fltobj_TaskExecutionFailure.status.flags.fltchken = 1; // Enable/disable fault check
+    fltobj_TaskExecutionFailure.status.bits.fltstat = 1; // Set/ret fault condition as present/active
+    fltobj_TaskExecutionFailure.status.bits.fltactive = 1; // Set/reset fault condition as present/active
+    fltobj_TaskExecutionFailure.status.bits.fltchken = 1; // Enable/disable fault check
 
     return(1);
     
@@ -312,23 +312,23 @@ inline volatile uint16_t init_TaskTimeQuotaViolationFaultObject(void)
     fltobj_TaskTimeQuotaViolation.criteria.reset_cnt_threshold = 10; // Set/reset number of successive resets before triggering fault release
         
     // specifying fault class, fault level and enable/disable status
-    fltobj_TaskTimeQuotaViolation.classes.flags.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
-    fltobj_TaskTimeQuotaViolation.classes.flags.warning = 1;  // Set =1 if this fault object triggers a warning fault condition response
-    fltobj_TaskTimeQuotaViolation.classes.flags.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
-    fltobj_TaskTimeQuotaViolation.classes.flags.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
+    fltobj_TaskTimeQuotaViolation.flt_class.bits.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
+    fltobj_TaskTimeQuotaViolation.flt_class.bits.warning = 1;  // Set =1 if this fault object triggers a warning fault condition response
+    fltobj_TaskTimeQuotaViolation.flt_class.bits.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
+    fltobj_TaskTimeQuotaViolation.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
-    fltobj_TaskTimeQuotaViolation.classes.flags.user_class = 0; // Set =1 if this fault object triggers a user-defined fault condition response
+    fltobj_TaskTimeQuotaViolation.flt_class.bits.user_class = 0; // Set =1 if this fault object triggers a user-defined fault condition response
     fltobj_TaskTimeQuotaViolation.user_fault_action = 0; // Set =1 if this fault object triggers a user-defined fault condition response
     fltobj_TaskTimeQuotaViolation.user_fault_reset = 0; // Set =1 if this fault object triggers a user-defined fault condition response
         
-    fltobj_TaskTimeQuotaViolation.status.flags.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
-    fltobj_TaskTimeQuotaViolation.status.flags.fltlvlsw = 1; // Set =1 if this fault condition is software-level fault condition
-    fltobj_TaskTimeQuotaViolation.status.flags.fltlvlsi = 0; // Set =1 if this fault condition is silicon-level fault condition
-    fltobj_TaskTimeQuotaViolation.status.flags.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
+    fltobj_TaskTimeQuotaViolation.status.bits.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
+    fltobj_TaskTimeQuotaViolation.status.bits.fltlvlsw = 1; // Set =1 if this fault condition is software-level fault condition
+    fltobj_TaskTimeQuotaViolation.status.bits.fltlvlsi = 0; // Set =1 if this fault condition is silicon-level fault condition
+    fltobj_TaskTimeQuotaViolation.status.bits.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
 
-    fltobj_TaskTimeQuotaViolation.status.flags.fltstat = 1; // Set/ret fault condition as present/active
-    fltobj_TaskTimeQuotaViolation.status.flags.fltactive = 1; // Set/reset fault condition as present/active
-    fltobj_TaskTimeQuotaViolation.status.flags.fltchken = 1; // Enable/disable fault check
+    fltobj_TaskTimeQuotaViolation.status.bits.fltstat = 1; // Set/ret fault condition as present/active
+    fltobj_TaskTimeQuotaViolation.status.bits.fltactive = 1; // Set/reset fault condition as present/active
+    fltobj_TaskTimeQuotaViolation.status.bits.fltchken = 1; // Enable/disable fault check
 
     return(1);
 }
@@ -366,23 +366,23 @@ inline volatile uint16_t init_PowerSourceFaultObject(void)
     fltobj_PowerSourceFailure.criteria.reset_cnt_threshold = 3; // Set/reset number of successive resets before triggering fault release
 
     // specifying fault class, fault level and enable/disable status
-    fltobj_PowerSourceFailure.classes.flags.notify = 0;   // Set if this fault object triggers a fault condition notification
-    fltobj_PowerSourceFailure.classes.flags.warning = 0;  // Set if this fault object triggers a warning fault condition response
-    fltobj_PowerSourceFailure.classes.flags.critical = 1; // Set if this fault object triggers a critical fault condition response
-    fltobj_PowerSourceFailure.classes.flags.catastrophic = 0; // Set if this fault object triggers a catastrophic fault condition response
+    fltobj_PowerSourceFailure.flt_class.bits.notify = 0;   // Set if this fault object triggers a fault condition notification
+    fltobj_PowerSourceFailure.flt_class.bits.warning = 0;  // Set if this fault object triggers a warning fault condition response
+    fltobj_PowerSourceFailure.flt_class.bits.critical = 1; // Set if this fault object triggers a critical fault condition response
+    fltobj_PowerSourceFailure.flt_class.bits.catastrophic = 0; // Set if this fault object triggers a catastrophic fault condition response
 
-    fltobj_PowerSourceFailure.classes.flags.user_class = 0; // Set if this fault object triggers a user-defined fault condition response
+    fltobj_PowerSourceFailure.flt_class.bits.user_class = 0; // Set if this fault object triggers a user-defined fault condition response
     fltobj_PowerSourceFailure.user_fault_action = 0; // Clear if no function should be called, Set = [function pointer] to function which should be executed
     fltobj_PowerSourceFailure.user_fault_reset = 0; // Clear if no function should be called, Set = [function pointer] to function which should be executed
 
-    fltobj_PowerSourceFailure.status.flags.fltlvlhw = 1; // Set if this fault condition is board-level fault condition
-    fltobj_PowerSourceFailure.status.flags.fltlvlsw = 0; // Set if this fault condition is software-level fault condition
-    fltobj_PowerSourceFailure.status.flags.fltlvlsi = 0; // Set if this fault condition is silicon-level fault condition
-    fltobj_PowerSourceFailure.status.flags.fltlvlsys = 1; // Set if this fault condition is system-level fault condition
+    fltobj_PowerSourceFailure.status.bits.fltlvlhw = 1; // Set if this fault condition is board-level fault condition
+    fltobj_PowerSourceFailure.status.bits.fltlvlsw = 0; // Set if this fault condition is software-level fault condition
+    fltobj_PowerSourceFailure.status.bits.fltlvlsi = 0; // Set if this fault condition is silicon-level fault condition
+    fltobj_PowerSourceFailure.status.bits.fltlvlsys = 1; // Set if this fault condition is system-level fault condition
 
-    fltobj_PowerSourceFailure.status.flags.fltstat = 1; // Set/reset fault condition as present/active
-    fltobj_PowerSourceFailure.status.flags.fltactive = 1; // Set/reset fault condition as present/active
-    fltobj_PowerSourceFailure.status.flags.fltchken = 1; // Enable/disable fault check
+    fltobj_PowerSourceFailure.status.bits.fltstat = 1; // Set/reset fault condition as present/active
+    fltobj_PowerSourceFailure.status.bits.fltactive = 1; // Set/reset fault condition as present/active
+    fltobj_PowerSourceFailure.status.bits.fltchken = 1; // Enable/disable fault check
 
     return(1);
 }
@@ -416,23 +416,23 @@ inline volatile uint16_t init_PowerControlFaultObject_PortA(void)
     fltobj_PowerControlFailure_PortA.criteria.reset_cnt_threshold = 3; // Set/reset number of successive resets before triggering fault release
 
     // specifying fault class, fault level and enable/disable status
-    fltobj_PowerControlFailure_PortA.classes.flags.notify = 0;   // Set if this fault object triggers a fault condition notification
-    fltobj_PowerControlFailure_PortA.classes.flags.warning = 0;  // Set if this fault object triggers a warning fault condition response
-    fltobj_PowerControlFailure_PortA.classes.flags.critical = 1; // Set if this fault object triggers a critical fault condition response
-    fltobj_PowerControlFailure_PortA.classes.flags.catastrophic = 0; // Set if this fault object triggers a catastrophic fault condition response
+    fltobj_PowerControlFailure_PortA.flt_class.bits.notify = 0;   // Set if this fault object triggers a fault condition notification
+    fltobj_PowerControlFailure_PortA.flt_class.bits.warning = 0;  // Set if this fault object triggers a warning fault condition response
+    fltobj_PowerControlFailure_PortA.flt_class.bits.critical = 1; // Set if this fault object triggers a critical fault condition response
+    fltobj_PowerControlFailure_PortA.flt_class.bits.catastrophic = 0; // Set if this fault object triggers a catastrophic fault condition response
 
-    fltobj_PowerControlFailure_PortA.classes.flags.user_class = 0; // Set =1 if this fault object triggers a user-defined fault condition response
+    fltobj_PowerControlFailure_PortA.flt_class.bits.user_class = 0; // Set =1 if this fault object triggers a user-defined fault condition response
     fltobj_PowerControlFailure_PortA.user_fault_action = 0; // Clear if no function should be called, Set= [function pointer] to function which should be executed
     fltobj_PowerControlFailure_PortA.user_fault_reset = 0; // Clear if no function should be called, Set = [function pointer] to function which should be executed
 
-    fltobj_PowerControlFailure_PortA.status.flags.fltlvlhw = 1; // Set =1 if this fault condition is board-level fault condition
-    fltobj_PowerControlFailure_PortA.status.flags.fltlvlsw = 0; // Set =1 if this fault condition is software-level fault condition
-    fltobj_PowerControlFailure_PortA.status.flags.fltlvlsi = 0; // Set =1 if this fault condition is silicon-level fault condition
-    fltobj_PowerControlFailure_PortA.status.flags.fltlvlsys = 1; // Set =1 if this fault condition is system-level fault condition
+    fltobj_PowerControlFailure_PortA.status.bits.fltlvlhw = 1; // Set =1 if this fault condition is board-level fault condition
+    fltobj_PowerControlFailure_PortA.status.bits.fltlvlsw = 0; // Set =1 if this fault condition is software-level fault condition
+    fltobj_PowerControlFailure_PortA.status.bits.fltlvlsi = 0; // Set =1 if this fault condition is silicon-level fault condition
+    fltobj_PowerControlFailure_PortA.status.bits.fltlvlsys = 1; // Set =1 if this fault condition is system-level fault condition
 
-    fltobj_PowerControlFailure_PortA.status.flags.fltstat = 1; // Set/reset fault condition as present/active
-    fltobj_PowerControlFailure_PortA.status.flags.fltactive = 1; // Set/reset fault condition as present/active
-    fltobj_PowerControlFailure_PortA.status.flags.fltchken = 1; // Enable/disable fault check
+    fltobj_PowerControlFailure_PortA.status.bits.fltstat = 1; // Set/reset fault condition as present/active
+    fltobj_PowerControlFailure_PortA.status.bits.fltactive = 1; // Set/reset fault condition as present/active
+    fltobj_PowerControlFailure_PortA.status.bits.fltchken = 1; // Enable/disable fault check
 
     return(1);
 }
@@ -466,23 +466,23 @@ inline volatile uint16_t init_PowerControlFaultObject_PortB(void)
     fltobj_PowerControlFailure_PortB.criteria.reset_cnt_threshold = 2; // Set/reset number of successive resets before triggering fault release
 
     // specifying fault class, fault level and enable/disable status
-    fltobj_PowerControlFailure_PortB.classes.flags.notify = 0;   // Set if this fault object triggers a fault condition notification
-    fltobj_PowerControlFailure_PortB.classes.flags.warning = 0;  // Set if this fault object triggers a warning fault condition response
-    fltobj_PowerControlFailure_PortB.classes.flags.critical = 1; // Set if this fault object triggers a critical fault condition response
-    fltobj_PowerControlFailure_PortB.classes.flags.catastrophic = 0; // Set if this fault object triggers a catastrophic fault condition response
+    fltobj_PowerControlFailure_PortB.flt_class.bits.notify = 0;   // Set if this fault object triggers a fault condition notification
+    fltobj_PowerControlFailure_PortB.flt_class.bits.warning = 0;  // Set if this fault object triggers a warning fault condition response
+    fltobj_PowerControlFailure_PortB.flt_class.bits.critical = 1; // Set if this fault object triggers a critical fault condition response
+    fltobj_PowerControlFailure_PortB.flt_class.bits.catastrophic = 0; // Set if this fault object triggers a catastrophic fault condition response
 
-    fltobj_PowerControlFailure_PortB.classes.flags.user_class = 0; // Set =1 if this fault object triggers a user-defined fault condition response
+    fltobj_PowerControlFailure_PortB.flt_class.bits.user_class = 0; // Set =1 if this fault object triggers a user-defined fault condition response
     fltobj_PowerControlFailure_PortB.user_fault_action = 0; // Clear if no function should be called, Set= [function pointer] to function which should be executed
     fltobj_PowerControlFailure_PortB.user_fault_reset = 0; // Clear if no function should be called, Set = [function pointer] to function which should be executed
 
-    fltobj_PowerControlFailure_PortB.status.flags.fltlvlhw = 1; // Set =1 if this fault condition is board-level fault condition
-    fltobj_PowerControlFailure_PortB.status.flags.fltlvlsw = 0; // Set =1 if this fault condition is software-level fault condition
-    fltobj_PowerControlFailure_PortB.status.flags.fltlvlsi = 0; // Set =1 if this fault condition is silicon-level fault condition
-    fltobj_PowerControlFailure_PortB.status.flags.fltlvlsys = 1; // Set =1 if this fault condition is system-level fault condition
+    fltobj_PowerControlFailure_PortB.status.bits.fltlvlhw = 1; // Set =1 if this fault condition is board-level fault condition
+    fltobj_PowerControlFailure_PortB.status.bits.fltlvlsw = 0; // Set =1 if this fault condition is software-level fault condition
+    fltobj_PowerControlFailure_PortB.status.bits.fltlvlsi = 0; // Set =1 if this fault condition is silicon-level fault condition
+    fltobj_PowerControlFailure_PortB.status.bits.fltlvlsys = 1; // Set =1 if this fault condition is system-level fault condition
 
-    fltobj_PowerControlFailure_PortB.status.flags.fltstat = 1; // Set/reset fault condition as present/active
-    fltobj_PowerControlFailure_PortB.status.flags.fltactive = 1; // Set/reset fault condition as present/active
-    fltobj_PowerControlFailure_PortB.status.flags.fltchken = 1; // Enable/disable fault check
+    fltobj_PowerControlFailure_PortB.status.bits.fltstat = 1; // Set/reset fault condition as present/active
+    fltobj_PowerControlFailure_PortB.status.bits.fltactive = 1; // Set/reset fault condition as present/active
+    fltobj_PowerControlFailure_PortB.status.bits.fltchken = 1; // Enable/disable fault check
 
     return(1);
 }

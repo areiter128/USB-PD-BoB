@@ -223,8 +223,8 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             pInstance->v_loop.ctrl_Precharge(pInstance->v_loop.controller, 0, int_dummy);
 
             // Reset control loop saturation status bits for a clean startup
-            pInstance->v_loop.controller->status.flags.flt_clamp_min = false;
-            pInstance->v_loop.controller->status.flags.flt_clamp_max = false;
+            pInstance->v_loop.controller->status.bits.flt_clamp_min = false;
+            pInstance->v_loop.controller->status.bits.flt_clamp_max = false;
             
             #elif (C4SWBB_CONTROL_MODE == C4SWBB_ACMC)
 
@@ -241,10 +241,10 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             pInstance->i_loop.ctrl_Precharge(pInstance->i_loop.controller, 0, int_dummy);
 
             // Reset control loop saturation status bits for a clean startup
-            pInstance->v_loop.controller->status.flags.flt_clamp_min = false;
-            pInstance->v_loop.controller->status.flags.flt_clamp_max = false;
-            pInstance->i_loop.controller->status.flags.flt_clamp_min = false;
-            pInstance->i_loop.controller->status.flags.flt_clamp_max = false;
+            pInstance->v_loop.controller->status.bits.flt_clamp_min = false;
+            pInstance->v_loop.controller->status.bits.flt_clamp_max = false;
+            pInstance->i_loop.controller->status.bits.flt_clamp_min = false;
+            pInstance->i_loop.controller->status.bits.flt_clamp_max = false;
             
             #endif            
 
@@ -275,7 +275,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
 
             // Enable control loops
             #if (C4SWBB_CONTROL_MODE == C4SWBB_VMC)
-            pInstance->v_loop.controller->status.flags.enable = true; // enable voltage mode controller
+            pInstance->v_loop.controller->status.bits.enable = true; // enable voltage mode controller
             #elif (C4SWBB_CONTROL_MODE == C4SWBB_ACMC)
             pInstance->v_loop.controller->status.bits.enable = true; // enable voltage loop
             pInstance->i_loop.controller->status.bits.enable = true; // enable current loop
@@ -374,7 +374,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             #else
             // should the state machine accidentally end up here, push state machine
             // to POWER_GOOD_DELAY phase
-                pInstance->status.flags.op_status = CONVERTER_STATE_POWER_GOOD;
+                pInstance->status.bits.op_status = CONVERTER_STATE_POWER_GOOD;
             #endif
             
             break;

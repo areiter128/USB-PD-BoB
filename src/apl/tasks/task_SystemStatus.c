@@ -75,7 +75,7 @@ volatile uint16_t exec_CaptureSystemStatus(void) {
     volatile uint16_t fres=1;
     
     // System status cannot reliably be detected without running ADC
-//    if(!application.ctrl_status.flags.adc_active) 
+//    if(!application.ctrl_status.bits.adc_active) 
 //    { return(fres); }
 
     
@@ -105,7 +105,7 @@ volatile uint16_t css_GetSystemStatus(void) {
 //    if ( abc == 0x1234 )
 //    { // System is powered from AC adapter (VIN = 19.8V DC / 5A)
 //        sys_mode.flags = ( SYSTEM_MODE_NORMAL );  // Set flag for normal mode
-//        application.system_status.flags.dummy_bit = (volatile bool)taskDebugLED_config.status.flags.led_status;
+//        application.system_status.bits.dummy_bit = (volatile bool)taskDebugLED_config.status.bits.led_status;
 //                
 //    }
 
@@ -143,33 +143,33 @@ volatile uint16_t css_SetSystemMode(void) {
     // Allow switching of operating modes only when the device and system startup procedure has been
     // completed and no fault condition is pending to make sure all peripherals and functions are 
     // available for NORMAL OPERATION modes
-    if (task_mgr.status.flags.startup_sequence_complete) 
+    if (task_mgr.status.bits.startup_sequence_complete) 
     {
         // when the fault handler detected a critical fault requiring to shut down the system and
         // hold it in fault recovery mode until the fault flags have been reset, do not allow to 
         // switch operating mode (overrides the detected mode of operation))
-        if (task_mgr.status.flags.fault_override)
-        { application.system_mode.flags = SYSTEM_MODE_FAULT; }
+        if (task_mgr.status.bits.fault_override)
+        { application.system_mode.value = SYSTEM_MODE_FAULT; }
     
         // Set the appropriate task scheduler operating mode depending required for the detected system mode
         if(application.system_mode.value & SYSTEM_MODE_STANDBY)
         { // System completely turned off and MCU is on standby power
-            task_mgr.op_mode.mode = OP_MODE_STANDBY;
+            task_mgr.op_mode.value = OP_MODE_STANDBY;
             // add additional application settings
         }
         else if(application.system_mode.value & SYSTEM_MODE_ON)
         { // System is powered by AC adapter
-            task_mgr.op_mode.mode = OP_MODE_NORMAL;
+            task_mgr.op_mode.value = OP_MODE_NORMAL;
             // add additional application settings
         }
         else if(application.system_mode.value & SYSTEM_MODE_FAULT)
         { // System is in fault mode       
-            task_mgr.op_mode.mode = OP_MODE_FAULT;
+            task_mgr.op_mode.value = OP_MODE_FAULT;
             // add additional application settings
         }
         else if(application.system_mode.value == 0)
         { // System is in undefined or idle mode       
-            task_mgr.op_mode.mode = OP_MODE_IDLE;
+            task_mgr.op_mode.value = OP_MODE_IDLE;
             // add additional application settings
         }
 

@@ -65,8 +65,8 @@ typedef struct {
 
 typedef union 
 {
-	volatile uint16_t status;
-	volatile FAULT_OBJECT_STATUS_BIT_FIELD_t flags;
+	volatile uint16_t value;
+	volatile FAULT_OBJECT_STATUS_BIT_FIELD_t bits;
 }FAULT_OBJECT_STATUS_t;
 
 /*!FAULT_OBJECT_CLASS_t
@@ -144,8 +144,8 @@ typedef struct {
 
 typedef union 
 {
-	volatile uint16_t class; // buffer for 16-bit word read/write operations
-	volatile FAULT_OBJECT_CLASS_BIT_FIELD_t flags; // data structure for single bit addressing operations
+	volatile uint16_t value; // buffer for 16-bit word read/write operations
+	volatile FAULT_OBJECT_CLASS_BIT_FIELD_t bits; // data structure for single bit addressing operations
 }FAULT_OBJECT_CLASS_t;
 
 /*!FAULT_OBJECT_CLASS_t
@@ -204,7 +204,7 @@ typedef struct
 typedef struct
 {
     volatile FAULT_OBJECT_STATUS_t status; // status bit field
-    volatile FAULT_OBJECT_CLASS_t classes; // fault class bit field
+    volatile FAULT_OBJECT_CLASS_t flt_class; // fault class bit field
     volatile FAULT_OBJECT_COMPARE_TYPE_e comp_type; // comparison type (against fixed or dynamic threshold)
     volatile FAULT_CONDITION_SETTINGS_t criteria; // Fault check settings of the  fault object
     volatile uint32_t error_code; // error code helping to identify source module, system level and importance

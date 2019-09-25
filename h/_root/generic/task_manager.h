@@ -83,8 +83,8 @@ typedef struct {
 
 typedef union 
 {
-	volatile SYSTEM_OPERATION_MODE_e mode;
-	volatile SYSTEM_OPERATION_MODE_FLAGS_BIT_FIELD_t flags;
+	volatile SYSTEM_OPERATION_MODE_e value;
+	volatile SYSTEM_OPERATION_MODE_FLAGS_BIT_FIELD_t bits;
 }system_operation_mode_t;
 
 typedef struct {
@@ -146,7 +146,7 @@ typedef struct {
 typedef union 
 {
 	volatile TASK_MANAGER_STATUS_e value; // buffer for 16-bit word read/write operations
-	volatile TASK_MANAGER_STATUS_FLAGS_t flags; // data structure for single bit addressing operations
+	volatile TASK_MANAGER_STATUS_FLAGS_t bits; // data structure for single bit addressing operations
 } task_manager_status_t;
 
 

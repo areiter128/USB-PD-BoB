@@ -124,7 +124,7 @@ typedef struct {
 
 typedef union {
     volatile uint16_t value; // 16-bit wide access to status bit field
-    volatile SYSTEM_STATUS_BITS_t flags; // single bit access to status bit field
+    volatile SYSTEM_STATUS_BITS_t bits; // single bit access to status bit field
 } SYSTEM_STATUS_t; // Internal system status of converters and control signals
 
 
@@ -138,7 +138,7 @@ typedef enum {
 typedef union 
 {
 	volatile uint16_t value; // buffer for 16-bit word read/write operations
-	volatile SYSTEM_MODE_FLAG_BITS_e flags; // data structure for single bit addressing operations
+	volatile SYSTEM_MODE_FLAG_BITS_e bits; // data structure for single bit addressing operations
 } SYSTEM_MODE_t;
 
 

@@ -77,7 +77,7 @@ uint16_t task_manager_tick(void) {
     task_mgr.exec_task_id = task_mgr.task_queue[task_mgr.task_queue_tick_index]; // Pick next task in the queue
 
     // Determine error code for the upcoming task
-    task_mgr.proc_code.segments.op_mode = (uint8_t)(task_mgr.op_mode.mode);    // log operation mode
+    task_mgr.proc_code.segments.op_mode = (uint8_t)(task_mgr.op_mode.value);    // log operation mode
     task_mgr.proc_code.segments.task_id = (uint8_t)(task_mgr.exec_task_id);   // log upcoming task-ID
 
     // Capture task start time for time quota monitoring
@@ -121,32 +121,32 @@ uint16_t task_manager_tick(void) {
 uint16_t task_CheckOperationModeStatus(void) {
 
     // Short Fix if MCC Configuration is used
-    if ((task_mgr.pre_op_mode.mode == OP_MODE_BOOT) && (task_mgr.op_mode.mode == OP_MODE_BOOT)) 
+    if ((task_mgr.pre_op_mode.value == OP_MODE_BOOT) && (task_mgr.op_mode.value == OP_MODE_BOOT)) 
      // Boot-up task queue is only run once
     {
-        task_mgr.op_mode.mode = OP_MODE_DEVICE_STARTUP;
+        task_mgr.op_mode.value = OP_MODE_DEVICE_STARTUP;
     } 
-    else if ((task_mgr.pre_op_mode.mode == OP_MODE_DEVICE_STARTUP) && (task_mgr.op_mode.mode == OP_MODE_DEVICE_STARTUP)) 
+    else if ((task_mgr.pre_op_mode.value == OP_MODE_DEVICE_STARTUP) && (task_mgr.op_mode.value == OP_MODE_DEVICE_STARTUP)) 
     // device resources start-up task queue is only run once before ending in FAULT mode.
     // only when all fault flags have been cleared the system will be able to enter startup-mode
     // to enter normal operation.
     { 
-        task_mgr.op_mode.mode = OP_MODE_SYSTEM_STARTUP; // put system into Fault mode to make sure all FAULT flags are cleared before entering normal operation
+        task_mgr.op_mode.value = OP_MODE_SYSTEM_STARTUP; // put system into Fault mode to make sure all FAULT flags are cleared before entering normal operation
     }
-    else if ((task_mgr.pre_op_mode.mode == OP_MODE_SYSTEM_STARTUP) && (task_mgr.op_mode.mode == OP_MODE_SYSTEM_STARTUP)) 
+    else if ((task_mgr.pre_op_mode.value == OP_MODE_SYSTEM_STARTUP) && (task_mgr.op_mode.value == OP_MODE_SYSTEM_STARTUP)) 
     // system-level start-up task queue is only run once before ending in NORMAL mode.
     { 
-        task_mgr.status.flags.startup_sequence_complete = true;
-        task_mgr.op_mode.mode = OP_MODE_IDLE;
+        task_mgr.status.bits.startup_sequence_complete = true;
+        task_mgr.op_mode.value = OP_MODE_IDLE;
     }
     
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Skip execution if operation mode has not changed
-    if (task_mgr.pre_op_mode.mode != task_mgr.op_mode.mode) {
+    if (task_mgr.pre_op_mode.value != task_mgr.op_mode.value) {
 
         // If a change was detected, select the task queue and reset settings and flags
-        switch (task_mgr.op_mode.mode) {
+        switch (task_mgr.op_mode.value) {
             
             case OP_MODE_BOOT:
                 // Switch to initialization mode operation
@@ -200,7 +200,7 @@ uint16_t task_CheckOperationModeStatus(void) {
                 task_mgr.task_time_ctrl.maximum = 0; // Reset max task time gauge
                 task_mgr.task_queue = task_queue_fault; // Set task queue FAULT
                 task_mgr.task_queue_ubound = (task_queue_fault_size-1);
-                task_mgr.status.flags.fault_override = true; // set global fault override flag bit
+                task_mgr.status.bits.fault_override = true; // set global fault override flag bit
                 task_mgr.op_mode_switch_over_function = &task_queue_init_fault; // Execute user function before switching to this operating mode
                 break;
 
@@ -230,13 +230,13 @@ uint16_t task_CheckOperationModeStatus(void) {
 
         if(task_mgr.op_mode_switch_over_function != NULL) // If op-mode switch-over function has been defined, ...
         { task_mgr.op_mode_switch_over_function(); } // Execute user function before switching to this operating mode
-        task_mgr.pre_op_mode.mode = task_mgr.op_mode.mode; // Sync OpMode Flags
-        task_mgr.status.flags.queue_switch = true; // set queue switch flag for one queue execution loop
+        task_mgr.pre_op_mode.value = task_mgr.op_mode.value; // Sync OpMode Flags
+        task_mgr.status.bits.queue_switch = true; // set queue switch flag for one queue execution loop
 
     }
     else // if operating mode has not changed, reset task queue change flag bit
     {
-        task_mgr.status.flags.queue_switch = false; // reset queue switch flag for one queue execution loop
+        task_mgr.status.bits.queue_switch = false; // reset queue switch flag for one queue execution loop
     }
 
     return (1);
@@ -252,10 +252,10 @@ uint16_t init_TaskManager(void) {
     uint16_t fres = 1;
 
     // initialize private flag variable pre-op-mode used by task_CheckOperationModeStatus to identify changes in op_mode
-    task_mgr.pre_op_mode.mode = OP_MODE_BOOT;
+    task_mgr.pre_op_mode.value = OP_MODE_BOOT;
 
     // Initialize basic Task Manager Status
-    task_mgr.op_mode.mode = OP_MODE_BOOT; // Set operation mode to STANDBY
+    task_mgr.op_mode.value = OP_MODE_BOOT; // Set operation mode to STANDBY
     task_mgr.proc_code.value = 0; // Reset process code
     task_mgr.exec_task_id = TASK_IDLE; // Set task ID to DEFAULT (IDle Task))
     task_mgr.task_queue_tick_index = 0; // Reset task queue pointer
@@ -263,9 +263,9 @@ uint16_t init_TaskManager(void) {
     task_mgr.task_queue = task_queue_boot; // Set task queue INIT
     task_mgr.task_queue_ubound = (task_queue_boot_size-1);
 
-    task_mgr.status.flags.queue_switch = false;
-    task_mgr.status.flags.startup_sequence_complete = false;
-    task_mgr.status.flags.fault_override = false;
+    task_mgr.status.bits.queue_switch = false;
+    task_mgr.status.bits.startup_sequence_complete = false;
+    task_mgr.status.bits.fault_override = false;
     
     // Scheduler Timer Configuration
     task_mgr.task_timer_index = TASK_MGR_TIMER_INDEX; // Index of the timer peripheral used

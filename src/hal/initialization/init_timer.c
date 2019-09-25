@@ -11,18 +11,18 @@ uint16_t init_system_timer(void) {
     // Initialize Scheduler Timer
     // Default configuration for 16-bit operation off CPU clock
     
-    tmr.flags.ton = TON_DISABLED;
-    tmr.flags.tsidl = TSIDL_STOP;
-    tmr.flags.tcs = TCS_INTERNAL;
-    tmr.flags.tgate = TGATE_DISABLED;
-    tmr.flags.tsync = TSYNC_NONE;
+    tmr.bits.ton = TON_DISABLED;
+    tmr.bits.tsidl = TSIDL_STOP;
+    tmr.bits.tcs = TCS_INTERNAL;
+    tmr.bits.tgate = TGATE_DISABLED;
+    tmr.bits.tsync = TSYNC_NONE;
 
     #if defined (__P33SMPS_CH2__) || defined (__P33SMPS_CH5__)
     
-    tmr.flags.tmwdis = TMWDIS_ENABLED;
-    tmr.flags.tmwip = TMWIP_COMPLETE;
-    tmr.flags.prwip = PRWIP_COMPLETE;
-    tmr.flags.tecs = TECS_TCY;
+    tmr.bits.tmwdis = TMWDIS_ENABLED;
+    tmr.bits.tmwip = TMWIP_COMPLETE;
+    tmr.bits.prwip = PRWIP_COMPLETE;
+    tmr.bits.tecs = TECS_TCY;
 
     #endif
     

@@ -92,8 +92,8 @@ volatile APPLICATION_t application; // global APPLICATION object holding setting
 volatile uint16_t Application_initialize(void) {
     
     /* Initialization of system status flags */
-    application.system_status.flags.critical_fault = false;
-    application.system_status.flags.temp_warning = false;
+    application.system_status.bits.critical_fault = false;
+    application.system_status.bits.temp_warning = false;
     
 
     return(1);

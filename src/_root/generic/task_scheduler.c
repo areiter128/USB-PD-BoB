@@ -88,7 +88,7 @@ inline volatile uint16_t exec_scheduler(void) {
             // the timer interrupt bit (oscillator, timer or interrupt controller is corrupted)
             // => Immediate reconfiguration and firmware initialization is required
 
-            task_mgr.op_mode.mode = OP_MODE_BOOT;                               // Boot mode will force re-config
+            task_mgr.op_mode.value = OP_MODE_BOOT;                               // Boot mode will force re-config
             task_mgr.task_queue_tick_index = (task_mgr.task_queue_ubound + 1);    // setting index to maximum will trip op_mode switch
 
         }
@@ -149,7 +149,7 @@ inline volatile uint16_t exec_scheduler(void) {
 
         // if the list index is at/beyond the recent list boundary, roll-over and/or switch task list
         if ( (task_mgr.task_queue_tick_index > (task_mgr.task_queue_ubound)) ||
-             (task_mgr.pre_op_mode.mode != task_mgr.op_mode.mode) )
+             (task_mgr.pre_op_mode.value != task_mgr.op_mode.value) )
         // Check for list boundary
         {
             // at the roll-over point (one tick above the array size) the operation mode switch check
