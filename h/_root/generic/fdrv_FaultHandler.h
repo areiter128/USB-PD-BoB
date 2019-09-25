@@ -178,7 +178,7 @@ typedef enum
     FAULT_LEVEL_EQUAL        = 0b0000000000000010, // Flag to perform "is equal" comparison
     FAULT_LEVEL_NOT_EQUAL    = 0b0000000000000100, // Flag to perform "is not equal than" comparison
     FAULT_LEVEL_OUT_OF_RANGE = 0b0000000000001000, // Flag to perform "greater than or less than" comparison
-    FAULT_LEVEL_IN_RANGE     = 0b0000000000001000, // Flag to perform "greater than and less than" comparison
+    FAULT_LEVEL_IN_RANGE     = 0b0000000000010000, // Flag to perform "greater than and less than" comparison
 }FAULT_OBJECT_CONDITION_LEVEL_e;
     
 typedef struct
@@ -258,7 +258,7 @@ extern volatile uint16_t fltobj_list_size;
  * Description:
  * The following function prototypes are publicly accessible.
  * ***********************************************************************************************/
-extern volatile uint16_t CaptureCPUResetStatus(void);
+extern volatile uint16_t CaptureCPUInterruptStatus(void);
 extern volatile uint16_t CheckCPUResetRootCause(void);
 
 extern volatile uint16_t exec_FaultCheckAll(void);

@@ -268,7 +268,7 @@ inline volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     return(fres);
 }
 
-/*!CaptureCPUResetStatus
+/*!CaptureCPUInterruptStatus
  * ***********************************************************************************************
  * Parameters: (none)
  *      
@@ -285,7 +285,7 @@ inline volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj)
  * number of restart attempts where unsuccessful.
  * 
  * ***********************************************************************************************/
-volatile uint16_t CaptureCPUResetStatus(void) 
+volatile uint16_t CaptureCPUInterruptStatus(void) 
 {
     volatile uint16_t fres = 1;
 
@@ -298,51 +298,61 @@ volatile uint16_t CaptureCPUResetStatus(void)
     RCON = 0x0000; // Reset status flag bits
     
     // Capture all available trap flag bits
-    traplog.trap_flags.ADDRERR = _ADDRERR;  // Address Error Trap Status bit
+    traplog.trap_flags.bits.ADDRERR = _ADDRERR;  // Address Error Trap Status bit
     _ADDRERR = 0; // Reset flag bit
-    traplog.trap_flags.APLL = _APLL; // Auxiliary PLL Loss of Lock Soft Trap Status bit
+    traplog.trap_flags.bits.APLL = _APLL; // Auxiliary PLL Loss of Lock Soft Trap Status bit
     _APLL = 0; // Reset flag bit
     #if defined (_CAN)
-    traplog.trap_flags.CAN = _CAN; // CAN Address Error Soft Trap Status bit
+    traplog.trap_flags.bits.CAN = _CAN; // CAN Address Error Soft Trap Status bit
     _CAN = 0; // Reset flag bit
     #endif
     #if defined (_CAN2)
-    traplog.trap_flags.CAN2 = _CAN2; // CAN2 Address Error Soft Trap Status bit
+    traplog.trap_flags.bits.CAN2 = _CAN2; // CAN2 Address Error Soft Trap Status bit
     _CAN2 = 0; // Reset flag bit
     #endif
-    traplog.trap_flags.COVAERR = _COVAERR; // Accumulator A Catastrophic Overflow Trap Flag bit
+    traplog.trap_flags.bits.COVAERR = _COVAERR; // Accumulator A Catastrophic Overflow Trap Flag bit
     _COVAERR = 0; // Reset flag bit
-    traplog.trap_flags.COVBERR = _COVBERR; // Accumulator B Catastrophic Overflow Trap Flag bit
+    traplog.trap_flags.bits.COVBERR = _COVBERR; // Accumulator B Catastrophic Overflow Trap Flag bit
     _COVBERR = 0; // Reset flag bit
-    traplog.trap_flags.DIV0ERR = _DIV0ERR; // Divide-by-Zero Error Status bit
+    traplog.trap_flags.bits.DIV0ERR = _DIV0ERR; // Divide-by-Zero Error Status bit
     _DIV0ERR = 0; // Reset flag bit
     #if defined (_DMACERR)
-    traplog.trap_flags.DMACERR = _DMACERR; // DMA Controller Trap Status bit
+    traplog.trap_flags.bits.DMACERR = _DMACERR; // DMA Controller Trap Status bit
     _DMACERR = 0; // Reset flag bit
     #endif
-    traplog.trap_flags.DOOVR = _DOOVR; // DO Stack Overflow Soft Trap Status bit
+    traplog.trap_flags.bits.DOOVR = _DOOVR; // DO Stack Overflow Soft Trap Status bit
     _DOOVR = 0; // Reset flag bit
     #if defined (_ECCDBE)
-    traplog.trap_flags.ECCDBE = _ECCDBE; // DO Stack Overflow Soft Trap Status bit
+    traplog.trap_flags.bits.ECCDBE = _ECCDBE; // DO Stack Overflow Soft Trap Status bit
     _ECCDBE = 0; // Reset flag bit
     #endif
-    traplog.trap_flags.MATHERR = _MATHERR; // Math Error Status bit
+    traplog.trap_flags.bits.MATHERR = _MATHERR; // Math Error Status bit
     _MATHERR = 0; // Reset flag bit
-    traplog.trap_flags.NAE = _NAE; // NVM Address Error Soft Trap Status bit
+    traplog.trap_flags.bits.NAE = _NAE; // NVM Address Error Soft Trap Status bit
     _NAE = 0; // Reset flag bit
-    traplog.trap_flags.OSCFAIL = _OSCFAIL; // Oscillator Failure Trap Status bit
+    traplog.trap_flags.bits.OSCFAIL = _OSCFAIL; // Oscillator Failure Trap Status bit
     _OSCFAIL = 0; // Reset flag bit
-    traplog.trap_flags.OVAERR = _OVAERR; // Accumulator A Overflow Trap Flag bit
+    traplog.trap_flags.bits.OVAERR = _OVAERR; // Accumulator A Overflow Trap Flag bit
     _OVAERR = 0; // Reset flag bit
-    traplog.trap_flags.OVBERR = _OVBERR; // Accumulator B Overflow Trap Flag bit
+    traplog.trap_flags.bits.OVBERR = _OVBERR; // Accumulator B Overflow Trap Flag bit
     _OVBERR = 0; // Reset flag bit
     #if defined (_SFTACERR)
-    traplog.trap_flags.SFTACERR = _SFTACERR; // Shift Accumulator Error Status bit
+    traplog.trap_flags.bits.SFTACERR = _SFTACERR; // Shift Accumulator Error Status bit
     _SFTACERR = 0; // Reset flag bit
     #endif
-    traplog.trap_flags.SGHT = _SGHT; // Software Generated Hard Trap Status bit
+    traplog.trap_flags.bits.SGHT = _SGHT; // Software Generated Hard Trap Status bit
     _SGHT = 0; // Reset flag bit
 
+    // Check trap flags for conditions triggering a CPU reset
+    if(traplog.trap_flags.value & CPU_RESET_TRIGGER_LOW_BIT_MASK) {
+    // Set the CPU RESET trigger bit
+        traplog.status.bits.cpu_reset_trigger = true;
+    }
+    else {
+    // Clear the CPU RESET trigger bit
+        traplog.status.bits.cpu_reset_trigger = false;
+    }
+    
     return(fres);
 }
 
@@ -382,7 +392,7 @@ inline volatile uint16_t CheckCPUResetRootCause(void)
     }
     
     // Check if CPU RESET was tripped by software
-    if (traplog.sw_reset) {
+    if (traplog.status.bits.sw_reset) {
         // TODO: handle condition after restart 
         Nop();
         Nop();

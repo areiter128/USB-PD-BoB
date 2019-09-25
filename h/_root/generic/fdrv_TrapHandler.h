@@ -114,9 +114,11 @@ typedef enum
 //
 // =================================================================================================
 
+// This define is used to filter on critical fault conditions used to trigger a CPU reset
+#define CPU_RESET_TRIGGER_LOW_BIT_MASK 0b00000000000000011011101110000000
 
-typedef struct
-{
+typedef struct {
+    
     volatile unsigned OVAERR    :1; // Bit #0:  Accumulator A Overflow Trap Flag bit
     volatile unsigned OVBERR    :1; // Bit #1:  Accumulator B Overflow Trap Flag bit
     volatile unsigned COVAERR   :1; // Bit #2:  Accumulator A Catastrophic Overflow Trap Flag bit
@@ -139,10 +141,15 @@ typedef struct
     volatile unsigned CAN2      :1; // Bit #18: CAN2 Address Error Soft Trap Status bit
     volatile unsigned           :13; // Bit <19:31> (reserved)
 
-}__attribute__((packed))TRAP_FLAG_IDENTIFIER_t;
+}__attribute__((packed))TRAP_FLAG_BIT_FIELD_t;
 
-typedef struct
-{
+typedef union {
+    volatile TRAP_FLAG_BIT_FIELD_t bits;
+    volatile uint32_t value;
+}TRAP_FLAG_IDENTIFIER_t;
+
+typedef struct {
+    
 	volatile unsigned VECNUM:8;	// Bit #0-7:  Pending Interrupt Number List
 	volatile unsigned ILR	:4;	// Bit #8-11: New Interrupt Priority Level
 	volatile unsigned		:1;	// Bit #12: Reserved
@@ -158,8 +165,8 @@ typedef union
 }INTERRUPT_CONTROL_REGISTER_t;
 
 // Data structure for RCON status capturing
-typedef struct
-{
+typedef struct {
+    
 	volatile unsigned por	:1;	// Bit #0:  Power-on Reset Flag bit
 	volatile unsigned bor	:1;	// Bit #1:  Brown-out Reset Flag bit
 	volatile unsigned idle	:1;	// Bit #2:  Wake-up from Idle Flag bit
@@ -179,16 +186,48 @@ typedef struct
     
 }__attribute__((packed))RESET_CONTROL_REGISTER_BIT_FIELD_t;
 
-typedef union 
-{
+typedef union {
 	volatile RESET_CONTROL_REGISTER_BIT_FIELD_t bits;
 	volatile uint16_t value;
 }RESET_CONTROL_REGISTER_t;
 
-typedef struct
-{
-    volatile bool     sw_reset;                     // Flag indicating CPU was reset by software
-    volatile uint16_t reset_count;                  // Counter of CPU RESET events
+
+#define FAULT_OBJECT_CPU_RESET_TRIGGER_BIT_MASK     0b0000000000000001
+
+typedef struct {
+
+    // Control bits
+    volatile bool cpu_reset_trigger : 1;    // Bit 0: Control bit to trigger software-enforced CPU reset
+    volatile unsigned : 1;                  // Bit 1: (reserved)
+    volatile unsigned : 1;                  // Bit 2: (reserved)
+    volatile unsigned : 1;                  // Bit 3: (reserved)
+    volatile unsigned : 1;                  // Bit 4: (reserved)
+    volatile unsigned : 1;                  // Bit 5: (reserved)
+    volatile unsigned : 1;                  // Bit 6: (reserved)
+    volatile unsigned : 1;                  // Bit 7: (reserved)
+    
+    // Status bits
+    volatile bool sw_reset : 1;             // Bit 8:  Flag indicating CPU was reset by software (read only)
+    volatile unsigned : 1;                  // Bit 9:  (reserved)
+    volatile unsigned : 1;                  // Bit 10: (reserved)
+    volatile unsigned : 1;                  // Bit 11: (reserved)
+    volatile unsigned : 1;                  // Bit 12: (reserved)
+    volatile unsigned : 1;                  // Bit 13: (reserved)
+    volatile unsigned : 1;                  // Bit 14: (reserved)
+    volatile unsigned : 1;                  // Bit 15: (reserved)
+    
+}__attribute__((packed)) TRAPLOG_STATUS_BIT_FIELD_t;
+
+typedef union {
+	volatile TRAPLOG_STATUS_BIT_FIELD_t bits;
+	volatile uint16_t value;
+}TRAPLOG_STATUS_t;
+
+
+typedef struct {
+
+    volatile TRAPLOG_STATUS_t status;               // Status word of the traplog object
+    volatile uint16_t reset_count;                  // Counter of CPU RESET events (read/write)
 	volatile TRAP_ID_e trap_id;                     // Trap-ID of the captured incident
 	volatile uint16_t trap_count;                   // Counter tracking the number of occurrences
     volatile TRAP_FLAG_IDENTIFIER_t trap_flags;     // Complete list of trap flags (showing all trap flags)
@@ -196,6 +235,8 @@ typedef struct
     volatile INTERRUPT_CONTROL_REGISTER_t inttreg;  // Interrupt Vector and Priority register capture
     
 }TRAP_LOGGER_t;
+
+
 
 // Global data structure used as buffer for trap monitoring
 extern volatile TRAP_LOGGER_t __attribute__((__persistent__))traplog; 

@@ -105,7 +105,7 @@ void DefaultTrapHandler(TRAP_ID_e trap_id) {
     traplog.trap_count++; // Capture occurrence 
 
     // Capture recent status of interrupt, reset control and trap flag bits
-    CaptureCPUResetStatus();
+    CaptureCPUInterruptStatus();
  
     // -------------------------------------------------
     #ifdef __DEBUG
