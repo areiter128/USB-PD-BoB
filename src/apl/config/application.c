@@ -59,11 +59,9 @@
 // Defining the global APPLICATION object "application" of type APPLICATION_SETTINGS_t
 volatile APPLICATION_t application; // global APPLICATION object holding settings, status and error code information
 
-// Private prototypes
-//Remove: volatile uint16_t initialize_main_loop(void);
 
 
-/*!init_ApplicationSettings.c
+/*!Application_initialize
  *****************************************************************************
  * Summary:
  * User code initializing the APPLICATION_SETTINGS_t data structure
@@ -78,7 +76,7 @@ volatile APPLICATION_t application; // global APPLICATION object holding setting
  * Description:	
  * The following routine will be called automatically after the device reset and before 
  * the OS is executing the task scheduler. Any settings, which need to be in place before
- * other tasks are executed can be set here.
+ * other tasks are executed, can be set here.
  * 
  * References:
  * -
@@ -91,13 +89,59 @@ volatile APPLICATION_t application; // global APPLICATION object holding setting
  * Comments:
  *****************************************************************************/
 
-volatile uint16_t init_ApplicationSettings(void) {
+volatile uint16_t Application_initialize(void) {
     
     /* Initialization of system status flags */
     application.system_status.flags.critical_fault = false;
     application.system_status.flags.temp_warning = false;
     
 
+    return(1);
+}
+
+/*!Application_reset.c
+ *****************************************************************************
+ * Summary:
+ * User code resetting the entire system into a safe, passive condition
+ *
+ * Parameters:
+ * (none)
+ * 
+ * Returns:
+ * 0 = FALSE
+ * 1 = TRUE
+ *
+ * Description:	
+ * The following routine will be called automatically when a catastrophic 
+ * fault condition has been detected and the system has to be brought into
+ * a safe and passive state. After this routine has been executed the CPU 
+ * may or may not be reset.
+ * 
+ * Please add all application-wide function calls terminating tasks which 
+ * could potentially drive board functions causing issues when executed
+ * by an unreliable CPU/memory or corrupted firmware modules.
+ * 
+ * References:
+ * -
+ *
+ * See also:
+ * 
+ * Revision history: 
+ * 04/10/19     Initial version
+ * Author: M91406
+ * Comments:
+ *****************************************************************************/
+
+volatile uint16_t Application_reset(void) {
+    
+    volatile uint16_t fres = 1;
+    
+    /* Reset of system tasks and settings */
+    
+    fres &= reset_PowerControl();   // Shut down power and bring system into a safe state
+
+    // ToDo: Add function within the PD stack securing the USB ports (load switch and VBUS short)
+    
     return(1);
 }
 
