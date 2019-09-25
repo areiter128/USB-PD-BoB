@@ -66,7 +66,7 @@
 volatile uint16_t (*Task_Table[])(void) = {
     
     // Cross-function modules
-    init_ApplicationSettings, // initialize system-wide application data structure
+    Application_initialize, // initialize system-wide application data structure
     init_FaultObjects, // call fault object initialization
     exec_CaptureSystemStatus, // Captures detection signals and analyzes voltages to determine the operating mode
     
