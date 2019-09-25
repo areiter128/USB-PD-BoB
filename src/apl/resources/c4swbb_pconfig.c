@@ -276,14 +276,15 @@ volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_
     
     fres &= hsadc_adc_module_initialize(adcmod_cfg);  // Write ADC module configuration to registers
 
-    // Load configuration presets for dedicated ADC cores
+    // Load configuration presets for dedicated ADC cores and shared ADC core
+    // Overwrite defaults with user settings provided in user object "pInstance"
     if (ADC_CORE_COUNT > 1) 
     {
 
         adcore_cfg.config.value = ((((uint32_t)C4SWBB_ADC_ADCORExH) << 16) | ((uint32_t)C4SWBB_ADC_ADCORExL));
 
         // Load standard configuration into all ADC cores
-        for (i=0; i<(ADC_CORE_COUNT-1); i++) 
+        for (i=0; i<ADC_CORE_COUNT; i++) 
         {
             if ( (i == pInstance->feedback.ad_iout.adc_core) || 
                  (i == pInstance->feedback.ad_temp.adc_core) ||
