@@ -15,6 +15,7 @@
                 <make-dep-project>../../plib/p33SMPS_mcal.X</make-dep-project>
             </make-dep-projects>
             <sourceRootList>
+                <sourceRootElem>../common</sourceRootElem>
                 <sourceRootElem>../h</sourceRootElem>
                 <sourceRootElem>../h/_root</sourceRootElem>
                 <sourceRootElem>../h/_root/config</sourceRootElem>
@@ -34,7 +35,6 @@
                 <sourceRootElem>../h/sfl/libapi</sourceRootElem>
                 <sourceRootElem>../h/sfl/isr</sourceRootElem>
                 <sourceRootElem>../src</sourceRootElem>
-                <sourceRootElem>../common</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
