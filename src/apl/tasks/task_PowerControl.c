@@ -15,9 +15,16 @@ volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;    // USB PD Port A
 volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;    // USB PD Port B
 
 // PRIVATE FUNCTION PROTOTYPES
+volatile uint16_t init_ADC(void);
+volatile uint16_t init_ISR(void);
 volatile uint16_t init_USBport_1(void);
 volatile uint16_t init_USBport_2(void);
 
+/*!exec_PowerControl
+ *  ******************************************************************************************************
+ *
+ * 
+ * *****************************************************************************************************/
 
 inline volatile uint16_t exec_PowerControl(void) {
 
@@ -39,8 +46,6 @@ inline volatile uint16_t init_PowerControl(void) {
 
     volatile uint16_t fres = 1;
 
-    volatile HSADC_MODULE_ADCORE_CONFIG_t adcore_cfg;
-    
     // Initialize the 4-switch buck/boost power controller objects for USB port A and B
     fres &= init_USBport_1(); // Initialize complete configuration of USB Port 1 power controller
     fres &= init_USBport_2(); // Initialize complete configuration of USB Port 2 power controller
@@ -55,6 +60,33 @@ inline volatile uint16_t init_PowerControl(void) {
     // Load PWM configurations for PWM generators for both ports
     fres &= c4swbb_pwm_generators_initialize(&c4swbb_1); // Initialize PWM generators of USB Port A
     fres &= c4swbb_pwm_generators_initialize(&c4swbb_2); // Initialize PWM generators of USB Port B
+
+    // ADC core direct configuration
+    fres &= init_ADC();
+    
+    // Initialize all ADC input channels of one power controller
+    fres &= c4swbb_adc_inputs_initialize(&c4swbb_1);
+    fres &= c4swbb_adc_inputs_initialize(&c4swbb_1);
+    
+
+    // return Success/Failure
+    return (fres);
+}
+
+inline volatile uint16_t reset_PowerControl(void) {
+    
+    volatile uint16_t fres = 0;
+    
+    fres &= c4SWBB_shut_down(&c4swbb_1);  // Shut Down 4-Switch Buck/Boost Converter #1 State Machine
+    fres &= c4SWBB_shut_down(&c4swbb_2);  // Shut Down 4-Switch Buck/Boost Converter #2 State Machine
+    
+    return(fres);
+}
+
+inline volatile uint16_t init_ADC(void) {
+    
+    volatile uint16_t fres = 1;
+    volatile HSADC_MODULE_ADCORE_CONFIG_t adcore_cfg;
     
     // Initialize ADC Converter
     // ========================
@@ -82,11 +114,6 @@ inline volatile uint16_t init_PowerControl(void) {
     adcore_cfg.SHRADCORE.config.bits.RES = ADCORE_RES_12BIT;
     adcore_cfg.SHRADCORE.config.bits.SAMC = ADCORE_SAMC_0010;
     
-
-    // Initialize all ADC module base registers
-    fres &= c4swbb_adc_module_initialize(&c4swbb_1);
-
-    // ADC core direct configuration
 //    fres &= hsadc_adc_core_initialize(adcore_cfg.ADCORE0);
 //    fres &= hsadc_adc_core_power_on(adcore_cfg.ADCORE0.index);
 //    fres &= hsadc_adc_core_initialize(adcore_cfg.ADCORE1);
@@ -94,12 +121,19 @@ inline volatile uint16_t init_PowerControl(void) {
 //    fres &= hsadc_adc_core_initialize(adcore_cfg.SHRADCORE);
 //    fres &= hsadc_adc_core_power_on(adcore_cfg.SHRADCORE.index);
 
+    // Initialize all ADC module base registers
+    fres &= c4swbb_adc_module_initialize(&c4swbb_1);
+    fres &= c4swbb_adc_module_initialize(&c4swbb_2);
+
     
-    // Initialize all ADC input channels of one power controller
-    fres &= c4swbb_adc_inputs_initialize(&c4swbb_1);
     
-    
-    
+    return(fres);
+}
+
+inline volatile uint16_t init_ISR(void) {
+
+    volatile uint16_t fres = 1;
+
     // Configure ADC input pins and interrupts
     FB_VOUT1_INIT_ANALOG; // Output voltage converter #1 feedback pin
     FB_VOUT1_ADC_IP = c4swbb_1.feedback.ad_vout.interrupt_priority; // Set interrupt priority
@@ -122,17 +156,31 @@ inline volatile uint16_t init_PowerControl(void) {
     FB_VBAT_ADC_IP = c4swbb_1.feedback.ad_vin.interrupt_priority; // Set interrupt priority
     FB_VBAT_ADC_IF = 0;  // Clear interrupt flag bit
     FB_VBAT_ADC_IE = c4swbb_1.feedback.ad_vin.interrupt_enable; // Enable/Disable interrupt service routine
-    
-    // return Success/Failure
-    return (fres);
-}
 
-inline volatile uint16_t reset_PowerControl(void) {
+    // Configure ADC input pins and interrupts
+    FB_VOUT2_INIT_ANALOG; // Output voltage converter #1 feedback pin
+    FB_VOUT2_ADC_IP = c4swbb_2.feedback.ad_vout.interrupt_priority; // Set interrupt priority
+    FB_VOUT2_ADC_IF = 0; // Clear interrupt flag bit
+    FB_VOUT2_ADC_IE = c4swbb_2.feedback.ad_vout.interrupt_enable; // Enable/Disable interrupt service routine
+
+    // Configure ADC input pin and interrupt
+    FB_IOUT2_INIT_ANALOG; // Output current converter #1 feedback pin
+    FB_IOUT2_ADC_IP = c4swbb_2.feedback.ad_iout.interrupt_priority; // Set interrupt priority
+    FB_IOUT2_ADC_IF = 0; // Clear interrupt flag bit
+    FB_IOUT2_ADC_IE = c4swbb_2.feedback.ad_iout.interrupt_enable; // Enable/Disable interrupt service routine
+
+    // Configure ADC input pin and interrupt
+    FB_TEMP2_INIT_ANALOG; // Temperature converter #1 feedback pin
+    FB_TEMP2_ADC_IP = c4swbb_2.feedback.ad_temp.interrupt_priority; // Set interrupt priority
+    FB_TEMP2_ADC_IF = 0; // Clear interrupt flag bit
+    FB_TEMP2_ADC_IE = c4swbb_2.feedback.ad_temp.interrupt_enable; // Enable/Disable interrupt service routine
+
+    // Initialization of this shared signal is covered by converter #1
+//    FB_VBAT_INIT_ANALOG; // Input voltage feedback pin
+//    FB_VBAT_ADC_IP = c4swbb_2.feedback.ad_vin.interrupt_priority; // Set interrupt priority
+//    FB_VBAT_ADC_IF = 0;  // Clear interrupt flag bit
+//    FB_VBAT_ADC_IE = c4swbb_2.feedback.ad_vin.interrupt_enable; // Enable/Disable interrupt service routine
     
-    volatile uint16_t fres = 0;
-    
-    fres &= c4SWBB_shut_down(&c4swbb_1);  // Shut Down 4-Switch Buck/Boost Converter #1 State Machine
-    fres &= c4SWBB_shut_down(&c4swbb_2);  // Shut Down 4-Switch Buck/Boost Converter #2 State Machine
     
     return(fres);
 }
