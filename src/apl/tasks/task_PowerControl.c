@@ -19,7 +19,7 @@ volatile uint16_t init_USBport_1(void);
 volatile uint16_t init_USBport_2(void);
 
 
-volatile uint16_t exec_PowerControl(void) {
+inline volatile uint16_t exec_PowerControl(void) {
 
     volatile uint16_t fres = 1;
     
@@ -35,7 +35,7 @@ volatile uint16_t exec_PowerControl(void) {
  * 
  * *****************************************************************************************************/
 
-volatile uint16_t init_PowerControl(void) {
+inline volatile uint16_t init_PowerControl(void) {
 
     volatile uint16_t fres = 1;
 
@@ -127,7 +127,17 @@ volatile uint16_t init_PowerControl(void) {
     return (fres);
 }
 
-volatile uint16_t init_USBport_1(void) {
+inline volatile uint16_t reset_PowerControl(void) {
+    
+    volatile uint16_t fres = 0;
+    
+    fres &= c4SWBB_shut_down(&c4swbb_1);  // Shut Down 4-Switch Buck/Boost Converter #1 State Machine
+    fres &= c4SWBB_shut_down(&c4swbb_2);  // Shut Down 4-Switch Buck/Boost Converter #2 State Machine
+    
+    return(fres);
+}
+
+inline volatile uint16_t init_USBport_1(void) {
 
     volatile uint16_t fres=1;
 
@@ -256,7 +266,7 @@ volatile uint16_t init_USBport_1(void) {
     
 }
 
-volatile uint16_t init_USBport_2(void) {
+inline volatile uint16_t init_USBport_2(void) {
 
     volatile uint16_t fres=1;
     

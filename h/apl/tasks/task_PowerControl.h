@@ -60,7 +60,8 @@ extern "C" {
     // Public function prototypes
     extern volatile uint16_t init_PowerControl(void);
     extern volatile uint16_t exec_PowerControl(void);
-
+    extern volatile uint16_t reset_PowerControl(void);
+    
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */
