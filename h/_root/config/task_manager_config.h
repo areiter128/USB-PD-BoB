@@ -246,9 +246,9 @@
 /*!CPU Meter Configuration
  * ***********************************************************************************************
  * Description:
- * CPU metering requires additional informatoin about the main while loop execution time.
- * While the CPU Load Meter is waiting for the sysem timer to overrun, it increments a counter.
- * To put the final counter value into relation ot "free" CPU cycles, we need to know how many cycles
+ * CPU metering requires additional information about the main while loop execution time.
+ * While the CPU Load Meter is waiting for the system timer to overrun, it increments a counter.
+ * To put the final counter value into relation to "free" CPU cycles, we need to know how many cycles
  * ONE waiting loop takes. This highly depends on the level of code optimization set in the Project
  * Properties.
  * 
@@ -304,8 +304,26 @@
 
 #endif
 
-#define TASK_MGR_CPU_LOAD_FACTOR            (uint16_t)(((float)(1000.000)/(float)(TASK_MGR_PERIOD))*pow(2, 16))
-    
+#define TASK_MGR_CPU_LOAD_FACTOR    (uint16_t)(((float)(1000.000)/(float)(TASK_MGR_PERIOD))*pow(2, 16))
+
+/*!Software CPU Reset Occurrence Limit
+ * ***********************************************************************************************
+ * Description:
+ * The trap and fault handler sub-modules of the OS are detecting and handling critical and 
+ * catastrophic failures automatically. In case a condition is detected, which prevents from
+ * executing code any further, such as address errors indicating errorous instructions being 
+ * loaded/read/executed, the fault handler will initiare a Warm CPU Reset. 
+ * 
+ * In case of a persistent failure, this would result in a continuously rebooting system, 
+ * which may be problematic. To limit the number of reboot events, users can set a threshold 
+ * here, limiting the number of restart attempts.
+ * 
+ * See also:
+ * (none)
+ * ***********************************************************************************************/
+
+#define TASK_MGR_CPU_RESET_LIMIT    10
+
  /* ***********************************************************************************************
  * PROTOTYPES
  * ***********************************************************************************************/
