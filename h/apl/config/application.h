@@ -155,8 +155,8 @@ extern volatile APPLICATION_t application;
 
 
 // Initialization of the application data structure
-extern volatile uint16_t init_ApplicationSettings(void);
-
+extern volatile uint16_t Application_initialize(void);
+extern volatile uint16_t Application_reset(void);
 
 
 #ifdef	__cplusplus

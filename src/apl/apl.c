@@ -145,7 +145,7 @@ inline volatile uint16_t APPLICATION_Initialize(void) {
 
     volatile uint16_t fres = 0;
 
-    fres = init_ApplicationSettings();
+    fres = Application_initialize();
     
     return(fres);
     
