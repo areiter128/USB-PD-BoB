@@ -98,15 +98,15 @@ typedef struct {
     volatile bool fault_active : 1; // Bit <7>: (read only) Status bit indicating that a critical fault condition has been detected
     volatile bool busy : 1; // Bit <9:11>: (read only) Status bit indicating that the state machine is in a ramp or delay phase
     volatile unsigned : 3; // Bit <9:11>: (reserved)
-    volatile C4SWBB_RAMP_DIRECTION_e tune_dir : 1; // Bit <12>: (read only) flag indicating the direction of the tune-in ramp when the reference is changed (0=up or 1=down)
+    volatile C4SWBB_RAMP_DIRECTION_e tune_dir : 1; // Bit <12>: (read only) Flag indicating the direction of the tune-in ramp when the reference is changed (0=up or 1=down)
     volatile bool GO : 1; // Bit <13>: POWER SUPPLY START bit (will trigger startup procedure when set)
     volatile bool autorun : 1; // Bit <14>: Auto-Start will automatically enable the converter and set the GO bit when ready
     volatile bool enabled : 1; // Bit <15>: Enable-bit (when disabled, power supply will reset in STANDBY mode)
-} __attribute__((packed))C4SWBB_STATUS_FLAGS_t;
+} __attribute__((packed))C4SWBB_STATUS_BIT_FIELD_t;
 
 typedef union {
     volatile uint16_t value; // buffer for 16-bit word read/write operations
-    volatile C4SWBB_STATUS_FLAGS_t flags; // data structure for single bit addressing operations
+    volatile C4SWBB_STATUS_BIT_FIELD_t bits; // data structure for single bit addressing operations
 } C4SWBB_STATUS_t; // Power converter operation status bits
 
 /*!C4SWBB_LOOP_SETTINGS_t
@@ -309,9 +309,9 @@ typedef struct {
  *      - set 'GO = 1'
  * 
  * 
- *      my_supply.status.flags.autorun = false;
- *      my_supply.status.flags.enabled = true;
- *      my_supply.status.flags.GO = 1;
+ *      my_supply.status.bits.autorun = false;
+ *      my_supply.status.bits.enabled = true;
+ *      my_supply.status.bits.GO = 1;
  * 
  *
  * **********************************************************************************************/

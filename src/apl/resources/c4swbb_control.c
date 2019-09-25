@@ -41,7 +41,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
     volatile uint16_t int_dummy = 0; // buffer variable for control loop pre-charge calculation
     
     
-    switch (pInstance->status.flags.op_status) {
+    switch (pInstance->status.bits.op_status) {
 
         /*!CONVERTER_STATE_INITIALIZE
          * ============================
@@ -55,15 +55,15 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         case CONVERTER_STATE_INITIALIZE:
             
             // Wait until all required peripherals are online and a valid power source is available
-            if( (pInstance->status.flags.pwm_active) && 
-                (pInstance->status.flags.adc_active) && 
-                (pInstance->status.flags.power_source_detected) ) {
+            if( (pInstance->status.bits.pwm_active) && 
+                (pInstance->status.bits.adc_active) && 
+                (pInstance->status.bits.power_source_detected) ) {
                 
                 // If no active fault condition is pending, enter STANDBY mode
-                if (!pInstance->status.flags.fault_active) {
+                if (!pInstance->status.bits.fault_active) {
 
                     // Switch to operation status CONVERTER_STATE_STANDBY
-                    pInstance->status.flags.op_status = CONVERTER_STATE_STANDBY;
+                    pInstance->status.bits.op_status = CONVERTER_STATE_STANDBY;
                     
                 }
                
@@ -74,24 +74,24 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         /*!CONVERTER_STATE_STANDBY
          * ============================
          * In this step the power controller is waiting for being enabled. No action will be taken
-         * until c4swbb.status.flags.enable = true and c4swbb.status.flags.GO = 1. The AUTORUN option
-         * (c4swbb.status.flags.autorun = true) will automatically enable the power controller 
+         * until c4swbb.status.bits.enable = true and c4swbb.status.bits.GO = 1. The AUTORUN option
+         * (c4swbb.status.bits.autorun = true) will automatically enable the power controller 
          * and set the GO bit to bypass this step of the state machine */
             
         case CONVERTER_STATE_STANDBY:
 
             // Clear the BUSY bit
-            pInstance->status.flags.busy = false; 
+            pInstance->status.bits.busy = false; 
             
             // If the power controller is enabled, the START command is received and no 
             // active fault condition is pending, enter soft-start process
-            if( (pInstance->status.flags.enabled) && 
-                (pInstance->status.flags.GO) && 
-                (!pInstance->status.flags.fault_active) ) {
+            if( (pInstance->status.bits.enabled) && 
+                (pInstance->status.bits.GO) && 
+                (!pInstance->status.bits.fault_active) ) {
                 
                     pInstance->soft_start.counter = 0;  // Reset soft-start counter
-                    pInstance->status.flags.busy = true; // Set the BUSY bit
-                    pInstance->status.flags.op_status = CONVERTER_STATE_POWER_ON_DELAY; // switch to state POWER_ON_DELAY
+                    pInstance->status.bits.busy = true; // Set the BUSY bit
+                    pInstance->status.bits.op_status = CONVERTER_STATE_POWER_ON_DELAY; // switch to state POWER_ON_DELAY
             
             }            
             break;
@@ -106,13 +106,13 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         case CONVERTER_STATE_POWER_ON_DELAY:
 
             // Set the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.busy = true;
+            pInstance->status.bits.busy = true;
             
             // delay startup until POWER ON DELAY has expired
             if(pInstance->soft_start.counter++ > pInstance->soft_start.pwr_on_delay) {
 
                 pInstance->soft_start.counter = 0;  // Reset soft-start counter
-                pInstance->status.flags.op_status = CONVERTER_STATE_BOOTSTRAP_PRECHARGE; // switch to soft-start phase BOOTSTRAP_PRECHARGE
+                pInstance->status.bits.op_status = CONVERTER_STATE_BOOTSTRAP_PRECHARGE; // switch to soft-start phase BOOTSTRAP_PRECHARGE
                 
             }
                 
@@ -127,10 +127,10 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         case CONVERTER_STATE_BOOTSTRAP_PRECHARGE:
 
             // Set the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.busy = true;
+            pInstance->status.bits.busy = true;
             
             // switch to soft-start phase LAUNCH_V_RAMP
-            pInstance->status.flags.op_status = CONVERTER_STATE_LAUNCH_V_RAMP; 
+            pInstance->status.bits.op_status = CONVERTER_STATE_LAUNCH_V_RAMP; 
 
 //            // generate n bootstrap pre-charge pulses before enabling switch node
 //            if(pchrg_couter++ < SOFT_START_PRECHARGE_TICKS)
@@ -163,7 +163,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         case CONVERTER_STATE_LAUNCH_V_RAMP:
 
             // Set the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.busy = true;
+            pInstance->status.bits.busy = true;
 
             // Hijack voltage loop controller reference
             #if (C4SWBB_CONTROL_MODE == C4SWBB_VMC)
@@ -178,10 +178,10 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             
             // Determine, if the soft-start needs to ramp up or down
             if(pInstance->data.v_out <= pInstance->data.v_ref) {
-                pInstance->status.flags.tune_dir = CONVERTER_RAMP_DIR_UP;
+                pInstance->status.bits.tune_dir = CONVERTER_RAMP_DIR_UP;
             }
             else {
-                pInstance->status.flags.tune_dir = CONVERTER_RAMP_DIR_DOWN;
+                pInstance->status.bits.tune_dir = CONVERTER_RAMP_DIR_DOWN;
             }
             
             // Set starting point of the soft-start reference to most recent output voltage level
@@ -253,7 +253,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             fres &= hspwm_set_duty_cycle(pInstance->boost_leg.pwm_instance, pInstance->boost_leg.duty_ratio_max, 0);
 
             // switch to soft-start phase RAMP UP
-            pInstance->status.flags.op_status = CONVERTER_STATE_V_RAMP_UP;
+            pInstance->status.bits.op_status = CONVERTER_STATE_V_RAMP_UP;
             
             break;
             
@@ -267,7 +267,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         case CONVERTER_STATE_V_RAMP_UP:
 
             // Set the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.busy = true;
+            pInstance->status.bits.busy = true;
 
             // Enable PWM outputs in initial state
             fres &= hspwm_ovr_release(pInstance->buck_leg.pwm_instance); // Release buck leg PWM
@@ -277,8 +277,8 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             #if (C4SWBB_CONTROL_MODE == C4SWBB_VMC)
             pInstance->v_loop.controller->status.flags.enable = true; // enable voltage mode controller
             #elif (C4SWBB_CONTROL_MODE == C4SWBB_ACMC)
-            pInstance->v_loop.controller->status.flags.enable = true; // enable voltage loop
-            pInstance->i_loop.controller->status.flags.enable = true; // enable current loop
+            pInstance->v_loop.controller->status.bits.enable = true; // enable voltage loop
+            pInstance->i_loop.controller->status.bits.enable = true; // enable current loop
             #endif
             
             // Increment voltage loop reference
@@ -299,11 +299,11 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
                 // Switch soft-start phase
                 #if (C4SWBB_CONTROL_MODE == C4SWBB_VMC)
                 // In voltage mode the soft-start ramp is completed => switch directly to POWER_GOOD_DELAY
-                pInstance->status.flags.op_status = CONVERTER_STATE_POWER_GOOD;
+                pInstance->status.bits.op_status = CONVERTER_STATE_POWER_GOOD;
                 #elif (C4SWBB_CONTROL_MODE == C4SWBB_ACMC)
                 // In current mode the soft-start ramp needs to consider the inrush current clamping
                 // => switch directly to I_RAMP_UP
-                pInstance->status.flags.op_status = CONVERTER_STATE_I_RAMP_UP;
+                pInstance->status.bits.op_status = CONVERTER_STATE_I_RAMP_UP;
                 #endif
 
             }
@@ -357,7 +357,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         case CONVERTER_STATE_I_RAMP_UP:
 
             // Set the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.busy = true;
+            pInstance->status.bits.busy = true;
 
             #if (C4SWBB_CONTROL_MODE == C4SWBB_ACMC)
             // increment current limit 
@@ -369,7 +369,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             {
                 pInstance->v_loop.maximum = pInstance->i_loop.maximum;
                 pInstance->v_loop.controller->MaxOutput = pInstance->v_loop.maximum;
-                pInstance->status.flags.op_status = CONVERTER_STATE_POWER_GOOD;
+                pInstance->status.bits.op_status = CONVERTER_STATE_POWER_GOOD;
             }
             #else
             // should the state machine accidentally end up here, push state machine
@@ -388,11 +388,11 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
         case CONVERTER_STATE_POWER_GOOD:
             
             // Set the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.busy = true;
+            pInstance->status.bits.busy = true;
             
             // Enforce POWER GOOD Delay
             if(pInstance->soft_start.counter++ > pInstance->soft_start.pwr_good_delay) {
-                pInstance->status.flags.op_status = CONVERTER_STATE_COMPLETE;  // set startup process COMPLETE
+                pInstance->status.bits.op_status = CONVERTER_STATE_COMPLETE;  // set startup process COMPLETE
                 pInstance->soft_start.counter = 0;  // reset startup counter
             }
             Nop();
@@ -427,9 +427,9 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
          */
         case CONVERTER_STATE_COMPLETE:
 
-            if(!pInstance->status.flags.autorun){
-                if(!pInstance->status.flags.enabled)
-                { pInstance->status.flags.op_status = CONVERTER_STATE_RESET; } // Always Auto-Clear GO bit
+            if(!pInstance->status.bits.autorun){
+                if(!pInstance->status.bits.enabled)
+                { pInstance->status.bits.op_status = CONVERTER_STATE_RESET; } // Always Auto-Clear GO bit
             }
                 
             /*!Runtime Reference Tuning
@@ -442,15 +442,15 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
              * the ramp up/down is complete.
              * =================================================================================*/
 
-            if((pInstance->data.v_ref != pInstance->v_loop.reference) && (!pInstance->status.flags.busy))
+            if((pInstance->data.v_ref != pInstance->v_loop.reference) && (!pInstance->status.bits.busy))
             {
                 // Set the BUSY bit indicating a delay/ramp period being executed
-                pInstance->status.flags.busy = true;
+                pInstance->status.bits.busy = true;
                 
                 // New reference value is less than controller reference value => ramp down
                 if(pInstance->data.v_ref < pInstance->v_loop.reference){
                     // decrement reference until new reference level is reached
-                    pInstance->status.flags.tune_dir = CONVERTER_RAMP_DIR_DOWN; // set RAMP_DOWN flag
+                    pInstance->status.bits.tune_dir = CONVERTER_RAMP_DIR_DOWN; // set RAMP_DOWN flag
                     pInstance->v_loop.reference -= pInstance->soft_start.ramp_v_ref_increment; // decrement reference
                     if(pInstance->v_loop.reference < pInstance->data.v_ref) { // check if ramp is complete
                         pInstance->v_loop.reference = pInstance->data.v_ref; // clamp reference level to setting
@@ -460,7 +460,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
                 // New reference value is greater than controller reference value => ramp up
                 else if(pInstance->data.v_ref > pInstance->v_loop.reference) {
                     // increment reference until new reference level is reached
-                    pInstance->status.flags.tune_dir = CONVERTER_RAMP_DIR_UP; // set RAMP_UP flag
+                    pInstance->status.bits.tune_dir = CONVERTER_RAMP_DIR_UP; // set RAMP_UP flag
                     pInstance->v_loop.reference += pInstance->soft_start.ramp_v_ref_increment; // increment reference
                     if(pInstance->v_loop.reference > pInstance->data.v_ref){ // check if ramp is complete
                         pInstance->v_loop.reference = pInstance->data.v_ref; // clamp reference level to setting
@@ -470,7 +470,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             }
             else{
                 // Clear the BUSY bit indicating a delay/ramp period being executed
-                pInstance->status.flags.busy = false;
+                pInstance->status.bits.busy = false;
 
             }
             
@@ -485,26 +485,26 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
             
             c4SWBB_shut_down(pInstance);
             
-            pInstance->status.flags.busy = false; // Clear the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.flags.fault_active = true;
-            pInstance->status.flags.GO = false;
-            pInstance->status.flags.op_status = CONVERTER_STATE_STANDBY;
+            pInstance->status.bits.busy = false; // Clear the BUSY bit indicating a delay/ramp period being executed
+            pInstance->status.bits.fault_active = true;
+            pInstance->status.bits.GO = false;
+            pInstance->status.bits.op_status = CONVERTER_STATE_STANDBY;
             
             break;
     }
 
     //----------------------------------------------------------
     /*!Power Converter Autorun Function
-     * When the control bit c4swbb.status.flags.auto_start is set, the status bits 'enabled' 
+     * When the control bit c4swbb.status.bits.auto_start is set, the status bits 'enabled' 
      * and 'GO' are automatically set and continuously enforced to ensure the power supply
      * will enter RAMP UP from STANDBY without the need for user code intervention. */
     // 
-    if( (pInstance->status.flags.autorun == true) && (pInstance->status.flags.fault_active == false)) {
-        pInstance->status.flags.enabled = true;  // Auto-run power converter
-        pInstance->status.flags.GO = true;       // Auto-Kick-off power converter
+    if( (pInstance->status.bits.autorun == true) && (pInstance->status.bits.fault_active == false)) {
+        pInstance->status.bits.enabled = true;  // Auto-run power converter
+        pInstance->status.bits.GO = true;       // Auto-Kick-off power converter
     }
     else { 
-        pInstance->status.flags.GO = false;
+        pInstance->status.bits.GO = false;
     }
     //-- end of auto-start enforcement -------------------------
 
@@ -625,15 +625,15 @@ volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t
     pInstance->data.temp = 0;   // reset converter board temperature buffer
     
     // Reset controller status
-    pInstance->status.flags.power_source_detected = false; // reset POWER_SOURCE_DETECTED flag bit
-    pInstance->status.flags.adc_active = false; // reset ADC_ACTIVE flag bit
-    pInstance->status.flags.pwm_active = false; // reset PWM_ACTIVE flag bit
-    pInstance->status.flags.tune_dir = 0; // reset voltage tune-in direction to UP
-    pInstance->status.flags.fault_active = false; // reset power controller global fault flag bit
-    pInstance->status.flags.GO = 0; // reset GO bit
-    pInstance->status.flags.autorun = false; // clear AUTORUN bit
-    pInstance->status.flags.enabled = false; // disable power controller
-    pInstance->status.flags.op_status = CONVERTER_STATE_INITIALIZE; // reset state machine
+    pInstance->status.bits.power_source_detected = false; // reset POWER_SOURCE_DETECTED flag bit
+    pInstance->status.bits.adc_active = false; // reset ADC_ACTIVE flag bit
+    pInstance->status.bits.pwm_active = false; // reset PWM_ACTIVE flag bit
+    pInstance->status.bits.tune_dir = 0; // reset voltage tune-in direction to UP
+    pInstance->status.bits.fault_active = false; // reset power controller global fault flag bit
+    pInstance->status.bits.GO = 0; // reset GO bit
+    pInstance->status.bits.autorun = false; // clear AUTORUN bit
+    pInstance->status.bits.enabled = false; // disable power controller
+    pInstance->status.bits.op_status = CONVERTER_STATE_INITIALIZE; // reset state machine
     
     return(1);
 }
@@ -720,15 +720,15 @@ volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
     pInstance->data.temp = 0;   // reset converter board temperature buffer
     
     // Reset controller status
-    pInstance->status.flags.power_source_detected = false; // reset POWER_SOURCE_DETECTED flag bit
-    pInstance->status.flags.adc_active = false; // reset ADC_ACTIVE flag bit
-    pInstance->status.flags.pwm_active = false; // reset PWM_ACTIVE flag bit
-    pInstance->status.flags.tune_dir = 0; // reset voltage tune-in direction to UP
-    pInstance->status.flags.fault_active = false; // reset power controller global fault flag bit
-    pInstance->status.flags.GO = 0; // reset GO bit
-    pInstance->status.flags.autorun = false; // clear AUTORUN bit
-    pInstance->status.flags.enabled = false; // disable power controller
-    pInstance->status.flags.op_status = CONVERTER_STATE_INITIALIZE; // reset state machine
+    pInstance->status.bits.power_source_detected = false; // reset POWER_SOURCE_DETECTED flag bit
+    pInstance->status.bits.adc_active = false; // reset ADC_ACTIVE flag bit
+    pInstance->status.bits.pwm_active = false; // reset PWM_ACTIVE flag bit
+    pInstance->status.bits.tune_dir = 0; // reset voltage tune-in direction to UP
+    pInstance->status.bits.fault_active = false; // reset power controller global fault flag bit
+    pInstance->status.bits.GO = 0; // reset GO bit
+    pInstance->status.bits.autorun = false; // clear AUTORUN bit
+    pInstance->status.bits.enabled = false; // disable power controller
+    pInstance->status.bits.op_status = CONVERTER_STATE_INITIALIZE; // reset state machine
     
     return(1);
 }
