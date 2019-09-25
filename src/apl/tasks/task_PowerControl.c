@@ -15,10 +15,12 @@ volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;    // USB PD Port A
 volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;    // USB PD Port B
 
 // PRIVATE FUNCTION PROTOTYPES
-volatile uint16_t init_ADC(void);
-volatile uint16_t init_ISR(void);
 volatile uint16_t init_USBport_1(void);
 volatile uint16_t init_USBport_2(void);
+
+volatile uint16_t init_ADC(void);
+volatile uint16_t init_ISR_USBport_1(void);
+volatile uint16_t init_ISR_USBport_2(void);
 
 /*!exec_PowerControl
  *  ******************************************************************************************************
@@ -130,7 +132,7 @@ inline volatile uint16_t init_ADC(void) {
     return(fres);
 }
 
-inline volatile uint16_t init_ISR(void) {
+inline volatile uint16_t init_ISR_USBport_1(void) {
 
     volatile uint16_t fres = 1;
 
@@ -156,6 +158,13 @@ inline volatile uint16_t init_ISR(void) {
     FB_VBAT_ADC_IP = c4swbb_1.feedback.ad_vin.interrupt_priority; // Set interrupt priority
     FB_VBAT_ADC_IF = 0;  // Clear interrupt flag bit
     FB_VBAT_ADC_IE = c4swbb_1.feedback.ad_vin.interrupt_enable; // Enable/Disable interrupt service routine
+
+    return(fres);
+}
+
+inline volatile uint16_t init_ISR_USBport_2(void) {
+
+    volatile uint16_t fres = 1;
 
     // Configure ADC input pins and interrupts
     FB_VOUT2_INIT_ANALOG; // Output voltage converter #1 feedback pin
@@ -184,6 +193,7 @@ inline volatile uint16_t init_ISR(void) {
     
     return(fres);
 }
+
 
 inline volatile uint16_t init_USBport_1(void) {
 
