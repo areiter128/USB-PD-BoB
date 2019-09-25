@@ -35,7 +35,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
+// (no user settings available)
 
 #endif	/* _DEVICE_CONFIGURATION_OSCILLATOR_H_ */
 
