@@ -36,13 +36,15 @@
  * ***********************************************************************************************/
 
 typedef enum {
+
+    FLTOBJ_CPU_FAILURE_ERROR, // The CPU trap handler has detected a critical CPU failure error
     FLTOBJ_CPU_LOAD_OVERRUN, // CPU load counter exceeds task period => not enough bandwidth
     FLTOBJ_TASK_EXECUTION_FAILURE, // Fault object Task Execution Failure
     FLTOBJ_TASK_TIME_QUOTA_VIOLATION, // Fault object Task Time Quota Violation
         
-    FLTOBJ_POWER_SOURCE_FAILURE,
-    FLTOBJ_POWER_CONTROL_FAILURE_PORT_A,
-    FLTOBJ_POWER_CONTROL_FAILURE_PORT_B
+    FLTOBJ_POWER_SOURCE_FAILURE, // Input voltage is out of range preventing DC/DC converters to run
+    FLTOBJ_POWER_CONTROL_FAILURE_PORT_A, // A critical fault was detected in DC/DC converter of port A
+    FLTOBJ_POWER_CONTROL_FAILURE_PORT_B // A critical fault was detected in DC/DC converter of port B
 //    FLTOBJ_SOFT_START, // Fault object Soft-Start Failure
         
 //    FLTOBJ_UVLO, // Fault object Under Voltage Lock-Out

@@ -54,6 +54,7 @@
  * ***********************************************************************************************/
 
 // Fault objects for firmware modules and task manager flow control
+volatile FAULT_OBJECT_t fltobj_CPUFailure;
 volatile FAULT_OBJECT_t fltobj_CPULoadOverrun;
 volatile FAULT_OBJECT_t fltobj_TaskExecutionFailure;
 volatile FAULT_OBJECT_t fltobj_TaskTimeQuotaViolation;
@@ -72,14 +73,15 @@ volatile FAULT_OBJECT_t fltobj_PowerControlFailure_PortB;
  * throughout the firmware needs to be initialized by a separate initialization routine.
  * ***********************************************************************************************/
 
-inline uint16_t init_CPULoadOverrunFaultObject(void);
-inline uint16_t init_TaskExecutionFaultObject(void);
-inline uint16_t init_TaskTimeQuotaViolationFaultObject(void);
+inline volatile uint16_t init_CPUFailureObject(void);
+inline volatile uint16_t init_CPULoadOverrunFaultObject(void);
+inline volatile uint16_t init_TaskExecutionFaultObject(void);
+inline volatile uint16_t init_TaskTimeQuotaViolationFaultObject(void);
 
     // user defined fault objects
-inline uint16_t init_PowerSourceFaultObject(void);
-inline uint16_t init_PowerControlFaultObject_PortA(void);
-inline uint16_t init_PowerControlFaultObject_PortB(void);
+inline volatile uint16_t init_PowerSourceFaultObject(void);
+inline volatile uint16_t init_PowerControlFaultObject_PortA(void);
+inline volatile uint16_t init_PowerControlFaultObject_PortB(void);
 
 /*!fault_object_list[]
  * ***********************************************************************************************
@@ -92,14 +94,15 @@ inline uint16_t init_PowerControlFaultObject_PortB(void);
 volatile FAULT_OBJECT_t *fault_object_list[] = {
     
     // fault objects for firmware modules and task manager flow
-    &fltobj_CPULoadOverrun,    // The CPU meter indicated an overrun condition (no free process time left))
-    &fltobj_TaskExecutionFailure,   // a task returned an error code ("no success")
-    &fltobj_TaskTimeQuotaViolation, // a time execution took longer than specified
+    &fltobj_CPUFailure,        // The CPU trap handler has detected a critical address error
+    &fltobj_CPULoadOverrun,         // The CPU meter indicated an overrun condition (no free process time left))
+    &fltobj_TaskExecutionFailure,   // A user task returned an error code ("no success")
+    &fltobj_TaskTimeQuotaViolation, // A user time execution took longer than specified
     
     // user defined fault objects
-    &fltobj_PowerSourceFailure, 
-    &fltobj_PowerControlFailure_PortA, 
-    &fltobj_PowerControlFailure_PortB, 
+    &fltobj_PowerSourceFailure,         // Input voltage is out of range preventing DC/DC converters to run
+    &fltobj_PowerControlFailure_PortA,  // A critical fault was detected in DC/DC converter of port A
+    &fltobj_PowerControlFailure_PortB   // A critical fault was detected in DC/DC converter of port B 
 
 };
 volatile uint16_t fltobj_list_size = (sizeof(fault_object_list)/sizeof(fault_object_list[0]));
@@ -112,11 +115,12 @@ volatile uint16_t fltobj_list_size = (sizeof(fault_object_list)/sizeof(fault_obj
  * status information, fault classes and user fault actions.
  * ***********************************************************************************************/
 
-volatile uint16_t init_FaultObjects(void)
+inline volatile uint16_t init_FaultObjects(void)
 {
-    volatile uint16_t fres = 0;
+    volatile uint16_t fres = 1;
 
-    fres = init_CPULoadOverrunFaultObject();
+    fres &= init_CPUFailureObject();
+    fres &= init_CPULoadOverrunFaultObject();
     fres &= init_TaskExecutionFaultObject();
     fres &= init_TaskTimeQuotaViolationFaultObject();
     
@@ -134,6 +138,56 @@ volatile uint16_t init_FaultObjects(void)
     
 }
 
+/*!init_CPUFailure
+ * ***********************************************************************************************
+ * Description:
+ * The fltobj_CPUFailure is initialized here. This fault detects conditions which enforces a 
+ * CPU RESET by software. The common fault handler will monitor the traplog object using 
+ * a bit mask defining all traps which will initiate the software-initiated Warm CPU Reset.
+ * ***********************************************************************************************/
+
+inline volatile uint16_t init_CPUFailureObject(void) 
+{
+    volatile uint16_t fres = 1;
+    
+    // Configuring the CPU Address Error fault object
+
+    // specify the target value/register to be monitored
+    fltobj_CPUFailure.source_object = &traplog.status.value; // monitoring the CPU traplog status
+    fltobj_CPUFailure.object_bit_mask = FAULT_OBJECT_CPU_RESET_TRIGGER_BIT_MASK;
+    fltobj_CPUFailure.error_code = (uint32_t)FLTOBJ_CPU_FAILURE_ERROR;
+    fltobj_CPUFailure.id = (uint16_t)FLTOBJ_CPU_FAILURE_ERROR;
+    
+    // configuring the trip and reset levels as well as trip and reset event filter setting
+    fltobj_CPUFailure.criteria.counter = 0;      // Set/reset fault counter
+    fltobj_CPUFailure.criteria.fault_ratio = FAULT_LEVEL_EQUAL;
+    fltobj_CPUFailure.criteria.trip_level = 1;   // Set/reset trip level value
+    fltobj_CPUFailure.criteria.trip_cnt_threshold = 1; // Set/reset number of successive trips before triggering fault event
+    fltobj_CPUFailure.criteria.reset_level = 1;  // Set/reset fault release level value
+    fltobj_CPUFailure.criteria.reset_cnt_threshold = 1; // Set/reset number of successive resets before triggering fault release
+    
+    // specifying fault class, fault level and enable/disable status
+    fltobj_CPUFailure.classes.flags.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
+    fltobj_CPUFailure.classes.flags.warning = 0;  // Set =1 if this fault object triggers a warning fault condition response
+    fltobj_CPUFailure.classes.flags.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
+    fltobj_CPUFailure.classes.flags.catastrophic = 1; // Set =1 if this fault object triggers a catastrophic fault condition response
+
+    fltobj_CPUFailure.classes.flags.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
+    fltobj_CPUFailure.user_fault_action = &Application_reset; // Set =1 if this fault object triggers a user-defined fault condition response
+    fltobj_CPUFailure.user_fault_reset = 0; // Set =1 if this fault object triggers a user-defined fault condition response
+        
+    fltobj_CPUFailure.status.flags.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
+    fltobj_CPUFailure.status.flags.fltlvlsw = 1; // Set =1 if this fault condition is software-level fault condition
+    fltobj_CPUFailure.status.flags.fltlvlsi = 1; // Set =1 if this fault condition is silicon-level fault condition
+    fltobj_CPUFailure.status.flags.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
+
+    fltobj_CPUFailure.status.flags.fltstat = 1; // Set/ret fault condition as present/active
+    fltobj_CPUFailure.status.flags.fltactive = 1; // Set/reset fault condition as present/active
+    fltobj_CPUFailure.status.flags.fltchken = 1; // Enable/disable fault check
+
+    return(fres);
+}
+
 /*!init_CPULoadOverrunFaultObject
  * ***********************************************************************************************
  * Description:
@@ -142,7 +196,7 @@ volatile uint16_t init_FaultObjects(void)
  * time left.
  * ***********************************************************************************************/
 
-inline uint16_t init_CPULoadOverrunFaultObject(void)
+inline volatile uint16_t init_CPULoadOverrunFaultObject(void)
 {
     // Configuring the CPU Load Overrun fault object
 
@@ -191,7 +245,7 @@ inline uint16_t init_CPULoadOverrunFaultObject(void)
  * user defined task called by the main scheduler returns a failure flag
  * ***********************************************************************************************/
 
-inline uint16_t init_TaskExecutionFaultObject(void)
+inline volatile uint16_t init_TaskExecutionFaultObject(void)
 {
     // Configuring the Task Execution Failure fault object
 
@@ -240,7 +294,7 @@ inline uint16_t init_TaskExecutionFaultObject(void)
  * maximum time quota defined within the task manager data structure.
  * ***********************************************************************************************/
 
-inline uint16_t init_TaskTimeQuotaViolationFaultObject(void)
+inline volatile uint16_t init_TaskTimeQuotaViolationFaultObject(void)
 {
     // Configuring the Task Time Quota Violation fault object
     fltobj_TaskTimeQuotaViolation.source_object = &task_mgr.task_time_ctrl.maximum;
@@ -293,7 +347,7 @@ inline uint16_t init_TaskTimeQuotaViolationFaultObject(void)
  * and need to declare the user function used to shut-down and restart the power supplies.
  */
 
-inline uint16_t init_PowerSourceFaultObject(void)
+inline volatile uint16_t init_PowerSourceFaultObject(void)
 {
     // Configuring the Task Time Quota Violation fault object
     
@@ -341,7 +395,7 @@ inline uint16_t init_PowerSourceFaultObject(void)
  * too much for too long.
  * ***********************************************************************************************/
 
-inline uint16_t init_PowerControlFaultObject_PortA(void)
+inline volatile uint16_t init_PowerControlFaultObject_PortA(void)
 {
     // Configuring the Task Time Quota Violation fault object
     
@@ -391,7 +445,7 @@ inline uint16_t init_PowerControlFaultObject_PortA(void)
  * too much for too long.
  * ***********************************************************************************************/
 
-inline uint16_t init_PowerControlFaultObject_PortB(void)
+inline volatile uint16_t init_PowerControlFaultObject_PortB(void)
 {
     // Configuring the Task Time Quota Violation fault object
     
