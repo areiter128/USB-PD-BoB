@@ -383,79 +383,40 @@ inline volatile uint16_t init_USBport_2(void) {
     
 }
 
-
-void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_IOUT2_ADC_Interrupt ( void )
+void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_VOUT1_ADC_Interrupt ( void )
 {
-    static volatile uint16_t counter = 0;
-    static volatile uint16_t accADCAN9 =0;
-    volatile uint16_t valADCAN9, avgADCAN9;
-    
-    valADCAN9  = ADCBUF9;   // Read the ADC value from the ADCBUF (ADSTATLbits.AN9RDY is cleared at the same time)
-    
-    if(++counter == 8){
-        
-        accADCAN9 += valADCAN9;
-        avgADCAN9  = accADCAN9 >> 3;
-        
-        if (avgADCAN9 >= IOUT_4SWBB_UTH_CONV1) {
-            // Enable PWM2 
-            hspwm_ovr_release(BOOSTH1_PGx_CHANNEL);
-            
-            PG2CONLbits.ON = 0b1;           // PWM2 Module is enabled
-//            UTH_ADCAN9_TRIPPED  = 1; 
-//            LTH_ADCAN9_TRIPPED  = 0;
-        }
-        if (avgADCAN9 <= IOUT_4SWBB_LTH_CONV1) {
-            // Disable PWM2 
-            PG2CONLbits.ON      = 0b0;     // PWM2 Module is disabled 
-//            UTH_ADCAN9_TRIPPED  = 0; 
-//            LTH_ADCAN9_TRIPPED  = 1;
-        }
-        counter = 0;
-        accADCAN9 = 0;
-    } 
-    else {
-        accADCAN9 += valADCAN9;
-    }
-    FB_IOUT2_ADC_IF = 0;  // Clear the ADCAN9 interrupt flag 
+    cha_vloop_Update(&cha_vloop);
+    c4swbb_1.status.bits.adc_active = true;
+    c4swbb_1.data.v_out = FB_VOUT1_ADCBUF;
+    c4swbb_1.data.v_in = FB_VBAT_ADCBUF;
+    FB_VOUT1_ADC_IF = 0;  // Clear the interrupt flag 
 }
 
 void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_IOUT1_ADC_Interrupt ( void )
 {
-    static volatile uint16_t counter = 0;
-    static volatile uint16_t accADCAN18 =0;
-    volatile uint16_t valADCAN18, avgADCAN18;
-   
-    valADCAN18  = ADCBUF18;   // Read the ADC value from the ADCBUF (ADSTATLbits.AN18RDY is cleared at the same time)
-    
-    if(++counter == 8){
-        accADCAN18 += valADCAN18;
-        avgADCAN18  = accADCAN18 >> 3;
-        
-        if (avgADCAN18 >= IOUT_4SWBB_UTH_CONV2) {
-            // Enable PWM7 outputs
-            hspwm_ovr_release(BOOSTH1_PGx_CHANNEL);
-            
-// Remove:            PG7CONLbits.ON = 0b1;           // PWM7 Module is enabled
-// Remove:            UTH_ADCAN18_TRIPPED = 1; 
-// Remove:            LTH_ADCAN18_TRIPPED = 0; 
-        }
-        if (avgADCAN18 <= IOUT_4SWBB_LTH_CONV2) {
-            // Disable PWM7 outputs
-            hspwm_ovr_hold(BOOSTH1_PGx_CHANNEL);
+    cha_iloop_Update(&cha_iloop);
+    c4swbb_1.status.bits.adc_active = true;
+    c4swbb_1.data.i_out = FB_IOUT1_ADCBUF;
+    c4swbb_1.data.temp = FB_TEMP1_ADCBUF;
+    FB_IOUT1_ADC_IF = 0;  // Clear the interrupt flag 
+}
 
-// Remove:            PG7CONLbits.ON      = 0b0;     // PWM7 Module is disabled 
-// Remove:            UTH_ADCAN18_TRIPPED = 0; 
-// Remove:            LTH_ADCAN18_TRIPPED = 1; 
-        }
-        
-        counter = 0;
-        accADCAN18 = 0;
-    } 
-    else {
-        accADCAN18 += valADCAN18;
-    }
-    FB_IOUT1_ADC_IF = 0;  // Clear the ADCAN18 interrupt flag 
+void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_VOUT2_ADC_Interrupt ( void )
+{
+    chb_vloop_Update(&chb_vloop);
+    c4swbb_2.status.bits.adc_active = true;
+    c4swbb_2.data.v_out = FB_VOUT2_ADCBUF;
+    c4swbb_2.data.v_in = FB_VBAT_ADCBUF;
+    FB_VOUT2_ADC_IF = 0;  // Clear the interrupt flag 
+}
+
+void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_IOUT2_ADC_Interrupt ( void )
+{
+    chb_iloop_Update(&chb_iloop);
+    c4swbb_2.status.bits.adc_active = true;
+    c4swbb_2.data.i_out = FB_IOUT2_ADCBUF;
+    c4swbb_2.data.temp = FB_TEMP2_ADCBUF;
+    FB_IOUT2_ADC_IF = 0;  // Clear the interrupt flag 
 }
 
 
