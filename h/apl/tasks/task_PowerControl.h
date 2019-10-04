@@ -46,7 +46,6 @@
 #include "apl/resources/chb_vloop.h"        // Voltage Control Loop library header of USB Port 2
 
 #include "apl/resources/c4swbb_control.h"   // 4-Switch Buck/Boost Power Control State Machine Header
-//#include "apl/resources/c4swbb_pconfig.h"   // 4-Switch Buck/Boost Power Control Peripheral Configuration Header
 
 #ifdef	__cplusplus
 extern "C" {
@@ -54,8 +53,8 @@ extern "C" {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_1;
-    extern volatile C4SWBB_POWER_CONTROLLER_t c4swbb_2;
+    extern volatile C4SWBB_PWRCTRL_t c4swbb_1;
+    extern volatile C4SWBB_PWRCTRL_t c4swbb_2;
 
     // Public function prototypes
     extern volatile uint16_t init_PowerControl(void);
