@@ -55,6 +55,28 @@ extern "C" {
  * 
  * **********************************************************************************************/
 
+/* PWM MODULE BASE REGISTERS */
+    
+/*!PCLKCON: PWM CLOCK CONTROL REGISTER
+
+    bit 15 HRRDY: High-Resolution Ready bit
+    bit 14 HRERR: High-Resolution Error bit
+    bit 13-9 Unimplemented: Read as ?0?
+    bit 8 LOCK: Lock bit(1)
+    bit 7-6 Unimplemented: Read as ?0?
+    bit 5-4 DIVSEL<1:0>: PWM Clock Divider Selection bits
+    bit 3-2 Unimplemented: Read as ?0?
+    bit 1-0 MCLKSEL<1:0>: PWM Master Clock Selection bits(2)
+ */
+    
+#define C4SWBB_PWMCFG_PCLKCON   (   REG_PCLKCON_HRRDY_WAIT | \
+                                    REG_PCLKCON_HRERR_NO_ERROR | \
+                                    REG_PCLKCON_LOCK_UNLOCKED | \
+                                    REG_PCLKCON_DIVSEL_DIV_2 | \
+                                    REG_PCLKCON_MCLKSEL_AFPLLO \
+                                )   // 0b0000000000000011
+    
+    
 /* BUCK LEG */
 
 /*!PGxCONL: PWM GENERATOR x CONTROL REGISTER LOW
