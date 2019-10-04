@@ -162,8 +162,8 @@ typedef struct {
     /* Active task queue properties */
     volatile uint16_t exec_task_id; // Main task ID from task id definition table
     volatile uint16_t *task_queue; // Pointer to the task queue (lookup table of task flow combinations)
-    volatile uint16_t task_queue_ubound; // Number of tasks in the current queue (1-n))
-    volatile uint16_t task_queue_tick_index; // Recent task queue tick counter
+    volatile uint16_t task_queue_tick_index; // Most recent index of the task queue element to be executed 
+    volatile uint16_t task_queue_ubound; // Number of tasks in the current queue (n-1)
 
     /* Settings for task scheduler timer */
     volatile uint16_t task_timer_index; // specifies the timer used for the task manager (e.g. 1 for Timer1)
