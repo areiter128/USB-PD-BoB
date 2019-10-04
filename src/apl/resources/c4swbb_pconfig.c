@@ -9,6 +9,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "mcal/mcal.h"
+#include "apl/resources/c4swbb_control.h" 
 #include "apl/resources/c4swbb_pconfig.h"   // 4-Switch Buck/Boost Power Control State Machine Header
 
 
@@ -72,6 +74,9 @@ volatile uint16_t c4swbb_pwm_module_initialize(volatile C4SWBB_PWRCTRL_t* pInsta
     pmod_cfg.PWMEVTD.value = 0; // Clear PWM event output control register A
     pmod_cfg.PWMEVTE.value = 0; // Clear PWM event output control register A
     pmod_cfg.PWMEVTF.value = 0; // Clear PWM event output control register A
+    
+    // Load PWM configuration defaults from header file
+    
     
     // Set user defined settings
     pmod_cfg.MPER.value = pInstance->buck_leg.period;
@@ -196,7 +201,22 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_PWRCTRL_t* pI
     
 }
 
-volatile uint16_t c4swbb_pwm_enable(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+/*!c4swbb_pwm_enable()
+ * *****************************************************************************************************
+ * Summary:
+ * Enables both PWM generators of 4-switch buck/boost controller buck and boost leg
+ *
+ * Parameters: 
+ *  volatile C4SWBB_POWER_CONTROLLER_t* pInstance
+ *
+ * Description:
+ * The 4-switch buck boost converter uses two half-bridges to convert power from input to output.
+ * Both PWM generators are enabled by this function while the PWM outputs are kept inactive in 
+ * override mode. Please use function c4swbb_pwm_release() to enable the PWM outputs synchronously.
+ * 
+ * *****************************************************************************************************/
+
+volatile uint16_t c4swbb_pwm_enable(volatile C4SWBB_PWRCTRL_t* pInstance) {
 
     volatile uint16_t fres = 1;
     
@@ -204,6 +224,7 @@ volatile uint16_t c4swbb_pwm_enable(volatile C4SWBB_POWER_CONTROLLER_t* pInstanc
     if(pInstance == NULL) { return(0); }
 
     // Enable PWM channels of buck and boost leg
+    fres &= c4swbb_pwm_hold(pInstance);
     fres &= hspwm_enable_pwm(pInstance->buck_leg.pwm_instance, true);
     fres &= hspwm_enable_pwm(pInstance->boost_leg.pwm_instance, true);
     
@@ -211,7 +232,21 @@ volatile uint16_t c4swbb_pwm_enable(volatile C4SWBB_POWER_CONTROLLER_t* pInstanc
     
 }
 
-volatile uint16_t c4swbb_pwm_disable(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+/*!c4swbb_pwm_disable()
+ * *****************************************************************************************************
+ * Summary:
+ * Disables both PWM generators of 4-switch buck/boost controller buck and boost leg
+ *
+ * Parameters: 
+ *  volatile C4SWBB_POWER_CONTROLLER_t* pInstance
+ *
+ * Description:
+ * The 4-switch buck boost converter uses two half-bridges to convert power from input to output.
+ * Both PWM generators are disabled synchronously.
+ * 
+ * *****************************************************************************************************/
+
+volatile uint16_t c4swbb_pwm_disable(volatile C4SWBB_PWRCTRL_t* pInstance) {
     
     volatile uint16_t fres = 1;
     
@@ -227,7 +262,23 @@ volatile uint16_t c4swbb_pwm_disable(volatile C4SWBB_POWER_CONTROLLER_t* pInstan
     
 }
 
-volatile uint16_t c4swbb_pwm_hold(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+/*!c4swbb_pwm_hold()
+ * *****************************************************************************************************
+ * Summary:
+ * Disables both PWM generator outputs of 4-switch buck/boost controller buck and boost leg
+ *
+ * Parameters: 
+ *  volatile C4SWBB_POWER_CONTROLLER_t* pInstance
+ *
+ * Description:
+ * The 4-switch buck boost converter uses two half-bridges to convert power from input to output.
+ * Both PWM generator outputs are disabled here synchronously while the PWM generator itself keeps
+ * running. The turn-off event occurs at the end of an active switching cycle. The output pins will 
+ * be kept in the state defined by the OVRDAT override bits.
+ * 
+ * *****************************************************************************************************/
+
+volatile uint16_t c4swbb_pwm_hold(volatile C4SWBB_PWRCTRL_t* pInstance) {
     
     volatile uint16_t fres = 1;
     
@@ -242,7 +293,23 @@ volatile uint16_t c4swbb_pwm_hold(volatile C4SWBB_POWER_CONTROLLER_t* pInstance)
     
 }
 
-volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+/*!c4swbb_pwm_release()
+ * *****************************************************************************************************
+ * Summary:
+ * Enables both PWM generator outputs of 4-switch buck/boost controller buck and boost leg
+ *
+ * Parameters: 
+ *  volatile C4SWBB_POWER_CONTROLLER_t* pInstance
+ *
+ * Description:
+ * The 4-switch buck boost converter uses two half-bridges to convert power from input to output.
+ * Both PWM generator outputs are enabled here synchronously. As the PWM generator itself keeps
+ * running when kept in hold, the turn-on event occurs at the end of an active switching cycle. 
+ * The output pins will turn on synchronously. 
+ * 
+ * *****************************************************************************************************/
+
+volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_PWRCTRL_t* pInstance) {
     
     volatile uint16_t fres = 1;
     
@@ -257,143 +324,255 @@ volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_POWER_CONTROLLER_t* pInstan
     
 }
 
-volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
-    
+/*!c4swbb_adc_module_initialize()
+ * *****************************************************************************************************
+ * Summary:
+ * Initializes the ADC Module with default settings for maximum performance
+ *
+ * Parameters: 
+ *  (none)
+ *
+ * Description:
+ * The 4-switch buck boost converter power controller supports up to four signals while running: 
+ * output voltage, output current, input voltage and temperature. The main control loop is based on 
+ * output voltage and output current. Input voltage is incorporated to optimize soft-start and gain,
+ * temperature is used for power balancing and protection. All four signals are triggered by the 
+ * same PWM source and sampled at different ADC inputs. 
+ * 
+ * The ADC initialization covers basic configurations like data format, clock sources and dividers
+ * as well as specific configurations for ADC cores. These settings are general, basic settings
+ * and not related to specific analog inputs. The standard configuration set here sets up the 
+ * ADC module and ADC cores for maximum performance.
+ * 
+ * The basic configuration of the ADC module is initialized here while the individual ADC inputs 
+ * are set by function c4swbb_adc_inputs_initialize(),
+ * 
+ * *****************************************************************************************************/
+
+volatile uint16_t c4swbb_adc_module_initialize(void) {
+
     volatile uint16_t fres = 1;
-    volatile uint16_t i = 0;
+    volatile HSADC_ADMODCFG_t admod_cfg;
     
-    volatile HSADC_MODULE_CONFIG_t adcmod_cfg;
-    volatile HSADC_ADCOREx_CONFIG_t adcore_cfg;
-
-    // Load configuration preset from header file
-    adcmod_cfg.ADCON1.value = ((((uint32_t)C4SWBB_ADC_ADCON1H) << 16) | ((uint32_t)C4SWBB_ADC_ADCON1L));
-    adcmod_cfg.ADCON2.value = ((((uint32_t)C4SWBB_ADC_ADCON2H) << 16) | ((uint32_t)C4SWBB_ADC_ADCON2L));
-    adcmod_cfg.ADCON3.value = ((((uint32_t)C4SWBB_ADC_ADCON3H) << 16) | ((uint32_t)C4SWBB_ADC_ADCON3L));
-    #if defined (ADCON4L)
-    adcmod_cfg.ADCON4.value = ((((uint32_t)C4SWBB_ADC_ADCON4H) << 16) | ((uint32_t)C4SWBB_ADC_ADCON4L));
-    #endif
-    adcmod_cfg.ADCON5.value = ((((uint32_t)C4SWBB_ADC_ADCON5H) << 16) | ((uint32_t)C4SWBB_ADC_ADCON5L));
+    // Initialize ADC Converter
+    // ========================
+    // The ADC channels configured here are covering sampling of input voltage, output voltage, 
+    // output current and temperature of each converter. All other ADC configurations for other 
+    // functions outside the power control scope need to be done elsewhere
     
-    fres &= hsadc_adc_module_initialize(adcmod_cfg);  // Write ADC module configuration to registers
-
-    // Load configuration presets for dedicated ADC cores and shared ADC core
-    // Overwrite defaults with user settings provided in user object "pInstance"
-    if (ADC_CORE_COUNT > 1) 
-    {
-
-        adcore_cfg.config.value = ((((uint32_t)C4SWBB_ADC_ADCORExH) << 16) | ((uint32_t)C4SWBB_ADC_ADCORExL));
-
-        // Load standard configuration into all ADC cores
-        for (i=0; i<ADC_CORE_COUNT; i++) 
-        {
-            if ( (i == pInstance->feedback.ad_iout.adc_core) || 
-                 (i == pInstance->feedback.ad_temp.adc_core) ||
-                 (i == pInstance->feedback.ad_vin.adc_core)  ||
-                 (i == pInstance->feedback.ad_vout.adc_core) )
-               {
-
-                // If the respective ADC core is used, configure and enable it
-                
-                adcore_cfg.index = i;
-                adcore_cfg.type = ADCORE_TYPE_DEDICATED;
-
-                fres &= hsadc_adc_core_initialize(adcore_cfg);  // Write ADC module configuration to registers
-                fres &= hsadc_adc_core_power_on(i); // Power on ADC Core x
-            }
-        }
-    }
-
-    // Check if all ADC cores are on and ready
-    fres &= hsadc_adc_cores_check_ready();
+    // Load default ADC configuration
+    admod_cfg.config.adon = ADCON1_ADON_ENABLED;
+    admod_cfg.config.adsidl = ADCON1_ADSIDL_RUN;
+    admod_cfg.config.form = ADCON1_FORM_INTEGER;
+    admod_cfg.config.ptgen = ADCON2_PTGEN_DISABLED;
+    admod_cfg.config.eien = ADCON2_EIEN_ENABLED;
+    admod_cfg.config.warmtime = ADCON5H_WARMTIME_CLK_32768;
     
+    admod_cfg.refcfg.refsel = ADCON3_REFSEL_AVDD_AVSS;
+    admod_cfg.refcfg.refcie = ADCON2_REFCIE_DISABLED;
+    admod_cfg.refcfg.refercie = ADCON2_REFERCIE_DISABLED;
+    
+    admod_cfg.swtrig.cnvchsel = ADCON3_CNVCHSEL_AN0;
+    admod_cfg.swtrig.suspcie = ADCON3_SUSPCIE_ENABLED;
+    admod_cfg.swtrig.suspend = ADCON3_SUSPEND_RUN;
+
+    admod_cfg.cores.clksel = ADCON3_CLKSEL_AFVCODIV;
+    admod_cfg.cores.clkdiv = ADCON3_CLKDIV_1;
+
+    admod_cfg.cores.shared_core.adcs = ADCORE_ADCS_DEFAULT;
+    admod_cfg.cores.shared_core.eisel = ADCORE_EISEL_8TAD;
+    admod_cfg.cores.shared_core.res = ADCORE_RES_12BIT;
+    admod_cfg.cores.shared_core.samc = ADCORE_SAMC_0010;
+    
+    admod_cfg.cores.core0.adcs = ADCORE_ADCS_DEFAULT;
+    admod_cfg.cores.core0.eisel = ADCORE_EISEL_8TAD;
+    admod_cfg.cores.core0.res = ADCORE_RES_12BIT;
+    admod_cfg.cores.core0.samc = ADCORE_SAMC_0002;
+    admod_cfg.cores.core0.samc_en = ADCON4_SAMCxEN_DISABLED;
+
+    admod_cfg.cores.core1.adcs = ADCORE_ADCS_DEFAULT;
+    admod_cfg.cores.core1.eisel = ADCORE_EISEL_8TAD;
+    admod_cfg.cores.core1.res = ADCORE_RES_12BIT;
+    admod_cfg.cores.core1.samc = ADCORE_SAMC_0002;
+    admod_cfg.cores.core1.samc_en = ADCON4_SAMCxEN_DISABLED;
+    
+    // Initialize ADC module base registers
+    fres &= hsadc_adc_module_initialize(admod_cfg);  // Write ADC module configuration to registers
+
     return(fres);
 }
 
-volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+/*!c4swbb_adc_inputs_initialize()
+ * *****************************************************************************************************
+ * Summary:
+ * Initializes the analog inputs for the four required input signals
+ *
+ * Parameters: 
+ *  volatile C4SWBB_PWRCTRL_t* pInstance
+ *
+ * Description:
+ * The 4-switch buck boost converter power controller supports up to four signals while running: 
+ * output voltage, output current, input voltage and temperature. The main control loop is based on 
+ * output voltage and output current. Input voltage is incorporated to optimize soft-start and gain,
+ * temperature is used for power balancing and protection. All four signals are triggered by the 
+ * same PWM source and sampled at different ADC inputs. 
+ * 
+ * *****************************************************************************************************/
+
+volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_PWRCTRL_t* pInstance) {
     
     volatile uint16_t fres = 1;
-    volatile HSADC_INPUT_CONFIG_t adin_cfg;
+    volatile HSADC_ADCANCFG_t adin_cfg;
 
     // -------------------------
-    // Reset/Load defaults from header file
-    adin_cfg.config.bits.early_interrupt_enable = ADEIE_ANx_DISABLED; // Always disable early interrupts
-    adin_cfg.config.bits.interrupt_enable = ADIE_ANx_DISABLED; // Always disable interrupt generation
-    adin_cfg.config.bits.trigger_mode = ADLVLTRG_ANx_EDGE; // Always set trigger to EDGE TRIGGER mode
-    adin_cfg.config.bits.trigger_source = ADTRIGx_TRGSRC_NONE; // Always clear interrupt source
+    // Reset/Load defaults from 'pconfig' header file and override these standards with 
+    // the user settings specified in pInstance.
     
-    adin_cfg.config.bits.data_mode = ANx_DATA_UNSIGNED; // Always use unsigned numbers
-    adin_cfg.config.bits.input_mode = ANx_SINGLE_ENDED; // Always use single ended ADC channels
+    // Initialize ADC input with default values
+    adin_cfg.config.early_interrupt_enable = ADEIE_ANx_DISABLED; // Always disable early interrupts
+    adin_cfg.config.interrupt_enable = ADIE_ANx_DISABLED; // Always disable interrupt generation
+    adin_cfg.config.trigger_mode = ADLVLTRG_ANx_EDGE; // Always set trigger to EDGE TRIGGER mode
+    adin_cfg.config.trigger_source = ADTRIGx_TRGSRC_NONE; // Always clear interrupt source
+    
+    adin_cfg.config.data_mode = ANx_DATA_UNSIGNED; // Always use unsigned numbers
+    adin_cfg.config.input_mode = ANx_SINGLE_ENDED; // Always use single ended ADC channels
 
     // -------------------------
     // Extract/Load VOUT user settings from controller object
-    adin_cfg.ad_input = pInstance->feedback.ad_vout.adin_no;    // Load analog input number from user object
-    adin_cfg.config.bits.data_mode = pInstance->feedback.ad_vout.signed_data; // Signed or unsigned ADC conversion result
-    adin_cfg.config.bits.input_mode = pInstance->feedback.ad_vout.differential_input; // Single-ended of differential input
+    if (pInstance->feedback.ad_vout.enable)
+    {
+        adin_cfg.ad_input = pInstance->feedback.ad_vout.adin_no;    // Load analog input number from user object
+        adin_cfg.config.data_mode = pInstance->feedback.ad_vout.signed_data; // Signed or unsigned ADC conversion result
+        adin_cfg.config.input_mode = pInstance->feedback.ad_vout.differential_input; // Single-ended or differential input
+        adin_cfg.config.core_index = pInstance->feedback.ad_vout.adc_core; // Capture ADC core connected to this analog input
+        
+        // Load analog input core assignment
+        if (pInstance->feedback.ad_vout.adc_core != (ADC_CORE_COUNT-1)) {
+            adin_cfg.config.core_assigmnment = ANx_CORE_ASSIGNMENT_DEDICATED; // Input is connected to dedicated ADC core
+        }
+        else {
+            adin_cfg.config.core_assigmnment = ANx_CORE_ASSIGNMENT_SHARED; // Input is connected to shared ADC core
+        }
 
-    // Load analog input core assignment
-    if (pInstance->feedback.ad_vout.adc_core != (ADC_CORE_COUNT-1)) {
-        adin_cfg.config.bits.core_assigmnment = ANx_CORE_ASSIGNMENT_DEDICATED; // Input is connected to dedicated ADC core
-    }
-    else {
-        adin_cfg.config.bits.core_assigmnment = ANx_CORE_ASSIGNMENT_SHARED; // Input is connected to shared ADC core
-    }
-    
-    // Set interrupt configuration
-    adin_cfg.config.bits.trigger_source = (volatile uint16_t)(pInstance->feedback.ad_vout.trigger_source);
-    adin_cfg.config.bits.early_interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vout.early_interrupt_enable);
-    adin_cfg.config.bits.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vout.interrupt_enable);
+        // Set interrupt configuration
+        adin_cfg.config.trigger_source = (volatile uint16_t)(pInstance->feedback.ad_vout.trigger_source);
+        adin_cfg.config.early_interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vout.early_interrupt_enable);
+        adin_cfg.config.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vout.interrupt_enable);
 
-    // Set output voltage ADC input configuration
-    fres &= hsadc_adc_input_initialize(adin_cfg); 
-    
+        // Set output voltage ADC input configuration
+        fres &= hsadc_adc_input_initialize(adin_cfg); 
+
+    }
+        
     // -------------------------
     // Extract/Load IOUT user settings from controller object
-    adin_cfg.ad_input = pInstance->feedback.ad_iout.adin_no;    // Load analog input number from user object
-    adin_cfg.config.bits.data_mode = pInstance->feedback.ad_iout.signed_data; // Signed or unsigned ADC conversion result
-    adin_cfg.config.bits.input_mode = pInstance->feedback.ad_iout.differential_input; // Single-ended of differential input
+    if (pInstance->feedback.ad_iout.enable)
+    {
+        adin_cfg.ad_input = pInstance->feedback.ad_iout.adin_no;    // Load analog input number from user object
+        adin_cfg.config.data_mode = pInstance->feedback.ad_iout.signed_data; // Signed or unsigned ADC conversion result
+        adin_cfg.config.input_mode = pInstance->feedback.ad_iout.differential_input; // Single-ended or differential input
+        adin_cfg.config.core_index = pInstance->feedback.ad_iout.adc_core; // Capture ADC core connected to this analog input
 
-    // Load analog input core assignment
-    if (pInstance->feedback.ad_iout.adc_core != (ADC_CORE_COUNT-1)) {
-        adin_cfg.config.bits.core_assigmnment = ANx_CORE_ASSIGNMENT_DEDICATED; // Input is connected to dedicated ADC core
-    }
-    else {
-        adin_cfg.config.bits.core_assigmnment = ANx_CORE_ASSIGNMENT_SHARED; // Input is connected to shared ADC core
+        // Load analog input core assignment
+        if (pInstance->feedback.ad_iout.adc_core != (ADC_CORE_COUNT-1)) {
+            adin_cfg.config.core_assigmnment = ANx_CORE_ASSIGNMENT_DEDICATED; // Input is connected to dedicated ADC core
+        }
+        else {
+            adin_cfg.config.core_assigmnment = ANx_CORE_ASSIGNMENT_SHARED; // Input is connected to shared ADC core
+        }
+
+        // Set interrupt configuration
+        adin_cfg.config.trigger_source = (volatile uint16_t)(pInstance->feedback.ad_iout.trigger_source);
+        adin_cfg.config.early_interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_iout.early_interrupt_enable);
+        adin_cfg.config.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_iout.interrupt_enable);
+
+        // Set output current ADC input configuration
+        fres &= hsadc_adc_input_initialize(adin_cfg); 
+    
     }
     
-    // Set interrupt configuration
-    adin_cfg.config.bits.trigger_source = (volatile uint16_t)(pInstance->feedback.ad_iout.trigger_source);
-    adin_cfg.config.bits.early_interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_iout.early_interrupt_enable);
-    adin_cfg.config.bits.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_iout.interrupt_enable);
+    // -------------------------
+    // Extract/Load VIN user settings from controller object
+    if (pInstance->feedback.ad_vin.enable)
+    {
+        adin_cfg.ad_input = pInstance->feedback.ad_vin.adin_no;    // Load analog input number from user object
+        adin_cfg.config.data_mode = pInstance->feedback.ad_vin.signed_data; // Signed or unsigned ADC conversion result
+        adin_cfg.config.input_mode = pInstance->feedback.ad_vin.differential_input; // Single-ended or differential input
+        adin_cfg.config.core_index = pInstance->feedback.ad_vin.adc_core; // Capture ADC core connected to this analog input
 
-    // Set output voltage ADC input configuration
-    fres &= hsadc_adc_input_initialize(adin_cfg); 
+        // Load analog input core assignment
+        if (pInstance->feedback.ad_vin.adc_core != (ADC_CORE_COUNT-1)) {
+            adin_cfg.config.core_assigmnment = ANx_CORE_ASSIGNMENT_DEDICATED; // Input is connected to dedicated ADC core
+        }
+        else {
+            adin_cfg.config.core_assigmnment = ANx_CORE_ASSIGNMENT_SHARED; // Input is connected to shared ADC core
+        }
+
+        // Set interrupt configuration
+        adin_cfg.config.trigger_source = (volatile uint16_t)(pInstance->feedback.ad_vin.trigger_source);
+        adin_cfg.config.early_interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vin.early_interrupt_enable);
+        adin_cfg.config.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vin.interrupt_enable);
+
+        // Set output voltage ADC input configuration
+        fres &= hsadc_adc_input_initialize(adin_cfg); 
+  
+    }
     
     // -------------------------
     // Extract/Load TEMP user settings from controller object
-    adin_cfg.ad_input = pInstance->feedback.ad_temp.adin_no;    // Load analog input number from user object
-    adin_cfg.config.bits.data_mode = pInstance->feedback.ad_temp.signed_data; // Signed or unsigned ADC conversion result
-    adin_cfg.config.bits.input_mode = pInstance->feedback.ad_temp.differential_input; // Single-ended of differential input
+    if (pInstance->feedback.ad_temp.enable)
+    {
+        adin_cfg.ad_input = pInstance->feedback.ad_temp.adin_no;    // Load analog input number from user object
+        adin_cfg.config.data_mode = pInstance->feedback.ad_temp.signed_data; // Signed or unsigned ADC conversion result
+        adin_cfg.config.input_mode = pInstance->feedback.ad_temp.differential_input; // Single-ended or differential input
+        adin_cfg.config.core_index = pInstance->feedback.ad_temp.adc_core; // Capture ADC core connected to this analog input
 
-    // Load analog input core assignment
-    if (pInstance->feedback.ad_temp.adc_core != (ADC_CORE_COUNT-1)) {
-        adin_cfg.config.bits.core_assigmnment = ANx_CORE_ASSIGNMENT_DEDICATED; // Input is connected to dedicated ADC core
-    }
-    else {
-        adin_cfg.config.bits.core_assigmnment = ANx_CORE_ASSIGNMENT_SHARED; // Input is connected to shared ADC core
+        // Load analog input core assignment
+        if (pInstance->feedback.ad_temp.adc_core != (ADC_CORE_COUNT-1)) {
+            adin_cfg.config.core_assigmnment = ANx_CORE_ASSIGNMENT_DEDICATED; // Input is connected to dedicated ADC core
+        }
+        else {
+            adin_cfg.config.core_assigmnment = ANx_CORE_ASSIGNMENT_SHARED; // Input is connected to shared ADC core
+        }
+
+        // Set interrupt configuration
+        adin_cfg.config.trigger_source = (volatile uint16_t)(pInstance->feedback.ad_temp.trigger_source);
+        adin_cfg.config.early_interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_temp.early_interrupt_enable);
+        adin_cfg.config.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_temp.interrupt_enable);
+
+        // Set temperature ADC input configuration
+        fres &= hsadc_adc_input_initialize(adin_cfg); 
+
     }
     
-    // Set interrupt configuration
-    adin_cfg.config.bits.trigger_source = (volatile uint16_t)(pInstance->feedback.ad_temp.trigger_source);
-    adin_cfg.config.bits.early_interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_temp.early_interrupt_enable);
-    adin_cfg.config.bits.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_temp.interrupt_enable);
-
-    // Set output voltage ADC input configuration
-    fres &= hsadc_adc_input_initialize(adin_cfg); 
     
     // Return Success/Failure
     return(fres);
 }
 
+/*!c4swbb_adc_enable()
+ * *****************************************************************************************************
+ * Summary:
+ * Enables the ADC module, starts the ADC cores analog inputs for the four required input signals
+ *
+ * Parameters: 
+ *  (none)
+ *
+ * Description:
+ * This function enables the ADC module, powers-up and enables the ADC cores used and waits 
+ * until all functions are acknowledged by the respective READY bits.
+ * 
+ * *****************************************************************************************************/
+
+volatile uint16_t c4swbb_adc_enable(void) {
+    
+    volatile uint16_t fres = 1;
+
+    fres &= hsadc_module_enable();
+    fres &= hsadc_adc_cores_check_ready();
+    
+    return(fres);
+}
 
 // EOF
 
