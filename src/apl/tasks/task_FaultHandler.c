@@ -73,15 +73,15 @@ volatile FAULT_OBJECT_t fltobj_PowerControlFailure_PortB;
  * throughout the firmware needs to be initialized by a separate initialization routine.
  * ***********************************************************************************************/
 
-inline volatile uint16_t init_CPUFailureObject(void);
-inline volatile uint16_t init_CPULoadOverrunFaultObject(void);
-inline volatile uint16_t init_TaskExecutionFaultObject(void);
-inline volatile uint16_t init_TaskTimeQuotaViolationFaultObject(void);
+volatile uint16_t init_CPUFailureObject(void);
+volatile uint16_t init_CPULoadOverrunFaultObject(void);
+volatile uint16_t init_TaskExecutionFaultObject(void);
+volatile uint16_t init_TaskTimeQuotaViolationFaultObject(void);
 
     // user defined fault objects
-inline volatile uint16_t init_PowerSourceFaultObject(void);
-inline volatile uint16_t init_PowerControlFaultObject_PortA(void);
-inline volatile uint16_t init_PowerControlFaultObject_PortB(void);
+volatile uint16_t init_PowerSourceFaultObject(void);
+volatile uint16_t init_PowerControlFaultObject_PortA(void);
+volatile uint16_t init_PowerControlFaultObject_PortB(void);
 
 /*!fault_object_list[]
  * ***********************************************************************************************
@@ -115,7 +115,7 @@ volatile uint16_t fltobj_list_size = (sizeof(fault_object_list)/sizeof(fault_obj
  * status information, fault classes and user fault actions.
  * ***********************************************************************************************/
 
-inline volatile uint16_t init_FaultObjects(void)
+volatile uint16_t init_FaultObjects(void)
 {
     volatile uint16_t fres = 1;
 
