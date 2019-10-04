@@ -34,7 +34,7 @@
  * 
  * *****************************************************************************************************/
 
-volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstance) {
     
     volatile uint16_t fres = 1; // buffer variable of function return value
     volatile float fdummy = 0.0; // buffer variable for control loop pre-charge calculation
@@ -527,7 +527,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t*
  * 
  * *****************************************************************************************************/
 
-volatile uint16_t c4SWBB_shut_down(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+volatile uint16_t c4SWBB_shut_down(volatile C4SWBB_PWRCTRL_t* pInstance) {
     
     volatile uint16_t fres = 1;
     
@@ -558,7 +558,7 @@ volatile uint16_t c4SWBB_shut_down(volatile C4SWBB_POWER_CONTROLLER_t* pInstance
  * 
  * *****************************************************************************************************/
 
-volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstance) {
 
     // Reset PWM settings
     pInstance->buck_leg.pwm_instance = 0; // Clear PWM instance of the buck leg
@@ -655,7 +655,7 @@ volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t
  * 
  * *****************************************************************************************************/
 
-volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance) {
+volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstance) {
 
     // Initialize PWM settings
     pInstance->buck_leg.pwm_instance = 0; // Clear PWM instance of the buck leg
