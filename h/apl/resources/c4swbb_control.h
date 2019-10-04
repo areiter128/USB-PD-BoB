@@ -201,6 +201,9 @@ typedef struct {
  * 
  * *************************************************************************************************** */
 typedef struct {
+    volatile bool enable ;       // Flag allowing to enable/disable the feedback signal. Disabled 
+                                 // feedback signals will not be configured. Enabling the feedback 
+                                 // channel requires to run initialization again.
     volatile uint16_t adin_no;   // Number of the analog input used (e.g. '3' for 'AN3')
     volatile uint16_t adc_core;  // Number of the ADC core the input is connected to
     volatile bool differential_input; // Flag indicating if ADC input is differential or single ended
@@ -210,6 +213,8 @@ typedef struct {
     volatile bool early_interrupt_enable; // Early Interrupt Enable setting (true = enabled, false = disabled)
     volatile uint16_t interrupt_priority; // Interrupt Service Routine (ISR) priority level (0-7)
     volatile uint16_t trigger_source; // Trigger generating source for this AND input (see device data sheet for details)
+//    volatile uint16_t trigger_divider; // When a PWM module is used as trigger generating source, triggers might only be generated any n-number of cycles
+//    volatile uint16_t trigger_offset; // When a PWM module is used as trigger generating source, triggers might be generated after n-number of cycles
 }C4SWBB_ADC_FEEDBACK_INTERFACE_t;
 
 
@@ -259,7 +264,7 @@ typedef struct {
     volatile C4SWBB_SWITCH_NODE_SETTINGS_t boost_leg; // Settings for 4-switch buck/boost converter boost leg
     volatile C4SWBB_SWITCH_NODE_SETTINGS_t buck_leg; // Settings for 4-switch buck/boost converter buck leg
     volatile C4SWBB_STARTUP_SETTINGS_t soft_start; // Soft-Start settings
-} __attribute__((packed)) C4SWBB_POWER_CONTROLLER_t; // Settings, status and operating data of the power controller
+} __attribute__((packed)) C4SWBB_PWRCTRL_t; // Settings, status and operating data of the power controller
 
 
 /* **********************************************************************************************
@@ -317,21 +322,22 @@ typedef struct {
  * **********************************************************************************************/
 
 /* Public Function Prototypes */
-extern volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
-extern volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
-extern volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
-extern volatile uint16_t c4SWBB_shut_down(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
+extern volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstance);
+extern volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstance);
+extern volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstance);
+extern volatile uint16_t c4SWBB_shut_down(volatile C4SWBB_PWRCTRL_t* pInstance);
 
 /* FUNCTION PROTOTYPES OF C4SWBB_PCONFIG */
-extern volatile uint16_t c4swbb_pwm_module_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
-extern volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
-extern volatile uint16_t c4swbb_pwm_enable(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
-extern volatile uint16_t c4swbb_pwm_disable(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
-extern volatile uint16_t c4swbb_pwm_hold(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
-extern volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_POWER_CONTROLLER_t* pInstance); 
+extern volatile uint16_t c4swbb_pwm_module_initialize(volatile C4SWBB_PWRCTRL_t* pInstance);
+extern volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_PWRCTRL_t* pInstance);
+extern volatile uint16_t c4swbb_pwm_enable(volatile C4SWBB_PWRCTRL_t* pInstance); 
+extern volatile uint16_t c4swbb_pwm_disable(volatile C4SWBB_PWRCTRL_t* pInstance); 
+extern volatile uint16_t c4swbb_pwm_hold(volatile C4SWBB_PWRCTRL_t* pInstance); 
+extern volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_PWRCTRL_t* pInstance); 
 
-extern volatile uint16_t c4swbb_adc_module_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
-extern volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_POWER_CONTROLLER_t* pInstance);
+extern volatile uint16_t c4swbb_adc_module_initialize(void);
+extern volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_PWRCTRL_t* pInstance);
+extern volatile uint16_t c4swbb_adc_enable(void);
 
 #endif	/* _APL_RESOURCES_SOFT_START_H_ */
 
