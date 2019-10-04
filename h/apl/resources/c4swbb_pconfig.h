@@ -33,20 +33,18 @@
  */
 
 // This is a guard condition so that contents of this file are not included more than once.  
-#ifndef C4SWBB_PERIPHERAL_CONFIG_H
-#define	C4SWBB_PERIPHERAL_CONFIG_H
+#ifndef C4SWBB_PERIPHERAL_CONFIGURATION_H
+#define	C4SWBB_PERIPHERAL_CONFIGURATION_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
 #include <stdbool.h>
 
 #include "mcal/mcal.h"
-#include "apl/resources/c4swbb_control.h" 
 
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
-
 
 /*!4-Switch Buck/Boost PWM Configuration 
  * ***********************************************************************************************
@@ -1002,5 +1000,5 @@ Description:
 }
 #endif /* __cplusplus */
 
-#endif	/* C4SWBB_PERIPHERAL_CONFIG_H */
+#endif	/* C4SWBB_PERIPHERAL_CONFIGURATION_H */
 
