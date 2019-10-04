@@ -39,11 +39,11 @@
 #include "_root/generic/fdrv_FaultHandler.h"
 
 /* private function prototypes */
-inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj);
-inline volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj);
-inline volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj);
-inline volatile uint16_t ExecGlobalFaultFlagRelease(volatile uint16_t fault_class_code);
-inline volatile uint16_t ExecFaultFlagReleaseHandler(volatile FAULT_OBJECT_t* fltobj);
+volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj);
+volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj);
+volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj);
+volatile uint16_t ExecGlobalFaultFlagRelease(volatile uint16_t fault_class_code);
+volatile uint16_t ExecFaultFlagReleaseHandler(volatile FAULT_OBJECT_t* fltobj);
 
 /*!fault_object_list_pointer
  * ***********************************************************************************************
