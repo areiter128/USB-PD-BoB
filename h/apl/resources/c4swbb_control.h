@@ -22,7 +22,7 @@
 /* 
  * File:   soft_start.h
  * Author: M91406
- * Comments: Dedicated DC/DC battery charger soft-start state engine for bi-directional buck converters
+ * Comments: Dedicated DC/DC battery charger soft-start state engine for bidirectional buck converters
  * Revision history: 
  */
 
@@ -90,23 +90,21 @@ typedef enum {
     CONVERTER_RAMP_DIR_DOWN = 0b0 // soft-start ramp direction #0: output is ramping down
 } C4SWBB_RAMP_DIRECTION_e;
 
-typedef struct {
-    volatile C4SWBB_STATUS_LABEL_e op_status : 4; // Bit <0:3>: (read only) converter state machine operating status 
-    volatile bool power_source_detected : 1; // Bit <4>:  (read only) Status bit indicating that a valid power source has been detected
-    volatile bool pwm_active : 1; // Bit <5>:  (read only) Status bit indicating that the PWM outputs have been enabled
-    volatile bool adc_active : 1; // Bit <6>: (read only) Status bit indicating that the ADC has been started and is sampling data
-    volatile bool fault_active : 1; // Bit <7>: (read only) Status bit indicating that a critical fault condition has been detected
-    volatile bool busy : 1; // Bit <9:11>: (read only) Status bit indicating that the state machine is in a ramp or delay phase
-    volatile unsigned : 3; // Bit <9:11>: (reserved)
-    volatile C4SWBB_RAMP_DIRECTION_e tune_dir : 1; // Bit <12>: (read only) Flag indicating the direction of the tune-in ramp when the reference is changed (0=up or 1=down)
-    volatile bool GO : 1; // Bit <13>: POWER SUPPLY START bit (will trigger startup procedure when set)
-    volatile bool autorun : 1; // Bit <14>: Auto-Start will automatically enable the converter and set the GO bit when ready
-    volatile bool enabled : 1; // Bit <15>: Enable-bit (when disabled, power supply will reset in STANDBY mode)
-} __attribute__((packed))C4SWBB_STATUS_BIT_FIELD_t;
-
 typedef union {
+    struct {
+        volatile C4SWBB_STATUS_LABEL_e op_status : 4; // Bit <0:3>: (read only) converter state machine operating status 
+        volatile bool power_source_detected : 1; // Bit <4>:  (read only) Status bit indicating that a valid power source has been detected
+        volatile bool pwm_active : 1; // Bit <5>:  (read only) Status bit indicating that the PWM outputs have been enabled
+        volatile bool adc_active : 1; // Bit <6>: (read only) Status bit indicating that the ADC has been started and is sampling data
+        volatile bool fault_active : 1; // Bit <7>: (read only) Status bit indicating that a critical fault condition has been detected
+        volatile bool busy : 1; // Bit <9:11>: (read only) Status bit indicating that the state machine is in a ramp or delay phase
+        volatile unsigned : 3; // Bit <9:11>: (reserved)
+        volatile C4SWBB_RAMP_DIRECTION_e tune_dir : 1; // Bit <12>: (read only) Flag indicating the direction of the tune-in ramp when the reference is changed (0=up or 1=down)
+        volatile bool GO : 1; // Bit <13>: POWER SUPPLY START bit (will trigger startup procedure when set)
+        volatile bool autorun : 1; // Bit <14>: Auto-Start will automatically enable the converter and set the GO bit when ready
+        volatile bool enabled : 1; // Bit <15>: Enable-bit (when disabled, power supply will reset in STANDBY mode)
+    } __attribute__((packed))bits; // data structure for single bit addressing operations
     volatile uint16_t value; // buffer for 16-bit word read/write operations
-    volatile C4SWBB_STATUS_BIT_FIELD_t bits; // data structure for single bit addressing operations
 } C4SWBB_STATUS_t; // Power converter operation status bits
 
 /*!C4SWBB_LOOP_SETTINGS_t
@@ -133,7 +131,7 @@ typedef struct {
     volatile uint16_t reference; // Control loop reference variable
     volatile uint16_t minimum; // output voltage clamping value (minimum)
     volatile uint16_t maximum; // output voltage clamping value (maximum)
-} __attribute__((packed)) C4SWBB_LOOP_SETTINGS_t; // User defined settings for control loops; 
+} C4SWBB_LOOP_SETTINGS_t; // User defined settings for control loops; 
 
 /*!C4SWBB_STARTUP_SETTINGS_t
  * ***************************************************************************************************
@@ -159,7 +157,7 @@ typedef struct {
     volatile uint16_t v_reference; // Soft-Start target voltage loop reference value (read only)
     volatile uint16_t i_reference; // Soft-Start target current loop reference value (read only)
     volatile uint16_t inrush_limit; // User defined setting of additional inrush current limit during startup 
-}  __attribute__((packed)) C4SWBB_STARTUP_SETTINGS_t; // Power converter soft-start settings and variables
+} C4SWBB_STARTUP_SETTINGS_t; // Power converter soft-start settings and variables
 
 /*!C4SWBB_SWITCH_NODE_SETTINGS_t
  * ***************************************************************************************************
@@ -187,7 +185,11 @@ typedef struct {
     volatile uint16_t leb_period; // Leading Edge Blanking period 
     volatile uint16_t pwm_ovrdat; // Override data defines the complementary PWM output status of pins PWMxH/PWMxL while in 'off-mode'
                                   // (only values of 1, 2 and 3 are allowed, where 0b00 = LOW/LOW, 0b01=LOW/HIGH, 0b10=HIGH/LOW and 0b11 = HIGH/HIGH)
-}  __attribute__((packed)) C4SWBB_SWITCH_NODE_SETTINGS_t; // Switching signal timing settings
+    volatile uint16_t adtr1_source; // ADC trigger 1 source is PGxTRIGA/B/C register compare event
+    volatile uint16_t adtr2_source; // ADC trigger 2 source is PGxTRIGA/B/C register compare event
+    volatile uint16_t adtr1_scale;  // ADC Trigger 1 Post-Scaler Selection
+    volatile uint16_t adtr1_offset; // ADC Trigger 1 Offset Selection
+} C4SWBB_SWITCH_NODE_SETTINGS_t; // Switching signal timing settings
 
 /*!C4SWBB_FEEDBACK_t
  * ***************************************************************************************************
@@ -213,8 +215,6 @@ typedef struct {
     volatile bool early_interrupt_enable; // Early Interrupt Enable setting (true = enabled, false = disabled)
     volatile uint16_t interrupt_priority; // Interrupt Service Routine (ISR) priority level (0-7)
     volatile uint16_t trigger_source; // Trigger generating source for this AND input (see device data sheet for details)
-//    volatile uint16_t trigger_divider; // When a PWM module is used as trigger generating source, triggers might only be generated any n-number of cycles
-//    volatile uint16_t trigger_offset; // When a PWM module is used as trigger generating source, triggers might be generated after n-number of cycles
 }C4SWBB_ADC_FEEDBACK_INTERFACE_t;
 
 
@@ -242,7 +242,7 @@ typedef struct {
     volatile uint16_t v_out; // Power converter output voltage
     volatile uint16_t v_ref; // Power converter output voltage reference (user setting)
     volatile uint16_t temp; // Power converter board temperature
-}  __attribute__((packed)) C4SWBB_DATA_t; // Power converter runtime data
+} C4SWBB_DATA_t; // Power converter runtime data
 
 /*!C4SWBB_POWER_CONTROLLER_t
  * ***************************************************************************************************
@@ -264,7 +264,7 @@ typedef struct {
     volatile C4SWBB_SWITCH_NODE_SETTINGS_t boost_leg; // Settings for 4-switch buck/boost converter boost leg
     volatile C4SWBB_SWITCH_NODE_SETTINGS_t buck_leg; // Settings for 4-switch buck/boost converter buck leg
     volatile C4SWBB_STARTUP_SETTINGS_t soft_start; // Soft-Start settings
-} __attribute__((packed)) C4SWBB_PWRCTRL_t; // Settings, status and operating data of the power controller
+} C4SWBB_PWRCTRL_t; // Settings, status and operating data of the power controller
 
 
 /* **********************************************************************************************
