@@ -48,11 +48,11 @@
         <logicalFolder name="initialization"
                        displayName="initialization"
                        projectFiles="true">
+          <itemPath>../h/hal/initialization/init_dsp.h</itemPath>
           <itemPath>../h/hal/initialization/init_fosc.h</itemPath>
           <itemPath>../h/hal/initialization/init_gpio.h</itemPath>
-          <itemPath>../h/hal/initialization/init_timer.h</itemPath>
           <itemPath>../h/hal/initialization/init_irq.h</itemPath>
-          <itemPath>../h/hal/initialization/init_dsp.h</itemPath>
+          <itemPath>../h/hal/initialization/init_timer.h</itemPath>
         </logicalFolder>
         <itemPath>../h/hal/hal.h</itemPath>
       </logicalFolder>
@@ -61,6 +61,8 @@
           <itemPath>../h/mcal/config/devcfg_oscillator.h</itemPath>
           <itemPath>../h/mcal/config/devcfg_irq.h</itemPath>
           <itemPath>../h/mcal/config/devcfg_pinmap.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f1" displayName="initialization" projectFiles="true">
         </logicalFolder>
         <itemPath>../h/mcal/cpu_macros.h</itemPath>
         <itemPath>../h/mcal/mcal.h</itemPath>
@@ -124,11 +126,11 @@
         <logicalFolder name="initialization"
                        displayName="initialization"
                        projectFiles="true">
+          <itemPath>../src/hal/initialization/init_dsp.c</itemPath>
           <itemPath>../src/hal/initialization/init_fosc.c</itemPath>
           <itemPath>../src/hal/initialization/init_gpio.c</itemPath>
-          <itemPath>../src/hal/initialization/init_timer.c</itemPath>
           <itemPath>../src/hal/initialization/init_irq.c</itemPath>
-          <itemPath>../src/hal/initialization/init_dsp.c</itemPath>
+          <itemPath>../src/hal/initialization/init_timer.c</itemPath>
         </logicalFolder>
         <itemPath>../src/hal/hal.c</itemPath>
       </logicalFolder>
@@ -136,6 +138,8 @@
         <logicalFolder name="config" displayName="config" projectFiles="true">
           <itemPath>../src/mcal/config/config_bits_P33CH.c</itemPath>
           <itemPath>../src/mcal/config/config_bits_P33CK.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f1" displayName="Initialization" projectFiles="true">
         </logicalFolder>
         <itemPath>../src/mcal/mcal.c</itemPath>
       </logicalFolder>
@@ -184,7 +188,6 @@
     <Elem>../h/sfl/libapi</Elem>
     <Elem>../h/sfl/isr</Elem>
     <Elem>../src</Elem>
-    <Elem>../common</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -194,9 +197,9 @@
         <targetDevice>dsPIC33CK64MP505</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>Simulator</platformTool>
+        <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.41</languageToolchainVersion>
+        <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -468,6 +471,7 @@
         <property key="Freeze All Other Peripherals" value="true"/>
         <property key="I2C 1" value="true"/>
         <property key="I2C 2" value="true"/>
+        <property key="I2C 3" value="true"/>
         <property key="MCCP/SCCP 1" value="true"/>
         <property key="MCCP/SCCP 2" value="true"/>
         <property key="MCCP/SCCP 3" value="true"/>
@@ -476,17 +480,24 @@
         <property key="MCCP/SCCP 6" value="true"/>
         <property key="MCCP/SCCP 7" value="true"/>
         <property key="MCCP/SCCP 8" value="true"/>
+        <property key="MCCP/SCCP 9" value="true"/>
         <property key="PG1" value="true"/>
         <property key="PG2" value="true"/>
         <property key="PG3" value="true"/>
         <property key="PG4" value="true"/>
+        <property key="PG5" value="true"/>
+        <property key="PG6" value="true"/>
+        <property key="PG7" value="true"/>
+        <property key="PG8" value="true"/>
         <property key="PTGFRZ" value="true"/>
         <property key="QEI1" value="true"/>
+        <property key="QEI2" value="true"/>
         <property key="REFO" value="true"/>
         <property key="SENT1" value="true"/>
         <property key="SENT2" value="true"/>
         <property key="SPI 1" value="true"/>
         <property key="SPI 2" value="true"/>
+        <property key="SPI 3" value="true"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
         <property key="TIMER1" value="true"/>
         <property key="ToolFirmwareFilePath"
@@ -1058,7 +1069,7 @@
         <targetDevice>dsPIC33CK256MP506</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>Simulator</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.41</languageToolchainVersion>
         <platform>3</platform>
@@ -1144,7 +1155,7 @@
         <property key="oXC16gcc-sfr-warn" value="false"/>
         <property key="oXC16gcc-smar-io-lvl" value="1"/>
         <property key="oXC16gcc-smart-io-fmt" value=""/>
-        <property key="optimization-level" value="3"/>
+        <property key="optimization-level" value="0"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
         <property key="preprocessor-macros" value=""/>
@@ -1257,6 +1268,7 @@
         <property key="Freeze All Other Peripherals" value="true"/>
         <property key="I2C 1" value="true"/>
         <property key="I2C 2" value="true"/>
+        <property key="I2C 3" value="true"/>
         <property key="MCCP/SCCP 1" value="true"/>
         <property key="MCCP/SCCP 2" value="true"/>
         <property key="MCCP/SCCP 3" value="true"/>
@@ -1265,17 +1277,25 @@
         <property key="MCCP/SCCP 6" value="true"/>
         <property key="MCCP/SCCP 7" value="true"/>
         <property key="MCCP/SCCP 8" value="true"/>
+        <property key="MCCP/SCCP 9" value="true"/>
         <property key="PG1" value="true"/>
         <property key="PG2" value="true"/>
         <property key="PG3" value="true"/>
         <property key="PG4" value="true"/>
+        <property key="PG5" value="true"/>
+        <property key="PG6" value="true"/>
+        <property key="PG7" value="true"/>
+        <property key="PG8" value="true"/>
+        <property key="PMP" value="true"/>
         <property key="PTGFRZ" value="true"/>
         <property key="QEI1" value="true"/>
+        <property key="QEI2" value="true"/>
         <property key="REFO" value="true"/>
         <property key="SENT1" value="true"/>
         <property key="SENT2" value="true"/>
         <property key="SPI 1" value="true"/>
         <property key="SPI 2" value="true"/>
+        <property key="SPI 3" value="true"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
         <property key="TIMER1" value="true"/>
         <property key="ToolFirmwareFilePath"
@@ -1332,6 +1352,7 @@
         <property key="Freeze All Other Peripherals" value="true"/>
         <property key="I2C 1" value="true"/>
         <property key="I2C 2" value="true"/>
+        <property key="I2C 3" value="true"/>
         <property key="MCCP/SCCP 1" value="true"/>
         <property key="MCCP/SCCP 2" value="true"/>
         <property key="MCCP/SCCP 3" value="true"/>
@@ -1340,17 +1361,25 @@
         <property key="MCCP/SCCP 6" value="true"/>
         <property key="MCCP/SCCP 7" value="true"/>
         <property key="MCCP/SCCP 8" value="true"/>
+        <property key="MCCP/SCCP 9" value="true"/>
         <property key="PG1" value="true"/>
         <property key="PG2" value="true"/>
         <property key="PG3" value="true"/>
         <property key="PG4" value="true"/>
+        <property key="PG5" value="true"/>
+        <property key="PG6" value="true"/>
+        <property key="PG7" value="true"/>
+        <property key="PG8" value="true"/>
+        <property key="PMP" value="true"/>
         <property key="PTGFRZ" value="true"/>
         <property key="QEI1" value="true"/>
+        <property key="QEI2" value="true"/>
         <property key="REFO" value="true"/>
         <property key="SENT1" value="true"/>
         <property key="SENT2" value="true"/>
         <property key="SPI 1" value="true"/>
         <property key="SPI 2" value="true"/>
+        <property key="SPI 3" value="true"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
         <property key="TIMER1" value="true"/>
         <property key="ToolFirmwareFilePath"
