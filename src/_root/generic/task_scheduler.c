@@ -37,11 +37,11 @@ inline volatile uint16_t exec_scheduler(void) {
 #if (USE_TASK_MANAGER_TIMING_DEBUG_ARRAYS == 1)
     volatile uint16_t cnt=0;
 #endif
-    volatile uint16_t fres = 0;
+    volatile uint16_t fres = 1;
     
 
     // Right after system reset, first check for root-cause of previous device reset
-    fres = CheckCPUResetRootCause();
+    fres &= CheckCPUResetRootCause();
 
     // Initialize essential chip features and peripheral modules to boot up system
     #if (EXECUTE_MCC_SYSTEM_INITIALIZE == 0)
@@ -187,7 +187,7 @@ inline volatile uint16_t exec_scheduler(void) {
 #endif
         
     }   // End of main loop
-
+    // =====================================================================
     
     CaptureCPUInterruptStatus(); // Capture all relevant interrupt and reset status bits
     traplog.status.bits.sw_reset = true; // Set flag bit indicating CPU was restarted by software

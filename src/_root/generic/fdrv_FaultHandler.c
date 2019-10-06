@@ -468,7 +468,7 @@ inline volatile uint16_t CheckCPUResetRootCause(void)
  * ***********************************************************************************************/
 inline volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj)
 {
-    volatile uint16_t fres = 0, log_id = 0;
+    volatile uint16_t fres = 1, log_id = 0;
     
     if(fltobj->flt_class.value & FLT_CLASS_CATASTROPHIC)
     {
@@ -478,7 +478,7 @@ inline volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj)
         task_mgr.op_mode.value = OP_MODE_FAULT; // force main scheduler into fault mode
         log_id = fltobj->id; // ToDo: Log the fault object ID in the traps data structure 
         run_scheduler = false; // Terminate main scheduler, enforcing a warm CPU restart
-        return(1);
+        return(fres);
     }
 
     // if fault is of any other class than CATASTROPHIC, perform response. 
