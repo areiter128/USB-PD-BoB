@@ -15,7 +15,6 @@
                 <make-dep-project>../../plib/p33SMPS_mcal.X</make-dep-project>
             </make-dep-projects>
             <sourceRootList>
-                <sourceRootElem>../common</sourceRootElem>
                 <sourceRootElem>../h</sourceRootElem>
                 <sourceRootElem>../h/_root</sourceRootElem>
                 <sourceRootElem>../h/_root/config</sourceRootElem>
