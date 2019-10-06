@@ -29,23 +29,27 @@
  * 07/24/2019   initial version
  */
 
+#include <xc.h> // include processor files - each processor file is guarded.  
+#include <stdint.h>
+#include <stdbool.h>
+
+#include "apl/apl.h"
+#include "hal/hal.h"
+#include "mcal/mcal.h"
+
+
 // This is a guard condition so that contents of this file are not included
 // more than once.  
 #ifndef APL_TASK_POWER_CONTROL_H
 #define	APL_TASK_POWER_CONTROL_H
 
-#include <xc.h> // include processor files - each processor file is guarded.  
-
-#include "apl/apl.h"
-#include "hal/hal.h"
-#include "mcal/mcal.h"
+#include "apl/resources/c4swbb_control.h"   // 4-Switch Buck/Boost Power Control State Machine Header
 
 #include "apl/resources/cha_iloop.h"        // Current Control Loop library header of USB Port 1
 #include "apl/resources/cha_vloop.h"        // Voltage Control Loop library header of USB Port 1
 #include "apl/resources/chb_iloop.h"        // Current Control Loop library header of USB Port 2
 #include "apl/resources/chb_vloop.h"        // Voltage Control Loop library header of USB Port 2
 
-#include "apl/resources/c4swbb_control.h"   // 4-Switch Buck/Boost Power Control State Machine Header
 
 #ifdef	__cplusplus
 extern "C" {

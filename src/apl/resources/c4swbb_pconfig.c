@@ -158,6 +158,12 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_PWRCTRL_t* pI
     pg_config.PGxIOCON.bits.SWAP = (pInstance->buck_leg.pwm_swap & 0x0001); // PWMxH/PWMxL output pin swap setting
     pg_config.PGxIOCON.bits.OVRDAT = (pInstance->buck_leg.pwm_ovrdat & 0x0003); // Override OVR pin-state of PWMxH/PWMxL
     
+    pg_config.PGxEVT.bits.ADTR1EN = (pInstance->buck_leg.adtr1_source & 0x0007); // ADC trigger 1 source is PGxTRIGA/B/C compare event
+    pg_config.PGxEVT.bits.ADTR1PS = (pInstance->buck_leg.adtr1_scale & 0x001F); // ADC trigger 1 port-scaler
+    pg_config.PGxEVT.bits.ADTR1OFS = (pInstance->buck_leg.adtr1_offset & 0x001F); // ADC trigger 1 port-scaler
+
+    pg_config.PGxEVT.bits.ADTR2EN = (pInstance->buck_leg.adtr2_source & 0x0007); // ADC trigger 2 source is PGxTRIGA/B/C compare event
+    
     // Write PWM generator configuration to PWM module
     fres &= hspwm_init_pwm_generator(pInstance->buck_leg.pwm_instance, pg_config);
 
@@ -193,6 +199,12 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_PWRCTRL_t* pI
     pg_config.PGxPHASE.value = pInstance->boost_leg.phase;   // initial PWM phase shift
     pg_config.PGxIOCON.bits.SWAP = (pInstance->boost_leg.pwm_swap & 0x0001); // PWMxH/PWMxL output pin swap setting
     pg_config.PGxIOCON.bits.OVRDAT = (pInstance->boost_leg.pwm_ovrdat & 0x0003); // Override OVR pin-state of PWMxH/PWMxL
+
+    pg_config.PGxEVT.bits.ADTR1EN = (pInstance->boost_leg.adtr1_source & 0x0007); // ADC trigger 1 source is PGxTRIGA/B/C compare event
+    pg_config.PGxEVT.bits.ADTR1PS = (pInstance->boost_leg.adtr1_scale & 0x001F); // ADC trigger 1 port-scaler
+    pg_config.PGxEVT.bits.ADTR1OFS = (pInstance->boost_leg.adtr1_offset & 0x001F); // ADC trigger 1 port-scaler
+
+    pg_config.PGxEVT.bits.ADTR2EN = (pInstance->boost_leg.adtr2_source & 0x0007); // ADC trigger 2 source is PGxTRIGA/B/C compare event
     
     // Write PWM generator configuration to PWM module
     fres &= hspwm_init_pwm_generator(pInstance->boost_leg.pwm_instance, pg_config);

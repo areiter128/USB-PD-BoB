@@ -11,6 +11,8 @@
 #include <stdbool.h>
 
 #include "apl/tasks/task_PowerControl.h"
+#include "apl/resources/c4swbb_control.h"   // 4-Switch Buck/Boost Power Control State Machine Header
+
 
 // Declare two 4-Switch Buck/Boost DC/DC converter objects
 volatile C4SWBB_PWRCTRL_t c4swbb_1;    // USB PD Port A
@@ -216,7 +218,11 @@ inline volatile uint16_t init_USBport_1(void) {
     c4swbb_1.buck_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     c4swbb_1.buck_leg.pwm_swap = false; // PWMxH and PWMxL are not swapped for buck converter operation
     c4swbb_1.buck_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
-
+    c4swbb_1.buck_leg.adtr1_source = BUCKH1_PGxEVT_ADTR1EN; // ADC trigger 1 source is PGxTRIGA/B/C register compare event
+    c4swbb_1.buck_leg.adtr2_source = BUCKH1_PGxEVT_ADTR2EN; // ADC trigger 2 source is PGxTRIGA/B/C register compare event
+    c4swbb_1.buck_leg.adtr1_scale = BUCKH1_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection
+    c4swbb_1.buck_leg.adtr1_offset = BUCKH1_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection
+    
     c4swbb_1.boost_leg.pwm_instance = BOOSTH1_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_1.boost_leg.period = SWITCHING_PERIOD; // set switching period 
     c4swbb_1.boost_leg.phase = PWM_PHASE_SFT; // Phase shift of the PWM switching frequency 
@@ -228,16 +234,20 @@ inline volatile uint16_t init_USBport_1(void) {
     c4swbb_1.boost_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     c4swbb_1.boost_leg.pwm_swap = true; // PWMxH and PWMxL are swapped for boost converter operation
     c4swbb_1.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
+    c4swbb_1.boost_leg.adtr1_source = BOOSTH1_PGxEVT_ADTR1EN; // ADC trigger 1 source is PGxTRIGA/B/C register compare event
+    c4swbb_1.boost_leg.adtr2_source = BOOSTH1_PGxEVT_ADTR2EN; // ADC trigger 2 source is PGxTRIGA/B/C register compare event
+    c4swbb_1.boost_leg.adtr1_scale = BOOSTH1_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection
+    c4swbb_1.boost_leg.adtr1_offset = BOOSTH1_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection
     
     // Load ADC settings from hardware and microcontroller abstraction layers (HAL and MCAL)
     c4swbb_1.feedback.ad_vout.enable = true;
     c4swbb_1.feedback.ad_vout.adin_no = FB_VOUT1_ADC_AN_INPUT;
     c4swbb_1.feedback.ad_vout.adc_core = FB_VOUT1_ADCCORE;
     c4swbb_1.feedback.ad_vout.ptrADBUF = &FB_VOUT1_ADCBUF;
+    c4swbb_1.feedback.ad_vout.trigger_source = BUCKH1_ADC_TRGSRC_1;
     c4swbb_1.feedback.ad_vout.early_interrupt_enable = true;
     c4swbb_1.feedback.ad_vout.interrupt_enable = true;
     c4swbb_1.feedback.ad_vout.interrupt_priority = FB_VOUT1_ISR_PRIORITY;
-    c4swbb_1.feedback.ad_vout.trigger_source = BUCKH1_ADC_TRGSRC_1;
     
     c4swbb_1.feedback.ad_iout.enable = true;
     c4swbb_1.feedback.ad_iout.adin_no = FB_IOUT1_ADC_AN_INPUT;
@@ -368,6 +378,10 @@ inline volatile uint16_t init_USBport_2(void) {
     c4swbb_2.buck_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     c4swbb_2.buck_leg.pwm_swap = 0; // PWMxH and PWMxL are not swapped for buck converter operation
     c4swbb_2.buck_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
+    c4swbb_2.buck_leg.adtr1_source = BUCKH2_PGxEVT_ADTR1EN; // ADC trigger 1 source is PGxTRIGA/B/C register compare event
+    c4swbb_2.buck_leg.adtr2_source = BUCKH2_PGxEVT_ADTR2EN; // ADC trigger 2 source is PGxTRIGA/B/C register compare event
+    c4swbb_2.buck_leg.adtr1_scale = BUCKH2_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection
+    c4swbb_2.buck_leg.adtr1_offset = BUCKH2_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection
 
     c4swbb_2.boost_leg.pwm_instance = BOOSTH2_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_2.boost_leg.period = SWITCHING_PERIOD; // set switching period 
@@ -380,6 +394,10 @@ inline volatile uint16_t init_USBport_2(void) {
     c4swbb_2.boost_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     c4swbb_2.boost_leg.pwm_swap = 1; // PWMxH and PWMxL are swapped for boost converter operation
     c4swbb_2.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
+    c4swbb_2.boost_leg.adtr1_source = BOOSTH2_PGxEVT_ADTR1EN; // ADC trigger 1 source is PGxTRIGA/B/C register compare event
+    c4swbb_2.boost_leg.adtr2_source = BOOSTH2_PGxEVT_ADTR2EN; // ADC trigger 2 source is PGxTRIGA/B/C register compare event
+    c4swbb_2.boost_leg.adtr1_scale = BOOSTH2_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection
+    c4swbb_2.boost_leg.adtr1_offset = BOOSTH2_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection
     
     // Load ADC settings from hardware and microcontroller abstraction layers (HAL and MCAL)
     c4swbb_2.feedback.ad_vout.enable = true;
