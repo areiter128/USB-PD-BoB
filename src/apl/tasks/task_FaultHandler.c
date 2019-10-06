@@ -250,7 +250,7 @@ inline volatile uint16_t init_TaskExecutionFaultObject(void)
     // Configuring the Task Execution Failure fault object
 
     // specify the target value/register to be monitored
-    fltobj_TaskExecutionFailure.source_object = &task_mgr.proc_code.segments.retval;
+    fltobj_TaskExecutionFailure.source_object = &task_mgr.proc_code.segment.retval;
     fltobj_TaskExecutionFailure.object_bit_mask = FAULT_OBJECT_BIT_MASK_DEFAULT;
     fltobj_TaskExecutionFailure.error_code = (uint32_t)FLTOBJ_TASK_EXECUTION_FAILURE;
     fltobj_TaskExecutionFailure.id = (uint16_t)FLTOBJ_TASK_EXECUTION_FAILURE;

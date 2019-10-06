@@ -477,7 +477,7 @@ inline volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj)
         task_mgr.status.bits.fault_override = true; // setting global fault override bit
         task_mgr.op_mode.value = OP_MODE_FAULT; // force main scheduler into fault mode
         log_id = fltobj->id; // ToDo: Log the fault object ID in the traps data structure 
-        run_scheduler = 0;
+        run_scheduler = false; // Terminate main scheduler, enforcing a warm CPU restart
         return(1);
     }
 
