@@ -58,7 +58,7 @@
 #define TASK_ZERO   0   
 
 // Task Manager
-volatile task_manager_settings_t task_mgr; // Declare a data structure holding the settings of the task manager
+volatile TASK_MANAGER_t task_mgr; // Declare a data structure holding the settings of the task manager
 
 //------------------------------------------------------------------------------
 // execute task manager scheduler
@@ -77,8 +77,8 @@ uint16_t task_manager_tick(void) {
     task_mgr.exec_task_id = task_mgr.task_queue[task_mgr.task_queue_tick_index]; // Pick next task in the queue
 
     // Determine error code for the upcoming task
-    task_mgr.proc_code.segments.op_mode = (uint8_t)(task_mgr.op_mode.value);    // log operation mode
-    task_mgr.proc_code.segments.task_id = (uint8_t)(task_mgr.exec_task_id);   // log upcoming task-ID
+    task_mgr.proc_code.segment.op_mode = (uint8_t)(task_mgr.op_mode.value);    // log operation mode
+    task_mgr.proc_code.segment.task_id = (uint8_t)(task_mgr.exec_task_id);   // log upcoming task-ID
 
     // Capture task start time for time quota monitoring
     task_mgr.task_time_ctrl.buffer = *task_mgr.reg_task_timer_counter; // Capture timer counter before task execution
@@ -90,7 +90,7 @@ uint16_t task_manager_tick(void) {
     tbuf = *task_mgr.reg_task_timer_counter;
     
     // Copy return value into process code for fault analysis
-    task_mgr.proc_code.segments.retval = fres;
+    task_mgr.proc_code.segment.retval = fres;
     
     if(tbuf > task_mgr.task_time_ctrl.buffer)
     // if timer period has not expired ...

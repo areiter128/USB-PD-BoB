@@ -61,31 +61,28 @@ typedef enum {
     OP_MODE_STANDBY          = 0b1000000000000000  // During standby mode the converter is disabled
 } SYSTEM_OPERATION_MODE_e;
 
-typedef struct {
-    volatile bool boot:1;           // Bit #0: Operation mode during device start-up and peripheral configuration
-    volatile bool device_startup;   // Bit #1: On-chip peripherals start-up period (self-check, soft-start, etc.)
-    volatile bool system_startup;   // Bit #2: Power converter start-up period (self-check, soft-start, etc.)
-    volatile bool idle;             // Bit #3: Idle operation mode is the generic fall-back op-mode when no other op-mode applies to current conditions
-    volatile bool normal;           // Bit #4: Normal operation mode is set when system performs the desired default function (whatever this may be needs to be defined)
-    volatile unsigned :1;           // Bit #5: (reserved)
-    volatile unsigned :1;           // Bit #6: (reserved)
-    volatile unsigned :1;           // Bit #7: (reserved)
+typedef union {
+    struct {
+        volatile bool boot:1;           // Bit #0: Operation mode during device start-up and peripheral configuration
+        volatile bool device_startup;   // Bit #1: On-chip peripherals start-up period (self-check, soft-start, etc.)
+        volatile bool system_startup;   // Bit #2: Power converter start-up period (self-check, soft-start, etc.)
+        volatile bool idle;             // Bit #3: Idle operation mode is the generic fall-back op-mode when no other op-mode applies to current conditions
+        volatile bool normal;           // Bit #4: Normal operation mode is set when system performs the desired default function (whatever this may be needs to be defined)
+        volatile unsigned :1;           // Bit #5: (reserved)
+        volatile unsigned :1;           // Bit #6: (reserved)
+        volatile unsigned :1;           // Bit #7: (reserved)
 
-    volatile unsigned :1;           // Bit #8: (reserved)
-    volatile unsigned :1;           // Bit #9: (reserved)
-    volatile unsigned :1;           // Bit #10: (reserved)
-    volatile unsigned :1;           // Bit #11: (reserved)
-    volatile unsigned :1;           // Bit #12: (reserved)
-    volatile unsigned :1;           // Bit #13: (reserved)
-    volatile bool fault;            // Bit #14: Fault mode will be entered when a critical fault condition has been detected
-    volatile bool standby;          // Bit #15: During standby mode the converter is disabled
-} SYSTEM_OPERATION_MODE_FLAGS_BIT_FIELD_t;
-
-typedef union 
-{
+        volatile unsigned :1;           // Bit #8: (reserved)
+        volatile unsigned :1;           // Bit #9: (reserved)
+        volatile unsigned :1;           // Bit #10: (reserved)
+        volatile unsigned :1;           // Bit #11: (reserved)
+        volatile unsigned :1;           // Bit #12: (reserved)
+        volatile unsigned :1;           // Bit #13: (reserved)
+        volatile bool fault;            // Bit #14: Fault mode will be entered when a critical fault condition has been detected
+        volatile bool standby;          // Bit #15: During standby mode the converter is disabled
+    } __attribute__((packed)) bits;
 	volatile SYSTEM_OPERATION_MODE_e value;
-	volatile SYSTEM_OPERATION_MODE_FLAGS_BIT_FIELD_t bits;
-}system_operation_mode_t;
+}SYSTEM_OPERATION_MODE_t;
 
 typedef struct {
     volatile uint32_t ticks; // Counter for CPU load measurement
@@ -93,25 +90,23 @@ typedef struct {
     volatile uint16_t load_max_buffer; // CPU load maximum is tracked and logged
     volatile uint16_t loop_nomblk; // Number of cycles required for one CPU load counter tick
     volatile uint32_t load_factor; // CPU_TICKS result has to be multiplied with this number to get CPU_LOAD in [10x %] => percentage with 1 digit accuracy, e.g. 124 = 12.4%
-} cpu_load_settings_t;
-
-typedef struct {
-    volatile uint16_t retval; // Function return value
-    volatile uint8_t task_id; // task ID of the function called
-    volatile uint8_t op_mode; // recent operating mode when the function was called
-} __attribute__((packed))task_manager_process_code_segment_t;
+} CPU_LOAD_SETTINGS_t;
 
 typedef union {
+    struct {
+        volatile uint16_t retval; // Function return value
+        volatile uint8_t task_id; // task ID of the function called
+        volatile uint8_t op_mode; // recent operating mode when the function was called
+    } __attribute__((packed))segment;
     volatile uint32_t value;
-    volatile task_manager_process_code_segment_t segments;
-} task_manager_process_code_t;
+} TASKMGR_PROCESS_CODE_t;
 
 typedef struct {
     volatile uint16_t quota; // Maximum allowed task execution period
     volatile uint16_t buffer; // Buffer for most recent task time meter result
     volatile uint16_t task_time; // Execution time meter result of last called task
     volatile uint16_t maximum; // Task time meter maximum is tracked and logged
-} __attribute__((packed))task_control_t;
+} __attribute__((packed))TASK_CONTROL_t;
 
 typedef enum {
     EXEC_STAT_FAULT_OVERRIDE        = 0b0000000000000001, // Some fault condition is overriding task settings and actions
@@ -121,42 +116,39 @@ typedef enum {
     EXEC_STAT_NOTIFICATION_PENDING  = 0b0010000000000000, // Some condition raised a notification flag
     EXEC_STAT_WARNING_PENDING       = 0b0100000000000000, // Some condition raised a warning flag
     EXEC_STAT_FAULT_PENDING         = 0b1000000000000000  // Some condition raised a critical fault flag
-}TASK_MANAGER_STATUS_e;
+}TASKMGR_STATUS_e;
 
-typedef struct {
-    volatile bool fault_override :1; // Bit #0: Flag bit indicating that all other operating modes are overridden by the FAULT_HANDLER
-    volatile bool startup_sequence_complete:1; // Bit #1: Flag bit indicating that device and system startup has been completed
-    volatile bool queue_switch:1; // Bit #2: queue_switch occurred (active for one queue loop)
-    volatile unsigned :1; // Bit #3:  (reserved)
-    volatile unsigned :1; // Bit #4:  (reserved)
-    volatile unsigned :1; // Bit #5:  (reserved)
-    volatile unsigned :1; // Bit #6:  (reserved)
-    volatile unsigned :1; // Bit #7:  (reserved)
+typedef union  {
+    struct {
+        volatile bool fault_override :1; // Bit #0: Flag bit indicating that all other operating modes are overridden by the FAULT_HANDLER
+        volatile bool startup_sequence_complete:1; // Bit #1: Flag bit indicating that device and system startup has been completed
+        volatile bool queue_switch:1; // Bit #2: queue_switch occurred (active for one queue loop)
+        volatile unsigned :1; // Bit #3:  (reserved)
+        volatile unsigned :1; // Bit #4:  (reserved)
+        volatile unsigned :1; // Bit #5:  (reserved)
+        volatile unsigned :1; // Bit #6:  (reserved)
+        volatile unsigned :1; // Bit #7:  (reserved)
 
-    volatile unsigned :1; // Bit #8:  (reserved)
-    volatile unsigned :1; // Bit #9:  (reserved)
-    volatile unsigned :1; // Bit #10: (reserved)
-    volatile unsigned :1; // Bit #11: (reserved)
-    volatile unsigned :1; // Bit #12: (reserved)
-	volatile bool global_notify:1;	// Bit #13: flag bit indicating the presence of notify events
-	volatile bool global_warning:1;	// Bit #14: flag bit indicating the presence of warning events
-	volatile bool global_fault:1;	// Bit #15: flag bit indicating the presence of fault events
-} __attribute__((packed))TASK_MANAGER_STATUS_FLAGS_t;
-
-typedef union 
-{
-	volatile TASK_MANAGER_STATUS_e value; // buffer for 16-bit word read/write operations
-	volatile TASK_MANAGER_STATUS_FLAGS_t bits; // data structure for single bit addressing operations
-} task_manager_status_t;
+        volatile unsigned :1; // Bit #8:  (reserved)
+        volatile unsigned :1; // Bit #9:  (reserved)
+        volatile unsigned :1; // Bit #10: (reserved)
+        volatile unsigned :1; // Bit #11: (reserved)
+        volatile unsigned :1; // Bit #12: (reserved)
+        volatile bool global_notify:1;	// Bit #13: flag bit indicating the presence of notify events
+        volatile bool global_warning:1;	// Bit #14: flag bit indicating the presence of warning events
+        volatile bool global_fault:1;	// Bit #15: flag bit indicating the presence of fault events
+    } __attribute__((packed))bits;
+	volatile TASKMGR_STATUS_e value; // buffer for 16-bit word read/write operations
+} TASKMGR_STATUS_t;
 
 
 typedef struct {
 
     /* System operation mode (selects the active task queue) */
-    volatile system_operation_mode_t pre_op_mode; // ID of previous operating mode (=op_mode after switch-over)
-    volatile system_operation_mode_t op_mode; // ID of current operating mode
+    volatile SYSTEM_OPERATION_MODE_t pre_op_mode; // ID of previous operating mode (=op_mode after switch-over)
+    volatile SYSTEM_OPERATION_MODE_t op_mode; // ID of current operating mode
     volatile uint16_t (*op_mode_switch_over_function)(void); // pointer to a user function called when a switch in op_mode is performed
-    volatile task_manager_process_code_t proc_code;   // in case an execution error occurred, this code contains task ID
+    volatile TASKMGR_PROCESS_CODE_t proc_code;   // in case an execution error occurred, this code contains task ID
                                     // and queue ID which caused the error 
     
     /* Active task queue properties */
@@ -173,18 +165,18 @@ typedef struct {
     volatile uint16_t task_timer_irq_flag_mask; // Bit-Mask for filtering on dedicated interrupt flag bit
 
     /* Generic task execution time control settings and buffer variables */
-    volatile task_control_t task_time_ctrl; // Task time control settings and monitoring
+    volatile TASK_CONTROL_t task_time_ctrl; // Task time control settings and monitoring
 
     /* CPU Load Meter variables */
-    volatile cpu_load_settings_t cpu_load;
+    volatile CPU_LOAD_SETTINGS_t cpu_load;
     
     /* Global task manager status flags */
-    volatile task_manager_status_t status;
+    volatile TASKMGR_STATUS_t status;
     
-} task_manager_settings_t;
+} TASK_MANAGER_t;
 
 // Public Task Manager data structure declaration
-extern volatile task_manager_settings_t task_mgr; // Declare a data structure holding the settings of the task manager
+extern volatile TASK_MANAGER_t task_mgr; // Declare a data structure holding the settings of the task manager
 
 
 // Public Task Manager Function Prototypes
