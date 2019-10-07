@@ -31,7 +31,7 @@ volatile uint16_t init_ISR_USBport_2(void);
  * 
  * *****************************************************************************************************/
 
-inline volatile uint16_t exec_PowerControl(void) {
+volatile uint16_t exec_PowerControl(void) {
 
     volatile uint16_t fres = 1;
     
@@ -47,7 +47,7 @@ inline volatile uint16_t exec_PowerControl(void) {
  * 
  * *****************************************************************************************************/
 
-inline volatile uint16_t init_PowerControl(void) {
+volatile uint16_t init_PowerControl(void) {
 
     volatile uint16_t fres = 1;
 
@@ -98,7 +98,7 @@ inline volatile uint16_t init_PowerControl(void) {
  * 
  * *****************************************************************************************************/
 
-inline volatile uint16_t reset_PowerControl(void) {
+volatile uint16_t reset_PowerControl(void) {
     
     volatile uint16_t fres = 0;
     
@@ -114,7 +114,7 @@ inline volatile uint16_t reset_PowerControl(void) {
  * 
  * *****************************************************************************************************/
 
-inline volatile uint16_t init_ISR_USBport_1(void) {
+volatile uint16_t init_ISR_USBport_1(void) {
 
     volatile uint16_t fres = 1;
     volatile uint16_t dummy_read=0;
@@ -155,7 +155,7 @@ inline volatile uint16_t init_ISR_USBport_1(void) {
  * 
  * *****************************************************************************************************/
 
-inline volatile uint16_t init_ISR_USBport_2(void) {
+volatile uint16_t init_ISR_USBport_2(void) {
 
     volatile uint16_t fres = 1;
     volatile uint16_t dummy_read=0;
@@ -198,7 +198,7 @@ inline volatile uint16_t init_ISR_USBport_2(void) {
  * 
  * *****************************************************************************************************/
 
-inline volatile uint16_t init_USBport_1(void) {
+volatile uint16_t init_USBport_1(void) {
 
     volatile uint16_t fres=1;
 
@@ -359,7 +359,7 @@ inline volatile uint16_t init_USBport_1(void) {
  * 
  * *****************************************************************************************************/
 
-inline volatile uint16_t init_USBport_2(void) {
+volatile uint16_t init_USBport_2(void) {
 
     volatile uint16_t fres=1;
     

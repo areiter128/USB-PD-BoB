@@ -5,7 +5,7 @@
 
 uint16_t init_system_timer(void) {
 
-    volatile uint16_t fres = 0;
+    volatile uint16_t fres = 1;
     TxCON_CONTROL_REGISTER_t tmr;
     
     // Initialize Scheduler Timer
@@ -27,7 +27,7 @@ uint16_t init_system_timer(void) {
     #endif
     
     // write configuration
-    fres =  gstmr_reset(TASK_MGR_TIMER_INDEX); 
+    fres &= gstmr_reset(TASK_MGR_TIMER_INDEX); 
     fres &= gstmr_init_timer16b(TASK_MGR_TIMER_INDEX, tmr, TASK_MGR_PERIOD, TASK_MGR_ISR_PRIORITY);
     
     return(fres);
@@ -35,7 +35,7 @@ uint16_t init_system_timer(void) {
 
 uint16_t launch_system_timer(void) {
 
-    volatile uint16_t fres = 0;
+    volatile uint16_t fres = 1;
     
     // User configuration
     fres &= gstmr_enable(TASK_MGR_TIMER_INDEX, TASK_MGR_ISR_STATE);  // Enable Timer without interrupts

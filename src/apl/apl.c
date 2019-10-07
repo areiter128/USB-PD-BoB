@@ -60,7 +60,7 @@
 
 uint16_t CLOCK_Initialize(void){
 
-    volatile uint16_t fres = 0;
+    volatile uint16_t fres = 1;
     
     // Initialize main oscillator and auxiliary clock
     //Remove: fres = init_SoftwareWatchDogTimer();
@@ -105,9 +105,9 @@ uint16_t CLOCK_Initialize(void){
 
 uint16_t OS_Initialize(void) {
 
-    volatile uint16_t fres = 0;
+    volatile uint16_t fres = 1;
 
-    fres = init_TaskManager();
+    fres &= init_TaskManager();
     fres &= init_FaultObjects();
     
     return(fres);
@@ -141,7 +141,7 @@ uint16_t OS_Initialize(void) {
  * 
  * ***********************************************************************************************/
 
-inline volatile uint16_t APPLICATION_Initialize(void) {
+volatile uint16_t APPLICATION_Initialize(void) {
 
     volatile uint16_t fres = 0;
 
@@ -178,7 +178,7 @@ inline volatile uint16_t APPLICATION_Initialize(void) {
  * 
  * ***********************************************************************************************/
 #if (EXECUTE_MCC_SYSTEM_INITIALIZE == 0)
-inline volatile uint16_t DEVICE_Reset(void){
+volatile uint16_t DEVICE_Reset(void){
 
     /* this routine can be used to replace the operation mode OP_MODE_BOOT */
 

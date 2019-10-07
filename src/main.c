@@ -48,7 +48,7 @@
 
 int main(void) {
 
-    volatile uint16_t fres = 0;
+    volatile uint16_t fres = 1;
     
 #if __DEBUG
 // In debug mode these NOPs can be used to place a breakpoint before

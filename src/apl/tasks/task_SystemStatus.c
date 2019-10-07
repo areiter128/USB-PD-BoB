@@ -52,7 +52,7 @@ volatile uint16_t css_SetSystemMode(void);
 /*!task_CaptureSystemStatus
  * ************************************************************************************************
  * Summary:
- * Enables the bias power to the high resolution PWM module
+ * Captures the most recent, application specific state of operation
  *
  * Parameters:
  *	(none)
@@ -62,12 +62,23 @@ volatile uint16_t css_SetSystemMode(void);
  *   1: success
  * 
  * Description:
- * This task is called in every scheduler cycle capturing detection and control signals as
- * well as ADC samples to determine the current state of operation. When a change in operating
- * mode has been detected, the recent operating mode is changed and updated on master and slave 
- * side. 
+ * This task is called in every scheduler cycle capturing a set of application dependent signals 
+ * of firmware status information to determine the current state of operation. When a change in 
+ * operating mode has been detected, the recent operating mode of the task scheduler is changed.
  * Tasks and processes need to respond to this change in state of operation independently from 
  * this function as needed.
+ * 
+ * Example:
+ * The fault handler is continuously monitoring user specific data points. When it detects a
+ * critical fault condition, a global, critical fault bit will be set. This fault bit will be 
+ * picked up by task_CaptureSystemStatus() of the System Status Monitor, forcing the task 
+ * scheduler to switch to the task queue task_queue_fault[]. 
+ * 
+ * Please note: 
+ * In System Status Monitor ONLY (!!!) serves the purpose of controlling the active task manager 
+ * task queue. Any other function, like shutting down a peripheral circuit in case of a detected
+ * fault condition, needs to be covered by the fault handler directly.
+ *  
  * ***********************************************************************************************/
 
 volatile uint16_t exec_CaptureSystemStatus(void) {
@@ -153,12 +164,12 @@ volatile uint16_t css_SetSystemMode(void) {
     
         // Set the appropriate task scheduler operating mode depending required for the detected system mode
         if(application.system_mode.value & SYSTEM_MODE_STANDBY)
-        { // System completely turned off and MCU is on standby power
+        { // System sub modules are turned off and MCU is on standby power
             task_mgr.op_mode.value = OP_MODE_STANDBY;
             // add additional application settings
         }
-        else if(application.system_mode.value & SYSTEM_MODE_ON)
-        { // System is powered by AC adapter
+        else if(application.system_mode.value & SYSTEM_MODE_RUN)
+        { // System is powered, all sub-modules are on
             task_mgr.op_mode.value = OP_MODE_NORMAL;
             // add additional application settings
         }
