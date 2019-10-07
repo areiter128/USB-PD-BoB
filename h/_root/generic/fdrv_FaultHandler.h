@@ -44,29 +44,27 @@ typedef enum {
 
 } __attribute__((packed))FAULT_OBJECT_STATUS_e;
 
-typedef struct {
-	volatile unsigned fltlvlhw  :1;	// Bit #0:  hardware/board level flag bit
-	volatile unsigned fltlvlsw  :1;	// Bit #1:  firmware/software level flag bit
-	volatile unsigned fltlvlsi  :1;	// Bit #2:  silicon/chip level flag bit
-	volatile unsigned fltlvlsys :1;	// Bit #3:  system parameter level Flag bit
-	volatile unsigned :1;	// Bit #4:  Reserved
-	volatile unsigned :1;	// Bit #5:  Reserved
-	volatile unsigned :1;	// Bit #6:  Reserved
-	volatile unsigned :1;	// Bit #7:  Reserved
-	volatile unsigned :1;	// Bit #8:  Reserved
-	volatile unsigned :1;	// Bit #9:  Reserved
-	volatile unsigned :1;	// Bit #10: Reserved
-	volatile unsigned :1;	// Bit #11: Reserved
-	volatile unsigned :1;	// Bit #12: Reserved
-	volatile unsigned fltactive :1; // Bit #14: Flag bit indicating temporary fault condition is present
-	volatile unsigned fltstat   :1;	// Bit #13: Flag bit indicating that a fault has been tripped (latched until gone)
-	volatile unsigned fltchken  :1;	// Bit #15: Fault check enable/disable flag bit
-}__attribute__((packed))FAULT_OBJECT_STATUS_BIT_FIELD_t;
-
 typedef union 
 {
+    struct {
+        volatile unsigned fltlvlhw  :1;	// Bit #0:  hardware/board level flag bit
+        volatile unsigned fltlvlsw  :1;	// Bit #1:  firmware/software level flag bit
+        volatile unsigned fltlvlsi  :1;	// Bit #2:  silicon/chip level flag bit
+        volatile unsigned fltlvlsys :1;	// Bit #3:  system parameter level Flag bit
+        volatile unsigned :1;	// Bit #4:  Reserved
+        volatile unsigned :1;	// Bit #5:  Reserved
+        volatile unsigned :1;	// Bit #6:  Reserved
+        volatile unsigned :1;	// Bit #7:  Reserved
+        volatile unsigned :1;	// Bit #8:  Reserved
+        volatile unsigned :1;	// Bit #9:  Reserved
+        volatile unsigned :1;	// Bit #10: Reserved
+        volatile unsigned :1;	// Bit #11: Reserved
+        volatile unsigned :1;	// Bit #12: Reserved
+        volatile unsigned fltactive :1; // Bit #14: Flag bit indicating temporary fault condition is present
+        volatile unsigned fltstat   :1;	// Bit #13: Flag bit indicating that a fault has been tripped (latched until gone)
+        volatile unsigned fltchken  :1;	// Bit #15: Fault check enable/disable flag bit
+    }__attribute__((packed))bits;
 	volatile uint16_t value;
-	volatile FAULT_OBJECT_STATUS_BIT_FIELD_t bits;
 }FAULT_OBJECT_STATUS_t;
 
 /*!FAULT_OBJECT_CLASS_t
@@ -122,30 +120,27 @@ typedef enum {
     FLT_CLASS_USER_RESPONSE = 0b0000000100000000     // user defined level 
 } FAULT_OBJECT_CLASS_e;
 
-
-typedef struct {
-	volatile unsigned notify       :1;	// Bit #0:  flag bit indicating a simple, uncritical notice
-	volatile unsigned warning      :1;	// Bit #1:  flag bit indicating a condition approaching critical level
-	volatile unsigned critical     :1;	// Bit #2:  flag bit indicating a condition has reached critical level
-	volatile unsigned catastrophic :1;	// Bit #3:  flag bit indicating a catastrophic failure has occurred
-	volatile unsigned :1;	// Bit #4:  Reserved
-	volatile unsigned :1;	// Bit #5:  Reserved
-	volatile unsigned :1;	// Bit #6:  Reserved
-	volatile unsigned :1;	// Bit #7:  Reserved
-	volatile unsigned user_class   :1;	// Bit #8:  flag bit indicating a user defined failure has occurred
-	volatile unsigned :1;	// Bit #9:  Reserved
-	volatile unsigned :1;	// Bit #10: Reserved
-	volatile unsigned :1;	// Bit #11: Reserved
-	volatile unsigned :1;	// Bit #12: Reserved
-	volatile unsigned :1;	// Bit #13: Reserved
-	volatile unsigned :1;	// Bit #14: Reserved
-	volatile unsigned none         :1;  // Bit #15: flag bit indicating that no failure has occurred
-}__attribute__((packed))FAULT_OBJECT_CLASS_BIT_FIELD_t;
-
 typedef union 
 {
+    struct {
+        volatile unsigned notify       :1;	// Bit #0:  flag bit indicating a simple, uncritical notice
+        volatile unsigned warning      :1;	// Bit #1:  flag bit indicating a condition approaching critical level
+        volatile unsigned critical     :1;	// Bit #2:  flag bit indicating a condition has reached critical level
+        volatile unsigned catastrophic :1;	// Bit #3:  flag bit indicating a catastrophic failure has occurred
+        volatile unsigned :1;	// Bit #4:  Reserved
+        volatile unsigned :1;	// Bit #5:  Reserved
+        volatile unsigned :1;	// Bit #6:  Reserved
+        volatile unsigned :1;	// Bit #7:  Reserved
+        volatile unsigned user_class   :1;	// Bit #8:  flag bit indicating a user defined failure has occurred
+        volatile unsigned :1;	// Bit #9:  Reserved
+        volatile unsigned :1;	// Bit #10: Reserved
+        volatile unsigned :1;	// Bit #11: Reserved
+        volatile unsigned :1;	// Bit #12: Reserved
+        volatile unsigned :1;	// Bit #13: Reserved
+        volatile unsigned :1;	// Bit #14: Reserved
+        volatile unsigned none         :1;  // Bit #15: flag bit indicating that no failure has occurred
+    }__attribute__((packed))bits;
 	volatile uint16_t value; // buffer for 16-bit word read/write operations
-	volatile FAULT_OBJECT_CLASS_BIT_FIELD_t bits; // data structure for single bit addressing operations
 }FAULT_OBJECT_CLASS_t;
 
 /*!FAULT_OBJECT_CLASS_t
@@ -156,8 +151,8 @@ typedef union
  * ***********************************************************************************************/
 
 typedef enum {
-    FAULT_COMPARE_FIXED,    // Flag indicating that monitored value will be  compared against a constant value
-    FAULT_COMPARE_DYNAMIC   // Flag indicating that are variable with be  compared against another variable
+    FAULT_COMPARE_CONSTANT = 0b0000000000000000, // Flag indicating that monitored value will be compared against a constant value
+    FAULT_COMPARE_DYNAMIC  = 0b0000000000000001  // Flag indicating that one variable with be compared against another variable
 }FAULT_OBJECT_COMPARE_TYPE_e;
 
 /*!FAULT_CONDITION_SETTINGS_t
@@ -179,6 +174,7 @@ typedef enum
     FAULT_LEVEL_NOT_EQUAL    = 0b0000000000000100, // Flag to perform "is not equal than" comparison
     FAULT_LEVEL_OUT_OF_RANGE = 0b0000000000001000, // Flag to perform "greater than or less than" comparison
     FAULT_LEVEL_IN_RANGE     = 0b0000000000010000, // Flag to perform "greater than and less than" comparison
+    FAULT_LEVEL_BOOLEAN      = 0b0000000000100000  // Flag to perform a "true/false" comparison (e.g. bit-test)
 }FAULT_OBJECT_CONDITION_LEVEL_e;
     
 typedef struct
@@ -189,7 +185,7 @@ typedef struct
     volatile uint16_t reset_cnt_threshold; // Fault counter threshold resetting fault exception
     volatile uint16_t trip_level; // Input signal fault trip level/fault trip point
     volatile uint16_t trip_cnt_threshold; // Fault counter threshold triggering fault exception
-}__attribute__((packed))FAULT_CONDITION_SETTINGS_t;
+} FAULT_CONDITION_SETTINGS_t;
 
 
 /*!FAULT_OBJECT_t
@@ -214,7 +210,7 @@ typedef struct
     volatile uint16_t object_bit_mask; // bit mask filter to monitor specific bits within OBJECT
     volatile uint16_t (*user_fault_action)(void); // pointer to a user function called when a defined fault condition is detected
     volatile uint16_t (*user_fault_reset)(void); // pointer to a user function called when a defined fault condition is detected
-}__attribute__((packed))FAULT_OBJECT_t;
+} FAULT_OBJECT_t;
 
 /*!fault_object_list[]
  * ***********************************************************************************************
