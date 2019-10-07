@@ -103,42 +103,41 @@ typedef enum {
     STAT_BIT_DUMMY_1 = 0b1      // Dummy value 1
 }STAT_BIT_DUMMY_e;   // Battery connected/disconnected status bit 
 
-typedef struct {
-    volatile unsigned: 1;               // Bit 1: (reserved)
-    volatile unsigned: 1;               // Bit 1: (reserved)
-    volatile unsigned: 1;               // Bit 2: (reserved)
-    volatile unsigned: 1;               // Bit 3: (reserved)
-    volatile unsigned: 1;               // Bit 4: (reserved)
-    volatile unsigned: 1;               // Bit 5: (reserved)
-    volatile unsigned: 1;               // Bit 6: (reserved)
-    volatile unsigned: 1;               // Bit 7: (reserved)
-    volatile unsigned: 1;               // Bit 8:  (reserved)
-    volatile unsigned: 1;               // Bit 9:  (reserved)
-    volatile unsigned: 1;               // Bit 10: (reserved)
-    volatile unsigned: 1;               // Bit 11: (reserved)
-    volatile unsigned: 1;               // Bit 12: (reserved)
-    volatile unsigned: 1;               // Bit 13: (reserved)
-    volatile bool temp_warning: 1;      // Bit 14:  Status flag distribution indicating a temperature warning condition 
-	volatile bool critical_fault :1;    // Bit #15: Status flag distribution indicating a critical fault condition (forcing power converters to shut down)
-}SYSTEM_STATUS_BITS_t; // Internal system status flag bits
-
 typedef union {
+    struct {
+        volatile unsigned: 1;               // Bit 1: (reserved)
+        volatile unsigned: 1;               // Bit 1: (reserved)
+        volatile unsigned: 1;               // Bit 2: (reserved)
+        volatile unsigned: 1;               // Bit 3: (reserved)
+        volatile unsigned: 1;               // Bit 4: (reserved)
+        volatile unsigned: 1;               // Bit 5: (reserved)
+        volatile unsigned: 1;               // Bit 6: (reserved)
+        volatile unsigned: 1;               // Bit 7: (reserved)
+        volatile unsigned: 1;               // Bit 8: (reserved)
+        volatile unsigned: 1;               // Bit 9: (reserved)
+        volatile unsigned: 1;               // Bit 10: (reserved)
+        volatile unsigned: 1;               // Bit 11: (reserved)
+        volatile unsigned: 1;               // Bit 12: (reserved)
+        volatile unsigned: 1;               // Bit 13: (reserved)
+        volatile bool temp_warning: 1;      // Bit 14:  Status flag distribution indicating a temperature warning condition 
+        volatile bool critical_fault :1;    // Bit #15: Status flag distribution indicating a critical fault condition (forcing power converters to shut down)
+    } __attribute__((packed))bits; // Internal system status flag bits
     volatile uint16_t value; // 16-bit wide access to status bit field
-    volatile SYSTEM_STATUS_BITS_t bits; // single bit access to status bit field
 } SYSTEM_STATUS_t; // Internal system status of converters and control signals
 
 
 typedef enum {
-    SYSTEM_MODE_FAULT      = 0b0000000000000000, // power supply is turned off and MCU is running in fault mode
-    SYSTEM_MODE_OFF        = 0b0000000000000001, // power supply is turned off and MCU is running in idle mode
-    SYSTEM_MODE_ON         = 0b0000000000000010, // System is powered by source and performing normal function
-    SYSTEM_MODE_STANDBY    = 0b0000000000000100  // System completely turned off and MCU is on standby power
+    SYSTEM_MODE_FAULT      = 0b0000000000000000, // MCU is running in fault mode, critical systems may be shut down
+    SYSTEM_MODE_STARTUP    = 0b0000000000000001, // MCU is running initialization routines, not all systems may be online yet
+    SYSTEM_MODE_RUN        = 0b0000000000000010, // System is powered by source and performing normal function
+    SYSTEM_MODE_STANDBY    = 0b0000000000000100, // System completely turned off and MCU is on standby power
+    SYSTEM_MODE_IDLE       = 0b0000000000001000  // MCU is running at normal performance and power but systems may be inactive/in wait state
 } SYSTEM_MODE_FLAG_BITS_e;
 
 typedef union 
 {
-	volatile uint16_t value; // buffer for 16-bit word read/write operations
 	volatile SYSTEM_MODE_FLAG_BITS_e bits; // data structure for single bit addressing operations
+	volatile uint16_t value; // buffer for 16-bit word read/write operations
 } SYSTEM_MODE_t;
 
 
