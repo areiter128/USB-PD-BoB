@@ -170,27 +170,27 @@ typedef enum {
 extern volatile uint16_t task_queue_boot[];
 extern volatile uint16_t task_queue_boot_size;
 
-extern volatile uint16_t task_queue_device_startup[];
-extern volatile uint16_t task_queue_device_startup_size;
+extern volatile uint16_t task_queue_firmware_init[];
+extern volatile uint16_t task_queue_firmware_init_size;
 
-extern volatile uint16_t task_queue_system_startup[];
-extern volatile uint16_t task_queue_system_startup_size;
+extern volatile uint16_t task_queue_startup_sequence[];
+extern volatile uint16_t task_queue_startup_sequence_size;
 
 extern volatile uint16_t task_queue_idle[];
 extern volatile uint16_t task_queue_idle_size;
-extern volatile uint16_t task_queue_init_idle(void);
+extern volatile uint16_t task_queue_idle_init(void);
 
-extern volatile uint16_t task_queue_normal[];
-extern volatile uint16_t task_queue_normal_size;
-extern volatile uint16_t task_queue_init_normal(void);
+extern volatile uint16_t task_queue_run[];
+extern volatile uint16_t task_queue_run_size;
+extern volatile uint16_t task_queue_run_init(void);
 
 extern volatile uint16_t task_queue_fault[];
 extern volatile uint16_t task_queue_fault_size;
-extern volatile uint16_t task_queue_init_fault(void);
+extern volatile uint16_t task_queue_fault_init(void);
 
 extern volatile uint16_t task_queue_standby[];
 extern volatile uint16_t task_queue_standby_size;
-extern volatile uint16_t task_queue_init_standby(void);
+extern volatile uint16_t task_queue_standby_init(void);
 
 #endif	/* _APPLICATION_LAYER_TASK_FLOW_QUEUES_H_ */
 

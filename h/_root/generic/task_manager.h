@@ -51,14 +51,14 @@
 /* Data structures */
 
 typedef enum {
-    OP_MODE_UNKNOWN          = 0b0000000000000000, // Define for unknown state of the task scheduler
-    OP_MODE_BOOT             = 0b0000000000000001, // Operation mode during device start-up and peripheral configuration
-    OP_MODE_DEVICE_STARTUP   = 0b0000000000000010, // On-chip peripherals start-up period (self-check, soft-start, etc.)
-    OP_MODE_SYSTEM_STARTUP   = 0b0000000000000100, // PCB start-up period (self-check, soft-start, etc.)
+    OP_MODE_UNKNOWN          = 0b0000000000000000, // Define for unknown state of the task scheduler => ERROR!
+    OP_MODE_BOOT             = 0b0000000000000001, // Operation mode during device start-up => basic task manager setup
+    OP_MODE_FIRMWARE_INIT    = 0b0000000000000010, // User-code modules and generic peripherals configuration (initialization in disabled state)
+    OP_MODE_STARTUP_SEQUENCE = 0b0000000000000100, // User-code module and generic peripheral start sequence
     OP_MODE_IDLE             = 0b0000000000001000, // Entering Normal operation mode, "NO ACTION" operating mode from which active op-modes are enabled
-    OP_MODE_NORMAL           = 0b0000000000010000, // SDB board is powered by AC adapter, motherboard is powered by ADB board, batteries are charged
-    OP_MODE_FAULT            = 0b0100000000000000, // Fault mode will be entered when a critical fault condition has been detected
-    OP_MODE_STANDBY          = 0b1000000000000000  // During standby mode the converter is disabled
+    OP_MODE_NORMAL           = 0b0000000000010000, // System is powered and performing "normal functions"
+    OP_MODE_FAULT            = 0b0100000000000000, // A critical FAULT condition has been detected and system is partially shut down, waiting for a restart-attempt
+    OP_MODE_STANDBY          = 0b1000000000000000  // Standby mode, all sub-modules are disabled and CPU is in low-power mode
 } SYSTEM_OPERATION_MODE_e;
 
 typedef union {

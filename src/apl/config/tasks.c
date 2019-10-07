@@ -103,16 +103,31 @@ volatile uint16_t (*Task_Table[])(void) = {
 
 /*!task_queue_boot
  * ***********************************************************************************************
- *   In OP_MODE_BOOT this is the first task queue which is loaded right after the task manager 
- *   has been started. 
- *   In this task queue is covering all basic configurations of data objects and user tasks.
- *   It is recommended to add all initializations of default values in data structures, which 
- *   will/might be later used/needed by peripheral drivers to be set up correctly.
+ *   The OP_MODE_BOOT marks the period where the CPU is coming out of reset. During this period
+ *   the following sequence of configurations will be executed. The execution of some of the 
+ *   listed, optional functions can be configured by using the named flags in task_manager_config.h
+ * 
+ *     - CheckCPUResetRootCause()
+ *     - DEVICE_Reset()             (optional, set/clear flag EXECUTE_DEVICE_RESET)
+ *     - ExecuteUserStartupCode()   (optional, set/clear flag EXECUTE_USER_STARTUP_CODE)
+ *     - CLOCK_Initialize()         (optional, set/clear flag EXECUTE_MCC_SYSTEM_INITIALIZE)
+ *     - OS_Initialize()
+ * 
+ *   After this sequence has been completed, the CPU is running at maximum performance,
+ *   starting to execute user defined tasks queues managed by the main task scheduler.
+ * 
+ *   In this task queue is reserved for all basic configurations of internal data objects
+ *   and software root modules of the task manager.
+ *  
+ *   It is recommended to add all Initialization and configuration functions of user code
+ *   modules and tasks to the task queue task_queue_firmware_init[] in a disabled state
+ *   and further use task queue task_queue_startup_sequence[] to execute their enable 
+ *   sequence.
  * 
  *   PLEASE NOTE:
  *   The boot task queue is only executed once calling all listed tasks in one sequence.
  *   At the end of this task queue the task manager will automatically switch over to 
- *   task queue device startup.
+ *   task queue task_queue_firmware_init[].
  * *********************************************************************************************** */
 
 volatile uint16_t task_queue_boot[] = {
@@ -124,31 +139,32 @@ volatile uint16_t task_queue_boot[] = {
 };
 volatile uint16_t task_queue_boot_size = (sizeof(task_queue_boot)/sizeof(task_queue_boot[0]));
 
-/*!task_queue_device_startup
+/*!task_queue_firmware_init
  * ***********************************************************************************************
- *   In OP_MODE_DEVICE_STARTUP this task queue covers all peripheral configurations. 
- *   During the execution of this task sequence the peripheral initialization may set up modules 
- *   in a disabled state. It is recommended to add a user defined task taking care of the 
- *   peripheral startup sequence to have maximum control over the functional device startup process.
+ *   In OP_MODE_FIRMWARE_INIT the task queue covers all user software modules and basic  
+ *   peripheral configurations 
  * 
- *   To support this approach, all initialization functions of peripheral driver library modules 
- *   are configuring peripherals masking out the ENABLE bit to keep them in a disabled state by 
- *   default. Each driver module offers an additional ENABLE function call for the purpose of
- *   enabling a pre-configured peripheral whenever needed. 
+ *   To support this approach, all initialization functions of peripheral and software modules 
+ *   are configured in a disabled state by default (e.g. by masking out the ENABLE bit).
+ *   Each peripheral of software module should offer an additional ENABLE function 
+ *   call or ENABLE bit for the purpose of enabling a pre-configured peripheral whenever needed. 
+ * 
+ *   Once all peripherals and software modules have been set up, they should be enabled in the
+ *   desired, application specific sequence/order within the task_queue_startup_sequence[]. 
  * 
  *   PLEASE NOTE:
- *   The device startup task queue is only executed once calling all listed tasks in one sequence.
- *   At the end of this task queue the task manager will automatically switch over to 
- *   task queue system startup.
+ *   The device startup task queue is only executed once calling all listed tasks in one successive 
+ *   sequence.  At the end of this task queue the task manager will automatically switch over to 
+ *   task_queue_startup_sequence[].
  * *********************************************************************************************** */
 
-volatile uint16_t task_queue_device_startup[] = {
+volatile uint16_t task_queue_firmware_init[] = {
     INIT_POWER_CONTROL, // Step #1
     TASK_IDLE   // empty task used as task list execution time buffer 
 };
-volatile uint16_t task_queue_device_startup_size = (sizeof(task_queue_device_startup)/sizeof(task_queue_device_startup[0]));
+volatile uint16_t task_queue_firmware_init_size = (sizeof(task_queue_firmware_init)/sizeof(task_queue_firmware_init[0]));
 
-/*!task_queue_system_startup
+/*!task_queue_startup_sequence
  * ***********************************************************************************************
  *   In OP_MODE_SYSTEM_STARTUP task queue system startup is executed.
  *   Once variable/data structure default values have been loaded and peripherals have been 
@@ -166,11 +182,11 @@ volatile uint16_t task_queue_device_startup_size = (sizeof(task_queue_device_sta
  *   in user code.
  * *********************************************************************************************** */
 
-volatile uint16_t task_queue_system_startup[] = {
+volatile uint16_t task_queue_startup_sequence[] = {
     TASK_IDLE, // Step #1
     TASK_IDLE   // empty task used as task list execution time buffer 
 };
-volatile uint16_t task_queue_system_startup_size = (sizeof(task_queue_system_startup)/sizeof(task_queue_system_startup[0]));
+volatile uint16_t task_queue_startup_sequence_size = (sizeof(task_queue_startup_sequence)/sizeof(task_queue_startup_sequence[0]));
 
 /*!task_queue_idle
  * ***********************************************************************************************
@@ -189,7 +205,7 @@ volatile uint16_t task_queue_idle[] = {
     TASK_IDLE   // empty task used as task list execution time buffer 
 };
 volatile uint16_t task_queue_idle_size = (sizeof(task_queue_idle)/sizeof(task_queue_idle[0]));
-volatile uint16_t task_queue_init_idle(void)
+volatile uint16_t task_queue_idle_init(void)
 {
     Nop();
     return(1);
@@ -215,7 +231,7 @@ volatile uint16_t task_queue_init_idle(void)
  * *********************************************************************************************** */
 /* ORIGINAL DEFINITION OF OP_MODE_NORMAL
  * 
-volatile uint16_t task_queue_normal[] = {
+volatile uint16_t task_queue_run[] = {
     TASK_1,                     // Step #0
     TASK_2                      // Step #1
     TASK_3                      // Step #2
@@ -223,24 +239,24 @@ volatile uint16_t task_queue_normal[] = {
     TASK_IDLE                   // Step #n => empty buffer task execution window to account for 
                                 // overrunning task execution time
 };
-volatile uint16_t task_queue_normal_size = (sizeof(task_queue_normal)/sizeof(task_queue_normal[0]));
+volatile uint16_t task_queue_run_size = (sizeof(task_queue_run)/sizeof(task_queue_run[0]));
 */
 
-/*!task_queue_normal
+/*!task_queue_run
  * ***********************************************************************************************
- *   In OP_MODE_NORMAL task queue normal is executed until a new operating mode is selected and a 
+ *   In OP_MODE_RUN task queue run is executed until a new operating mode is selected and a 
  *   new/different task queue is loaded.
  * 
  *   In NORMAL MODE the system is performing its normal function. All tasks which need to be
  *   executed in this mode need to added to this task queue.
  * *********************************************************************************************** */
 
-volatile uint16_t task_queue_normal[] = {
+volatile uint16_t task_queue_run[] = {
     TASK_IDLE, // Step #0
-    TASK_IDLE   // empty task used as task list execution time buffer 
+    TASK_IDLE  // empty task used as task list execution time buffer 
 };
-volatile uint16_t task_queue_normal_size = (sizeof(task_queue_normal)/sizeof(task_queue_normal[0]));
-volatile uint16_t task_queue_init_normal(void)
+volatile uint16_t task_queue_run_size = (sizeof(task_queue_run)/sizeof(task_queue_run[0]));
+volatile uint16_t task_queue_run_init(void)
 {
     Nop();
     
@@ -264,7 +280,7 @@ volatile uint16_t task_queue_fault[] = {
     TASK_IDLE   // empty task used as task list execution time buffer 
 };
 volatile uint16_t task_queue_fault_size = (sizeof(task_queue_fault)/sizeof(task_queue_fault[0]));
-volatile uint16_t task_queue_init_fault(void)
+volatile uint16_t task_queue_fault_init(void)
 {
     Nop();
     return(1);
@@ -284,7 +300,7 @@ volatile uint16_t task_queue_standby[] = {
     TASK_IDLE   // empty task used as task list execution time buffer 
 };
 volatile uint16_t task_queue_standby_size = (sizeof(task_queue_standby)/sizeof(task_queue_standby[0]));
-volatile uint16_t task_queue_init_standby(void)
+volatile uint16_t task_queue_standby_init(void)
 {
     Nop();
     return(1);
