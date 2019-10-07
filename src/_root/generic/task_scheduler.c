@@ -44,7 +44,7 @@ inline volatile uint16_t exec_scheduler(void) {
     fres &= CheckCPUResetRootCause();
 
     // Initialize essential chip features and peripheral modules to boot up system
-    #if (EXECUTE_MCC_SYSTEM_INITIALIZE == 0)
+    #if ((EXECUTE_MCC_SYSTEM_INITIALIZE == 0) && (EXECUTE_DEVICE_RESET == 1))
     fres &= DEVICE_Reset();
     #endif
 
@@ -78,7 +78,7 @@ inline volatile uint16_t exec_scheduler(void) {
 
 #if (USE_TASK_EXECUTION_CLOCKOUT_PIN == 1)
 #ifdef TS_CLOCKOUT_PIN_WR
-    TS_CLOCKOUT_PIN_WR = PINSTATE_HIGH;                  // Drive debug pin high
+    TS_CLOCKOUT_PIN_WR = PINSTATE_HIGH; // Drive debug pin high
 #endif
 #endif
 
@@ -101,7 +101,7 @@ inline volatile uint16_t exec_scheduler(void) {
 
         }
 
-        *task_mgr.reg_task_timer_irq_flag ^= task_mgr.task_timer_irq_flag_mask; // Reset timer ISR flag bit
+        *task_mgr.reg_task_timer_irq_flag &= (~task_mgr.task_timer_irq_flag_mask); // Reset timer ISR flag bit
 
         
 #if ((USE_TASK_EXECUTION_CLOCKOUT_PIN == 1) && (USE_DETAILED_CLOCKOUT_PATTERN == 1))
@@ -111,8 +111,7 @@ inline volatile uint16_t exec_scheduler(void) {
 #endif
         
         // Call most recent task with execution time measurement
-        fres = task_manager_tick();     // Step through pre-defined task lists
-
+        fres &= task_manager_tick();     // Step through pre-defined task lists
 
 #if ((USE_TASK_EXECUTION_CLOCKOUT_PIN == 1) && (USE_DETAILED_CLOCKOUT_PATTERN == 1))
 #ifdef TS_CLOCKOUT_PIN_WR
@@ -129,6 +128,8 @@ inline volatile uint16_t exec_scheduler(void) {
 #endif
 #endif
 
+        // 'fres'-check is mapped into the operating system component check status bit
+        task_mgr.status.bits.os_component_check = fres;
         
         // call the fault handler to check all defined fault objects
         fres &= exec_FaultCheckAll();
@@ -142,6 +143,7 @@ inline volatile uint16_t exec_scheduler(void) {
         // Reset Watchdog Timer
         // ToDo: Move swdt_reset(); out to taks queues
         // ToDo: Add windowed WDT option to library
+        // ToDo: Add compile switch for option __DEBUG to disable watchdog in debug sessions
         //Remove: fres &= swdt_reset();
         
         // Increment task table pointer
