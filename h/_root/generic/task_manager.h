@@ -103,7 +103,6 @@ typedef union {
 
 typedef struct {
     volatile uint16_t quota; // Maximum allowed task execution period
-    volatile uint16_t buffer; // Buffer for most recent task time meter result
     volatile uint16_t task_time; // Execution time meter result of last called task
     volatile uint16_t maximum; // Task time meter maximum is tracked and logged
 } __attribute__((packed))TASK_CONTROL_t;
@@ -112,6 +111,8 @@ typedef enum {
     EXEC_STAT_FAULT_OVERRIDE        = 0b0000000000000001, // Some fault condition is overriding task settings and actions
     EXEC_STAT_START_COMPLETE        = 0b0000000000000010, // Firmware has passed startup sequence
     EXEC_STAT_QUEUE_SWITCH          = 0b0000000000000100, // Task manager has just switched task queues
+    EXEC_STAT_TSKMGR_PER_OVR        = 0b0000000000001000, // Task manager base timer period overrun flag bit
+    EXEC_STAT_OS_COMP_CHECK         = 0b0000000000010000, // Task manager internal component check flag bit
         
     EXEC_STAT_NOTIFICATION_PENDING  = 0b0010000000000000, // Some condition raised a notification flag
     EXEC_STAT_WARNING_PENDING       = 0b0100000000000000, // Some condition raised a warning flag
@@ -121,10 +122,10 @@ typedef enum {
 typedef union  {
     struct {
         volatile bool fault_override :1; // Bit #0: Flag bit indicating that all other operating modes are overridden by the FAULT_HANDLER
-        volatile bool startup_sequence_complete:1; // Bit #1: Flag bit indicating that device and system startup has been completed
-        volatile bool queue_switch:1; // Bit #2: queue_switch occurred (active for one queue loop)
-        volatile unsigned :1; // Bit #3:  (reserved)
-        volatile unsigned :1; // Bit #4:  (reserved)
+        volatile bool startup_sequence_complete :1; // Bit #1: Flag bit indicating that device and system startup has been completed
+        volatile bool queue_switch :1; // Bit #2: queue_switch occurred (active for one queue loop)
+        volatile bool task_mgr_period_overrun :1; // Bit #3:  Flag bit indicating task manager base time has overrun before an execution period was complete
+        volatile bool os_component_check :1; // Bit #4: OS component function return value validation (0=failure, 1=success)
         volatile unsigned :1; // Bit #5:  (reserved)
         volatile unsigned :1; // Bit #6:  (reserved)
         volatile unsigned :1; // Bit #7:  (reserved)
@@ -134,9 +135,9 @@ typedef union  {
         volatile unsigned :1; // Bit #10: (reserved)
         volatile unsigned :1; // Bit #11: (reserved)
         volatile unsigned :1; // Bit #12: (reserved)
-        volatile bool global_notify:1;	// Bit #13: flag bit indicating the presence of notify events
-        volatile bool global_warning:1;	// Bit #14: flag bit indicating the presence of warning events
-        volatile bool global_fault:1;	// Bit #15: flag bit indicating the presence of fault events
+        volatile bool global_notify :1;	// Bit #13: flag bit indicating the presence of notify events
+        volatile bool global_warning :1;	// Bit #14: flag bit indicating the presence of warning events
+        volatile bool global_fault :1;	// Bit #15: flag bit indicating the presence of fault events
     } __attribute__((packed))bits;
 	volatile TASKMGR_STATUS_e value; // buffer for 16-bit word read/write operations
 } TASKMGR_STATUS_t;
@@ -180,9 +181,9 @@ extern volatile TASK_MANAGER_t task_mgr; // Declare a data structure holding the
 
 
 // Public Task Manager Function Prototypes
-extern uint16_t init_TaskManager(void);
-extern uint16_t task_manager_tick(void);
-extern uint16_t task_CheckOperationModeStatus(void);
+extern volatile uint16_t init_TaskManager(void);
+extern volatile uint16_t task_manager_tick(void);
+extern volatile uint16_t task_CheckOperationModeStatus(void);
 
 
 #endif	/* _ROOT_TASK_MANAGER_H_ */

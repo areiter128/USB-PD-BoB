@@ -86,6 +86,7 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     
     // if the fault object is not initialized, exit here
     if(fltobj->source_object == NULL) { return(1); }
+    
     // read value to monitor (with bit-mask filtering)
     source_value = ((*fltobj->source_object) & (fltobj->object_bit_mask));
     
@@ -134,6 +135,17 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
         // if the value hovers within the hysteresis of the threshold => do nothing
         { Nop(); }
         
+    }
+    else if (fltobj->criteria.fault_ratio == (FAULT_LEVEL_BOOLEAN))
+    // if the fault level is defined to be at a constant number/value, trigger fault (without hysteresis)
+    {
+        if(((bool)source_value) == ((bool)fltobj->criteria.trip_level))
+        // if the fault value is hit, set the fault flag and increment the fault counter
+        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
+        else
+        // if not equal, reset the fault flag and fault counter
+        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
+
     }
     else if (fltobj->criteria.fault_ratio == (FAULT_LEVEL_EQUAL))
     // if the fault level is defined to be at a constant number/value, trigger fault (without hysteresis)
@@ -212,7 +224,7 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
  * ***********************************************************************************************/
 inline volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj)
 {
-    volatile uint16_t fres = 1;
+    volatile uint16_t f_res = 1;
     
     // Depending on if a fault state is active or not, set or reset fault counter
     if (!fltobj->status.bits.fltstat)
@@ -230,7 +242,7 @@ inline volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj)
                 fltobj->status.bits.fltstat = 1; // set "fault status" bit
 
                 // Set global fault flags and execute appropriate response
-                fres &= ExecFaultHandler(fltobj);   
+                f_res &= ExecFaultHandler(fltobj);   
 
             }
 
@@ -265,7 +277,7 @@ inline volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     }
         
     
-    return(fres);
+    return(f_res);
 }
 
 /*!CaptureCPUInterruptStatus
@@ -368,14 +380,15 @@ volatile uint16_t CaptureCPUInterruptStatus(void)
  * Description:
  * This routine analyzes the traplog object and CPU RESET register RCON for the latest events.
  * The register status is triaged in critical, warning and notification-level reset causes.
- * If a critical condition was detected, this functions returns 
+ * This functions returns 
  * 
  *     3 = (critical-level reset condition)
  *     2 = (warning-level reset condition)
  *     1 = (notification-level reset condition)
  *     0 = unknown condition/function failure
+ * 
  * ***********************************************************************************************/
-inline volatile uint16_t CheckCPUResetRootCause(void)
+volatile uint16_t CheckCPUResetRootCause(void)
 {
     volatile uint16_t fres = 1;
 
@@ -466,9 +479,9 @@ inline volatile uint16_t CheckCPUResetRootCause(void)
  *          * a user defined function will be called (of form uint16_t xxxx(void) only)
  * 
  * ***********************************************************************************************/
-inline volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj)
+ inline volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj)
 {
-    volatile uint16_t fres = 1, log_id = 0;
+    volatile uint16_t f_ret = 1, log_id = 0;
     
     if(fltobj->flt_class.value & FLT_CLASS_CATASTROPHIC)
     {
@@ -478,7 +491,7 @@ inline volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj)
         task_mgr.op_mode.value = OP_MODE_FAULT; // force main scheduler into fault mode
         log_id = fltobj->id; // ToDo: Log the fault object ID in the traps data structure 
         run_scheduler = false; // Terminate main scheduler, enforcing a warm CPU restart
-        return(fres);
+        return(f_ret); // Return success immediately, don't execute rest of function
     }
 
     // if fault is of any other class than CATASTROPHIC, perform response. 
@@ -512,10 +525,10 @@ inline volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj)
         // If a user defined fault handler routine has been specified, 
         // call/execute user defined function of type uint16_t xxxx(void) only
         if(fltobj->user_fault_action != NULL)
-        { fres = fltobj->user_fault_action(); } // Call/execute user defined function
+        { f_ret = fltobj->user_fault_action(); } // Call/execute user defined function
     }        
         
-    return(fres);
+    return(f_ret); // return 1=success, 0=failure
 }
 
 
@@ -554,7 +567,6 @@ inline volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj)
  * ***********************************************************************************************/
 inline volatile uint16_t ExecGlobalFaultFlagRelease(volatile uint16_t fault_class_code)
 {
-    volatile uint16_t fres = 1;
     
     // if fault is of any other class than CATASTROPHIC, perform recovery from fault condition. 
     // Multiple responses are supported when multiple fault classes are specified by ORing multiple 
@@ -580,7 +592,7 @@ inline volatile uint16_t ExecGlobalFaultFlagRelease(volatile uint16_t fault_clas
                                                     // and don't take further action
     }
 
-    return(fres);
+    return(1);
 }
 
 /*!ExecFaultFlagReleaseHandler
@@ -671,7 +683,7 @@ volatile uint16_t exec_FaultCheckAll(void)
         task_mgr.status.bits.fault_override = false;   // Reset global fault override flag
         task_mgr.status.bits.startup_sequence_complete = false; // Reset startup sequence complete flag
         task_mgr.pre_op_mode.value = OP_MODE_FAULT;  // set pre_op_mode to provoke op-mode switch-over
-        task_mgr.op_mode.value = OP_MODE_SYSTEM_STARTUP; // set op_mode to provoke op-mode switch-over
+        task_mgr.op_mode.value = OP_MODE_STARTUP_SEQUENCE; // set op_mode to provoke op-mode switch-over
 
     } 
         

@@ -41,6 +41,8 @@ typedef enum {
     FLTOBJ_CPU_LOAD_OVERRUN, // CPU load counter exceeds task period => not enough bandwidth
     FLTOBJ_TASK_EXECUTION_FAILURE, // Fault object Task Execution Failure
     FLTOBJ_TASK_TIME_QUOTA_VIOLATION, // Fault object Task Time Quota Violation
+    FLTOBJ_TASK_MGR_PERIOD_VIOLATION, // Fault object Task Manager Period Violation
+    FLTOBJ_OS_COMPONENT_FAILURE, // Fault object Operating System Component Failure
         
     FLTOBJ_POWER_SOURCE_FAILURE, // Input voltage is out of range preventing DC/DC converters to run
     FLTOBJ_POWER_CONTROL_FAILURE_PORT_A, // A critical fault was detected in DC/DC converter of port A
