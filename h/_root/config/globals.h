@@ -82,31 +82,31 @@
  * 
  *****************************************************************************/
 
- typedef struct
- {
-     volatile uint16_t bit0:1;	// Bit #0:  generic bit placeholder bit #0
-     volatile uint16_t bit1:1;	// Bit #1:  generic bit placeholder bit #1
-     volatile uint16_t bit2:1;	// Bit #2:  generic bit placeholder bit #2
-     volatile uint16_t bit3:1;	// Bit #3:  generic bit placeholder bit #3
-     volatile uint16_t bit4:1;	// Bit #4:  generic bit placeholder bit #4
-     volatile uint16_t bit5:1;	// Bit #5:  generic bit placeholder bit #5
-     volatile uint16_t bit6:1;	// Bit #6:  generic bit placeholder bit #6
-     volatile uint16_t bit7:1;	// Bit #7:  generic bit placeholder bit #7
-     
-     volatile uint16_t bit8:1;	// Bit #8:  generic bit placeholder bit #8
-     volatile uint16_t bit9:1;	// Bit #9:  generic bit placeholder bit #9
-     volatile uint16_t bit10:1;	// Bit #11:  generic bit placeholder bit #10
-     volatile uint16_t bit11:1;	// Bit #11:  generic bit placeholder bit #11
-     volatile uint16_t bit12:1;	// Bit #12:  generic bit placeholder bit #12
-     volatile uint16_t bit13:1;	// Bit #13:  generic bit placeholder bit #13
-     volatile uint16_t bit14:1;	// Bit #14:  generic bit placeholder bit #14
-     volatile uint16_t bit15:1;	// Bit #15:  generic bit placeholder bit #15
- }__attribute__((packed)) SFR16b_FRAME_t;
- 
 typedef union 
 {
-	volatile uint16_t value;    // buffer for 16-bit word read/write operations
-	volatile SFR16b_FRAME_t bits;  // data structure for single bit addressing operations
+    struct
+    {
+        volatile uint16_t bit0:1;	// Bit #0:  generic bit placeholder bit #0
+        volatile uint16_t bit1:1;	// Bit #1:  generic bit placeholder bit #1
+        volatile uint16_t bit2:1;	// Bit #2:  generic bit placeholder bit #2
+        volatile uint16_t bit3:1;	// Bit #3:  generic bit placeholder bit #3
+        volatile uint16_t bit4:1;	// Bit #4:  generic bit placeholder bit #4
+        volatile uint16_t bit5:1;	// Bit #5:  generic bit placeholder bit #5
+        volatile uint16_t bit6:1;	// Bit #6:  generic bit placeholder bit #6
+        volatile uint16_t bit7:1;	// Bit #7:  generic bit placeholder bit #7
+
+        volatile uint16_t bit8:1;	// Bit #8:  generic bit placeholder bit #8
+        volatile uint16_t bit9:1;	// Bit #9:  generic bit placeholder bit #9
+        volatile uint16_t bit10:1;	// Bit #11:  generic bit placeholder bit #10
+        volatile uint16_t bit11:1;	// Bit #11:  generic bit placeholder bit #11
+        volatile uint16_t bit12:1;	// Bit #12:  generic bit placeholder bit #12
+        volatile uint16_t bit13:1;	// Bit #13:  generic bit placeholder bit #13
+        volatile uint16_t bit14:1;	// Bit #14:  generic bit placeholder bit #14
+        volatile uint16_t bit15:1;	// Bit #15:  generic bit placeholder bit #15
+    }__attribute__((packed)) SFR16b_FRAME_t; // data structure for single bit addressing operations
+
+ 	volatile uint16_t value;    // buffer for 16-bit word read/write operations
+
 }SPECIAL_FUNCTION_REGISTER_t;
 
     
