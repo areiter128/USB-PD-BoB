@@ -438,15 +438,8 @@
 #define BOOSTH2_PWM_IE       _PWM2IE // interrupt enable bit
 #define BOOSTH2_PWM_IP       _PWM2IP // interrupt priority for this analog input
 #define _BOOSTH2_PWM_Interrupt _PWM2Interrupt // Interrupt Service Routine name declaration
-
-// ToDo: User defined settings need to be incorporated into code generator
-#define BOOSTH2_ADC_TRGSRC_1    0b00110 //ADTRIGx_TRGSRC_PWM2_TRIG1
-#define BOOSTH2_ADC_TRGSRC_2    0b00111 //ADTRIGx_TRGSRC_PWM2_TRIG2
-#define BOOSTH2_PGxEVT_ADTR1EN  0b001   // PGxTRIGA register compare event is enabled as trigger source for ADC Trigger 1
-#define BOOSTH2_PGxEVT_ADTR1PS  0b00001 // ADC Trigger 1 Postscaler Selection: Trigger will be generated every other cycle
-#define BOOSTH2_PGxEVT_ADTR1OFS 0b00001 // ADC Trigger 1 Offset Selection: Offset by 1 trigger event 
-#define BOOSTH2_PGxEVT_ADTR2EN  0b000   // All PGxTRIGn registers compare events are disabled as trigger source for ADC Trigger 2
-#define BOOSTH2_PGxEVT_EVTSEL   0b11    // Time base interrupts are disabled
+#define BOOSTH2_ADTRGSRC_1    0b00110 // = ADTRIGx_TRGSRC_PWM2_TRIG1
+#define BOOSTH2_ADTRGSRC_2    0b00111 // = ADTRIGx_TRGSRC_PWM2_TRIG2
 
 // Device Pin #64 is RB13
 #define POOSTL2_TRIS    TRISBbits.TRISB13 // GPIO direction register bit
@@ -515,15 +508,8 @@
 #define BUCKH2_PWM_IE       _PWM1IE // interrupt enable bit
 #define BUCKH2_PWM_IP       _PWM1IP // interrupt priority for this analog input
 #define _BUCKH2_PWM_Interrupt _PWM1Interrupt // Interrupt Service Routine name declaration
-
-// ToDo: User defined settings need to be incorporated into code generator
-#define BUCKH2_ADC_TRGSRC_1 0b00100 //ADTRIGx_TRGSRC_PWM1_TRIG1
-#define BUCKH2_ADC_TRGSRC_2 0b00101 //ADTRIGx_TRGSRC_PWM1_TRIG2
-#define BUCKH2_PGxEVT_ADTR1EN   0b001   // PGxTRIGA register compare event is enabled as trigger source for ADC Trigger 1
-#define BUCKH2_PGxEVT_ADTR1PS   0b00001 // ADC Trigger 1 Postscaler Selection: Trigger will be generated every other cycle
-#define BUCKH2_PGxEVT_ADTR1OFS  0b00001 // ADC Trigger 1 Offset Selection: Offset by 1 trigger event
-#define BUCKH2_PGxEVT_ADTR2EN   0b000   // All PGxTRIGn registers compare events are disabled as trigger source for ADC Trigger 2
-#define BUCKH2_PGxEVT_EVTSEL    0b11    // Time base interrupts are disabled
+#define BUCKH2_ADTRGSRC_1   0b00100 // = ADTRIGx_TRGSRC_PWM1_TRIG1
+#define BUCKH2_ADTRGSRC_2   0b00101 // = ADTRIGx_TRGSRC_PWM1_TRIG2
 
 // Device Pin #2 is RB15
 #define BUCKL2_TRIS    TRISBbits.TRISB15 // GPIO direction register bit
@@ -873,15 +859,8 @@
 #define BOOSTH1_PWM_IE       _PWM7IE // interrupt enable bit
 #define BOOSTH1_PWM_IP       _PWM7IP // interrupt priority for this analog input
 #define _BOOSTH1_PWM_Interrupt _PWM7Interrupt // Interrupt Service Routine name declaration
-
-// ToDo: User defined settings need to be incorporated into code generator
-#define BOOSTH1_ADC_TRGSRC_1 0b10000 //ADTRIGx_TRGSRC_PWM7_TRIG1
-#define BOOSTH1_ADC_TRGSRC_2 0b10001 //ADTRIGx_TRGSRC_PWM7_TRIG2
-#define BOOSTH1_PGxEVT_ADTR1EN   0b001   // PGxTRIGA register compare event is enabled as trigger source for ADC Trigger 1
-#define BOOSTH1_PGxEVT_ADTR1PS   0b00001 // ADC Trigger 1 Postscaler Selection: Trigger will be generated every other cycle
-#define BOOSTH1_PGxEVT_ADTR1OFS  0b00000 // ADC Trigger 1 Offset Selection: Offset by 0 trigger event (triggered in the first cycle)
-#define BOOSTH1_PGxEVT_ADTR2EN   0b000   // All PGxTRIGn registers compare events are disabled as trigger source for ADC Trigger 2
-#define BOOSTH1_PGxEVT_EVTSEL    0b11    // Time base interrupts are disabled
+#define BOOSTH1_ADTRGSRC_1    0b10000 // = ADTRIGx_TRGSRC_PWM7_TRIG1
+#define BOOSTH1_ADTRGSRC_2    0b10001 // = ADTRIGx_TRGSRC_PWM7_TRIG2
 
 // Device Pin #53 is RC11
 #define BOOSTL1_TRIS    TRISCbits.TRISC11 // GPIO direction register bit
@@ -1150,17 +1129,10 @@
 #define BUCKH1_PWM_IE       _PWM5IE // interrupt enable bit
 #define BUCKH1_PWM_IP       _PWM5IP // interrupt priority for this analog input
 #define _BUCKH1_PWM_Interrupt _PWM5Interrupt // Interrupt Service Routine name declaration
+#define BUCKH1_ADTRGSRC_1   0b01100 // = ADTRIGx_TRGSRC_PWM5_TRIG1
+#define BUCKH1_ADTRGSRC_2   0b01101 // = ADTRIGx_TRGSRC_PWM5_TRIG2
 
-// ToDo: User defined settings need to be incorporated into code generator
-#define BUCKH1_ADC_TRGSRC_1     0b01100 // ADTRIGx_TRGSRC_PWM5_TRIG1
-#define BUCKH1_ADC_TRGSRC_2     0b01101 // ADTRIGx_TRGSRC_PWM5_TRIG2
-#define BUCKH1_PGxEVT_ADTR1EN   0b001   // PGxTRIGA register compare event is enabled as trigger source for ADC Trigger 1
-#define BUCKH1_PGxEVT_ADTR2EN   0b000   // All PGxTRIGn registers compare events are disabled as trigger source for ADC Trigger 2
-#define BUCKH1_PGxEVT_ADTR1PS   0b00001 // ADC Trigger 1 Postscaler Selection: Trigger will be generated every other cycle
-#define BUCKH1_PGxEVT_ADTR1OFS  0b00000 // ADC Trigger 1 Offset Selection: Offset by 0 trigger event
-#define BUCKH1_PGxEVT_EVTSEL    0b11    // Time base interrupts are disabled
-
-// Device Pin #51 is RC5
+    // Device Pin #51 is RC5
 #define BUCKL1_TRIS    TRISCbits.TRISC5 // GPIO direction register bit
 #define BUCKL1_WR      LATCbits.LATC5 // GPIO port latch register bit
 #define BUCKL1_RD      PORTCbits.RC5 // GPIO port register bit

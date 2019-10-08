@@ -240,40 +240,40 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.boost_leg.adtr1_offset = BOOSTH1_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection
     
     // Load ADC settings from hardware and microcontroller abstraction layers (HAL and MCAL)
-    c4swbb_1.feedback.ad_vout.enable = true;
+    c4swbb_1.feedback.ad_vout.enable = FB_VOUT1_ENABLE;
     c4swbb_1.feedback.ad_vout.adin_no = FB_VOUT1_ADC_AN_INPUT;
     c4swbb_1.feedback.ad_vout.adc_core = FB_VOUT1_ADCCORE;
     c4swbb_1.feedback.ad_vout.ptrADBUF = &FB_VOUT1_ADCBUF;
-    c4swbb_1.feedback.ad_vout.trigger_source = BUCKH1_ADC_TRGSRC_1;
-    c4swbb_1.feedback.ad_vout.early_interrupt_enable = true;
-    c4swbb_1.feedback.ad_vout.interrupt_enable = true;
+    c4swbb_1.feedback.ad_vout.trigger_source = FB_VOUT1_TRGSRC;
+    c4swbb_1.feedback.ad_vout.early_interrupt_enable = FB_VOUT1_EIE_ENABLE;
+    c4swbb_1.feedback.ad_vout.interrupt_enable = FB_VOUT1_ISR_ENABLE;
     c4swbb_1.feedback.ad_vout.interrupt_priority = FB_VOUT1_ISR_PRIORITY;
     
-    c4swbb_1.feedback.ad_iout.enable = true;
+    c4swbb_1.feedback.ad_iout.enable = FB_IOUT1_ENABLE;
     c4swbb_1.feedback.ad_iout.adin_no = FB_IOUT1_ADC_AN_INPUT;
     c4swbb_1.feedback.ad_iout.adc_core = FB_IOUT1_ADCCORE;
     c4swbb_1.feedback.ad_iout.ptrADBUF = &FB_IOUT1_ADCBUF;
-    c4swbb_1.feedback.ad_iout.trigger_source = BUCKH1_ADC_TRGSRC_2;
-    c4swbb_1.feedback.ad_iout.early_interrupt_enable = true;
-    c4swbb_1.feedback.ad_iout.interrupt_enable = true;
+    c4swbb_1.feedback.ad_iout.trigger_source = FB_IOUT1_TRGSRC;
+    c4swbb_1.feedback.ad_iout.early_interrupt_enable = FB_IOUT1_EIE_ENABLE;
+    c4swbb_1.feedback.ad_iout.interrupt_enable = FB_IOUT1_ISR_ENABLE;
     c4swbb_1.feedback.ad_iout.interrupt_priority = FB_IOUT1_ISR_PRIORITY;
     
-    c4swbb_1.feedback.ad_vin.enable = true;
+    c4swbb_1.feedback.ad_vin.enable = FB_VBAT_ENABLE;
     c4swbb_1.feedback.ad_vin.adin_no = FB_VBAT_ADC_AN_INPUT;
     c4swbb_1.feedback.ad_vin.adc_core = FB_VBAT_ADCCORE;
     c4swbb_1.feedback.ad_vin.ptrADBUF = &FB_VBAT_ADCBUF;
-    c4swbb_1.feedback.ad_vin.trigger_source = BUCKH1_ADC_TRGSRC_2;
-    c4swbb_1.feedback.ad_vin.early_interrupt_enable = true;
-    c4swbb_1.feedback.ad_vin.interrupt_enable = false;
+    c4swbb_1.feedback.ad_vin.trigger_source = FB_VBAT_TRGSRC;
+    c4swbb_1.feedback.ad_vin.early_interrupt_enable = FB_VBAT_EIE_ENABLE;
+    c4swbb_1.feedback.ad_vin.interrupt_enable = FB_VBAT_ISR_ENABLE;
     c4swbb_1.feedback.ad_vin.interrupt_priority = FB_VBAT_ISR_PRIORITY;
     
-    c4swbb_1.feedback.ad_temp.enable = true;
+    c4swbb_1.feedback.ad_temp.enable = FB_TEMP1_ENABLE;
     c4swbb_1.feedback.ad_temp.adin_no = FB_TEMP1_ADC_AN_INPUT;
     c4swbb_1.feedback.ad_temp.adc_core = FB_TEMP1_ADCCORE;
     c4swbb_1.feedback.ad_temp.ptrADBUF = &FB_TEMP1_ADCBUF;
-    c4swbb_1.feedback.ad_temp.trigger_source = BUCKH1_ADC_TRGSRC_2;
-    c4swbb_1.feedback.ad_temp.early_interrupt_enable = true;
-    c4swbb_1.feedback.ad_temp.interrupt_enable = false;
+    c4swbb_1.feedback.ad_temp.trigger_source = FB_TEMP1_TRGSRC;
+    c4swbb_1.feedback.ad_temp.early_interrupt_enable = FB_TEMP1_EIE_ENABLE;
+    c4swbb_1.feedback.ad_temp.interrupt_enable = FB_TEMP1_ISR_ENABLE;
     c4swbb_1.feedback.ad_temp.interrupt_priority = FB_TEMP1_ISR_PRIORITY;
 
     // Initialize converter #1 voltage loop controller settings
@@ -297,7 +297,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.controller->MaxOutput = c4swbb_1.v_loop.maximum; // Load user maximum value
     c4swbb_1.v_loop.controller->InputOffset = c4swbb_1.v_loop.feedback_offset; // Load user feedback offset value
     c4swbb_1.v_loop.controller->ADCTriggerOffset = c4swbb_1.v_loop.trigger_offset; // Load user trigger offset value
-    c4swbb_1.v_loop.controller->ptrADCTriggerRegister = &BOOSTH1_PGxTRIGA; // Load pointer to ADC trigger register
+    c4swbb_1.v_loop.controller->ptrADCTriggerRegister = &FB_VOUT1_PGxTRIGy; // Load pointer to ADC trigger register
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_1.v_loop.ctrl_Init = &cha_vloop_Init;        // Function pointer to CONTROL INIT routine
@@ -324,7 +324,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.i_loop.controller->MaxOutput = c4swbb_1.i_loop.maximum; // Load user maximum value
     c4swbb_1.i_loop.controller->InputOffset = c4swbb_1.i_loop.feedback_offset; // Load user feedback offset value
     c4swbb_1.i_loop.controller->ADCTriggerOffset = c4swbb_1.i_loop.trigger_offset; // Load user trigger offset value
-    c4swbb_1.i_loop.controller->ptrADCTriggerRegister = &BUCKH1_PGxTRIGA; // Load pointer to ADC trigger register
+    c4swbb_1.i_loop.controller->ptrADCTriggerRegister = &FB_IOUT1_PGxTRIGy; // Load pointer to ADC trigger register
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_1.i_loop.ctrl_Init = &cha_iloop_Init;        // Function pointer to CONTROL INIT routine
@@ -400,40 +400,40 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.boost_leg.adtr1_offset = BOOSTH2_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection
     
     // Load ADC settings from hardware and microcontroller abstraction layers (HAL and MCAL)
-    c4swbb_2.feedback.ad_vout.enable = true;
+    c4swbb_2.feedback.ad_vout.enable = FB_VOUT2_ENABLE;
     c4swbb_2.feedback.ad_vout.adin_no = FB_VOUT2_ADC_AN_INPUT;
     c4swbb_2.feedback.ad_vout.adc_core = FB_VOUT2_ADCCORE;
     c4swbb_2.feedback.ad_vout.ptrADBUF = &FB_VOUT2_ADCBUF;
-    c4swbb_2.feedback.ad_vout.trigger_source = BUCKH2_ADC_TRGSRC_1;
-    c4swbb_2.feedback.ad_vout.early_interrupt_enable = true;
-    c4swbb_2.feedback.ad_vout.interrupt_enable = true;
+    c4swbb_2.feedback.ad_vout.trigger_source = FB_VOUT2_TRGSRC;
+    c4swbb_2.feedback.ad_vout.early_interrupt_enable = FB_VOUT2_EIE_ENABLE;
+    c4swbb_2.feedback.ad_vout.interrupt_enable = FB_VOUT2_ISR_ENABLE;
     c4swbb_2.feedback.ad_vout.interrupt_priority = FB_VOUT2_ISR_PRIORITY;
     
-    c4swbb_2.feedback.ad_iout.enable = true;
+    c4swbb_2.feedback.ad_iout.enable = FB_IOUT2_ENABLE;
     c4swbb_2.feedback.ad_iout.adin_no = FB_IOUT2_ADC_AN_INPUT;
     c4swbb_2.feedback.ad_iout.adc_core = FB_IOUT2_ADCCORE;
     c4swbb_2.feedback.ad_iout.ptrADBUF = &FB_IOUT2_ADCBUF;
-    c4swbb_2.feedback.ad_iout.trigger_source = BUCKH2_ADC_TRGSRC_2;
-    c4swbb_2.feedback.ad_iout.early_interrupt_enable = true;
-    c4swbb_2.feedback.ad_iout.interrupt_enable = true;
+    c4swbb_2.feedback.ad_iout.trigger_source = FB_IOUT2_TRGSRC;
+    c4swbb_2.feedback.ad_iout.early_interrupt_enable = FB_IOUT2_EIE_ENABLE;
+    c4swbb_2.feedback.ad_iout.interrupt_enable = FB_IOUT2_ISR_ENABLE;
     c4swbb_2.feedback.ad_iout.interrupt_priority = FB_IOUT2_ISR_PRIORITY;
     
-    c4swbb_2.feedback.ad_vin.enable = false;
+    c4swbb_2.feedback.ad_vin.enable = FB_VBAT_ENABLE;
     c4swbb_2.feedback.ad_vin.adin_no = FB_VBAT_ADC_AN_INPUT;
     c4swbb_2.feedback.ad_vin.adc_core = FB_VBAT_ADCCORE;
     c4swbb_2.feedback.ad_vin.ptrADBUF = &FB_VBAT_ADCBUF;
-    c4swbb_2.feedback.ad_vin.trigger_source = BUCKH1_ADC_TRGSRC_2;
-    c4swbb_2.feedback.ad_vin.early_interrupt_enable = true;
-    c4swbb_2.feedback.ad_vin.interrupt_enable = false;
+    c4swbb_2.feedback.ad_vin.trigger_source = FB_VBAT_TRGSRC;
+    c4swbb_2.feedback.ad_vin.early_interrupt_enable = FB_VBAT_EIE_ENABLE;
+    c4swbb_2.feedback.ad_vin.interrupt_enable = FB_VBAT_ISR_ENABLE;
     c4swbb_2.feedback.ad_vin.interrupt_priority = FB_VBAT_ISR_PRIORITY;
     
-    c4swbb_2.feedback.ad_temp.enable = true;
+    c4swbb_2.feedback.ad_temp.enable = FB_TEMP2_ENABLE;
     c4swbb_2.feedback.ad_temp.adin_no = FB_TEMP2_ADC_AN_INPUT;
     c4swbb_2.feedback.ad_temp.adc_core = FB_TEMP2_ADCCORE;
     c4swbb_2.feedback.ad_temp.ptrADBUF = &FB_TEMP2_ADCBUF;
-    c4swbb_2.feedback.ad_temp.trigger_source = BUCKH2_ADC_TRGSRC_2;
-    c4swbb_2.feedback.ad_temp.early_interrupt_enable = true;
-    c4swbb_2.feedback.ad_temp.interrupt_enable = false;
+    c4swbb_2.feedback.ad_temp.trigger_source = FB_TEMP2_TRGSRC;
+    c4swbb_2.feedback.ad_temp.early_interrupt_enable = FB_TEMP2_EIE_ENABLE;
+    c4swbb_2.feedback.ad_temp.interrupt_enable = FB_TEMP2_ISR_ENABLE;
     c4swbb_2.feedback.ad_temp.interrupt_priority = FB_TEMP2_ISR_PRIORITY;
 
     // Initialize converter #1 voltage loop controller settings
@@ -457,7 +457,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.v_loop.controller->MaxOutput = c4swbb_2.v_loop.maximum; // Load user maximum value
     c4swbb_2.v_loop.controller->InputOffset = c4swbb_2.v_loop.feedback_offset; // Load user feedback offset value
     c4swbb_2.v_loop.controller->ADCTriggerOffset = c4swbb_2.v_loop.trigger_offset; // Load user trigger offset value
-    c4swbb_2.v_loop.controller->ptrADCTriggerRegister = &BOOSTH2_PGxTRIGA; // Load pointer to ADC trigger register
+    c4swbb_2.v_loop.controller->ptrADCTriggerRegister = &FB_VOUT2_PGxTRIGy; // Load pointer to ADC trigger register
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_2.v_loop.ctrl_Init = &chb_vloop_Init;        // Function pointer to CONTROL INIT routine
@@ -484,7 +484,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.i_loop.controller->MaxOutput = c4swbb_2.i_loop.maximum; // Load user maximum value
     c4swbb_2.i_loop.controller->InputOffset = c4swbb_2.i_loop.feedback_offset; // Load user feedback offset value
     c4swbb_2.i_loop.controller->ADCTriggerOffset = c4swbb_2.i_loop.trigger_offset; // Load user trigger offset value
-    c4swbb_2.i_loop.controller->ptrADCTriggerRegister = &BUCKH2_PGxTRIGA; // Load pointer to ADC trigger register
+    c4swbb_2.i_loop.controller->ptrADCTriggerRegister = &FB_IOUT2_PGxTRIGy; // Load pointer to ADC trigger register
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_2.i_loop.ctrl_Init = &chb_iloop_Init;        // Function pointer to CONTROL INIT routine
@@ -526,14 +526,22 @@ volatile uint16_t init_USBport_2(void) {
  * 4-switch buck/boost converter #1.
  * 
  * *****************************************************************************************************/
-
-void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_VOUT1_ADC_Interrupt ( void )
+#if (FB_VOUT1_ENABLE)
+void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT1_ADC_Interrupt(void)
+#else
+    #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #1"
+#endif
 {
+    // Call control loop update
     cha_vloop_Update(&cha_vloop);
-    c4swbb_1.status.bits.adc_active = true;
-    c4swbb_1.data.v_out = FB_VOUT1_ADCBUF;
-    c4swbb_1.data.v_in = FB_VBAT_ADCBUF;
-    FB_VOUT1_ADC_IF = 0;  // Clear the interrupt flag 
+    
+    // Capture additional analog inputs
+    c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
+    c4swbb_1.data.v_out = FB_VOUT1_ADCBUF; // Capture most recent output voltage value
+    c4swbb_1.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
+    
+    // Clear the interrupt flag 
+    FB_VOUT1_ADC_IF = 0;  
 }
 
 /*!_FB_IOUT1_ADC_Interrupt
@@ -549,14 +557,30 @@ void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_VOUT1_ADC_Inter
  * 4-switch buck/boost converter #1.
  * 
  * *****************************************************************************************************/
-
-void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_IOUT1_ADC_Interrupt ( void )
+#if (FB_IOUT1_ENABLE)
+void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IOUT1_ADC_Interrupt(void)
+#elif (FB_IIN1_ENABLE)
+void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(void)
+#else
+    #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #1"
+#endif
 {
+    // Call control loop update
     cha_iloop_Update(&cha_iloop);
-    c4swbb_1.status.bits.adc_active = true;
-    c4swbb_1.data.i_out = FB_IOUT1_ADCBUF;
-    c4swbb_1.data.temp = FB_TEMP1_ADCBUF;
-    FB_IOUT1_ADC_IF = 0;  // Clear the interrupt flag 
+    
+    // Capture additional analog inputs
+    c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
+    c4swbb_1.data.i_out = FB_IOUT1_ADCBUF; // Capture most recent output current value
+    c4swbb_1.data.temp = FB_TEMP1_ADCBUF; // Capture most recent temperature value
+    
+    // Clear the interrupt flag 
+    #if (FB_IOUT1_ENABLE)
+    FB_IOUT1_ADC_IF = 0;  
+    #elif (FB_IIN1_ENABLE)
+    FB_IIN1_ADC_IF = 0;  
+    #else
+    #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN SELECTED FOR USB PORT #2"
+    #endif    
 }
 
 /*!_FB_VOUT2_ADC_Interrupt
@@ -572,14 +596,23 @@ void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_IOUT1_ADC_Inter
  * 4-switch buck/boost converter #2.
  * 
  * *****************************************************************************************************/
-
-void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_VOUT2_ADC_Interrupt ( void )
+#if (FB_VOUT2_ENABLE)
+void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT2_ADC_Interrupt(void)
+#else
+    #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #2"
+#endif
 {
-    chb_vloop_Update(&chb_vloop);
-    c4swbb_2.status.bits.adc_active = true;
-    c4swbb_2.data.v_out = FB_VOUT2_ADCBUF;
-    c4swbb_2.data.v_in = FB_VBAT_ADCBUF;
-    FB_VOUT2_ADC_IF = 0;  // Clear the interrupt flag 
+    // Call control loop update
+    cha_vloop_Update(&chb_vloop);
+    
+    // Capture additional analog inputs
+    c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
+    c4swbb_2.data.v_out = FB_VOUT2_ADCBUF; // Capture most recent output voltage value
+    c4swbb_2.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
+    
+    // Clear the interrupt flag 
+    FB_VOUT2_ADC_IF = 0;  
+
 }
 
 /*!_FB_IOUT2_ADC_Interrupt
@@ -595,15 +628,30 @@ void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_VOUT2_ADC_Inter
  * 4-switch buck/boost converter #2.
  * 
  * *****************************************************************************************************/
-
-void __attribute__ ( ( __interrupt__ , auto_psv , context) ) _FB_IOUT2_ADC_Interrupt ( void )
+#if (FB_IOUT2_ENABLE)
+void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IOUT2_ADC_Interrupt(void)
+#elif (FB_IIN2_ENABLE)
+void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(void)
+#else
+    #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #2"
+#endif
 {
-    chb_iloop_Update(&chb_iloop);
-    c4swbb_2.status.bits.adc_active = true;
-    c4swbb_2.data.i_out = FB_IOUT2_ADCBUF;
-    c4swbb_2.data.temp = FB_TEMP2_ADCBUF;
-    FB_IOUT2_ADC_IF = 0;  // Clear the interrupt flag 
+    // Call control loop update
+    cha_iloop_Update(&chb_iloop);
+    
+    // Capture additional analog inputs
+    c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
+    c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output current value
+//    c4swbb_2.data.temp = FB_TEMP2_ADCBUF; // Capture most recent temperature value
+    
+    // Clear the interrupt flag 
+    #if (FB_IOUT1_ENABLE)
+    FB_IOUT2_ADC_IF = 0;  
+    #elif (FB_IIN1_ENABLE)
+    FB_IIN2_ADC_IF = 0;  
+    #else
+    #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN SELECTED FOR USB PORT #2"
+    #endif    
 }
-
 
 // EOF

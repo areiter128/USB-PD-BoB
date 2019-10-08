@@ -37,11 +37,6 @@
 
 // Converter input and output voltage and current levels
 
-#define AUX_POWER_GOOD_TIMEOUT  0x2800  // at startup in UserStartupCode.c ExecuteUserStartupCode() software is polling for the 
-                                        // LDO POWER GOOD output pin indicating full auxiliary power is available. This timeout
-                                        // counter value is preventing that this polling loop will stall the firmware in case
-                                        // AUX_POWER_GOOD is not set for some reason...
-
 #define VIN_MINIMUM             9.000       // input voltage minimum (Under-Voltage-Lockout-Level)
 #define VIN_MINIMUM_HYST        0.500        // input voltage minimum (Under-Voltage-Lockout Hysteresis Level)
 
