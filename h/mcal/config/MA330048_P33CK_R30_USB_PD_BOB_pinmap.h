@@ -210,35 +210,66 @@
 #define FB_IOUT2_INIT_INPUT   {FB_IOUT2_WR = PINSTATE_HIGH; FB_IOUT2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
 
 // Device Pin #17 is RA3
-#define TESTPOINT_TRIS    TRISAbits.TRISA3 // GPIO direction register bit
-#define TESTPOINT_WR      LATAbits.LATA3 // GPIO port latch register bit
-#define TESTPOINT_RD      PORTAbits.RA3 // GPIO port register bit
-#define TESTPOINT_ODC     ODCAbits.ODCA3 // GPIO port open drain configuration register bit
-#define TESTPOINT_CNPU    CNPUAbits.CNPUA3 // GPIO port pull-up resistor register bit
-#define TESTPOINT_CNPD    CNPDAbits.CNPDA3 // GPIO port pull-down resistor register bit
-#define TESTPOINT_CNEN0   CNEN0Abits.CNEN0A3 // GPIO port change notification Enable register bit
-#define TESTPOINT_CNSTAT  CNSTATAbits.CNSTATA3 // GPIO port change notification Status register bit
-#define TESTPOINT_CNEN1   CNEN1Abits.CNEN1A3 // GPIO port change notification Edge Select Enable register bit
-#define TESTPOINT_CNF     CNFAbits.CNFA3 // GPIO port change notification flag bit register bit
-#define TESTPOINT_SET     { asm volatile ("bset _LATA, #3 \n"); }
-#define TESTPOINT_CLEAR   { asm volatile ("bclr _LATA, #3 \n"); }
-#define TESTPOINT_TOGGLE  { asm volatile ("btg  _LATA, #3 \n"); }
-#define TESTPOINT_IS_ANALOG_INPUT  true // Pin is/is not analog input 
-#define TESTPOINT_ANSEL   _ANSELA3 // analog/digital pin configuration register bit
-#define TESTPOINT_ADCCORE  2 // index starts from zero, last index indicated shared adC core
-#define TESTPOINT_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
-#define TESTPOINT_ADC_AN_INPUT 3   // ANx input pin number
-#define TESTPOINT_ADCBUF  ADCBUF3 // ADC buffer register for this input
-#define TESTPOINT_ADC_ANIE ADIELbits.IE3
-#define TESTPOINT_ADC_ANEIE ADEIELbits.EIEN3
-#define TESTPOINT_ADC_IF   _ADCAN3IF // interrupt flag bit
-#define TESTPOINT_ADC_IE   _ADCAN3IE // interrupt enable bit
-#define TESTPOINT_ADC_IP   _ADCAN3IP // interrupt priority for this analog input
-#define TESTPOINT_ADC_RDY  _AN3RDY // ADC buffer ready bit
-#define _TESTPOINT_ADC_Interrupt _ADCAN3Interrupt
-#define TESTPOINT_INIT_ANALOG	{TESTPOINT_ANSEL = 1; TESTPOINT_WR = PINSTATE_HIGH; TESTPOINT_TRIS = PINDIR_INPUT;} // initialization macro for analog input
-#define TESTPOINT_INIT_OUTPUT  {TESTPOINT_WR = PINSTATE_LOW; TESTPOINT_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
-#define TESTPOINT_INIT_INPUT   {TESTPOINT_WR = PINSTATE_HIGH; TESTPOINT_TRIS = PINDIR_INPUT;} // initialization macro for digital input
+//#define TESTPOINT_TRIS    TRISAbits.TRISA3 // GPIO direction register bit
+//#define TESTPOINT_WR      LATAbits.LATA3 // GPIO port latch register bit
+//#define TESTPOINT_RD      PORTAbits.RA3 // GPIO port register bit
+//#define TESTPOINT_ODC     ODCAbits.ODCA3 // GPIO port open drain configuration register bit
+//#define TESTPOINT_CNPU    CNPUAbits.CNPUA3 // GPIO port pull-up resistor register bit
+//#define TESTPOINT_CNPD    CNPDAbits.CNPDA3 // GPIO port pull-down resistor register bit
+//#define TESTPOINT_CNEN0   CNEN0Abits.CNEN0A3 // GPIO port change notification Enable register bit
+//#define TESTPOINT_CNSTAT  CNSTATAbits.CNSTATA3 // GPIO port change notification Status register bit
+//#define TESTPOINT_CNEN1   CNEN1Abits.CNEN1A3 // GPIO port change notification Edge Select Enable register bit
+//#define TESTPOINT_CNF     CNFAbits.CNFA3 // GPIO port change notification flag bit register bit
+//#define TESTPOINT_SET     { asm volatile ("bset _LATA, #3 \n"); }
+//#define TESTPOINT_CLEAR   { asm volatile ("bclr _LATA, #3 \n"); }
+//#define TESTPOINT_TOGGLE  { asm volatile ("btg  _LATA, #3 \n"); }
+//#define TESTPOINT_IS_ANALOG_INPUT  true // Pin is/is not analog input 
+//#define TESTPOINT_ANSEL   _ANSELA3 // analog/digital pin configuration register bit
+//#define TESTPOINT_ADCCORE  2 // index starts from zero, last index indicated shared adC core
+//#define TESTPOINT_IS_SHARED_CORE true // AN input is routed to a dedicated or shared ACD core
+//#define TESTPOINT_ADC_AN_INPUT 3   // ANx input pin number
+//#define TESTPOINT_ADCBUF  ADCBUF3 // ADC buffer register for this input
+//#define TESTPOINT_ADC_ANIE ADIELbits.IE3
+//#define TESTPOINT_ADC_ANEIE ADEIELbits.EIEN3
+//#define TESTPOINT_ADC_IF   _ADCAN3IF // interrupt flag bit
+//#define TESTPOINT_ADC_IE   _ADCAN3IE // interrupt enable bit
+//#define TESTPOINT_ADC_IP   _ADCAN3IP // interrupt priority for this analog input
+//#define TESTPOINT_ADC_RDY  _AN3RDY // ADC buffer ready bit
+//#define _TESTPOINT_ADC_Interrupt _ADCAN3Interrupt
+//#define TESTPOINT_INIT_ANALOG	{TESTPOINT_ANSEL = 1; TESTPOINT_WR = PINSTATE_HIGH; TESTPOINT_TRIS = PINDIR_INPUT;} // initialization macro for analog input
+//#define TESTPOINT_INIT_OUTPUT  {TESTPOINT_WR = PINSTATE_LOW; TESTPOINT_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
+//#define TESTPOINT_INIT_INPUT   {TESTPOINT_WR = PINSTATE_HIGH; TESTPOINT_TRIS = PINDIR_INPUT;} // initialization macro for digital input
+
+#define TESTPOINT_TRIS              DBGPIN_TRIS    
+#define TESTPOINT_WR                DBGPIN_WR      
+#define TESTPOINT_RD                DBGPIN_RD      
+#define TESTPOINT_ODC               DBGPIN_ODC     
+#define TESTPOINT_CNPU              DBGPIN_CNPU    
+#define TESTPOINT_CNPD              DBGPIN_CNPD    
+#define TESTPOINT_CNEN0             DBGPIN_CNEN0   
+#define TESTPOINT_CNSTAT            DBGPIN_CNSTAT  
+#define TESTPOINT_CNEN1             DBGPIN_CNEN1   
+#define TESTPOINT_CNF               DBGPIN_CNF     
+#define TESTPOINT_SET               DBGPIN_SET     
+#define TESTPOINT_CLEAR             DBGPIN_CLEAR   
+#define TESTPOINT_TOGGLE            DBGPIN_TOGGLE  
+#define TESTPOINT_IS_ANALOG_INPUT   DBGPIN_IS_ANALOG_INPUT 
+#define TESTPOINT_ANSEL             DBGPIN_ANSEL 
+#define TESTPOINT_ADCCORE           DBGPIN_ADCCORE 
+#define TESTPOINT_IS_SHARED_CORE    DBGPIN_IS_SHARED_CORE 
+#define TESTPOINT_ADC_AN_INPUT      DBGPIN_ADC_AN_INPUT
+#define TESTPOINT_ADCBUF            DBGPIN_ADCBUF 
+#define TESTPOINT_ADC_ANIE          DBGPIN_ADC_ANIE
+#define TESTPOINT_ADC_ANEIE         DBGPIN_ADC_ANEIE
+#define TESTPOINT_ADC_IF            DBGPIN_ADC_IF 
+#define TESTPOINT_ADC_IE            DBGPIN_ADC_IE 
+#define TESTPOINT_ADC_IP            DBGPIN_ADC_IP 
+#define TESTPOINT_ADC_RDY           DBGPIN_ADC_RDY
+#define _TESTPOINT_ADC_Interrupt    _DBGPIN_ADC_Interrupt
+#define TESTPOINT_INIT_ANALOG       DBGPIN_INIT_ANALOG
+#define TESTPOINT_INIT_OUTPUT       DBGPIN_INIT_OUTPUT
+#define TESTPOINT_INIT_INPUT        DBGPIN_INIT_INPUT
+
 
 // Device Pin #18 is RA4
 #define FB_VOUT2_TRIS    TRISAbits.TRISA4 // GPIO direction register bit
