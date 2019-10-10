@@ -314,6 +314,7 @@
 #define FB_VBAT_CNEN1   CNEN1Bbits.CNEN1B0 // GPIO port change notification Edge Select Enable register bit
 #define FB_VBAT_CNF     CNFBbits.CNFB0 // GPIO port change notification flag bit register bit
 #define FB_VBAT_RP      32 // Number of Remappable Pin
+#define _FB_VBAT_RPOR   _RP32R // Remappable Pin Register
 #define FB_VBAT_SET     { asm volatile ("bset _LATB, #0 \n"); }
 #define FB_VBAT_CLEAR   { asm volatile ("bclr _LATB, #0 \n"); }
 #define FB_VBAT_TOGGLE  { asm volatile ("btg  _LATB, #0 \n"); }
@@ -346,6 +347,7 @@
 #define FB_TEMP1_CNEN1   CNEN1Bbits.CNEN1B1 // GPIO port change notification Edge Select Enable register bit
 #define FB_TEMP1_CNF     CNFBbits.CNFB1 // GPIO port change notification flag bit register bit
 #define FB_TEMP1_RP      33 // Number of Remappable Pin
+#define _FB_TEMP1_RPOR   _RP33R // Remappable Pin Register
 #define FB_TEMP1_SET     { asm volatile ("bset _LATB, #1 \n"); }
 #define FB_TEMP1_CLEAR   { asm volatile ("bclr _LATB, #1 \n"); }
 #define FB_TEMP1_TOGGLE  { asm volatile ("btg  _LATB, #1 \n"); }
@@ -378,6 +380,7 @@
 #define PPC_RST1_CNEN1   CNEN1Bbits.CNEN1B10 // GPIO port change notification Edge Select Enable register bit
 #define PPC_RST1_CNF     CNFBbits.CNFB10 // GPIO port change notification flag bit register bit
 #define PPC_RST1_RP      42 // Number of Remappable Pin
+#define _PPC_RST1_RPOR   _RP42R // Remappable Pin Register
 #define PPC_RST1_SET     { asm volatile ("bset _LATB, #10 \n"); }
 #define PPC_RST1_CLEAR   { asm volatile ("bclr _LATB, #10 \n"); }
 #define PPC_RST1_TOGGLE  { asm volatile ("btg  _LATB, #10 \n"); }
@@ -414,6 +417,7 @@
 #define HUB_PRTPWR1_CNEN1   CNEN1Bbits.CNEN1B11 // GPIO port change notification Edge Select Enable register bit
 #define HUB_PRTPWR1_CNF     CNFBbits.CNFB11 // GPIO port change notification flag bit register bit
 #define HUB_PRTPWR1_RP      43 // Number of Remappable Pin
+#define _HUB_PRTPWR1_RPOR   _RP43R // Remappable Pin Register
 #define HUB_PRTPWR1_SET     { asm volatile ("bset _LATB, #11 \n"); }
 #define HUB_PRTPWR1_CLEAR   { asm volatile ("bclr _LATB, #11 \n"); }
 #define HUB_PRTPWR1_TOGGLE  { asm volatile ("btg  _LATB, #11 \n"); }
@@ -446,6 +450,7 @@
 #define BOOSTH2_CNEN1   CNEN1Bbits.CNEN1B12 // GPIO port change notification Edge Select Enable register bit
 #define BOOSTH2_CNF     CNFBbits.CNFB12 // GPIO port change notification flag bit register bit
 #define BOOSTH2_RP      44 // Number of Remappable Pin
+#define _BOOSTH2_RPOR   _RP44R // Remappable Pin Register
 #define BOOSTH2_SET     { asm volatile ("bset _LATB, #12 \n"); }
 #define BOOSTH2_CLEAR   { asm volatile ("bclr _LATB, #12 \n"); }
 #define BOOSTH2_TOGGLE  { asm volatile ("btg  _LATB, #12 \n"); }
@@ -484,6 +489,7 @@
 #define POOSTL2_CNEN1   CNEN1Bbits.CNEN1B13 // GPIO port change notification Edge Select Enable register bit
 #define POOSTL2_CNF     CNFBbits.CNFB13 // GPIO port change notification flag bit register bit
 #define POOSTL2_RP      45 // Number of Remappable Pin
+#define _BOOSTL2_RPOR   _RP45R // Remappable Pin Register
 #define POOSTL2_SET     { asm volatile ("bset _LATB, #13 \n"); }
 #define POOSTL2_CLEAR   { asm volatile ("bclr _LATB, #13 \n"); }
 #define POOSTL2_TOGGLE  { asm volatile ("btg  _LATB, #13 \n"); }
@@ -516,6 +522,7 @@
 #define BUCKH2_CNEN1   CNEN1Bbits.CNEN1B14 // GPIO port change notification Edge Select Enable register bit
 #define BUCKH2_CNF     CNFBbits.CNFB14 // GPIO port change notification flag bit register bit
 #define BUCKH2_RP      46 // Number of Remappable Pin
+#define _BUCKH2_RPOR   _RP46R // Remappable Pin Register
 #define BUCKH2_SET     { asm volatile ("bset _LATB, #14 \n"); }
 #define BUCKH2_CLEAR   { asm volatile ("bclr _LATB, #14 \n"); }
 #define BUCKH2_TOGGLE  { asm volatile ("btg  _LATB, #14 \n"); }
@@ -554,6 +561,7 @@
 #define BUCKL2_CNEN1   CNEN1Bbits.CNEN1B15 // GPIO port change notification Edge Select Enable register bit
 #define BUCKL2_CNF     CNFBbits.CNFB15 // GPIO port change notification flag bit register bit
 #define BUCKL2_RP      47 // Number of Remappable Pin
+#define _BUCKL2_RPOR   _RP47R // Remappable Pin Register
 #define BUCKL2_SET     { asm volatile ("bset _LATB, #15 \n"); }
 #define BUCKL2_CLEAR   { asm volatile ("bclr _LATB, #15 \n"); }
 #define BUCKL2_TOGGLE  { asm volatile ("btg  _LATB, #15 \n"); }
@@ -586,6 +594,7 @@
 #define FB_IIN1_CNEN1   CNEN1Bbits.CNEN1B2 // GPIO port change notification Edge Select Enable register bit
 #define FB_IIN1_CNF     CNFBbits.CNFB2 // GPIO port change notification flag bit register bit
 #define FB_IIN1_RP      34 // Number of Remappable Pin
+#define _FB_IIN1_RPOR   _RP34R // Remappable Pin Register
 #define FB_IIN1_SET     { asm volatile ("bset _LATB, #2 \n"); }
 #define FB_IIN1_CLEAR   { asm volatile ("bclr _LATB, #2 \n"); }
 #define FB_IIN1_TOGGLE  { asm volatile ("btg  _LATB, #2 \n"); }
@@ -618,6 +627,7 @@
 #define PGD2_CNEN1   CNEN1Bbits.CNEN1B3 // GPIO port change notification Edge Select Enable register bit
 #define PGD2_CNF     CNFBbits.CNFB3 // GPIO port change notification flag bit register bit
 #define PGD2_RP      35 // Number of Remappable Pin
+#define _PGD2_RPOR   _RP35R // Remappable Pin Register
 #define PGD2_SET     { asm volatile ("bset _LATB, #3 \n"); }
 #define PGD2_CLEAR   { asm volatile ("bclr _LATB, #3 \n"); }
 #define PGD2_TOGGLE  { asm volatile ("btg  _LATB, #3 \n"); }
@@ -650,6 +660,7 @@
 #define PGC2_CNEN1   CNEN1Bbits.CNEN1B4 // GPIO port change notification Edge Select Enable register bit
 #define PGC2_CNF     CNFBbits.CNFB4 // GPIO port change notification flag bit register bit
 #define PGC2_RP      36 // Number of Remappable Pin
+#define _PGC2_RPOR   _RP36R // Remappable Pin Register
 #define PGC2_SET     { asm volatile ("bset _LATB, #4 \n"); }
 #define PGC2_CLEAR   { asm volatile ("bclr _LATB, #4 \n"); }
 #define PGC2_TOGGLE  { asm volatile ("btg  _LATB, #4 \n"); }
@@ -669,6 +680,7 @@
 #define SDA2_CNEN1   CNEN1Bbits.CNEN1B5 // GPIO port change notification Edge Select Enable register bit
 #define SDA2_CNF     CNFBbits.CNFB5 // GPIO port change notification flag bit register bit
 #define SDA2_RP      37 // Number of Remappable Pin
+#define _SDA2_RPOR   _RP37R // Remappable Pin Register
 #define SDA2_SET     { asm volatile ("bset _LATB, #5 \n"); }
 #define SDA2_CLEAR   { asm volatile ("bclr _LATB, #5 \n"); }
 #define SDA2_TOGGLE  { asm volatile ("btg  _LATB, #5 \n"); }
@@ -688,6 +700,7 @@
 #define SCL2_CNEN1   CNEN1Bbits.CNEN1B6 // GPIO port change notification Edge Select Enable register bit
 #define SCL2_CNF     CNFBbits.CNFB6 // GPIO port change notification flag bit register bit
 #define SCL2_RP      38 // Number of Remappable Pin
+#define _SCL2_RPOR   _RP38R // Remappable Pin Register
 #define SCL2_SET     { asm volatile ("bset _LATB, #6 \n"); }
 #define SCL2_CLEAR   { asm volatile ("bclr _LATB, #6 \n"); }
 #define SCL2_TOGGLE  { asm volatile ("btg  _LATB, #6 \n"); }
@@ -707,6 +720,7 @@
 #define SPI_CS1_CNEN1   CNEN1Bbits.CNEN1B7 // GPIO port change notification Edge Select Enable register bit
 #define SPI_CS1_CNF     CNFBbits.CNFB7 // GPIO port change notification flag bit register bit
 #define SPI_CS1_RP      39 // Number of Remappable Pin
+#define _SPI_CS1_RPOR   _RP39R // Remappable Pin Register
 #define SPI_CS1_SET     { asm volatile ("bset _LATB, #7 \n"); }
 #define SPI_CS1_CLEAR   { asm volatile ("bclr _LATB, #7 \n"); }
 #define SPI_CS1_TOGGLE  { asm volatile ("btg  _LATB, #7 \n"); }
@@ -739,6 +753,7 @@
 #define SCL1_CNEN1   CNEN1Bbits.CNEN1B8 // GPIO port change notification Edge Select Enable register bit
 #define SCL1_CNF     CNFBbits.CNFB8 // GPIO port change notification flag bit register bit
 #define SCL1_RP      40 // Number of Remappable Pin
+#define _SCL1_RPOR   _RP40R // Remappable Pin Register
 #define SCL1_SET     { asm volatile ("bset _LATB, #8 \n"); }
 #define SCL1_CLEAR   { asm volatile ("bclr _LATB, #8 \n"); }
 #define SCL1_TOGGLE  { asm volatile ("btg  _LATB, #8 \n"); }
@@ -771,6 +786,7 @@
 #define SDA1_CNEN1   CNEN1Bbits.CNEN1B9 // GPIO port change notification Edge Select Enable register bit
 #define SDA1_CNF     CNFBbits.CNFB9 // GPIO port change notification flag bit register bit
 #define SDA1_RP      41 // Number of Remappable Pin
+#define _SDA1_RPOR   _RP41R // Remappable Pin Register
 #define SDA1_SET     { asm volatile ("bset _LATB, #9 \n"); }
 #define SDA1_CLEAR   { asm volatile ("bclr _LATB, #9 \n"); }
 #define SDA1_TOGGLE  { asm volatile ("btg  _LATB, #9 \n"); }
@@ -803,6 +819,7 @@
 #define PPC_IRQ2_CNEN1   CNEN1Cbits.CNEN1C0 // GPIO port change notification Edge Select Enable register bit
 #define PPC_IRQ2_CNF     CNFCbits.CNFC0 // GPIO port change notification flag bit register bit
 #define PPC_IRQ2_RP      48 // Number of Remappable Pin
+#define _PPC_IRQ2_RPOR   _RP48R // Remappable Pin Register
 #define PPC_IRQ2_SET     { asm volatile ("bset _LATC, #0 \n"); }
 #define PPC_IRQ2_CLEAR   { asm volatile ("bclr _LATC, #0 \n"); }
 #define PPC_IRQ2_TOGGLE  { asm volatile ("btg  _LATC, #0 \n"); }
@@ -835,6 +852,7 @@
 #define ECP18_CNEN1   CNEN1Cbits.CNEN1C1 // GPIO port change notification Edge Select Enable register bit
 #define ECP18_CNF     CNFCbits.CNFC1 // GPIO port change notification flag bit register bit
 #define ECP18_RP      49 // Number of Remappable Pin
+#define _ECP18_RPOR   _RP49R // Remappable Pin Register
 #define ECP18_SET     { asm volatile ("bset _LATC, #1 \n"); }
 #define ECP18_CLEAR   { asm volatile ("bclr _LATC, #1 \n"); }
 #define ECP18_TOGGLE  { asm volatile ("btg  _LATC, #1 \n"); }
@@ -867,6 +885,7 @@
 #define BOOSTH1_CNEN1   CNEN1Cbits.CNEN1C10 // GPIO port change notification Edge Select Enable register bit
 #define BOOSTH1_CNF     CNFCbits.CNFC10 // GPIO port change notification flag bit register bit
 #define BOOSTH1_RP      58 // Number of Remappable Pin
+#define _BOOSTH1_RPOR   _RP58R // Remappable Pin Register
 #define BOOSTH1_SET     { asm volatile ("bset _LATC, #10 \n"); }
 #define BOOSTH1_CLEAR   { asm volatile ("bclr _LATC, #10 \n"); }
 #define BOOSTH1_TOGGLE  { asm volatile ("btg  _LATC, #10 \n"); }
@@ -905,6 +924,7 @@
 #define BOOSTL1_CNEN1   CNEN1Cbits.CNEN1C11 // GPIO port change notification Edge Select Enable register bit
 #define BOOSTL1_CNF     CNFCbits.CNFC11 // GPIO port change notification flag bit register bit
 #define BOOSTL1_RP      59 // Number of Remappable Pin
+#define _BOOSTL1_RPOR   _RP59R // Remappable Pin Register
 #define BOOSTL1_SET     { asm volatile ("bset _LATC, #11 \n"); }
 #define BOOSTL1_CLEAR   { asm volatile ("bclr _LATC, #11 \n"); }
 #define BOOSTL1_TOGGLE  { asm volatile ("btg  _LATC, #11 \n"); }
@@ -937,6 +957,7 @@
 #define HUB_RST_CNEN1   CNEN1Cbits.CNEN1C12 // GPIO port change notification Edge Select Enable register bit
 #define HUB_RST_CNF     CNFCbits.CNFC12 // GPIO port change notification flag bit register bit
 #define HUB_RST_RP      60 // Number of Remappable Pin
+#define _HUB_RST_RPOR   _RP60R // Remappable Pin Register
 #define HUB_RST_SET     { asm volatile ("bset _LATC, #12 \n"); }
 #define HUB_RST_CLEAR   { asm volatile ("bclr _LATC, #12 \n"); }
 #define HUB_RST_TOGGLE  { asm volatile ("btg  _LATC, #12 \n"); }
@@ -973,6 +994,7 @@
 #define HUB_PRTPWR2_CNEN1   CNEN1Cbits.CNEN1C13 // GPIO port change notification Edge Select Enable register bit
 #define HUB_PRTPWR2_CNF     CNFCbits.CNFC13 // GPIO port change notification flag bit register bit
 #define HUB_PRTPWR2_RP      61 // Number of Remappable Pin
+#define _HUB_PRTPWR2_RPOR   _RP61R // Remappable Pin Register
 #define HUB_PRTPWR2_SET     { asm volatile ("bset _LATC, #13 \n"); }
 #define HUB_PRTPWR2_CLEAR   { asm volatile ("bclr _LATC, #13 \n"); }
 #define HUB_PRTPWR2_TOGGLE  { asm volatile ("btg  _LATC, #13 \n"); }
@@ -1005,6 +1027,7 @@
 #define ECP31_CNEN1   CNEN1Cbits.CNEN1C14 // GPIO port change notification Edge Select Enable register bit
 #define ECP31_CNF     CNFCbits.CNFC14 // GPIO port change notification flag bit register bit
 #define ECP31_RP      62 // Number of Remappable Pin
+#define _ECP31_RPOR   _RP62R // Remappable Pin Register
 #define ECP31_SET     { asm volatile ("bset _LATC, #14 \n"); }
 #define ECP31_CLEAR   { asm volatile ("bclr _LATC, #14 \n"); }
 #define ECP31_TOGGLE  { asm volatile ("btg  _LATC, #14 \n"); }
@@ -1041,6 +1064,7 @@
 #define ECP33_CNEN1   CNEN1Cbits.CNEN1C15 // GPIO port change notification Edge Select Enable register bit
 #define ECP33_CNF     CNFCbits.CNFC15 // GPIO port change notification flag bit register bit
 #define ECP33_RP      63 // Number of Remappable Pin
+#define _ECP33_RPOR   _RP63R // Remappable Pin Register
 #define ECP33_SET     { asm volatile ("bset _LATC, #15 \n"); }
 #define ECP33_CLEAR   { asm volatile ("bclr _LATC, #15 \n"); }
 #define ECP33_TOGGLE  { asm volatile ("btg  _LATC, #15 \n"); }
@@ -1073,6 +1097,7 @@
 #define ECP17_CNEN1   CNEN1Cbits.CNEN1C2 // GPIO port change notification Edge Select Enable register bit
 #define ECP17_CNF     CNFCbits.CNFC2 // GPIO port change notification flag bit register bit
 #define ECP17_RP      50 // Number of Remappable Pin
+#define _ECP17_RPOR   _RP50R // Remappable Pin Register
 #define ECP17_SET     { asm volatile ("bset _LATC, #2 \n"); }
 #define ECP17_CLEAR   { asm volatile ("bclr _LATC, #2 \n"); }
 #define ECP17_TOGGLE  { asm volatile ("btg  _LATC, #2 \n"); }
@@ -1105,6 +1130,7 @@
 #define LED_AUX_CTRL_CNEN1   CNEN1Cbits.CNEN1C3 // GPIO port change notification Edge Select Enable register bit
 #define LED_AUX_CTRL_CNF     CNFCbits.CNFC3 // GPIO port change notification flag bit register bit
 #define LED_AUX_CTRL_RP      51 // Number of Remappable Pin
+#define _LED_AUX_CTRL_RPOR   _RP51R // Remappable Pin Register
 #define LED_AUX_CTRL_SET     { asm volatile ("bset _LATC, #3 \n"); }
 #define LED_AUX_CTRL_CLEAR   { asm volatile ("bclr _LATC, #3 \n"); }
 #define LED_AUX_CTRL_TOGGLE  { asm volatile ("btg  _LATC, #3 \n"); }
@@ -1137,6 +1163,7 @@
 #define BUCKH1_CNEN1   CNEN1Cbits.CNEN1C4 // GPIO port change notification Edge Select Enable register bit
 #define BUCKH1_CNF     CNFCbits.CNFC4 // GPIO port change notification flag bit register bit
 #define BUCKH1_RP      52 // Number of Remappable Pin
+#define _BUCKH1_RPOR   _RP52R // Remappable Pin Register
 #define BUCKH1_SET     { asm volatile ("bset _LATC, #4 \n"); }
 #define BUCKH1_CLEAR   { asm volatile ("bclr _LATC, #4 \n"); }
 #define BUCKH1_TOGGLE  { asm volatile ("btg  _LATC, #4 \n"); }
@@ -1175,6 +1202,7 @@
 #define BUCKL1_CNEN1   CNEN1Cbits.CNEN1C5 // GPIO port change notification Edge Select Enable register bit
 #define BUCKL1_CNF     CNFCbits.CNFC5 // GPIO port change notification flag bit register bit
 #define BUCKL1_RP      53 // Number of Remappable Pin
+#define _BUCKL1_RPOR   _RP53R // Remappable Pin Register
 #define BUCKL1_SET     { asm volatile ("bset _LATC, #5 \n"); }
 #define BUCKL1_CLEAR   { asm volatile ("bclr _LATC, #5 \n"); }
 #define BUCKL1_TOGGLE  { asm volatile ("btg  _LATC, #5 \n"); }
@@ -1207,6 +1235,7 @@
 #define FB_TEMP2_CNEN1   CNEN1Cbits.CNEN1C6 // GPIO port change notification Edge Select Enable register bit
 #define FB_TEMP2_CNF     CNFCbits.CNFC6 // GPIO port change notification flag bit register bit
 #define FB_TEMP2_RP      54 // Number of Remappable Pin
+#define _FB_TEMP2_RPOR   _RP54R // Remappable Pin Register
 #define FB_TEMP2_SET     { asm volatile ("bset _LATC, #6 \n"); }
 #define FB_TEMP2_CLEAR   { asm volatile ("bclr _LATC, #6 \n"); }
 #define FB_TEMP2_TOGGLE  { asm volatile ("btg  _LATC, #6 \n"); }
@@ -1239,6 +1268,7 @@
 #define FB_VOUT1_CNEN1   CNEN1Cbits.CNEN1C7 // GPIO port change notification Edge Select Enable register bit
 #define FB_VOUT1_CNF     CNFCbits.CNFC7 // GPIO port change notification flag bit register bit
 #define FB_VOUT1_RP      55 // Number of Remappable Pin
+#define _FB_VOUT1_RPOR   _RP55R // Remappable Pin Register
 #define FB_VOUT1_SET     { asm volatile ("bset _LATC, #7 \n"); }
 #define FB_VOUT1_CLEAR   { asm volatile ("bclr _LATC, #7 \n"); }
 #define FB_VOUT1_TOGGLE  { asm volatile ("btg  _LATC, #7 \n"); }
@@ -1271,6 +1301,7 @@
 #define SPI_CLK_CNEN1   CNEN1Cbits.CNEN1C8 // GPIO port change notification Edge Select Enable register bit
 #define SPI_CLK_CNF     CNFCbits.CNFC8 // GPIO port change notification flag bit register bit
 #define SPI_CLK_RP      56 // Number of Remappable Pin
+#define _SPI_CLK_RPOR   _RP56R // Remappable Pin Register
 #define SPI_CLK_SET     { asm volatile ("bset _LATC, #8 \n"); }
 #define SPI_CLK_CLEAR   { asm volatile ("bclr _LATC, #8 \n"); }
 #define SPI_CLK_TOGGLE  { asm volatile ("btg  _LATC, #8 \n"); }
@@ -1290,6 +1321,7 @@
 #define SPI_MISO_CNEN1   CNEN1Cbits.CNEN1C9 // GPIO port change notification Edge Select Enable register bit
 #define SPI_MISO_CNF     CNFCbits.CNFC9 // GPIO port change notification flag bit register bit
 #define SPI_MISO_RP      57 // Number of Remappable Pin
+#define _SPI_MISO_RPOR   _RP57R // Remappable Pin Register
 #define SPI_MISO_SET     { asm volatile ("bset _LATC, #9 \n"); }
 #define SPI_MISO_CLEAR   { asm volatile ("bclr _LATC, #9 \n"); }
 #define SPI_MISO_TOGGLE  { asm volatile ("btg  _LATC, #9 \n"); }
@@ -1309,6 +1341,7 @@
 #define ECP44_CNEN1   CNEN1Dbits.CNEN1D0 // GPIO port change notification Edge Select Enable register bit
 #define ECP44_CNF     CNFDbits.CNFD0 // GPIO port change notification flag bit register bit
 #define ECP44_RP      64 // Number of Remappable Pin
+#define _ECP44_RPOR   _RP64R // Remappable Pin Register
 #define ECP44_SET     { asm volatile ("bset _LATD, #0 \n"); }
 #define ECP44_CLEAR   { asm volatile ("bclr _LATD, #0 \n"); }
 #define ECP44_TOGGLE  { asm volatile ("btg  _LATD, #0 \n"); }
@@ -1341,6 +1374,7 @@
 #define PPC_IRQ1_CNEN1   CNEN1Dbits.CNEN1D1 // GPIO port change notification Edge Select Enable register bit
 #define PPC_IRQ1_CNF     CNFDbits.CNFD1 // GPIO port change notification flag bit register bit
 #define PPC_IRQ1_RP      65 // Number of Remappable Pin
+#define _PPC_IRQ1_RPOR   _RP65R // Remappable Pin Register
 #define PPC_IRQ1_SET     { asm volatile ("bset _LATD, #1 \n"); }
 #define PPC_IRQ1_CLEAR   { asm volatile ("bclr _LATD, #1 \n"); }
 #define PPC_IRQ1_TOGGLE  { asm volatile ("btg  _LATD, #1 \n"); }
@@ -1377,6 +1411,7 @@
 #define FB_IOUT1_CNEN1   CNEN1Dbits.CNEN1D10 // GPIO port change notification Edge Select Enable register bit
 #define FB_IOUT1_CNF     CNFDbits.CNFD10 // GPIO port change notification flag bit register bit
 #define FB_IOUT1_RP      74 // Number of Remappable Pin
+#define _FB_IOUT1_RPOR   _RP74R // Remappable Pin Register
 #define FB_IOUT1_SET     { asm volatile ("bset _LATD, #10 \n"); }
 #define FB_IOUT1_CLEAR   { asm volatile ("bclr _LATD, #10 \n"); }
 #define FB_IOUT1_TOGGLE  { asm volatile ("btg  _LATD, #10 \n"); }
@@ -1409,6 +1444,7 @@
 #define ECP13_CNEN1   CNEN1Dbits.CNEN1D11 // GPIO port change notification Edge Select Enable register bit
 #define ECP13_CNF     CNFDbits.CNFD11 // GPIO port change notification flag bit register bit
 #define ECP13_RP      75 // Number of Remappable Pin
+#define _ECP13_RPOR   _RP75R // Remappable Pin Register
 #define ECP13_SET     { asm volatile ("bset _LATD, #11 \n"); }
 #define ECP13_CLEAR   { asm volatile ("bclr _LATD, #11 \n"); }
 #define ECP13_TOGGLE  { asm volatile ("btg  _LATD, #11 \n"); }
@@ -1441,6 +1477,7 @@
 #define DBGPIN_CNEN1   CNEN1Dbits.CNEN1D12 // GPIO port change notification Edge Select Enable register bit
 #define DBGPIN_CNF     CNFDbits.CNFD12 // GPIO port change notification flag bit register bit
 #define DBGPIN_RP      76 // Number of Remappable Pin
+#define _DBGPIN_RPOR   _RP76R // Remappable Pin Register
 #define DBGPIN_SET     { asm volatile ("bset _LATD, #12 \n"); }
 #define DBGPIN_CLEAR   { asm volatile ("bclr _LATD, #12 \n"); }
 #define DBGPIN_TOGGLE  { asm volatile ("btg  _LATD, #12 \n"); }
@@ -1460,6 +1497,7 @@
 #define SPI_CS2_CNEN1   CNEN1Dbits.CNEN1D13 // GPIO port change notification Edge Select Enable register bit
 #define SPI_CS2_CNF     CNFDbits.CNFD13 // GPIO port change notification flag bit register bit
 #define SPI_CS2_RP      77 // Number of Remappable Pin
+#define _SPI_CS2_RPOR   _RP77R // Remappable Pin Register
 #define SPI_CS2_SET     { asm volatile ("bset _LATD, #13 \n"); }
 #define SPI_CS2_CLEAR   { asm volatile ("bclr _LATD, #13 \n"); }
 #define SPI_CS2_TOGGLE  { asm volatile ("btg  _LATD, #13 \n"); }
@@ -1479,6 +1517,7 @@
 #define ECP26_CNEN1   CNEN1Dbits.CNEN1D14 // GPIO port change notification Edge Select Enable register bit
 #define ECP26_CNF     CNFDbits.CNFD14 // GPIO port change notification flag bit register bit
 #define ECP26_RP      78 // Number of Remappable Pin
+#define _ECP26_RPOR   _RP78R // Remappable Pin Register
 #define ECP26_SET     { asm volatile ("bset _LATD, #14 \n"); }
 #define ECP26_CLEAR   { asm volatile ("bclr _LATD, #14 \n"); }
 #define ECP26_TOGGLE  { asm volatile ("btg  _LATD, #14 \n"); }
@@ -1498,6 +1537,7 @@
 #define DBGLED_CNEN1   CNEN1Dbits.CNEN1D15 // GPIO port change notification Edge Select Enable register bit
 #define DBGLED_CNF     CNFDbits.CNFD15 // GPIO port change notification flag bit register bit
 #define DBGLED_RP      79 // Number of Remappable Pin
+#define _DBGLED_RPOR   _RP79R // Remappable Pin Register
 #define DBGLED_SET     { asm volatile ("bset _LATD, #15 \n"); }
 #define DBGLED_CLEAR   { asm volatile ("bclr _LATD, #15 \n"); }
 #define DBGLED_TOGGLE  { asm volatile ("btg  _LATD, #15 \n"); }
@@ -1517,6 +1557,7 @@
 #define ECP39_CNEN1   CNEN1Dbits.CNEN1D2 // GPIO port change notification Edge Select Enable register bit
 #define ECP39_CNF     CNFDbits.CNFD2 // GPIO port change notification flag bit register bit
 #define ECP39_RP      66 // Number of Remappable Pin
+#define _ECP39_RPOR   _RP66R // Remappable Pin Register
 #define ECP39_SET     { asm volatile ("bset _LATD, #2 \n"); }
 #define ECP39_CLEAR   { asm volatile ("bclr _LATD, #2 \n"); }
 #define ECP39_TOGGLE  { asm volatile ("btg  _LATD, #2 \n"); }
@@ -1536,6 +1577,7 @@
 #define UART_TX_CNEN1   CNEN1Dbits.CNEN1D3 // GPIO port change notification Edge Select Enable register bit
 #define UART_TX_CNF     CNFDbits.CNFD3 // GPIO port change notification flag bit register bit
 #define UART_TX_RP      67 // Number of Remappable Pin
+#define _UART_TX_RPOR   _RP67R // Remappable Pin Register
 #define UART_TX_SET     { asm volatile ("bset _LATD, #3 \n"); }
 #define UART_TX_CLEAR   { asm volatile ("bclr _LATD, #3 \n"); }
 #define UART_TX_TOGGLE  { asm volatile ("btg  _LATD, #3 \n"); }
@@ -1555,6 +1597,7 @@
 #define UART_RX_CNEN1   CNEN1Dbits.CNEN1D4 // GPIO port change notification Edge Select Enable register bit
 #define UART_RX_CNF     CNFDbits.CNFD4 // GPIO port change notification flag bit register bit
 #define UART_RX_RP      68 // Number of Remappable Pin
+#define _UART_RX_RPOR   _RP68R // Remappable Pin Register
 #define UART_RX_SET     { asm volatile ("bset _LATD, #4 \n"); }
 #define UART_RX_CLEAR   { asm volatile ("bclr _LATD, #4 \n"); }
 #define UART_RX_TOGGLE  { asm volatile ("btg  _LATD, #4 \n"); }
@@ -1574,6 +1617,7 @@
 #define ECP34_CNEN1   CNEN1Dbits.CNEN1D5 // GPIO port change notification Edge Select Enable register bit
 #define ECP34_CNF     CNFDbits.CNFD5 // GPIO port change notification flag bit register bit
 #define ECP34_RP      69 // Number of Remappable Pin
+#define _ECP34_RPOR _RP69R // Remappable Pin Register
 #define ECP34_SET     { asm volatile ("bset _LATD, #5 \n"); }
 #define ECP34_CLEAR   { asm volatile ("bclr _LATD, #5 \n"); }
 #define ECP34_TOGGLE  { asm volatile ("btg  _LATD, #5 \n"); }
@@ -1593,6 +1637,7 @@
 #define ECP36_CNEN1   CNEN1Dbits.CNEN1D6 // GPIO port change notification Edge Select Enable register bit
 #define ECP36_CNF     CNFDbits.CNFD6 // GPIO port change notification flag bit register bit
 #define ECP36_RP      70 // Number of Remappable Pin
+#define _ECP36_RPOR _RP70R // Remappable Pin Register
 #define ECP36_SET     { asm volatile ("bset _LATD, #6 \n"); }
 #define ECP36_CLEAR   { asm volatile ("bclr _LATD, #6 \n"); }
 #define ECP36_TOGGLE  { asm volatile ("btg  _LATD, #6 \n"); }
@@ -1612,6 +1657,7 @@
 #define ECP50_CNEN1   CNEN1Dbits.CNEN1D7 // GPIO port change notification Edge Select Enable register bit
 #define ECP50_CNF     CNFDbits.CNFD7 // GPIO port change notification flag bit register bit
 #define ECP50_RP      71 // Number of Remappable Pin
+#define _ECP50_RPOR _RP71R // Remappable Pin Register
 #define ECP50_SET     { asm volatile ("bset _LATD, #7 \n"); }
 #define ECP50_CLEAR   { asm volatile ("bclr _LATD, #7 \n"); }
 #define ECP50_TOGGLE  { asm volatile ("btg  _LATD, #7 \n"); }
@@ -1631,6 +1677,7 @@
 #define SPI_MOSI_CNEN1   CNEN1Dbits.CNEN1D8 // GPIO port change notification Edge Select Enable register bit
 #define SPI_MOSI_CNF     CNFDbits.CNFD8 // GPIO port change notification flag bit register bit
 #define SPI_MOSI_RP      72 // Number of Remappable Pin
+#define _SPI_MOSI_RPOR    _RP72R // Remappable Pin Register
 #define SPI_MOSI_SET     { asm volatile ("bset _LATD, #8 \n"); }
 #define SPI_MOSI_CLEAR   { asm volatile ("bclr _LATD, #8 \n"); }
 #define SPI_MOSI_TOGGLE  { asm volatile ("btg  _LATD, #8 \n"); }
@@ -1650,6 +1697,7 @@
 #define ECP28_CNEN1   CNEN1Dbits.CNEN1D9 // GPIO port change notification Edge Select Enable register bit
 #define ECP28_CNF     CNFDbits.CNFD9 // GPIO port change notification flag bit register bit
 #define ECP28_RP      73 // Number of Remappable Pin
+#define _ECP28_RPOR _RP73R // Remappable Pin Register
 #define ECP28_SET     { asm volatile ("bset _LATD, #9 \n"); }
 #define ECP28_CLEAR   { asm volatile ("bclr _LATD, #9 \n"); }
 #define ECP28_TOGGLE  { asm volatile ("btg  _LATD, #9 \n"); }
