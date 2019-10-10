@@ -44,7 +44,7 @@
  * Created on May 19, 2019, 09:32 AM
  ******************************************************************************/
 
-#include "_root/generic/task_scheduler.h"
+#include "_root/generic/os_Scheduler.h"
 
 int main(void) {
 
@@ -57,8 +57,8 @@ int main(void) {
     Nop();
     Nop();
 #endif
-    
-    /*!exec_scheduler()
+
+    /*!OS_Execute()
      * ****************************************************************
      * Description:
      * The main task scheduler engine is called as a single and sole
@@ -73,7 +73,7 @@ int main(void) {
      * of peripheral initialization will only take place within the
      * main task scheduler execution.
      * ***************************************************************/
-    fres = exec_scheduler();
+    fres = OS_Execute();
     
     return(fres);
 }

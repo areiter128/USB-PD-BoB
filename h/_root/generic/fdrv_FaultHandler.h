@@ -13,13 +13,14 @@
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef _APPLLICAITON_LAYER_FAULT_HANDLER_H_
-#define	_APPLLICAITON_LAYER_FAULT_HANDLER_H_
+#ifndef _ROOT_FUNCTION_DRIVER_FAULT_HANDLER_H_
+#define	_ROOT_FUNCTION_DRIVER_FAULT_HANDLER_H_
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
-#include "_root/config/globals.h"
+#include <stdbool.h>
 
+#include "apl/config/UserFaultObjects.h"
 
 /*!FAULT_OBJECT_STATUS_t
  * ***********************************************************************************************
@@ -60,7 +61,7 @@ typedef union
         volatile unsigned :1;	// Bit #10: Reserved
         volatile unsigned :1;	// Bit #11: Reserved
         volatile unsigned :1;	// Bit #12: Reserved
-        volatile unsigned fltactive :1; // Bit #14: Flag bit indicating temporary fault condition is present
+        volatile unsigned flt_active :1; // Bit #14: Flag bit indicating temporary fault condition is present
         volatile unsigned fltstat   :1;	// Bit #13: Flag bit indicating that a fault has been tripped (latched until gone)
         volatile unsigned fltchken  :1;	// Bit #15: Fault check enable/disable flag bit
     }__attribute__((packed))bits;
@@ -220,8 +221,10 @@ typedef struct
  * status information, fault classes and user fault actions.
  * ***********************************************************************************************/
 
-extern volatile FAULT_OBJECT_t *fault_object_list[];
-extern volatile uint16_t fltobj_list_size;
+extern volatile FAULT_OBJECT_t *os_fault_object_list[];
+extern volatile uint16_t os_fltobj_list_size;
+extern volatile FAULT_OBJECT_t *user_fault_object_list[];
+extern volatile uint16_t user_fltobj_list_size;
 
 
 /*!CPU Reset Classes
@@ -254,11 +257,13 @@ extern volatile uint16_t fltobj_list_size;
  * Description:
  * The following function prototypes are publicly accessible.
  * ***********************************************************************************************/
+extern volatile uint16_t os_FaultObjects_Initialize(void);
+
 extern volatile uint16_t CaptureCPUInterruptStatus(void);
 extern volatile uint16_t CheckCPUResetRootCause(void);
 
 extern volatile uint16_t exec_FaultCheckAll(void);
 extern volatile uint16_t exec_FaultCheckSequential(void);
 
-#endif	/* _APPLLICAITON_LAYER_FAULT_HANDLER_H_ */
+#endif	/* _ROOT_FUNCTION_DRIVER_FAULT_HANDLER_H_ */
 

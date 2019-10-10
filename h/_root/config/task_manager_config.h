@@ -372,7 +372,7 @@
  * PROTOTYPES
  * ***********************************************************************************************/
 
-extern uint16_t OS_Initialize(void);
+extern volatile uint16_t OS_Initialize(void);
 
 #endif	/* _ROOT_TASK_MANAGER_CONFIGURATION_H_ */
 

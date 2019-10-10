@@ -117,124 +117,127 @@ typedef enum
 // This define is used to filter on critical fault conditions used to trigger a CPU reset
 #define CPU_RESET_TRIGGER_LOW_BIT_MASK 0b00000000000000011011101110000000
 
-typedef struct {
-    
-    volatile unsigned OVAERR    :1; // Bit #0:  Accumulator A Overflow Trap Flag bit
-    volatile unsigned OVBERR    :1; // Bit #1:  Accumulator B Overflow Trap Flag bit
-    volatile unsigned COVAERR   :1; // Bit #2:  Accumulator A Catastrophic Overflow Trap Flag bit
-    volatile unsigned COVBERR   :1; // Bit #3:  Accumulator B Catastrophic Overflow Trap Flag bit
-    volatile unsigned SFTACERR  :1; // Bit #4:  Shift Accumulator Error Status bit
-    volatile unsigned DIV0ERR   :1; // Bit #5:  Divide-by-Zero Error Status bit
-    volatile unsigned MATHERR   :1; // Bit #6:  Math Error Status bit
-    volatile unsigned ADDRERR   :1; // Bit #7:  Address Error Trap Status bit
-    volatile unsigned STKERR    :1; // Bit #8:  Stack Error Trap Status bit
-    volatile unsigned OSCFAIL   :1; // Bit #9:  Oscillator Failure Trap Status bit
-    volatile unsigned SWTRAP    :1; // Bit #10: Software Trap Status bit
-    volatile unsigned NAE       :1; // Bit #11: NVM Address Error Soft Trap Status bit
-    volatile unsigned DOOVR     :1; // Bit #12: DO Stack Overflow Soft Trap Status bit
-    volatile unsigned APLL      :1; // Bit #13: Auxiliary PLL Loss of Lock Soft Trap Status bit
-    volatile unsigned SGHT      :1; // Bit #14: Software Generated Hard Trap Status bit
-    volatile unsigned DMACERR   :1; // Bit #15: DMA Trap Status bit
-
-    volatile unsigned ECCDBE    :1; // Bit #16: ECC Double-Bit Error Trap Status bit
-    volatile unsigned CAN       :1; // Bit #17: CAN Address Error Soft Trap Status bit
-    volatile unsigned CAN2      :1; // Bit #18: CAN2 Address Error Soft Trap Status bit
-    volatile unsigned           :13; // Bit <19:31> (reserved)
-
-}__attribute__((packed))TRAP_FLAG_BIT_FIELD_t;
-
 typedef union {
-    volatile TRAP_FLAG_BIT_FIELD_t bits;
-    volatile uint32_t value;
-}TRAP_FLAG_IDENTIFIER_t;
-
-typedef struct {
     
-	volatile unsigned VECNUM:8;	// Bit #0-7:  Pending Interrupt Number List
-	volatile unsigned ILR	:4;	// Bit #8-11: New Interrupt Priority Level
-	volatile unsigned		:1;	// Bit #12: Reserved
-	volatile unsigned VHOLD :1; // Bit #13: Vector Number Capture Enable bit
-	volatile unsigned       :1;	// Bit #14: Reserved
-	volatile unsigned       :1;	// Bit #15: Reserved
-}__attribute__((packed))INTERRUPT_CONTROL_REGISTER_BIT_FIELD_t;
+    struct {
+
+        volatile unsigned OVAERR    :1; // Bit #0:  Accumulator A Overflow Trap Flag bit
+        volatile unsigned OVBERR    :1; // Bit #1:  Accumulator B Overflow Trap Flag bit
+        volatile unsigned COVAERR   :1; // Bit #2:  Accumulator A Catastrophic Overflow Trap Flag bit
+        volatile unsigned COVBERR   :1; // Bit #3:  Accumulator B Catastrophic Overflow Trap Flag bit
+        volatile unsigned SFTACERR  :1; // Bit #4:  Shift Accumulator Error Status bit
+        volatile unsigned DIV0ERR   :1; // Bit #5:  Divide-by-Zero Error Status bit
+        volatile unsigned MATHERR   :1; // Bit #6:  Math Error Status bit
+        volatile unsigned ADDRERR   :1; // Bit #7:  Address Error Trap Status bit
+        volatile unsigned STKERR    :1; // Bit #8:  Stack Error Trap Status bit
+        volatile unsigned OSCFAIL   :1; // Bit #9:  Oscillator Failure Trap Status bit
+        volatile unsigned SWTRAP    :1; // Bit #10: Software Trap Status bit
+        volatile unsigned NAE       :1; // Bit #11: NVM Address Error Soft Trap Status bit
+        volatile unsigned DOOVR     :1; // Bit #12: DO Stack Overflow Soft Trap Status bit
+        volatile unsigned APLL      :1; // Bit #13: Auxiliary PLL Loss of Lock Soft Trap Status bit
+        volatile unsigned SGHT      :1; // Bit #14: Software Generated Hard Trap Status bit
+        volatile unsigned DMACERR   :1; // Bit #15: DMA Trap Status bit
+
+        volatile unsigned ECCDBE    :1; // Bit #16: ECC Double-Bit Error Trap Status bit
+        volatile unsigned CAN       :1; // Bit #17: CAN Address Error Soft Trap Status bit
+        volatile unsigned CAN2      :1; // Bit #18: CAN2 Address Error Soft Trap Status bit
+        volatile unsigned           :13; // Bit <19:31> (reserved)
+
+    }__attribute__((packed))bits;
+
+    volatile uint32_t value;
+    
+}TRAP_FLAGS_t;
 
 typedef union 
 {
-	volatile uint32_t value;
-	volatile INTERRUPT_CONTROL_REGISTER_BIT_FIELD_t bits;
-}INTERRUPT_CONTROL_REGISTER_t;
+    struct {
+        volatile unsigned VECNUM:8;	// Bit #0-7:  Pending Interrupt Number List
+        volatile unsigned ILR	:4;	// Bit #8-11: New Interrupt Priority Level
+        volatile unsigned		:1;	// Bit #12: Reserved
+        volatile unsigned VHOLD :1; // Bit #13: Vector Number Capture Enable bit
+        volatile unsigned       :1;	// Bit #14: Reserved
+        volatile unsigned       :1;	// Bit #15: Reserved
+    }__attribute__((packed))bits;
+
+	volatile uint16_t value;
+
+}CPU_INTTREG_t;
 
 // Data structure for RCON status capturing
-typedef struct {
-    
-	volatile unsigned por	:1;	// Bit #0:  Power-on Reset Flag bit
-	volatile unsigned bor	:1;	// Bit #1:  Brown-out Reset Flag bit
-	volatile unsigned idle	:1;	// Bit #2:  Wake-up from Idle Flag bit
-	volatile unsigned sleep	:1;	// Bit #3:  Wake-up from Sleep Flag bit
-	volatile unsigned wdto	:1;	// Bit #4:  Watchdog Timer Time-out Flag bit
-	volatile unsigned swdten:1;	// Bit #5:  Software Enable/Disable of WDT bit
-	volatile unsigned swr	:1;	// Bit #6:  Software Reset Flag (Instruction) bit
-	volatile unsigned extr	:1;	// Bit #7:  External Reset Pin (MCLR) bit
-	volatile unsigned vregs	:1;	// Bit #8:  Voltage Regulator Standby During Sleep bit
-	volatile unsigned cm    :1;	// Bit #9:  Configuration Mismatch Flag bit
-	volatile unsigned		:1;	// Bit #10: Reserved
-	volatile unsigned vregsf:1;	// Bit #11: Flash Voltage Regulator Standby During Sleep bit
-	volatile unsigned		:1;	// Bit #12: Reserved
-	volatile unsigned		:1;	// Bit #13: Reserved
-	volatile unsigned iopuwr:1;	// Bit #14: Illegal Opcode or Uninitialized W Access Reset Flag bit
-	volatile unsigned trapr :1;	// Bit #15: Trap Reset Flag bit
-    
-}__attribute__((packed))RESET_CONTROL_REGISTER_BIT_FIELD_t;
 
 typedef union {
-	volatile RESET_CONTROL_REGISTER_BIT_FIELD_t bits;
+
+    struct {
+
+        volatile unsigned por	:1;	// Bit #0:  Power-on Reset Flag bit
+        volatile unsigned bor	:1;	// Bit #1:  Brown-out Reset Flag bit
+        volatile unsigned idle	:1;	// Bit #2:  Wake-up from Idle Flag bit
+        volatile unsigned sleep	:1;	// Bit #3:  Wake-up from Sleep Flag bit
+        volatile unsigned wdto	:1;	// Bit #4:  Watchdog Timer Time-out Flag bit
+        volatile unsigned swdten:1;	// Bit #5:  Software Enable/Disable of WDT bit
+        volatile unsigned swr	:1;	// Bit #6:  Software Reset Flag (Instruction) bit
+        volatile unsigned extr	:1;	// Bit #7:  External Reset Pin (MCLR) bit
+        volatile unsigned vregs	:1;	// Bit #8:  Voltage Regulator Standby During Sleep bit
+        volatile unsigned cm    :1;	// Bit #9:  Configuration Mismatch Flag bit
+        volatile unsigned		:1;	// Bit #10: Reserved
+        volatile unsigned vregsf:1;	// Bit #11: Flash Voltage Regulator Standby During Sleep bit
+        volatile unsigned		:1;	// Bit #12: Reserved
+        volatile unsigned		:1;	// Bit #13: Reserved
+        volatile unsigned iopuwr:1;	// Bit #14: Illegal Opcode or Uninitialized W Access Reset Flag bit
+        volatile unsigned trapr :1;	// Bit #15: Trap Reset Flag bit
+
+    }__attribute__((packed))bits;
+
 	volatile uint16_t value;
-}RESET_CONTROL_REGISTER_t;
+    
+}CPU_RCON_t;
 
 
 #define FAULT_OBJECT_CPU_RESET_TRIGGER_BIT_MASK     0b0000000000000001
 
-typedef struct {
-
-    // Control bits
-    volatile bool cpu_reset_trigger : 1;    // Bit 0: Control bit to trigger software-enforced CPU reset
-    volatile unsigned : 1;                  // Bit 1: (reserved)
-    volatile unsigned : 1;                  // Bit 2: (reserved)
-    volatile unsigned : 1;                  // Bit 3: (reserved)
-    volatile unsigned : 1;                  // Bit 4: (reserved)
-    volatile unsigned : 1;                  // Bit 5: (reserved)
-    volatile unsigned : 1;                  // Bit 6: (reserved)
-    volatile unsigned : 1;                  // Bit 7: (reserved)
-    
-    // Status bits
-    volatile bool sw_reset : 1;             // Bit 8:  Flag indicating CPU was reset by software (read only)
-    volatile unsigned : 1;                  // Bit 9:  (reserved)
-    volatile unsigned : 1;                  // Bit 10: (reserved)
-    volatile unsigned : 1;                  // Bit 11: (reserved)
-    volatile unsigned : 1;                  // Bit 12: (reserved)
-    volatile unsigned : 1;                  // Bit 13: (reserved)
-    volatile unsigned : 1;                  // Bit 14: (reserved)
-    volatile unsigned : 1;                  // Bit 15: (reserved)
-    
-}__attribute__((packed)) TRAPLOG_STATUS_BIT_FIELD_t;
-
 typedef union {
-	volatile TRAPLOG_STATUS_BIT_FIELD_t bits;
+
+    struct {
+
+        // Control bits
+        volatile bool cpu_reset_trigger : 1;    // Bit 0: Control bit to trigger software-enforced CPU reset
+        volatile unsigned : 1;                  // Bit 1: (reserved)
+        volatile unsigned : 1;                  // Bit 2: (reserved)
+        volatile unsigned : 1;                  // Bit 3: (reserved)
+        volatile unsigned : 1;                  // Bit 4: (reserved)
+        volatile unsigned : 1;                  // Bit 5: (reserved)
+        volatile unsigned : 1;                  // Bit 6: (reserved)
+        volatile unsigned : 1;                  // Bit 7: (reserved)
+
+        // Status bits
+        volatile bool sw_reset : 1;             // Bit 8:  Flag indicating CPU was reset by software (read only)
+        volatile unsigned : 1;                  // Bit 9:  (reserved)
+        volatile unsigned : 1;                  // Bit 10: (reserved)
+        volatile unsigned : 1;                  // Bit 11: (reserved)
+        volatile unsigned : 1;                  // Bit 12: (reserved)
+        volatile unsigned : 1;                  // Bit 13: (reserved)
+        volatile unsigned : 1;                  // Bit 14: (reserved)
+        volatile unsigned : 1;                  // Bit 15: (reserved)
+
+    }__attribute__((packed)) bits;
+
 	volatile uint16_t value;
+
 }TRAPLOG_STATUS_t;
 
 
 typedef struct {
 
-    volatile TRAPLOG_STATUS_t status;               // Status word of the traplog object
-    volatile uint16_t reset_count;                  // Counter of CPU RESET events (read/write)
-	volatile TRAP_ID_e trap_id;                     // Trap-ID of the captured incident
-	volatile uint16_t trap_count;                   // Counter tracking the number of occurrences
-    volatile TRAP_FLAG_IDENTIFIER_t trap_flags;     // Complete list of trap flags (showing all trap flags)
-	volatile RESET_CONTROL_REGISTER_t rcon_reg;     // Captures the RESET CONTROL register
-    volatile INTERRUPT_CONTROL_REGISTER_t inttreg;  // Interrupt Vector and Priority register capture
+    volatile TRAPLOG_STATUS_t status;   // Status word of the traplog object
+    volatile uint16_t reset_count;      // Counter of CPU RESET events (read/write)
+	volatile TRAP_ID_e trap_id;         // Trap-ID of the captured incident
+	volatile uint16_t trap_count;       // Counter tracking the number of occurrences
+    volatile TRAP_FLAGS_t trap_flags;   // Complete list of trap flags (showing all trap flags)
+	volatile CPU_RCON_t rcon_reg;       // Captures the RESET CONTROL register
+    volatile CPU_INTTREG_t inttreg;     // Interrupt Vector and Priority register capture
     
-}TRAP_LOGGER_t;
+}TRAP_LOGGER_t; // Global data structure for trap event capturing
 
 
 

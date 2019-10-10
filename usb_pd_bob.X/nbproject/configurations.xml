@@ -6,20 +6,23 @@
                    projectFiles="true">
       <logicalFolder name="_root" displayName="_root" projectFiles="true">
         <logicalFolder name="config" displayName="config" projectFiles="true">
-          <itemPath>../h/_root/config/globals.h</itemPath>
           <itemPath>../h/_root/config/task_manager_config.h</itemPath>
         </logicalFolder>
         <logicalFolder name="generic" displayName="generic" projectFiles="true">
           <itemPath>../h/_root/generic/fdrv_FaultHandler.h</itemPath>
-          <itemPath>../h/_root/generic/task_manager.h</itemPath>
           <itemPath>../h/_root/generic/fdrv_TrapHandler.h</itemPath>
-          <itemPath>../h/_root/generic/task_scheduler.h</itemPath>
+          <itemPath>../h/_root/generic/fdrv_FaultObjects.h</itemPath>
+          <itemPath>../h/_root/generic/os_Globals.h</itemPath>
+          <itemPath>../h/_root/generic/os_Initialize.h</itemPath>
+          <itemPath>../h/_root/generic/os_Scheduler.h</itemPath>
+          <itemPath>../h/_root/generic/os_TaskManager.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="apl" displayName="apl" projectFiles="true">
         <logicalFolder name="config" displayName="config" projectFiles="true">
-          <itemPath>../h/apl/config/tasks.h</itemPath>
-          <itemPath>../h/apl/config/application.h</itemPath>
+          <itemPath>../h/apl/config/UserAppManager.h</itemPath>
+          <itemPath>../h/apl/config/UserFaultObjects.h</itemPath>
+          <itemPath>../h/apl/config/UserTasks.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
           <itemPath>../h/apl/resources/npnz16b.h</itemPath>
@@ -31,9 +34,7 @@
           <itemPath>../h/apl/resources/c4swbb_pconfig.h</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
-          <itemPath>../h/apl/tasks/task_FaultHandler.h</itemPath>
           <itemPath>../h/apl/tasks/task_Idle.h</itemPath>
-          <itemPath>../h/apl/tasks/task_SystemStatus.h</itemPath>
           <itemPath>../h/apl/tasks/task_PowerControl.h</itemPath>
         </logicalFolder>
         <itemPath>../h/apl/apl.h</itemPath>
@@ -45,15 +46,6 @@
           <itemPath>../h/hal/config/syscfg_limits.h</itemPath>
           <itemPath>../h/hal/config/syscfg_scaling.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="initialization"
-                       displayName="initialization"
-                       projectFiles="true">
-          <itemPath>../h/hal/initialization/init_dsp.h</itemPath>
-          <itemPath>../h/hal/initialization/init_fosc.h</itemPath>
-          <itemPath>../h/hal/initialization/init_gpio.h</itemPath>
-          <itemPath>../h/hal/initialization/init_irq.h</itemPath>
-          <itemPath>../h/hal/initialization/init_timer.h</itemPath>
-        </logicalFolder>
         <itemPath>../h/hal/hal.h</itemPath>
       </logicalFolder>
       <logicalFolder name="mcal" displayName="mcal" projectFiles="true">
@@ -63,19 +55,16 @@
           <itemPath>../h/mcal/config/devcfg_pinmap.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="initialization" projectFiles="true">
+          <itemPath>../h/mcal/initialization/init_dsp.h</itemPath>
+          <itemPath>../h/mcal/initialization/init_fosc.h</itemPath>
+          <itemPath>../h/mcal/initialization/init_gpio.h</itemPath>
+          <itemPath>../h/mcal/initialization/init_irq.h</itemPath>
+          <itemPath>../h/mcal/initialization/init_timer.h</itemPath>
         </logicalFolder>
         <itemPath>../h/mcal/cpu_macros.h</itemPath>
         <itemPath>../h/mcal/mcal.h</itemPath>
       </logicalFolder>
       <logicalFolder name="sfl" displayName="sfl" projectFiles="true">
-        <logicalFolder name="asmlib" displayName="asmlib" projectFiles="true">
-        </logicalFolder>
-        <logicalFolder name="generic" displayName="generic" projectFiles="true">
-        </logicalFolder>
-        <logicalFolder name="f1" displayName="isr" projectFiles="true">
-        </logicalFolder>
-        <logicalFolder name="libapi" displayName="libapi" projectFiles="true">
-        </logicalFolder>
         <itemPath>../h/sfl/sfl.h</itemPath>
       </logicalFolder>
     </logicalFolder>
@@ -89,16 +78,19 @@
       <logicalFolder name="_root" displayName="_root" projectFiles="true">
         <logicalFolder name="generic" displayName="generic" projectFiles="true">
           <itemPath>../src/_root/generic/fdrv_FaultHandler.c</itemPath>
-          <itemPath>../src/_root/generic/task_manager.c</itemPath>
           <itemPath>../src/_root/generic/fdrv_TrapHandler.c</itemPath>
-          <itemPath>../src/_root/generic/task_scheduler.c</itemPath>
+          <itemPath>../src/_root/generic/fdrv_FaultObjects.c</itemPath>
+          <itemPath>../src/_root/generic/os_Initialize.c</itemPath>
+          <itemPath>../src/_root/generic/os_Scheduler.c</itemPath>
+          <itemPath>../src/_root/generic/os_TaskManager.c</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="apl" displayName="apl" projectFiles="true">
         <logicalFolder name="config" displayName="config" projectFiles="true">
-          <itemPath>../src/apl/config/tasks.c</itemPath>
           <itemPath>../src/apl/config/UserStartupCode.c</itemPath>
-          <itemPath>../src/apl/config/application.c</itemPath>
+          <itemPath>../src/apl/config/UserAppManager.c</itemPath>
+          <itemPath>../src/apl/config/UserFaultObjects.c</itemPath>
+          <itemPath>../src/apl/config/UserTasks.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
           <itemPath>../src/apl/resources/c4swbb_control.c</itemPath>
@@ -113,24 +105,13 @@
           <itemPath>../src/apl/resources/c4swbb_pconfig.c</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
-          <itemPath>../src/apl/tasks/task_FaultHandler.c</itemPath>
           <itemPath>../src/apl/tasks/task_Idle.c</itemPath>
-          <itemPath>../src/apl/tasks/task_SystemStatus.c</itemPath>
           <itemPath>../src/apl/tasks/task_PowerControl.c</itemPath>
         </logicalFolder>
         <itemPath>../src/apl/apl.c</itemPath>
       </logicalFolder>
       <logicalFolder name="hal" displayName="hal" projectFiles="true">
         <logicalFolder name="config" displayName="config" projectFiles="true">
-        </logicalFolder>
-        <logicalFolder name="initialization"
-                       displayName="initialization"
-                       projectFiles="true">
-          <itemPath>../src/hal/initialization/init_dsp.c</itemPath>
-          <itemPath>../src/hal/initialization/init_fosc.c</itemPath>
-          <itemPath>../src/hal/initialization/init_gpio.c</itemPath>
-          <itemPath>../src/hal/initialization/init_irq.c</itemPath>
-          <itemPath>../src/hal/initialization/init_timer.c</itemPath>
         </logicalFolder>
         <itemPath>../src/hal/hal.c</itemPath>
       </logicalFolder>
@@ -140,19 +121,15 @@
           <itemPath>../src/mcal/config/config_bits_P33CK.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="Initialization" projectFiles="true">
+          <itemPath>../src/mcal/initialization/init_dsp.c</itemPath>
+          <itemPath>../src/mcal/initialization/init_fosc.c</itemPath>
+          <itemPath>../src/mcal/initialization/init_gpio.c</itemPath>
+          <itemPath>../src/mcal/initialization/init_irq.c</itemPath>
+          <itemPath>../src/mcal/initialization/init_timer.c</itemPath>
         </logicalFolder>
         <itemPath>../src/mcal/mcal.c</itemPath>
       </logicalFolder>
       <logicalFolder name="sfl" displayName="sfl" projectFiles="true">
-        <logicalFolder name="asmlib" displayName="asmlib" projectFiles="true">
-        </logicalFolder>
-        <logicalFolder name="generic" displayName="generic" projectFiles="true">
-        </logicalFolder>
-        <logicalFolder name="f1" displayName="isr" projectFiles="true">
-          <itemPath>../src/sfl/isr/isr_timer.c</itemPath>
-        </logicalFolder>
-        <logicalFolder name="libapi" displayName="libapi" projectFiles="true">
-        </logicalFolder>
         <itemPath>../src/sfl/sfl.c</itemPath>
       </logicalFolder>
       <itemPath>../src/main.c</itemPath>
@@ -197,7 +174,7 @@
         <targetDevice>dsPIC33CK64MP505</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>PICkit3PlatformTool</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.41</languageToolchainVersion>
         <platform>3</platform>
@@ -1318,6 +1295,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-ffffffffffffffff"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="D:/Firmware/00173_USB_PD_BoB/firmware/project/usb_pd_bob.X/debug/MA330048_P33CK_R30/usb_pd_bob_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>

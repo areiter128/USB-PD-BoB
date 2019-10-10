@@ -36,7 +36,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <math.h>
-#include "_root/generic/fdrv_FaultHandler.h"
+#include "_root/generic/os_Globals.h"
 
 /* private function prototypes */
 volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj);
@@ -45,22 +45,44 @@ volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj);
 volatile uint16_t ExecGlobalFaultFlagRelease(volatile uint16_t fault_class_code);
 volatile uint16_t ExecFaultFlagReleaseHandler(volatile FAULT_OBJECT_t* fltobj);
 
-/*!fault_object_list_pointer
+/*!FaultObjects_Initialize
  * ***********************************************************************************************
  * Description:
- * The fault_object_list_pointer variable is used by the exec_FaultCheckSequential() function.
- * Instead of checking all fault objects at once, this routine checks one fault object  
- * declared in fault_object_list[] at a time. After the last item was checked, the 
- * fault_object_list_pointer is automatically reset and starts from fault_object_list[0].
+ * The fault_object_list[] array is a list of all fault objects defined for this project. It
+ * is a list of pointers to FAULT_OBJECT_t data structures defining fault settings,
+ * status information, fault classes and user fault actions.
  * ***********************************************************************************************/
-volatile uint16_t fault_object_list_pointer = 0;
+
+volatile uint16_t os_FaultObjects_Initialize(void)
+{
+    volatile uint16_t fres = 1;
+    volatile uint16_t i = 0;
+
+    // Initialize all fault objects in OS Fault Object list
+    for(i=0; i<os_fault_object_init_functions_size; i++) {
+        fres &= os_fault_object_init_functions[i]();
+    }
+    
+    for(i=0; i<user_fault_object_init_functions_size; i++) {
+        fres &= user_fault_object_init_functions[i]();
+    }
+
+    // ====================================================
+    // Set global fault flags (need to be cleared during operation)
+    task_mgr.status.bits.global_fault = 1;
+    task_mgr.status.bits.global_warning = 1;
+    task_mgr.status.bits.global_notify = 1;
+    // ====================================================
+    
+    return(fres);
+    
+}
 
 /*!CheckFaultCondition
  * ***********************************************************************************************
  * Parameters:
  *      FAULT_OBJECT_t* fltobj: Pointer to fault object fltobj of type FAULT_OBJECT_t, holding
- *          all the information about fault conditions, fault class, and further user-defined
- *          settings.
+ *          all the information about fault criteria, fault class and fault response settings
  * 
  * Return:
  *      type: uint16_t
@@ -68,15 +90,21 @@ volatile uint16_t fault_object_list_pointer = 0;
  *      1: Success
  * 
  * <b>Description:</b>
- * The fault_object_list_pointer variable is used by the exec_FaultCheckSequential() and 
- * exec_FaultCheckAll() functions. In this function the given fault object fltobj of type
- * FAULT_OBJECT_t is checked for violations of its fault condition criteria. When a fault
- * condition is detected, the fltactive flag bit is set. 
- * IF an active fault condition has been detected, the fault filter using the fault counter
- * and associated min/max counter threshold "trip_cnt_threshold" resp. "release_cnt_threshold" is 
- * applied before the fltstat bit is set/cleared.
- * The fltstat bit indicates a persistent fault condition, which then results in the global
- * application notify, warning or critical flag bit to be set/cleared.
+ * exec_FaultCheckAll() the given fault object fltobj of type FAULT_OBJECT_t is checked for 
+ * violations of its fault condition criteria. When a fault condition is detected, the flt_active 
+ * flag bit is set. If the fault flag bit flt_active is set, the fault filter counter is incremented.
+ * Once the specified counter maximum threshold "trip_cnt_threshold" is reached/exceeded, the fltstat 
+ * bit is set and the specified fault response is tripped. If a fault condition disappears while the 
+ * fault filter counter has not reached its maximum threshold, flag bit flt_active will be cleared and 
+ * the fault filter counter will reset to zero.
+ * 
+ * While a certain fault condition is flagged, the fault object is still monitored for fault reset 
+ * conditions. Once the fault condition disappears, the fault active flag bit is reset and the 
+ * fault filter counter is incremented.  
+ * Once the specified counter maximum threshold "release_cnt_threshold" is reached/exceeded, the fltstat 
+ * bit is cleared and the specified fault release response is triggered. If a fault condition 
+ * reappears while the fault filter counter has not reached its maximum threshold, flag bit flt_active 
+ * will be set and the fault filter counter will reset to zero.
  * ***********************************************************************************************/
 inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
 {
@@ -111,10 +139,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
         
         if(source_value > fltobj->criteria.trip_level)
         // if the upper threshold is exceeded, set "fault present" flag
-        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
+        { fltobj->status.bits.flt_active = 1; } // set "fault present" bit
         else if(source_value < fltobj->criteria.reset_level)
         // if the value is above the upper limit of the hysteresis of the threshold, reset fault flag
-        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
+        { fltobj->status.bits.flt_active = 0; } // reset "fault present" bit
         else
         // if the value hovers within the hysteresis of the threshold => do nothing
         { Nop(); }
@@ -127,10 +155,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
         
         if(source_value < fltobj->criteria.trip_level)
         // if the lower threshold is exceeded, set "fault present" flag
-        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
+        { fltobj->status.bits.flt_active = 1; } // set "fault present" bit
         else if(source_value > fltobj->criteria.reset_level)
         // if the value is above the upper limit of the hysteresis of the threshold, reset fault flag
-        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
+        { fltobj->status.bits.flt_active = 0; } // reset "fault present" bit
         else
         // if the value hovers within the hysteresis of the threshold => do nothing
         { Nop(); }
@@ -141,10 +169,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     {
         if(((bool)source_value) == ((bool)fltobj->criteria.trip_level))
         // if the fault value is hit, set the fault flag and increment the fault counter
-        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
+        { fltobj->status.bits.flt_active = 1; } // set "fault present" bit
         else
         // if not equal, reset the fault flag and fault counter
-        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
+        { fltobj->status.bits.flt_active = 0; } // reset "fault present" bit
 
     }
     else if (fltobj->criteria.fault_ratio == (FAULT_LEVEL_EQUAL))
@@ -152,10 +180,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     {
         if(source_value == fltobj->criteria.trip_level)
         // if the fault value is hit, set the fault flag and increment the fault counter
-        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
+        { fltobj->status.bits.flt_active = 1; } // set "fault present" bit
         else
         // if not equal, reset the fault flag and fault counter
-        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
+        { fltobj->status.bits.flt_active = 0; } // reset "fault present" bit
 
     }
     else if (fltobj->criteria.fault_ratio == (FAULT_LEVEL_NOT_EQUAL))
@@ -163,10 +191,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     {
         if(source_value != fltobj->criteria.trip_level)
         // if the fault value is off constant, set the fault flag and increment the fault counter
-        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
+        { fltobj->status.bits.flt_active = 1; } // set "fault present" bit
         else
         // if equal, reset the fault flag and fault counter
-        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
+        { fltobj->status.bits.flt_active = 0; } // reset "fault present" bit
 
     }
     else if(fltobj->criteria.fault_ratio == (FAULT_LEVEL_OUT_OF_RANGE)) 
@@ -176,10 +204,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     {
         if((source_value > fltobj->criteria.trip_level) || (source_value < fltobj->criteria.reset_level))
         // if the fault value is outside the window, set the fault flag and increment the fault counter
-        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
+        { fltobj->status.bits.flt_active = 1; } // set "fault present" bit
         else
         // if inside the window, reset the fault flag and fault counter
-        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
+        { fltobj->status.bits.flt_active = 0; } // reset "fault present" bit
         
     }
     else if(fltobj->criteria.fault_ratio == (FAULT_LEVEL_IN_RANGE)) 
@@ -189,10 +217,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     {
         if((fltobj->criteria.reset_level < source_value) && (source_value < fltobj->criteria.trip_level))
         // if the fault value is inside the window, set the fault flag and increment the fault counter
-        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
+        { fltobj->status.bits.flt_active = 1; } // set "fault present" bit
         else
         // if outside the window, reset the fault flag and fault counter
-        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
+        { fltobj->status.bits.flt_active = 0; } // reset "fault present" bit
         
     }
     else
@@ -230,7 +258,7 @@ inline volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     if (!fltobj->status.bits.fltstat)
     // if there is no active fault state...
     {
-        if(fltobj->status.bits.fltactive) 
+        if(fltobj->status.bits.flt_active) 
         // if a fault condition has been detected... 
         { 
             fltobj->criteria.counter++ ; // increment fault counter
@@ -256,7 +284,7 @@ inline volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     else
     // if there is an active fault state...
     {
-        if(!fltobj->status.bits.fltactive) 
+        if(!fltobj->status.bits.flt_active) 
         // if no fault condition has been detected ... 
         { 
             fltobj->criteria.counter++ ; // increment fault reset counter
@@ -651,18 +679,35 @@ volatile uint16_t exec_FaultCheckAll(void)
 {
     volatile uint16_t i=0, global_fault_present=0, fres=1;
     
-    // Scan through all fault objects for violation of fault conditions
-    for (i=0; i<fltobj_list_size; i++)
+    // First scan through all operating system fault objects for violation of fault conditions
+    for (i=0; i<os_fltobj_list_size; i++)
     {
         // only test objects which have been enabled for fault testing
-        if(fault_object_list[i]->status.bits.fltchken)
+        if(os_fault_object_list[i]->status.bits.fltchken)
         {
-            fres &= CheckFaultCondition(fault_object_list[i]);  // Check fault condition
-            fres &= SetFaultCondition(fault_object_list[i]);    // Set fault flags and execute user fault function
+            fres &= CheckFaultCondition(os_fault_object_list[i]);  // Check fault condition
+            fres &= SetFaultCondition(os_fault_object_list[i]);    // Set fault flags and execute user fault function
 
             // track global fault status
-            if(fault_object_list[i]->status.bits.fltstat)
-            { global_fault_present |= fault_object_list[i]->flt_class.value; }
+            if(os_fault_object_list[i]->status.bits.fltstat)
+            { global_fault_present |= os_fault_object_list[i]->flt_class.value; }
+
+        }
+    }
+    
+    
+    // Scan through all user-defined fault objects for violation of fault conditions
+    for (i=0; i<user_fltobj_list_size; i++)
+    {
+        // only test objects which have been enabled for fault testing
+        if(user_fault_object_list[i]->status.bits.fltchken)
+        {
+            fres &= CheckFaultCondition(user_fault_object_list[i]);  // Check fault condition
+            fres &= SetFaultCondition(user_fault_object_list[i]);    // Set fault flags and execute user fault function
+
+            // track global fault status
+            if(user_fault_object_list[i]->status.bits.fltstat)
+            { global_fault_present |= user_fault_object_list[i]->flt_class.value; }
 
         }
     }
@@ -674,10 +719,10 @@ volatile uint16_t exec_FaultCheckAll(void)
     if((task_mgr.op_mode.value == OP_MODE_FAULT) && (!task_mgr.status.bits.global_fault))
     { 
         // when recovering from active fault, check if user recovery functions have to be executed
-        for (i=0; i<fltobj_list_size; i++)
+        for (i=0; i<user_fltobj_list_size; i++)
         {
-            if(fault_object_list[i]->status.bits.fltchken)
-            { fres &= ExecFaultFlagReleaseHandler(fault_object_list[i]); }
+            if(user_fault_object_list[i]->status.bits.fltchken)
+            { fres &= ExecFaultFlagReleaseHandler(user_fault_object_list[i]); }
         }    
 
         task_mgr.status.bits.fault_override = false;   // Reset global fault override flag
@@ -691,37 +736,3 @@ volatile uint16_t exec_FaultCheckAll(void)
 
 }
 
-/*!exec_FaultCheckSequential
- * ***********************************************************************************************
- * Parameters: 
- *      (none)
- * 
- * Return:
- *      type: uint16_t
- *      0: Failure
- *      1: Success
- * 
- * Description:
- * This routine checks one fault object listed in *fault_object_list[] sequentially, one at a time
- * and only one per function call. With every call the fault_object_list_pointer is incremented for
- * the next function call. 
- * Any fault action triggered by any of the fault objects, will be executed immediately after every 
- * individual fault object check.
- * ***********************************************************************************************/
-/*
-volatile uint16_t exec_FaultCheckSequential(void)
-{
-    volatile uint16_t fres = 0;
-    
-    // check next fault object
-    fres = CheckFaultCondition(fault_object_list[fault_object_list_pointer]);
-    fres = SetFaultCondition(fault_object_list[fault_object_list_pointer]);
-
-    // check fault_object_list_pointer overrun
-    if(fault_object_list_pointer++ >= fltobj_list_size) fault_object_list_pointer = 0;
-    
-    return(fres);
-
-}
-*/
-/*************************************************************************************************/
