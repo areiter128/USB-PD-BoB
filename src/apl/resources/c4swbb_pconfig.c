@@ -150,6 +150,7 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_PWRCTRL_t* pI
     pg_config.PGxCAP.value = C4SWBB_BUCKLEG_PGxCAP;     // reset PWM capture result register
 
     // Overriding pre-configured settings with user settings
+    pg_config.PGxPER.value = pInstance->boost_leg.period;   // switching period
     pg_config.PGxLEB.value = pInstance->buck_leg.leb_period;   // leading edge blanking period
     pg_config.PGxDT.value = (((uint32_t)pInstance->buck_leg.dead_time_rising << 16) | // Rising edge dead time
                              ((uint32_t)pInstance->buck_leg.dead_time_falling));      // Falling edge dead time
@@ -192,6 +193,7 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_PWRCTRL_t* pI
     pg_config.PGxCAP.value = C4SWBB_BOOSTLEG_PGxCAP;
 
     // Overriding pre-configured settings with user settings
+    pg_config.PGxPER.value = pInstance->boost_leg.period;   // switching period
     pg_config.PGxLEB.value = pInstance->boost_leg.leb_period;   // leading edge blanking period
     pg_config.PGxDT.value = (((uint32_t)pInstance->boost_leg.dead_time_rising << 16) | // Rising edge dead time
                              ((uint32_t)pInstance->boost_leg.dead_time_falling));      // Falling edge dead time
@@ -237,8 +239,11 @@ volatile uint16_t c4swbb_pwm_enable(volatile C4SWBB_PWRCTRL_t* pInstance) {
 
     // Enable PWM channels of buck and boost leg
     fres &= c4swbb_pwm_hold(pInstance);
+    fres &= c4swbb_pwm_hold(pInstance);
     fres &= hspwm_enable_pwm(pInstance->buck_leg.pwm_instance, true);
     fres &= hspwm_enable_pwm(pInstance->boost_leg.pwm_instance, true);
+    
+    if (fres) { pInstance->status.bits.pwm_active = true; }
     
     return(fres); // return failure/success or error code
     
@@ -268,6 +273,8 @@ volatile uint16_t c4swbb_pwm_disable(volatile C4SWBB_PWRCTRL_t* pInstance) {
     // Disable PWM channels of buck and boost leg
     fres &= hspwm_disable_pwm(pInstance->buck_leg.pwm_instance);
     fres &= hspwm_disable_pwm(pInstance->boost_leg.pwm_instance);
+    
+    if (fres) { pInstance->status.bits.pwm_active = false; }
     
     return(fres); // ToDo: need function execution success validation
     
