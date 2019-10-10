@@ -169,6 +169,11 @@
                             REG_INTCON3_APLL_CLEAR \
                             )
 
+/* INTCON4 Settings */
+
+#define IRQ_INTCON4_CFG    (REG_INTCON4_ECCDBE_CLEAR | \
+                            REG_INTCON4_SGHT_CLEAR \
+                            )
 
 #endif	/* _DEVICE_CONFIGURATION_IRQ_H */
 

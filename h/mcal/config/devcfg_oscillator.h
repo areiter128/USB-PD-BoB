@@ -28,14 +28,27 @@
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef _DEVICE_CONFIGURATION_OSCILLATOR_H_
-#define	_DEVICE_CONFIGURATION_OSCILLATOR_H_
+#ifndef MCAL_DEVICE_CONFIGURATION_OSCILLATOR_H
+#define	MCAL_DEVICE_CONFIGURATION_OSCILLATOR_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
 #include <stdbool.h>
 
-// (no user settings available)
 
-#endif	/* _DEVICE_CONFIGURATION_OSCILLATOR_H_ */
+#if defined (__P33SMPS_CK__) || defined (__P33SMPS_CH_SLV__)
+
+    #define MAIN_CLOCK_SPEED    CPU_SPEED_100_MIPS
+    #define AUX_CLOCK_SPEED     AFPLLO_500_MHZ
+
+#elif defined (__P33SMPS_CH_MSTR__)
+
+    #define MAIN_CLOCK_SPEED    CPU_SPEED_90_MIPS
+    #define AUX_CLOCK_SPEED     AFPLLO_500_MHZ
+
+#else
+    #pragma message "=== selected device is not defined and may not be supported ==="
+#endif
+
+#endif	/* MCAL_DEVICE_CONFIGURATION_OSCILLATOR_H */
 
