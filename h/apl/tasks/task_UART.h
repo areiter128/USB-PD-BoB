@@ -93,32 +93,31 @@
  * See also:
  * 
  *****************************************************************************/
-
-typedef struct{
-
-	volatile unsigned RXFrameReady:1;	// Bit #0:  
-	volatile unsigned TXFrameReady:1;	// Bit #1:  Reserved
-	volatile unsigned RXComplete:1;	// Bit #2:  Reserved
-	volatile unsigned TXComplete:1;	// Bit #3:  Reserved
-	volatile unsigned SOF:1;	// Bit #4:  Reserved
-	volatile unsigned :1;	// Bit #5:  Reserved
-	volatile unsigned :1;	// Bit #6:  Reserved
-	volatile unsigned :1;	// Bit #7:  Reserved
-    
-	volatile unsigned fault:1;	// Bit #8:  communication error was detected
-	volatile unsigned :1;	// Bit #9:  Reserved
-	volatile unsigned :1;	// Bit #10: Reserved
-	volatile unsigned :1;	// Bit #11: Reserved
-	volatile unsigned :1;	// Bit #12: Reserved
-	volatile unsigned :1;	// Bit #13: Reserved
-	volatile unsigned :1;	// Bit #14: Reserved
-	volatile unsigned enable:1;	// Bit #15: flag bit to enable/disable (suspend) the communication 
-} __attribute__((packed))SMPS_UART_STATUS_BIT_FIELD_t;
-
 typedef union 
 {
-	volatile uint16_t flags; // buffer for 16-bit word read/write operations
-	volatile SMPS_UART_STATUS_BIT_FIELD_t flag; // data structure for single bit addressing operations
+    struct{
+
+        volatile unsigned RXFrameReady:1;	// Bit #0:  
+        volatile unsigned TXFrameReady:1;	// Bit #1:  Reserved
+        volatile unsigned RXComplete:1;	// Bit #2:  Reserved
+        volatile unsigned TXComplete:1;	// Bit #3:  Reserved
+        volatile unsigned SOF:1;	// Bit #4:  Reserved
+        volatile unsigned :1;	// Bit #5:  Reserved
+        volatile unsigned :1;	// Bit #6:  Reserved
+        volatile unsigned :1;	// Bit #7:  Reserved
+
+        volatile unsigned fault:1;	// Bit #8:  communication error was detected
+        volatile unsigned :1;	// Bit #9:  Reserved
+        volatile unsigned :1;	// Bit #10: Reserved
+        volatile unsigned :1;	// Bit #11: Reserved
+        volatile unsigned :1;	// Bit #12: Reserved
+        volatile unsigned :1;	// Bit #13: Reserved
+        volatile unsigned :1;	// Bit #14: Reserved
+        volatile unsigned enable:1;	// Bit #15: flag bit to enable/disable (suspend) the communication 
+    } __attribute__((packed))SMPS_UART_STATUS_BIT_FIELD_t;
+
+	volatile uint16_t value; // buffer for 16-bit word read/write operations
+
 }SMPS_UART_STATUS_FLAGS_t;
 
 typedef struct{
@@ -152,7 +151,7 @@ typedef struct
     volatile SMPS_UART_RX_COMM_FRAME_t RXBytes;
     volatile SMPS_UART_TX_COMM_FRAME_t TXBytes;
 
-}__attribute__((packed))SMPS_UART_OBJECT_t;
+} SMPS_UART_OBJECT_t;
 
 /** UART Driver Hardware Flags
 
@@ -184,7 +183,7 @@ extern volatile SMPS_UART_OBJECT_t smps_uart;
  * ***********************************************************************************************/
 extern volatile uint16_t init_DebugUART(void);
 extern volatile uint16_t exec_DebugUART(void);
-volatile inline int16_t  dispose_DebugUART(void);
+extern volatile int16_t  dispose_DebugUART(void);
 
 #endif	/* _APL_TASK_SMPS_UART_H_ */
 

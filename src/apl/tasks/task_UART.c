@@ -100,11 +100,8 @@ typedef struct
 volatile SMPS_UART_DATA_HANDLER_t UART_RxTx;
 
 /* private prototypes */
-volatile inline int16_t  init_DebugUART(void);
-volatile inline int16_t  exec_DebugUART(void);
-volatile inline int16_t  dispose_DebugUART(void);
 
-volatile inline int16_t  task_DebugUARTsend(void);
+volatile inline uint16_t task_DebugUARTsend(void);
 volatile inline uint16_t task_DebugUARTreceive(void);
 volatile inline uint16_t task_DebugDecodeFrame(void);
 volatile uint16_t smpsuart_get_crc(volatile uint8_t *ptrDataFrame, volatile uint16_t data_len);
@@ -272,7 +269,7 @@ volatile uint16_t init_DebugUART(void) {
     pps_LockIO();
 	
 	// Configure UART peripheral
-    fres = init_smps_uart();
+//    fres = smps_uart_init(smps_uart.port_index, smps_uart.);
 
     // set DATA TRANSMISSION COMPLETE flag to enable new transmissions
     UART_RxTx.UartTXSendDone = 1;   
@@ -299,7 +296,7 @@ volatile uint16_t init_DebugUART(void) {
  * 
  *****************************************************************************/
 
-volatile inline int16_t task_DebugUARTsend(void) 
+volatile inline uint16_t task_DebugUARTsend(void) 
 {
     volatile uint16_t fres=1, timeout=0;
  
@@ -360,7 +357,7 @@ volatile inline uint16_t task_DebugUARTreceive(void) {
     {
         UART_RxTx.status.flag.RXFrameReady = 0;
         UART_RxTx.UARTRXComplete = 1;
-        smps_uart.status.flags = UART_RxTx.status.flags;
+        smps_uart.status.value = UART_RxTx.status.value;
     }
 
     // return the RXComplete-Flag
@@ -520,7 +517,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _CVRT_UxRXInterrupt()
             UART_RxTx.status.flag.SOF = 0;             // clear START-OF-FRAME flag
 
             // copy status flags into global UART object
-            smps_uart.status.flags = UART_RxTx.status.flags;
+            smps_uart.status.value = UART_RxTx.status.value;
                 
         }
 
@@ -573,7 +570,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _CVRT_UxTXInterrupt()
         UART_RxTx.UartSendCounter = 0;
         UART_RxTx.status.flag.TXFrameReady = 0;
         UART_RxTx.UartTXSendDone = 1;
-        smps_uart.status.flags = UART_RxTx.status.flags;
+        smps_uart.status.value = UART_RxTx.status.value;
     }
 
     _CVRT_UxTXIF = 0;
