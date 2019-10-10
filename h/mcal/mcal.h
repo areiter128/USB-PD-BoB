@@ -63,6 +63,13 @@ extern "C" {
 #include "mcal/config/devcfg_oscillator.h"
 #include "mcal/config/devcfg_pinmap.h"
 
+    // Hardware-specific peripheral initialization
+#include "mcal/initialization/init_gpio.h"
+#include "mcal/initialization/init_irq.h"
+#include "mcal/initialization/init_dsp.h"
+#include "mcal/initialization/init_timer.h"
+#include "mcal/initialization/init_fosc.h"
+
 /* generic peripheral drives */    
 #include "dsPIC33C/p33SMPS_irq.h"
 #include "dsPIC33C/p33SMPS_dsp.h"

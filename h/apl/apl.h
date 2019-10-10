@@ -36,35 +36,19 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "config/application.h"
+/* User Configuration Files */
+#include "apl/config/UserAppManager.h"
+#include "_root/generic/os_Globals.h"
 
-//Remove: #include "task_ConverterStateControl.h"
+/* User Tasks */
 #include "apl/tasks/task_Idle.h"
-#include "apl/tasks/task_FaultHandler.h"
-#include "apl/tasks/task_SystemStatus.h"
 #include "apl/tasks/task_PowerControl.h"
-
 
 /* ***********************************************************************************************
  * GLOBAL APPLICATION LAYER USER OPTIONS
  * ***********************************************************************************************/
 
 
-/* ***********************************************************************************************
- * PROTOTYPES
- * ***********************************************************************************************/
-
-#if (EXECUTE_MCC_SYSTEM_INITIALIZE == 0)
-extern volatile uint16_t DEVICE_Reset(void);         // Declare prototype if MCC option is disabled
-#endif
-#if (EXECUTE_MCC_SYSTEM_INITIALIZE == 0)
-extern uint16_t CLOCK_Initialize(void);     // Declare prototype if MCC option is disabled
-#endif
-#if (EXECUTE_USER_STARTUP_CODE == 1)
-    extern volatile uint16_t ExecuteUserStartupCode(void);  // Declare prototype if Startup Code option is enabled
->>>>>>> develop
-#endif
-extern volatile uint16_t APPLICATION_Initialize(void);
 
 #endif	/* APPLICATION_LAYER_H */
 

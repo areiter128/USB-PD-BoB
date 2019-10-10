@@ -41,13 +41,6 @@
 #include "hal/config/syscfg_options.h"
 #include "hal/config/syscfg_startup.h"
 
-// Hardware-specific peripheral initialization
-#include "hal/initialization/init_gpio.h"
-#include "hal/initialization/init_irq.h"
-#include "hal/initialization/init_dsp.h"
-#include "hal/initialization/init_timer.h"
-#include "hal/initialization/init_fosc.h"
-
 /* ***********************************************************************************************
  * FUNCTION PROTOTYPES
  * ***********************************************************************************************/
