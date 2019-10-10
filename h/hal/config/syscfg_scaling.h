@@ -91,13 +91,13 @@
     #define C4SWBB_VOUT_LEVEL_15V        15.0   // Nominal output voltage in [V]
     #define C4SWBB_VOUT_LEVEL_20V        20.0   // Nominal output voltage in [V]
 
-    #define C4SWBB_VOUT_R1               18000  // Resitance of upper voltage divider resistor in kOhm
-    #define C4SWBB_VOUT_R2               2870   // Resitance of lower voltage divider resistor in kOhm
+    #define C4SWBB_VOUT_DIV_R1           18000  // Resitance of upper voltage divider resistor in kOhm
+    #define C4SWBB_VOUT_DIV_R2           2870   // Resitance of lower voltage divider resistor in kOhm
     #define C4SWBB_VOUT_AMP_GAIN         1.000  // Gain factor or additional op-amp (set to 1.0 if none is used)
     #define C4SWBB_VOUT_SENSE_OFFSET     0.000  // Output voltage sense offset
 
     //~~~~~~~~~~~~~~~~~ conversion macros ~~~~~~~~~~~~~~~~~~
-    #define C4SWBB_VOUT_FB_GAIN      (float)(C4SWBB_VOUT_AMP_GAIN * (((float)C4SWBB_VOUT_R2) / (((float)C4SWBB_VOUT_R1) + ((float)C4SWBB_VOUT_R2))))
+    #define C4SWBB_VOUT_FB_GAIN      (float)(C4SWBB_VOUT_AMP_GAIN * (((float)C4SWBB_VOUT_DIV_R2) / (((float)C4SWBB_VOUT_DIV_R1) + ((float)C4SWBB_VOUT_DIV_R2))))
     #define C4SWBB_VOUT_OFFSET       (uint16_t)(C4SWBB_VOUT_SENSE_OFFSET * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
     #define C4SWBB_VOUT_REF          (uint16_t)(C4SWBB_VOUT_NOMINAL * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
     #define C4SWBB_VOUT_OVP          (uint16_t)(C4SWBB_VOUT_MAXIMUM * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
@@ -113,17 +113,17 @@
     //~~~~~~~~~~~~~~~~~
 
     // Input Voltage Feedback Scaling
-    #define C4SWBB_VIN_DIVIDER_R1          36000       // Resitance of upper voltage divider resistor in Ohm
-    #define C4SWBB_VIN_DIVIDER_R2          2870        // Resitance of lower voltage divider resistor in Ohm
-    #define C4SWBB_VIN_AMP_GAIN            1.000       // Gain factor or additional op-amp (set to 1.0 if none is used)
-    #define C4SWBB_VIN_FEEDBACK_OFFSET     0.000       // Input voltage sense offset
+    #define C4SWBB_VIN_DIV_R1          36000       // Resitance of upper voltage divider resistor in Ohm
+    #define C4SWBB_VIN_DIV_R2          2870        // Resitance of lower voltage divider resistor in Ohm
+    #define C4SWBB_VIN_AMP_GAIN        1.000       // Gain factor or additional op-amp (set to 1.0 if none is used)
+    #define C4SWBB_VIN_FEEDBACK_OFFSET 0.000       // Input voltage sense offset
 
     #define C4SWBB_VIN_MINIMUM      7.0         // Minimum input voltage in [V]
     #define C4SWBB_VIN_MAXIMUM      20.0        // Maximum input voltage in [V]
     #define C4SWBB_VIN_HYSTERESIS   1.0         // Input voltage protection hysteresis in [V]
 
     //~~~~~~~~~~~~~~~~~ conversion macros ~~~~~~~~~~~~~~~~~~
-    #define C4SWBB_VIN_FB_GAIN       (float)((C4SWBB_VIN_R2) / (C4SWBB_VIN_R1 + C4SWBB_VIN_R2))
+    #define C4SWBB_VIN_FB_GAIN       (float)((C4SWBB_VIN_DIV_R2) / (C4SWBB_VIN_DIV_R1 + C4SWBB_VIN_DIV_R2))
     #define C4SWBB_VIN_UVLO          (uint16_t)(C4SWBB_VIN_MINIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
     #define C4SWBB_VIN_OVLO          (uint16_t)(C4SWBB_VIN_MAXIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
     #define C4SWBB_VIN_HYST          (uint16_t)(C4SWBB_VIN_HYSTERESIS * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
@@ -193,11 +193,11 @@
 
 // Macros calculating register values based on the physical values given above
 
-#define VIN_DIVIDER_RATIO           (float)((float)C4SWBB_VIN_AMP_GAIN * ((float)C4SWBB_VIN_DIVIDER_R2) / ((float)(C4SWBB_VIN_DIVIDER_R1 + C4SWBB_VIN_DIVIDER_R2)))
+#define VIN_DIVIDER_RATIO           (float)((float)C4SWBB_VIN_AMP_GAIN * ((float)C4SWBB_VIN_DIV_R2) / ((float)(C4SWBB_VIN_DIV_R1 + C4SWBB_VIN_DIV_R2)))
 #define VIN_DIVIDER_RATIO_INV       (float)( 1.0 / VIN_DIVIDER_RATIO )
 #define VIN_FB_OFFSET               (uint16_t)(C4SWBB_VIN_FEEDBACK_OFFSET * ADC_SCALER)    // Input voltage sense offset ADC ticks
 
-#define VOUT_DIVIDER_RATIO          (float)((float)C4SWBB_VOUT_AMP_GAIN * ((float)C4SWBB_VOUT_R2) / ((float)(C4SWBB_VOUT_R1 + C4SWBB_VOUT_R2)))
+#define VOUT_DIVIDER_RATIO          (float)((float)C4SWBB_VOUT_AMP_GAIN * ((float)C4SWBB_VOUT_DIV_R2) / ((float)(C4SWBB_VOUT_DIV_R1 + C4SWBB_VOUT_DIV_R2)))
 #define VOUT_DIVIDER_RATIO_INV      (float)( 1.0 / VOUT_DIVIDER_RATIO )
 #define VOUT_FB_OFFSET              (int16_t)(C4SWBB_VOUT_SENSE_OFFSET * ADC_SCALER)   // Output voltage sense offset ADC ticks
 
