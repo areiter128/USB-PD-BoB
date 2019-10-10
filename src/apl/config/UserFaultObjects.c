@@ -122,7 +122,7 @@ volatile uint16_t MyFaultObject_Initialize(void)
     fltobj_MyFaultObject.criteria.fault_ratio = FAULT_LEVEL_EQUAL;
     fltobj_MyFaultObject.criteria.trip_level = 1;   // Set/reset trip level value
     fltobj_MyFaultObject.criteria.trip_cnt_threshold = 1; // Set/reset number of successive trips before triggering fault event
-    fltobj_MyFaultObject.criteria.reset_level = 1;  // Set/reset fault release level value
+    fltobj_MyFaultObject.criteria.reset_level = 0;  // Set/reset fault release level value
     fltobj_MyFaultObject.criteria.reset_cnt_threshold = 1; // Set/reset number of successive resets before triggering fault release
     
     // specifying fault class, fault level and enable/disable status
