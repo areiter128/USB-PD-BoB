@@ -239,7 +239,6 @@ volatile uint16_t c4swbb_pwm_enable(volatile C4SWBB_PWRCTRL_t* pInstance) {
 
     // Enable PWM channels of buck and boost leg
     fres &= c4swbb_pwm_hold(pInstance);
-    fres &= c4swbb_pwm_hold(pInstance);
     fres &= hspwm_enable_pwm(pInstance->buck_leg.pwm_instance, true);
     fres &= hspwm_enable_pwm(pInstance->boost_leg.pwm_instance, true);
     
