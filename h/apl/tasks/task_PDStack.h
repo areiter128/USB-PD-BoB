@@ -46,7 +46,7 @@
 #include <stdbool.h>
 #include "ZeusStackConfig.h"
 #include "upd_interrupts.h"
-#include "_root/config/globals.h"
+#include "_root/generic/os_Globals.h"
 #include "apl/resources/fdrv_FunctionPDStack.h"
 #include "hal/hal.h"
 #include "mcal/mcal.h"
