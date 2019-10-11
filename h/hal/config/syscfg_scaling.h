@@ -142,7 +142,7 @@
 
     // System Settings
     #define SWITCHING_FREQUENCY         350e+3      // Nominal switching frequency per converter phase in [Hz]
-    #define PWM_PHASE_SHIFT             (SWITCHING_PERIOD / 2.0) // Phase shift of the PWM switching frequency
+    #define PWM_NO_OF_PHASES            2.0         // this board has two converters running parallel. Both will be operated 180° out of phase
     #define PWM_DEAD_TIME_RISING        50e-9       // Nominal dead time at the leading edge in [ns]
     #define PWM_DEAD_TIME_FALLING       60e-9       // Nominal dead time at the falling edge in [ns]
     #define PWM_DUTY_RATIO_MAXIMUM      0.90        // Maximum duty ratio in [%]
@@ -173,7 +173,7 @@
 // Macros are used to translate physical values into register values
 
 #define SWITCHING_PERIOD            ((uint16_t)(((float)((1.0/(float)(SWITCHING_FREQUENCY))/T_ACLK)-1)))
-#define PWM_PHASE_SFT               ((uint16_t)(((float)(((float)(PWM_PHASE_SHIFT)/T_ACLK)-1))))
+#define PWM_PHASE_SFT               ((uint16_t)(((float)SWITCHING_PERIOD) / ((float)PWM_NO_OF_PHASES)))
 #define PWM_DUTY_RATIO_MAX          ((uint16_t)(PWM_DUTY_RATIO_MAXIMUM * (float)SWITCHING_PERIOD))
 #define PWM_DUTY_RATIO_MIN          ((uint16_t)(PWM_DUTY_RATIO_MINIMUM * (float)SWITCHING_PERIOD))
 
