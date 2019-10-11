@@ -95,7 +95,7 @@ volatile uint16_t os_ProcessTaskQueue(void) {
     task_mgr.proc_code.segment.retval = retval;
 
     // Check if OS task period timer has overrun while the recent task was executed
-    if(*task_mgr.reg_task_timer_irq_flag & task_mgr.task_timer_irq_flag_mask)
+    if(TASK_MGR_TIMER_ISR_FLAG_REGISTER & TASK_MGR_TIMER_ISR_FLAG_BIT_MASK)
     { 
         task_mgr.status.bits.task_mgr_period_overrun = true; // Set task manager period overrun flag bit
 
@@ -298,8 +298,6 @@ volatile uint16_t os_TaskManager_Initialize(void) {
     task_mgr.reg_task_timer_counter = &TASK_MGR_TIMER_COUNTER_REGISTER;
     task_mgr.reg_task_timer_period = &TASK_MGR_TIMER_PERIOD_REGISTER;
     task_mgr.task_time_ctrl.quota = *task_mgr.reg_task_timer_period; // Global task execution period 
-    task_mgr.reg_task_timer_irq_flag = &TASK_MGR_TIMER_ISR_FLAG_REGISTER;
-    task_mgr.task_timer_irq_flag_mask = TASK_MGR_TIMER_ISR_FLAG_BIT_MASK; // ISR flag bit mask
 
     // CPU Load Monitor Configuration
     task_mgr.cpu_load.load = 0;

@@ -69,8 +69,8 @@ inline volatile uint16_t OS_Execute(void) {
       
         // Wait for timer to expire before calling the next task
         while (
-           !(*task_mgr.reg_task_timer_irq_flag & task_mgr.task_timer_irq_flag_mask)
-            && (task_mgr.cpu_load.ticks != task_mgr.task_time_ctrl.quota)
+            !(TASK_MGR_TIMER_ISR_FLAG_REGISTER & TASK_MGR_TIMER_ISR_FLAG_BIT_MASK) && 
+             (task_mgr.cpu_load.ticks != task_mgr.task_time_ctrl.quota)
             )
         {
             // Increment CPU tick counter
@@ -102,7 +102,7 @@ inline volatile uint16_t OS_Execute(void) {
 
         }
 
-        *task_mgr.reg_task_timer_irq_flag &= (~task_mgr.task_timer_irq_flag_mask); // Reset timer ISR flag bit
+        TASK_MGR_TIMER_ISR_FLAG_REGISTER &= (~TASK_MGR_TIMER_ISR_FLAG_BIT_MASK); // Reset timer ISR flag bit
 
         
 #if ((USE_TASK_EXECUTION_CLOCKOUT_PIN == 1) && (USE_DETAILED_CLOCKOUT_PATTERN == 1))
