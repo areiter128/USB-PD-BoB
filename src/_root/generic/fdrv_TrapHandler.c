@@ -109,11 +109,10 @@ void DefaultTrapHandler(TRAP_ID_e trap_id) {
  
     // -------------------------------------------------
     #ifdef __DEBUG
-    volatile uint16_t i = 0;
     while(1) {
         Nop();  // Use these NOPs to place breakpoint
         Nop();
-        for( i=50000; i>0; i-- );
+        Nop();
     }
     #endif
     // -------------------------------------------------
