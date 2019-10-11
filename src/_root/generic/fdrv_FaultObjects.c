@@ -130,7 +130,7 @@ volatile uint16_t CPUFailureObject_Initialize(void)
     fltobj_CPUFailure.status.bits.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
 
     fltobj_CPUFailure.status.bits.fltstat = 1; // Set/reset fault condition as present/active
-    fltobj_CPUFailure.status.bits.flt_active = 1; // Set/reset fault condition as present/active
+    fltobj_CPUFailure.status.bits.fltactive = 1; // Set/reset fault condition as present/active
     fltobj_CPUFailure.status.bits.fltchken = 1; // Enable/disable fault check
 
     return(fres);
@@ -179,7 +179,7 @@ volatile uint16_t CPULoadOverrunFaultObject_Initialize(void)
     fltobj_CPULoadOverrun.status.bits.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
 
     fltobj_CPULoadOverrun.status.bits.fltstat = 1; // Set/reset fault condition as present/active
-    fltobj_CPULoadOverrun.status.bits.flt_active = 1; // Set/reset fault condition as present/active
+    fltobj_CPULoadOverrun.status.bits.fltactive = 1; // Set/reset fault condition as present/active
     fltobj_CPULoadOverrun.status.bits.fltchken = 1; // Enable/disable fault check
 
     return(1);
@@ -227,7 +227,7 @@ volatile uint16_t TaskExecutionFaultObject_Initialize(void)
     fltobj_TaskExecutionFailure.status.bits.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
 
     fltobj_TaskExecutionFailure.status.bits.fltstat = 1; // Set/reset fault condition as present/active
-    fltobj_TaskExecutionFailure.status.bits.flt_active = 1; // Set/reset fault condition as present/active
+    fltobj_TaskExecutionFailure.status.bits.fltactive = 1; // Set/reset fault condition as present/active
     fltobj_TaskExecutionFailure.status.bits.fltchken = 1; // Enable/disable fault check
 
     return(1);
@@ -274,7 +274,7 @@ volatile uint16_t TaskTimeQuotaViolationFaultObject_Initialize(void)
     fltobj_TaskTimeQuotaViolation.status.bits.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
 
     fltobj_TaskTimeQuotaViolation.status.bits.fltstat = 1; // Set/reset fault condition as present/active
-    fltobj_TaskTimeQuotaViolation.status.bits.flt_active = 1; // Set/reset fault condition as present/active
+    fltobj_TaskTimeQuotaViolation.status.bits.fltactive = 1; // Set/reset fault condition as present/active
     fltobj_TaskTimeQuotaViolation.status.bits.fltchken = 1; // Enable/disable fault check
 
     return(1);
@@ -321,7 +321,7 @@ volatile uint16_t TaskMgrPeriodViolationFaultObject_Initialize(void)
     fltobj_TaskMgrPeriodViolation.status.bits.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
 
     fltobj_TaskMgrPeriodViolation.status.bits.fltstat = 1; // Set/reset fault condition as present/active
-    fltobj_TaskMgrPeriodViolation.status.bits.flt_active = 1; // Set/reset fault condition as present/active
+    fltobj_TaskMgrPeriodViolation.status.bits.fltactive = 1; // Set/reset fault condition as present/active
     fltobj_TaskMgrPeriodViolation.status.bits.fltchken = 1; // Enable/disable fault check
 
     return(1);
@@ -369,7 +369,7 @@ volatile uint16_t OSComponentFailureFaultObject_Initialize(void)
     fltobj_OSComponentFailure.status.bits.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
 
     fltobj_OSComponentFailure.status.bits.fltstat = 1; // Set/reset fault condition as present/active
-    fltobj_OSComponentFailure.status.bits.flt_active = 1; // Set/reset fault condition as present/active
+    fltobj_OSComponentFailure.status.bits.fltactive = 1; // Set/reset fault condition as present/active
     fltobj_OSComponentFailure.status.bits.fltchken = 1; // Enable/disable fault check
     
     return(1);

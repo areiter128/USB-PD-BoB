@@ -198,6 +198,8 @@ volatile uint16_t task_queue_idle[] = {
 volatile uint16_t task_queue_idle_size = (sizeof(task_queue_idle)/sizeof(task_queue_idle[0]));
 volatile uint16_t task_queue_idle_init(void)
 {
+    DBGLED_INIT_OUTPUT;
+    DBGLED_WR = LED_ON;
     Nop();
     return(1);
 }
@@ -249,6 +251,8 @@ volatile uint16_t task_queue_run[] = {
 volatile uint16_t task_queue_run_size = (sizeof(task_queue_run)/sizeof(task_queue_run[0]));
 volatile uint16_t task_queue_run_init(void)
 {
+    DBGLED_INIT_OUTPUT;
+    DBGLED_WR = LED_OFF;
     Nop();
     return(1);
 }

@@ -60,11 +60,15 @@ volatile uint16_t os_FaultObjects_Initialize(void)
 
     // Initialize all fault objects in OS Fault Object list
     for(i=0; i<os_fault_object_init_functions_size; i++) {
-        fres &= os_fault_object_init_functions[i]();
+        if (os_fault_object_init_functions[i] != NULL) {
+            fres &= os_fault_object_init_functions[i]();
+        }
     }
     
     for(i=0; i<user_fault_object_init_functions_size; i++) {
-        fres &= user_fault_object_init_functions[i]();
+        if (user_fault_object_init_functions[i] != NULL) {
+            fres &= user_fault_object_init_functions[i]();
+        }
     }
 
     // ====================================================
@@ -113,7 +117,7 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     volatile int32_t diff_dummy = 0;
     
     // if the fault object is not initialized, exit here
-    if(fltobj->source_object == NULL) { return(1); }
+    if(fltobj == NULL) { return(1); }
     
     // read value to monitor (with bit-mask filtering)
     source_value = ((*fltobj->source_object) & (fltobj->object_bit_mask));
@@ -139,10 +143,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
         
         if(source_value > fltobj->criteria.trip_level)
         // if the upper threshold is exceeded, set "fault present" flag
-        { fltobj->status.bits.flt_active = 1; } // set "fault present" bit
+        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
         else if(source_value < fltobj->criteria.reset_level)
         // if the value is above the upper limit of the hysteresis of the threshold, reset fault flag
-        { fltobj->status.bits.flt_active = 0; } // reset "fault present" bit
+        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
         else
         // if the value hovers within the hysteresis of the threshold => do nothing
         { Nop(); }
@@ -155,10 +159,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
         
         if(source_value < fltobj->criteria.trip_level)
         // if the lower threshold is exceeded, set "fault present" flag
-        { fltobj->status.bits.flt_active = 1; } // set "fault present" bit
+        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
         else if(source_value > fltobj->criteria.reset_level)
         // if the value is above the upper limit of the hysteresis of the threshold, reset fault flag
-        { fltobj->status.bits.flt_active = 0; } // reset "fault present" bit
+        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
         else
         // if the value hovers within the hysteresis of the threshold => do nothing
         { Nop(); }
@@ -169,10 +173,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     {
         if(((bool)source_value) == ((bool)fltobj->criteria.trip_level))
         // if the fault value is hit, set the fault flag and increment the fault counter
-        { fltobj->status.bits.flt_active = 1; } // set "fault present" bit
+        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
         else
         // if not equal, reset the fault flag and fault counter
-        { fltobj->status.bits.flt_active = 0; } // reset "fault present" bit
+        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
 
     }
     else if (fltobj->criteria.fault_ratio == (FAULT_LEVEL_EQUAL))
@@ -180,10 +184,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     {
         if(source_value == fltobj->criteria.trip_level)
         // if the fault value is hit, set the fault flag and increment the fault counter
-        { fltobj->status.bits.flt_active = 1; } // set "fault present" bit
+        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
         else
         // if not equal, reset the fault flag and fault counter
-        { fltobj->status.bits.flt_active = 0; } // reset "fault present" bit
+        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
 
     }
     else if (fltobj->criteria.fault_ratio == (FAULT_LEVEL_NOT_EQUAL))
@@ -191,10 +195,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     {
         if(source_value != fltobj->criteria.trip_level)
         // if the fault value is off constant, set the fault flag and increment the fault counter
-        { fltobj->status.bits.flt_active = 1; } // set "fault present" bit
+        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
         else
         // if equal, reset the fault flag and fault counter
-        { fltobj->status.bits.flt_active = 0; } // reset "fault present" bit
+        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
 
     }
     else if(fltobj->criteria.fault_ratio == (FAULT_LEVEL_OUT_OF_RANGE)) 
@@ -204,10 +208,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     {
         if((source_value > fltobj->criteria.trip_level) || (source_value < fltobj->criteria.reset_level))
         // if the fault value is outside the window, set the fault flag and increment the fault counter
-        { fltobj->status.bits.flt_active = 1; } // set "fault present" bit
+        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
         else
         // if inside the window, reset the fault flag and fault counter
-        { fltobj->status.bits.flt_active = 0; } // reset "fault present" bit
+        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
         
     }
     else if(fltobj->criteria.fault_ratio == (FAULT_LEVEL_IN_RANGE)) 
@@ -217,10 +221,10 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     {
         if((fltobj->criteria.reset_level < source_value) && (source_value < fltobj->criteria.trip_level))
         // if the fault value is inside the window, set the fault flag and increment the fault counter
-        { fltobj->status.bits.flt_active = 1; } // set "fault present" bit
+        { fltobj->status.bits.fltactive = 1; } // set "fault present" bit
         else
         // if outside the window, reset the fault flag and fault counter
-        { fltobj->status.bits.flt_active = 0; } // reset "fault present" bit
+        { fltobj->status.bits.fltactive = 0; } // reset "fault present" bit
         
     }
     else
@@ -250,15 +254,18 @@ inline volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj)
  * fault or fault reset condition leads to a set/clear of the fltstat flag bit after passing
  * through the specified counter filter.
  * ***********************************************************************************************/
-inline volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj)
+volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj)
 {
     volatile uint16_t f_res = 1;
     
+    // if the fault object is not initialized, exit here
+    if(fltobj == NULL) { return(1); }
+
     // Depending on if a fault state is active or not, set or reset fault counter
     if (!fltobj->status.bits.fltstat)
     // if there is no active fault state...
     {
-        if(fltobj->status.bits.flt_active) 
+        if(fltobj->status.bits.fltactive) 
         // if a fault condition has been detected... 
         { 
             fltobj->criteria.counter++ ; // increment fault counter
@@ -284,7 +291,7 @@ inline volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj)
     else
     // if there is an active fault state...
     {
-        if(!fltobj->status.bits.flt_active) 
+        if(!fltobj->status.bits.fltactive) 
         // if no fault condition has been detected ... 
         { 
             fltobj->criteria.counter++ ; // increment fault reset counter
@@ -507,10 +514,13 @@ volatile uint16_t CheckCPUResetRootCause(void)
  *          * a user defined function will be called (of form uint16_t xxxx(void) only)
  * 
  * ***********************************************************************************************/
- inline volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj)
+inline volatile uint16_t ExecFaultHandler(volatile FAULT_OBJECT_t* fltobj)
 {
     volatile uint16_t f_ret = 1, log_id = 0;
     
+    // if the fault object is not initialized, exit here
+    if(fltobj == NULL) { return(1); }
+
     if(fltobj->flt_class.value & FLT_CLASS_CATASTROPHIC)
     {
         // if fault is of class CATASTROPHIC, force main loop to reset CPU
@@ -647,6 +657,8 @@ inline volatile uint16_t ExecFaultFlagReleaseHandler(volatile FAULT_OBJECT_t* fl
 {
     volatile uint16_t fres = 1;
     
+    // if the fault object is not initialized, exit here
+    if(fltobj == NULL) { return(1); }
 
     if(fltobj->flt_class.value & FLT_CLASS_USER_RESPONSE)
     {
@@ -683,7 +695,8 @@ volatile uint16_t exec_FaultCheckAll(void)
     for (i=0; i<os_fltobj_list_size; i++)
     {
         // only test objects which have been enabled for fault testing
-        if(os_fault_object_list[i]->status.bits.fltchken)
+        if (os_fault_object_list[i] != NULL) {
+        if (os_fault_object_list[i]->status.bits.fltchken)
         {
             fres &= CheckFaultCondition(os_fault_object_list[i]);  // Check fault condition
             fres &= SetFaultCondition(os_fault_object_list[i]);    // Set fault flags and execute user fault function
@@ -692,7 +705,7 @@ volatile uint16_t exec_FaultCheckAll(void)
             if(os_fault_object_list[i]->status.bits.fltstat)
             { global_fault_present |= os_fault_object_list[i]->flt_class.value; }
 
-        }
+        }}
     }
     
     
@@ -700,7 +713,8 @@ volatile uint16_t exec_FaultCheckAll(void)
     for (i=0; i<user_fltobj_list_size; i++)
     {
         // only test objects which have been enabled for fault testing
-        if(user_fault_object_list[i]->status.bits.fltchken)
+        if (user_fault_object_list[i] != NULL) {
+        if (user_fault_object_list[i]->status.bits.fltchken)
         {
             fres &= CheckFaultCondition(user_fault_object_list[i]);  // Check fault condition
             fres &= SetFaultCondition(user_fault_object_list[i]);    // Set fault flags and execute user fault function
@@ -709,10 +723,12 @@ volatile uint16_t exec_FaultCheckAll(void)
             if(user_fault_object_list[i]->status.bits.fltstat)
             { global_fault_present |= user_fault_object_list[i]->flt_class.value; }
 
-        }
+        }}
     }
 
+    // =============================================================================
     // Reset fault flags if no fault conditions are present
+    
     fres &= ExecGlobalFaultFlagRelease((FAULT_OBJECT_CLASS_e)global_fault_present);
         
     // Set/reset operating mode when global fault flag has been reset 
@@ -721,8 +737,18 @@ volatile uint16_t exec_FaultCheckAll(void)
         // when recovering from active fault, check if user recovery functions have to be executed
         for (i=0; i<user_fltobj_list_size; i++)
         {
+            if(os_fault_object_list[i] != NULL) {
+            if(os_fault_object_list[i]->status.bits.fltchken)
+            { fres &= ExecFaultFlagReleaseHandler(os_fault_object_list[i]); }
+            }
+        }    
+
+        for (i=0; i<user_fltobj_list_size; i++)
+        {
+            if(user_fault_object_list[i] != NULL) {
             if(user_fault_object_list[i]->status.bits.fltchken)
             { fres &= ExecFaultFlagReleaseHandler(user_fault_object_list[i]); }
+            }
         }    
 
         task_mgr.status.bits.fault_override = false;   // Reset global fault override flag

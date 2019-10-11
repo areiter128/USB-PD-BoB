@@ -86,8 +86,10 @@ volatile uint16_t os_ProcessTaskQueue(void) {
     t_start = *task_mgr.reg_task_timer_counter; // Capture timer counter before task execution
 
     // Execute next task in the queue
-    retval = Task_Table[task_mgr.exec_task_id](); // Execute currently selected task
-
+    if (Task_Table[task_mgr.exec_task_id] != NULL) {
+        retval = Task_Table[task_mgr.exec_task_id](); // Execute currently selected task
+    }
+        
     // Capture time to determine elapsed task executing time
     t_stop = *task_mgr.reg_task_timer_counter;
     
