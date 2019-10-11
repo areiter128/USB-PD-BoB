@@ -61,7 +61,7 @@ typedef union
         volatile unsigned :1;	// Bit #10: Reserved
         volatile unsigned :1;	// Bit #11: Reserved
         volatile unsigned :1;	// Bit #12: Reserved
-        volatile unsigned flt_active :1; // Bit #14: Flag bit indicating temporary fault condition is present
+        volatile unsigned fltactive :1; // Bit #14: Flag bit indicating temporary fault condition is present
         volatile unsigned fltstat   :1;	// Bit #13: Flag bit indicating that a fault has been tripped (latched until gone)
         volatile unsigned fltchken  :1;	// Bit #15: Fault check enable/disable flag bit
     }__attribute__((packed))bits;

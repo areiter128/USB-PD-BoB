@@ -141,7 +141,7 @@ volatile uint16_t MyFaultObject_Initialize(void)
     fltobj_MyFaultObject.status.bits.fltlvlsys = 0; // Set =1 if this fault condition is system-level fault condition
 
     fltobj_MyFaultObject.status.bits.fltstat = 1; // Set/reset fault condition as present/active
-    fltobj_MyFaultObject.status.bits.flt_active = 1; // Set/reset fault condition as present/active
+    fltobj_MyFaultObject.status.bits.fltactive = 1; // Set/reset fault condition as present/active
     fltobj_MyFaultObject.status.bits.fltchken = 1; // Enable/disable fault check
     
     return(fres);
