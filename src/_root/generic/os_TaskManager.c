@@ -202,7 +202,18 @@ volatile uint16_t os_CheckOperationModeStatus(void) {
                 task_mgr.op_mode_switch_over_function = 0; // Do not perform any user function during switch-over to this mode
                 break;
 
-            case OP_MODE_NORMAL:
+            case OP_MODE_IDLE:
+                // Switch to normal operation
+                task_mgr.exec_task_id = TASK_ZERO; // Set task ID to DEFAULT (Idle Task))
+                task_mgr.task_queue_tick_index = 0; // Reset task queue pointer
+                task_mgr.task_time_ctrl.task_time = 0; // Reset recent task time meter result
+                task_mgr.task_time_ctrl.maximum = 0; // Reset max task time gauge
+                task_mgr.task_queue = task_queue_idle; // Set task queue NORMAL
+                task_mgr.task_queue_ubound = (task_queue_idle_size-1);
+                task_mgr.op_mode_switch_over_function = &task_queue_idle_init; // Execute user function before switching to this operating mode
+                break;
+
+            case OP_MODE_RUN:
                 // Switch to normal operation
                 task_mgr.exec_task_id = TASK_ZERO; // Set task ID to DEFAULT (Idle Task))
                 task_mgr.task_queue_tick_index = 0; // Reset task queue pointer
@@ -237,14 +248,8 @@ volatile uint16_t os_CheckOperationModeStatus(void) {
                 break;
 
             default: // OP_MODE_IDLE
-                // Switch to normal operation
-                task_mgr.exec_task_id = TASK_ZERO; // Set task ID to DEFAULT (Idle Task))
-                task_mgr.task_queue_tick_index = 0; // Reset task queue pointer
-                task_mgr.task_time_ctrl.task_time = 0; // Reset recent task time meter result
-                task_mgr.task_time_ctrl.maximum = 0; // Reset max task time gauge
-                task_mgr.task_queue = task_queue_idle; // Set task queue NORMAL
-                task_mgr.task_queue_ubound = (task_queue_idle_size-1);
-                task_mgr.op_mode_switch_over_function = &task_queue_idle_init; // Execute user function before switching to this operating mode
+                // Switch to idle operation as fallback default
+                task_mgr.op_mode.value = OP_MODE_IDLE;
                 break;
                 
         }

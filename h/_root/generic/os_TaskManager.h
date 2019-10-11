@@ -56,18 +56,18 @@ typedef enum {
     OP_MODE_FIRMWARE_INIT    = 0b0000000000000010, // User-code modules and generic peripherals configuration (initialization in disabled state)
     OP_MODE_STARTUP_SEQUENCE = 0b0000000000000100, // User-code module and generic peripheral start sequence
     OP_MODE_IDLE             = 0b0000000000001000, // Entering Normal operation mode, "NO ACTION" operating mode from which active op-modes are enabled
-    OP_MODE_NORMAL           = 0b0000000000010000, // System is powered and performing "normal functions"
+    OP_MODE_RUN              = 0b0000000000010000, // System is powered and performing "normal functions"
     OP_MODE_FAULT            = 0b0100000000000000, // A critical FAULT condition has been detected and system is partially shut down, waiting for a restart-attempt
     OP_MODE_STANDBY          = 0b1000000000000000  // Standby mode, all sub-modules are disabled and CPU is in low-power mode
 } SYSTEM_OPERATION_MODE_e;
 
 typedef union {
     struct {
-        volatile bool boot:1;           // Bit #0: Operation mode during device start-up and peripheral configuration
-        volatile bool device_startup;   // Bit #1: On-chip peripherals start-up period (self-check, soft-start, etc.)
-        volatile bool system_startup;   // Bit #2: Power converter start-up period (self-check, soft-start, etc.)
+        volatile bool boot:1;           // Bit #0: Operation mode during device start-up and system boot configuration
+        volatile bool initialization;   // Bit #1: user firmware module initialization
+        volatile bool task_sequencing;  // Bit #2: user firmware module enable sequencing
         volatile bool idle;             // Bit #3: Idle operation mode is the generic fall-back op-mode when no other op-mode applies to current conditions
-        volatile bool normal;           // Bit #4: Normal operation mode is set when system performs the desired default function (whatever this may be needs to be defined)
+        volatile bool run;              // Bit #4: Normal operation mode is set when system performs the desired default function (whatever this may be needs to be defined)
         volatile unsigned :1;           // Bit #5: (reserved)
         volatile unsigned :1;           // Bit #6: (reserved)
         volatile unsigned :1;           // Bit #7: (reserved)
@@ -162,8 +162,6 @@ typedef struct {
     volatile uint16_t task_timer_index; // specifies the timer used for the task manager (e.g. 1 for Timer1)
     volatile uint16_t *reg_task_timer_period; // Pointer to Timer period register (e.g. PR1)
     volatile uint16_t *reg_task_timer_counter; // Pointer to Timer counter register (e.g. TMR1))
-    volatile uint16_t *reg_task_timer_irq_flag; // Pointer to Timer interrupt flag register (e.g. IFS0)
-    volatile uint16_t task_timer_irq_flag_mask; // Bit-Mask for filtering on dedicated interrupt flag bit
 
     /* Generic task execution time control settings and buffer variables */
     volatile TASK_CONTROL_t task_time_ctrl; // Task time control settings and monitoring
