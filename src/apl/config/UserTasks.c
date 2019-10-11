@@ -36,8 +36,8 @@
  * -
  *
  * See also:
- * task_manager.c
- * task_manager.h
+ * os_TaskManager.c
+ * os_TaskManager.h
  * 
  * Revision history: 
  * 07/27/16     Initial version
