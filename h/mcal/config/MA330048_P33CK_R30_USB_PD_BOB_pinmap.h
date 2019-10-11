@@ -104,10 +104,10 @@
 #endif
 
 #ifndef LED_ON
-    #define LED_ON 0
+    #define LED_ON 1
 #endif
 #ifndef LED_OFF
-    #define LED_OFF 1
+    #define LED_OFF 0
 #endif
 
 // Device Pin #19 is AVDD
