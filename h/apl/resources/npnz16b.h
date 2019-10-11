@@ -1,5 +1,5 @@
 /* ***************************************************************************************
- * z-Domain Control Loop Designer Version 0.9.0.61.
+ * z-Domain Control Loop Designer Version 0.9.0.62.
  * ***************************************************************************************
  * Generic library header for z-domain compensation filter assembly functions
  * ***************************************************************************************/
@@ -10,6 +10,7 @@
 #include <xc.h>
 #include <dsp.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 /* Status flags (Single Bit) */
 #define NPNZ16_STATUS_LSAT_SET		1
@@ -32,7 +33,6 @@ typedef enum {
 } CONTROLLER_STATUS_FLAGS_t;
 
 typedef union {
-
     struct {
         volatile unsigned flt_clamp_min : 1; // Bit 0: control loop is clamped at minimum output level
         volatile unsigned flt_clamp_max : 1; // Bit 1: control loop is clamped at maximum output level
@@ -50,11 +50,9 @@ typedef union {
         volatile unsigned : 1; // Bit 13: reserved
         volatile unsigned : 1; // Bit 14: reserved
         volatile unsigned enable : 1; // Bit 15: enables/disables control loop execution
-    } __attribute__((packed))bits;
-
-    volatile uint16_t value;
-
-} __attribute__((packed))CONTROLLER_STATUS_t;
+    } __attribute__((packed))bits;    // Controller status bitfield for direct bit access
+    volatile uint16_t value;          // Controller status full register access
+} __attribute__((packed))CONTROLLER_STATUS_t; // Controller status data structure
 
 typedef struct {
     // External control and monitoring
@@ -94,7 +92,7 @@ typedef struct {
     volatile uint16_t* ptrADCTriggerRegister; // Pointer to ADC trigger register (e.g. TRIG1)
     volatile uint16_t ADCTriggerOffset; // ADC trigger offset to compensate propagation delays 
     
-} __attribute__((packed))cNPNZ16b_t;
+} __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object
 
 
 /* ***************************************************************************************/
