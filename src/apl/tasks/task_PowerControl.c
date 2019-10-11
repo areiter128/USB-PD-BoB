@@ -133,13 +133,18 @@ ECP44_INIT_OUTPUT;
     PG1DC = 3000;
     PG1TRIGA = 7000;
     PG2DC = 3000;
-    PG4TRIGA = 1000;
+    PG2TRIGA = 1000;
     PG5DC = 3000;
     PG5TRIGA = 7000;
     PG7DC = 3000;
     PG7TRIGA = 1000;
     
+    PG1STATbits.UPDREQ = 1;
+    PG2STATbits.UPDREQ = 1;
+    PG5STATbits.UPDREQ = 1;
+    PG7STATbits.UPDREQ = 1;
     
+    Nop();
     
     // return Success/Failure
     return (fres);
@@ -262,7 +267,7 @@ volatile uint16_t init_USBport_1(void) {
     // Load PWM settings from hardware and microcontroller abstraction layers (HAL and MCAL)
     c4swbb_1.buck_leg.pwm_instance = BUCKH1_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_1.buck_leg.period = SWITCHING_PERIOD; // set switching period 
-    c4swbb_1.buck_leg.phase = PWM_PHASE_SFT; // Phase shift of the PWM switching frequency 
+    c4swbb_1.buck_leg.phase = 0; // Phase shift of converter #1 is ZERO
     c4swbb_1.buck_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
     c4swbb_1.buck_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
     c4swbb_1.buck_leg.duty_ratio_init = PWM_DUTY_RATIO_MIN; // reset initial duty cycle
@@ -278,7 +283,7 @@ volatile uint16_t init_USBport_1(void) {
     
     c4swbb_1.boost_leg.pwm_instance = BOOSTH1_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_1.boost_leg.period = SWITCHING_PERIOD; // set switching period 
-    c4swbb_1.boost_leg.phase = PWM_PHASE_SFT; // Phase shift of the PWM switching frequency 
+    c4swbb_1.boost_leg.phase = 0; // Phase shift of converter #1 is ZERO 
     c4swbb_1.boost_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
     c4swbb_1.boost_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
     c4swbb_1.boost_leg.duty_ratio_init = PWM_DUTY_RATIO_MIN; // reset initial duty cycle
@@ -422,7 +427,7 @@ volatile uint16_t init_USBport_2(void) {
     // Load PWM settings from hardware and microcontroller abstraction layers (HAL and MCAL)
     c4swbb_2.buck_leg.pwm_instance = BUCKH2_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_2.buck_leg.period = SWITCHING_PERIOD; // set switching period 
-    c4swbb_2.buck_leg.phase = PWM_PHASE_SFT; // Phase shift of the PWM switching frequency 
+    c4swbb_2.buck_leg.phase = PWM_PHASE_SFT; // Phase shift of converter #2 is 180° (half of switching frequency)
     c4swbb_2.buck_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
     c4swbb_2.buck_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
     c4swbb_2.buck_leg.duty_ratio_init = PWM_DUTY_RATIO_MIN; // reset initial duty cycle
@@ -438,7 +443,7 @@ volatile uint16_t init_USBport_2(void) {
 
     c4swbb_2.boost_leg.pwm_instance = BOOSTH2_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_2.boost_leg.period = SWITCHING_PERIOD; // set switching period 
-    c4swbb_2.boost_leg.phase = PWM_PHASE_SFT; // Phase shift of the PWM switching frequency 
+    c4swbb_2.boost_leg.phase = PWM_PHASE_SFT; // Phase shift of converter #2 is 180° (half of switching frequency
     c4swbb_2.boost_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
     c4swbb_2.boost_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
     c4swbb_2.boost_leg.duty_ratio_init = PWM_DUTY_RATIO_MIN; // reset initial duty cycle
@@ -581,10 +586,10 @@ volatile uint16_t init_USBport_2(void) {
  * *****************************************************************************************************/
 #if (FB_VOUT1_ENABLE)
 void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT1_ADC_Interrupt(void)
-#else
-    #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #1"
-#endif
-{ECP39_SET;
+{
+ECP39_SET;
+Nop();
+
     // Call control loop update
     cha_vloop_Update(&cha_vloop);
     
@@ -597,8 +602,13 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT1_ADC_Interrupt(
     _ADCIF = 0;
     FB_VBAT_ADC_IF = 0;
     FB_VOUT1_ADC_IF = 0;  
+    
 ECP39_CLEAR;
+Nop();
 }
+#else
+    #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #1"
+#endif
 
 /*!_FB_IOUT1_ADC_Interrupt
  * ******************************************************************************************************
@@ -613,6 +623,7 @@ ECP39_CLEAR;
  * 4-switch buck/boost converter #1.
  * 
  * *****************************************************************************************************/
+#if ((FB_IOUT1_ENABLE) || (FB_IIN1_ENABLE))
 #if (FB_IOUT1_ENABLE)
 void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IOUT1_ADC_Interrupt(void)
 #elif (FB_IIN1_ENABLE)
@@ -620,7 +631,7 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
 #else
     #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #1"
 #endif
-{ECP39_SET;
+{ECP44_SET;
     // Call control loop update
     cha_iloop_Update(&cha_iloop);
     
@@ -638,8 +649,11 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     #else
     #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN SELECTED FOR USB PORT #2"
     #endif   
-ECP39_CLEAR;
+ECP44_CLEAR;
 }
+#else
+    #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #1"
+#endif
 
 /*!_FB_VOUT2_ADC_Interrupt
  * ******************************************************************************************************
@@ -656,10 +670,7 @@ ECP39_CLEAR;
  * *****************************************************************************************************/
 #if (FB_VOUT2_ENABLE)
 void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT2_ADC_Interrupt(void)
-#else
-    #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #2"
-#endif
-{ECP44_SET;
+{ECP39_SET;
     // Call control loop update
     chb_vloop_Update(&chb_vloop);
     
@@ -671,8 +682,11 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT2_ADC_Interrupt(
     // Clear the interrupt flag 
     FB_VBAT_ADC_IF = 0;
     FB_VOUT2_ADC_IF = 0;  
-ECP44_CLEAR;
+ECP39_CLEAR;
 }
+#else
+//    #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #2"
+#endif
 
 /*!_FB_IOUT2_ADC_Interrupt
  * ******************************************************************************************************
@@ -687,6 +701,7 @@ ECP44_CLEAR;
  * 4-switch buck/boost converter #2.
  * 
  * *****************************************************************************************************/
+#if ((FB_IOUT2_ENABLE) || (FB_IIN2_ENABLE))
 #if (FB_IOUT2_ENABLE)
 void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IOUT2_ADC_Interrupt(void)
 #elif (FB_IIN2_ENABLE)
@@ -714,5 +729,9 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     #endif   
 ECP44_CLEAR;
 }
+#else
+//    #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #2"
+#endif
+
 
 // EOF
