@@ -19,37 +19,50 @@
  * MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE 
  * TERMS. 
  * ***************************************************************************/
-/*!apl.h
- * ****************************************************************************
- * File:   apl.h
- * Author: M91406
- * Comments:
- * Revision history: 
- * ****************************************************************************/
+/*!task_PDStack.h
+ * ***************************************************************************
+ * File:   task_PDStack.h
+ * Author: James Schaffer - C41076
+ * 
+ * Summary:
+ * Zeus USB PD Stack Task
+ * 
+ * Description:
+ * 
+ * This file contains functions that implement the task that initializes
+ * and runs the Zeus USB PD Stack.
+ * 
+ * History:
+ * 05/23/2019	File created
+ * ***************************************************************************/
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef APPLICATION_LAYER_H
-#define	APPLICATION_LAYER_H
+#ifndef APL_TASK_PDSTACK_H
+#define	APL_TASK_PDSTACK_H
 
-#include <xc.h> // include processor files - each processor file is guarded.  
+#include <xc.h>   
 #include <stdint.h>
 #include <stdbool.h>
-
-/* User Configuration Files */
-#include "apl/config/UserAppManager.h"
-#include "_root/generic/os_Globals.h"
-
-/* User Tasks */
-#include "apl/tasks/task_Idle.h"
-#include "apl/tasks/task_PowerControl.h"
-#include "../h/apl/tasks/task_PDStack.h"
+#include "ZeusStackConfig.h"
+#include "upd_interrupts.h"
+#include "_root/config/globals.h"
+#include "apl/resources/fdrv_FunctionPDStack.h"
+#include "hal/hal.h"
+#include "mcal/mcal.h"
 
 /* ***********************************************************************************************
- * GLOBAL APPLICATION LAYER USER OPTIONS
+ * DECLARATIONS
  * ***********************************************************************************************/
 
+extern volatile FUNCTION_PD_STACK_CONFIG_t taskPDStack_config;
+
+/* ***********************************************************************************************
+ * PROTOTYPES
+ * ***********************************************************************************************/
+extern volatile uint16_t init_taskPDStack(void);
+extern volatile uint16_t task_PDStack(void);
 
 
-#endif	/* APPLICATION_LAYER_H */
+#endif	/* APL_TASK_PDSTACK_H */
 

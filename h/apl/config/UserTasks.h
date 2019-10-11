@@ -141,6 +141,9 @@ typedef enum {
     TASK_PWR_CONTROL_RESET,
     TASK_PWR_CONTROL_EXECUTE,
         
+    TASK_INIT_PDSTACK,          // initialize PD Stack task
+    TASK_PDSTACK,               // run PD Stack task
+
     /* ===== END OF USER FUNCTIONS ===== */
 
     // Empty task used as internal task execution timing buffer

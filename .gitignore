@@ -31,6 +31,10 @@ disassembly/
 *.bash
 Makefile-genesis.properties
 
+# MPLAB X Trace specific
+*.log
+*.inx
+
 # KDE specific
 .directory
 

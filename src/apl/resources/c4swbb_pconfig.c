@@ -121,7 +121,7 @@ volatile uint16_t c4swbb_pwm_module_initialize(volatile C4SWBB_PWRCTRL_t* pInsta
 volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_PWRCTRL_t* pInstance) {
 
     volatile uint16_t fres = 1;
-    volatile HSPWM_C_GENERATOR_CONFIG_t pg_config;
+    volatile HSPWM_C_CHANNEL_CONFIG_t pg_config;
     
     // If pointer to controller object is not initialized, return error code
     if(pInstance == NULL) { return(0); }

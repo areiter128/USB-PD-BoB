@@ -262,11 +262,11 @@ typedef struct {
     volatile C4SWBB_LOOP_SETTINGS_t i_loop; // Current loop control data structure
     volatile C4SWBB_LOOP_SETTINGS_t v_loop; // Voltage loop control data structure
     volatile C4SWBB_SWITCH_NODE_SETTINGS_t boost_leg; // Settings for 4-switch buck/boost converter boost leg
-    volatile C4SWBB_SWITCH_NODE_SETTINGS_t buck_leg; // Settings for 4-switch buck/boost converter buck leg
+    volatile C4SWBB_SWITCH_NODE_SETTINGS_t buck_leg;  // Settings for 4-switch buck/boost converter buck leg
     volatile C4SWBB_STARTUP_SETTINGS_t soft_start; // Soft-Start settings
 } C4SWBB_PWRCTRL_t; // Settings, status and operating data of the power controller
 
-
+     
 /* **********************************************************************************************
  *  Code example of how to start/control the power controller in your code
  * 
