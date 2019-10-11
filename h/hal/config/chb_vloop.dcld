@@ -1,6 +1,6 @@
 [GUI]
 CreateDate=08/01/19 4:10:00 PM
-SaveDate=09/09/2019 11:51:57 AM
+SaveDate=10/11/2019 2:34:45 AM
 Name=z-Domain Control Loop Designer
 Version=0.9.0.61
 WindoWState=Maximized
@@ -36,12 +36,12 @@ UserPrefix1=chb_
 UserPrefix2=vloop
 UseUserPrefix=1
 UseUserPrefixVar=1
-ContextSaving=0
+ContextSaving=1
 ContextSavingShadowRegisters=1
 ContextSavingMACRegisters=1
-ContextSavingAccumulatorRegisters=1
+ContextSavingAccumulatorRegisters=0
 ContextSavingCoreConfigRegister=1
-ContextSavingCoreStatusRegister=1
+ContextSavingCoreStatusRegister=0
 EnforceCoreConfiguration=1
 AddEnableDisableFeature=1
 AddErrorNormalization=1

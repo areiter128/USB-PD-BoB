@@ -31,29 +31,29 @@ typedef enum {
     CONTROLLER_STATUS_ENABLE_ON = 0b1000000000000000
 } CONTROLLER_STATUS_FLAGS_t;
 
-typedef struct {
-    volatile unsigned flt_clamp_min : 1; // Bit 0: control loop is clamped at minimum output level
-    volatile unsigned flt_clamp_max : 1; // Bit 1: control loop is clamped at maximum output level
-    volatile unsigned : 1; // Bit 2: reserved
-    volatile unsigned : 1; // Bit 3: reserved
-    volatile unsigned : 1; // Bit 4: reserved
-    volatile unsigned : 1; // Bit 5: reserved
-    volatile unsigned : 1; // Bit 6: reserved
-    volatile unsigned : 1; // Bit 7: reserved
-    volatile unsigned : 1; // Bit 8: reserved
-    volatile unsigned : 1; // Bit 9: reserved
-    volatile unsigned : 1; // Bit 11: reserved
-    volatile unsigned : 1; // Bit 11: reserved
-    volatile unsigned : 1; // Bit 12: reserved
-    volatile unsigned : 1; // Bit 13: reserved
-    volatile unsigned : 1; // Bit 14: reserved
-    volatile unsigned enable : 1; // Bit 15: enables/disables control loop execution
-} __attribute__((packed))CONTROLLER_STATUS_BIT_FIELD_t;
-
-/* status items data structure to monitor a power converter */
 typedef union {
-    volatile CONTROLLER_STATUS_BIT_FIELD_t bits;
+
+    struct {
+        volatile unsigned flt_clamp_min : 1; // Bit 0: control loop is clamped at minimum output level
+        volatile unsigned flt_clamp_max : 1; // Bit 1: control loop is clamped at maximum output level
+        volatile unsigned : 1; // Bit 2: reserved
+        volatile unsigned : 1; // Bit 3: reserved
+        volatile unsigned : 1; // Bit 4: reserved
+        volatile unsigned : 1; // Bit 5: reserved
+        volatile unsigned : 1; // Bit 6: reserved
+        volatile unsigned : 1; // Bit 7: reserved
+        volatile unsigned : 1; // Bit 8: reserved
+        volatile unsigned : 1; // Bit 9: reserved
+        volatile unsigned : 1; // Bit 11: reserved
+        volatile unsigned : 1; // Bit 11: reserved
+        volatile unsigned : 1; // Bit 12: reserved
+        volatile unsigned : 1; // Bit 13: reserved
+        volatile unsigned : 1; // Bit 14: reserved
+        volatile unsigned enable : 1; // Bit 15: enables/disables control loop execution
+    } __attribute__((packed))bits;
+
     volatile uint16_t value;
+
 } __attribute__((packed))CONTROLLER_STATUS_t;
 
 typedef struct {

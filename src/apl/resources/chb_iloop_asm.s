@@ -2,7 +2,7 @@
 ; **********************************************************************************
 ;  SDK Version: z-Domain Control Loop Designer v0.9.0.61
 ;  Author:      M91406
-;  Date/Time:   09/09/2019 11:51:21 AM
+;  Date/Time:   10/11/2019 2:34:21 AM
 ; **********************************************************************************
 ;  2P2Z Control Library File (Dual Bitshift-Scaliing Mode)
 ; **********************************************************************************
@@ -57,6 +57,14 @@
 	
 	.global _chb_iloop_Update
 _chb_iloop_Update:    ; provide global scope to routine
+	
+;------------------------------------------------------------------------------
+; Save working registers
+	push.s    ; save shadowed working registers (w0...w3)
+	push w4    ; save working registers used for MAC operations (w4, w6, w8, w10)
+	push w6
+	push w8
+	push w10
 	push w12    ; save working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------
@@ -64,6 +72,10 @@ _chb_iloop_Update:    ; provide global scope to routine
 	mov [w0 + #offStatus], w12
 	btss w12, #NPMZ16_STATUS_ENABLE
 	bra CHB_ILOOP_BYPASS_LOOP
+	
+;------------------------------------------------------------------------------
+; Save working registers
+	push CORCON    ; save CPU configuration register
 	
 ;------------------------------------------------------------------------------
 ; Configure DSP for fractional operation with normal saturation (Q1.31 format)
@@ -183,8 +195,20 @@ _chb_iloop_Update:    ; provide global scope to routine
 	mov w12, [w0 + #offStatus]
 	
 ;------------------------------------------------------------------------------
+; Restore working registers
+	pop CORCON    ; restore CPU configuration registers
+	
+;------------------------------------------------------------------------------
 ; Enable/Disable bypass branch target
 	CHB_ILOOP_BYPASS_LOOP:
+	
+;------------------------------------------------------------------------------
+; Restore working registers
+	pop.s    ; restore shadowed working registers (w0...w3)
+	pop w4    ; restore working registers used for MAC operations w4, w6, w8, w10)
+	pop w6
+	pop w8
+	pop w10
 	pop w12    ; restore working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------

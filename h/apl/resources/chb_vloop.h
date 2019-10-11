@@ -19,7 +19,7 @@
 #include <dsp.h>
 #include <stdint.h>
 
-#include "../../apl/resources/npnz16b.h"
+#include "apl/resources/npnz16b.h"
 
 /* ***************************************************************************************
  * Data Arrays:
