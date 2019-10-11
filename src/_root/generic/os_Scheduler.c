@@ -35,18 +35,19 @@ volatile uint16_t cpu_time_buffer[CPU_LOAD_DEBUG_BUFFER_LENGTH];
 volatile uint16_t OS_Execute(void) {
 #else
 void __attribute__((user_init)) OS_Execute(void) {
-    Nop(); // When the scheduler is configured as ((user_init)) and executed before 
-    Nop(); // main(), this NOPs provide a start address for the debugger to step in.
-    Nop();
 #endif
 
     // Local variables
-    volatile uint16_t fres = 1;  // Internal test variable tracking return values of sub-functions
-    
-    #if (USE_TASK_MANAGER_TIMING_DEBUG_ARRAYS == 1)
+    #if (__DEBUG && (USE_TASK_MANAGER_TIMING_DEBUG_ARRAYS == 1))
     volatile uint16_t cnt=0; // In debug mode , this counter is used to fill profiling arrays
     #endif
-    
+    volatile uint16_t fres = 1;  // Internal test variable tracking return values of sub-functions
+
+    #if (__DEBUG && (START_OS_BEFORE_MAIN==1))
+    Nop(); // When the scheduler is configured as ((user_init)) and executed before 
+    Nop(); // main(), this NOPs provide a start address for the debugger to step in.
+    Nop(); // Please Note: A breakpoint may be required to stop the debugger.
+    #endif
 
     // Right after system reset, first check for root-cause of previous device reset
     fres &= CheckCPUResetRootCause();
@@ -181,7 +182,7 @@ void __attribute__((user_init)) OS_Execute(void) {
 
         
         
-        #if (USE_TASK_MANAGER_TIMING_DEBUG_ARRAYS == 1)
+        #if (__DEBUG && (USE_TASK_MANAGER_TIMING_DEBUG_ARRAYS == 1))
         // In debugging mode CPU load and task time is measured and logged in two arrays
         // to examine the recent code execution profile
         if(cnt == CPU_LOAD_DEBUG_BUFFER_LENGTH)
