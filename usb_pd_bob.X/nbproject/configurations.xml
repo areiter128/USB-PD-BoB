@@ -32,6 +32,7 @@
           <itemPath>../h/apl/resources/chb_iloop.h</itemPath>
           <itemPath>../h/apl/resources/chb_vloop.h</itemPath>
           <itemPath>../h/apl/resources/c4swbb_pconfig.h</itemPath>
+          <itemPath>../h/apl/resources/init_PWM.h</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../h/apl/tasks/task_Idle.h</itemPath>
@@ -103,6 +104,7 @@
           <itemPath>../src/apl/resources/chb_vloop.c</itemPath>
           <itemPath>../src/apl/resources/chb_vloop_asm.s</itemPath>
           <itemPath>../src/apl/resources/c4swbb_pconfig.c</itemPath>
+          <itemPath>../src/apl/resources/init_PWM.c</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../src/apl/tasks/task_Idle.c</itemPath>
@@ -373,6 +375,7 @@
         <property key="Freeze All Other Peripherals" value="true"/>
         <property key="I2C 1" value="true"/>
         <property key="I2C 2" value="true"/>
+        <property key="I2C 3" value="true"/>
         <property key="MCCP/SCCP 1" value="true"/>
         <property key="MCCP/SCCP 2" value="true"/>
         <property key="MCCP/SCCP 3" value="true"/>
@@ -381,17 +384,24 @@
         <property key="MCCP/SCCP 6" value="true"/>
         <property key="MCCP/SCCP 7" value="true"/>
         <property key="MCCP/SCCP 8" value="true"/>
+        <property key="MCCP/SCCP 9" value="true"/>
         <property key="PG1" value="true"/>
         <property key="PG2" value="true"/>
         <property key="PG3" value="true"/>
         <property key="PG4" value="true"/>
+        <property key="PG5" value="true"/>
+        <property key="PG6" value="true"/>
+        <property key="PG7" value="true"/>
+        <property key="PG8" value="true"/>
         <property key="PTGFRZ" value="true"/>
         <property key="QEI1" value="true"/>
+        <property key="QEI2" value="true"/>
         <property key="REFO" value="true"/>
         <property key="SENT1" value="true"/>
         <property key="SENT2" value="true"/>
         <property key="SPI 1" value="true"/>
         <property key="SPI 2" value="true"/>
+        <property key="SPI 3" value="true"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
         <property key="TIMER1" value="true"/>
         <property key="ToolFirmwareFilePath"
@@ -414,6 +424,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-ffffffffffffffff"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="D:/Firmware/00173_USB_PD_BoB/firmware/project/usb_pd_bob.X/debug/00173_USB_PD_BOB_R20/usb_pd_bob_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
@@ -1259,9 +1271,9 @@
         <property key="PG2" value="true"/>
         <property key="PG3" value="true"/>
         <property key="PG4" value="true"/>
-        <property key="PG5" value="true"/>
+        <property key="PG5" value="false"/>
         <property key="PG6" value="true"/>
-        <property key="PG7" value="true"/>
+        <property key="PG7" value="false"/>
         <property key="PG8" value="true"/>
         <property key="PMP" value="true"/>
         <property key="PTGFRZ" value="true"/>
