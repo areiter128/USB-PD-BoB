@@ -31,13 +31,21 @@ volatile uint16_t cpu_time_buffer[CPU_LOAD_DEBUG_BUFFER_LENGTH];
  * it's called, it's executed continuously until the flag "run_scheduler" is 
  * set to FALSE by any external process.
  * ***********************************************************************************************/
-
-inline volatile uint16_t OS_Execute(void) {
-
-#if (USE_TASK_MANAGER_TIMING_DEBUG_ARRAYS == 1)
-    volatile uint16_t cnt=0;
+#if (START_OS_BEFORE_MAIN==0)
+volatile uint16_t OS_Execute(void) {
+#else
+void __attribute__((user_init)) OS_Execute(void) {
+    Nop(); // When the scheduler is configured as ((user_init)) and executed before 
+    Nop(); // main(), this NOPs provide a start address for the debugger to step in.
+    Nop();
 #endif
-    volatile uint16_t fres = 1;
+
+    // Local variables
+    volatile uint16_t fres = 1;  // Internal test variable tracking return values of sub-functions
+    
+    #if (USE_TASK_MANAGER_TIMING_DEBUG_ARRAYS == 1)
+    volatile uint16_t cnt=0; // In debug mode , this counter is used to fill profiling arrays
+    #endif
     
 
     // Right after system reset, first check for root-cause of previous device reset
@@ -77,11 +85,11 @@ inline volatile uint16_t OS_Execute(void) {
             task_mgr.cpu_load.ticks++;
         }
 
-#if (USE_TASK_EXECUTION_CLOCKOUT_PIN == 1)
-#ifdef TS_CLOCKOUT_PIN_WR
+    #if (USE_TASK_EXECUTION_CLOCKOUT_PIN == 1)
+    #ifdef TS_CLOCKOUT_PIN_WR
     TS_CLOCKOUT_PIN_WR = PINSTATE_HIGH; // Drive debug pin high
-#endif
-#endif
+    #endif
+    #endif
 
         // CPU Meter Fault Trigger for CPU Load Lockout Check
         if(task_mgr.cpu_load.ticks >= task_mgr.task_time_ctrl.quota){
@@ -105,20 +113,20 @@ inline volatile uint16_t OS_Execute(void) {
         TASK_MGR_TIMER_ISR_FLAG_REGISTER &= (~TASK_MGR_TIMER_ISR_FLAG_BIT_MASK); // Reset timer ISR flag bit
 
         
-#if ((USE_TASK_EXECUTION_CLOCKOUT_PIN == 1) && (USE_DETAILED_CLOCKOUT_PATTERN == 1))
-#ifdef TS_CLOCKOUT_PIN_WR
+    #if ((USE_TASK_EXECUTION_CLOCKOUT_PIN == 1) && (USE_DETAILED_CLOCKOUT_PATTERN == 1))
+    #ifdef TS_CLOCKOUT_PIN_WR
     TS_CLOCKOUT_PIN_WR = PINSTATE_LOW;                  // Drive debug pin low
-#endif
-#endif
+    #endif
+    #endif
         
         // Call most recent task with execution time measurement
         fres &= os_ProcessTaskQueue();     // Step through pre-defined task lists
 
-#if ((USE_TASK_EXECUTION_CLOCKOUT_PIN == 1) && (USE_DETAILED_CLOCKOUT_PATTERN == 1))
-#ifdef TS_CLOCKOUT_PIN_WR
+    #if ((USE_TASK_EXECUTION_CLOCKOUT_PIN == 1) && (USE_DETAILED_CLOCKOUT_PATTERN == 1))
+    #ifdef TS_CLOCKOUT_PIN_WR
     TS_CLOCKOUT_PIN_WR = PINSTATE_HIGH;                 // Drive debug pin high
-#endif
-#endif
+    #endif
+    #endif
 
         // 'fres'-check is mapped into the operating system component check status bit
         task_mgr.status.bits.os_component_check = fres;
@@ -126,21 +134,21 @@ inline volatile uint16_t OS_Execute(void) {
         // call the fault handler to check all defined fault objects
         fres &= exec_FaultCheckAll();
         
-#if ((USE_TASK_EXECUTION_CLOCKOUT_PIN == 1) && (USE_DETAILED_CLOCKOUT_PATTERN == 1))
-#ifdef TS_CLOCKOUT_PIN_WR
+    #if ((USE_TASK_EXECUTION_CLOCKOUT_PIN == 1) && (USE_DETAILED_CLOCKOUT_PATTERN == 1))
+    #ifdef TS_CLOCKOUT_PIN_WR
     TS_CLOCKOUT_PIN_WR = PINSTATE_LOW;                 // Drive debug pin high
-#endif
-#endif
+    #endif
+    #endif
 
         // Capture the most recent system status to respond to changes in operating modes
         fres &= APPLICATION_CaptureSystemStatus();
 
         
-#if ((USE_TASK_EXECUTION_CLOCKOUT_PIN == 1) && (USE_DETAILED_CLOCKOUT_PATTERN == 1))
-#ifdef TS_CLOCKOUT_PIN_WR
+    #if ((USE_TASK_EXECUTION_CLOCKOUT_PIN == 1) && (USE_DETAILED_CLOCKOUT_PATTERN == 1))
+    #ifdef TS_CLOCKOUT_PIN_WR
     TS_CLOCKOUT_PIN_WR = PINSTATE_HIGH;                 // Drive debug pin low
-#endif
-#endif
+    #endif
+    #endif
 
     
         // Reset Watchdog Timer
@@ -165,17 +173,17 @@ inline volatile uint16_t OS_Execute(void) {
         }
 
         
-#if (USE_TASK_EXECUTION_CLOCKOUT_PIN == 1)
-#ifdef TS_CLOCKOUT_PIN_WR
+    #if (USE_TASK_EXECUTION_CLOCKOUT_PIN == 1)
+    #ifdef TS_CLOCKOUT_PIN_WR
     TS_CLOCKOUT_PIN_WR = PINSTATE_LOW;                  // Drive debug pin low
-#endif
-#endif
+    #endif
+    #endif
 
         
         
-#if (USE_TASK_MANAGER_TIMING_DEBUG_ARRAYS == 1)
-// In debugging mode CPU load and task time is measured and logged in two arrays
-// to examine the recent code execution profile
+        #if (USE_TASK_MANAGER_TIMING_DEBUG_ARRAYS == 1)
+        // In debugging mode CPU load and task time is measured and logged in two arrays
+        // to examine the recent code execution profile
         if(cnt == CPU_LOAD_DEBUG_BUFFER_LENGTH)
         {
             Nop();  // place breakpoint here to hold firmware when arrays are filled
@@ -189,22 +197,40 @@ inline volatile uint16_t OS_Execute(void) {
             cpu_time_buffer[cnt] = task_mgr.cpu_load.load;    // Log most recent CPU Load
             cnt++;                                      // Increment array index
         }
-#endif
+        #endif
         
     }   // End of main loop
     // =====================================================================
+    
+    // =====================================================================
+    // When the scheduler has been terminated by an internal error or software command,
+    // the interrupt and traps status is captured and a warm CPU reset is initiated
     
     CaptureCPUInterruptStatus(); // Capture all relevant interrupt and reset status bits
     traplog.status.bits.sw_reset = true; // Set flag bit indicating CPU was restarted by software
     traplog.reset_count++;  // Increment the persistent soft-reset counter to stop restarting after certain number of restart attempts
 
+    // To prevent that the CPU ends up restarting endlessly, the traplog object 
+    // tracks the number or CPU resets and stalls here after a user defined number
+    // of attempts defined by TASK_MGR_CPU_RESET_LIMIT
+    
     if (traplog.reset_count < TASK_MGR_CPU_RESET_LIMIT) {
-        CPU_RESET;  // If the fault handler skips execution of the main loop, this line will reset the CPU  
+    // Initiate CPU Reset
+        CPU_RESET;    
     }
     else {
-        while (1);  // Hold CPU inactive here
+    // If CPU has been reset a user defined number of attempts 
+    // defined by TASK_MGR_CPU_RESET_LIMIT, the software is stalled 
+    // here
+        while (1)  
+        { Nop(); Nop(); Nop(); }
     }
     
-    return(0);   // if this code line is ever reached, something really bad had happened...
+// if this code line is ever reached, something really bad had happened...
+#if (START_OS_BEFORE_MAIN==0)
+    return(0);   
+#else
+    return;
+#endif
 
 }

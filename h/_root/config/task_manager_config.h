@@ -48,6 +48,20 @@
 #include "mcal/mcal.h" // required to include p33SMPS_devices.h
 #include "mcal/config/devcfg_oscillator.h"
 
+/*!START_OS_BEFORE_MAIN
+ *****************************************************************************
+ * Summary:
+ * Enables/Disables the execution of the scheduler before main() is called.
+ * 
+ * Description:
+ * When this option is enabled, the OS function OS_Execute() will be called
+ * before mail() of the user project. As the scheduler is running a managed
+ * endless-loop, the user function main() will actually never be reached
+ * and therefore becomes practically obsolete. 
+ * 
+*****************************************************************************/
+#define START_OS_BEFORE_MAIN   1 // Enable/disable execution OS befroe main()
+
 /*!EXECUTE_DEVICE_RESET
  *****************************************************************************
  * Summary:

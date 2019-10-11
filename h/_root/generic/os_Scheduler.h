@@ -31,12 +31,26 @@
 #ifndef ROOT_TASK_SCHEDULER_H
 #define	ROOT_TASK_SCHEDULER_H
 
-#include "os_Globals.h" // os_globals.h also include the 4-layer headers for 
-                        //   - Application Layer (APL)
-                        //   - Hardware Abstraction Layer (HAL)
-                        //   - Microcontroller Abstraction Layer (MCAL)
-                        //   - Special Function Layer (SFL)
+#include <xc.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+// ===========================================================
+// task_manager_config.h holds all OS options used to configure 
+// bahavior, features and functions
+// ===========================================================
+#include "_root/config/task_manager_config.h" 
+// ===========================================================
+
+// ===========================================================
+// os_globals.h also include the 4-layer headers for 
+//   - Application Layer (APL)
+//   - Hardware Abstraction Layer (HAL)
+//   - Microcontroller Abstraction Layer (MCAL)
+//   - Special Function Layer (SFL)
+// ===========================================================
+#include "os_Globals.h" 
+// ===========================================================
 
 #ifdef	__cplusplus
 extern "C" {
@@ -91,13 +105,19 @@ extern volatile uint16_t cpu_time_buffer[];
  * PROTOTYPES
  * ***********************************************************************************************/
     
-    
+#if (START_OS_BEFORE_MAIN==0)
+// If option START_OS_WITHOUT_MAIN is disabled, OS_Execute becomes a normal function
+// which can be called by other instances. Use this function call if main() of the 
+// user application is executed and you need to start the operating system manually.
 extern volatile uint16_t OS_Execute(void);
+#else
+extern void OS_Execute(void);
+#endif
 
 
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */
 
-#endif	/* APL_TASK_SCHEDULER_H */
+#endif	/* ROOT_TASK_SCHEDULER_H */
 

@@ -48,8 +48,6 @@
 
 int main(void) {
 
-    volatile uint16_t fres = 1;
-    
 #if __DEBUG
 // In debug mode these NOPs can be used to place a breakpoint before
 // the start of the main task scheduler
@@ -57,23 +55,28 @@ int main(void) {
     Nop();
     Nop();
 #endif
-
+    
     /*!OS_Execute()
      * ****************************************************************
      * Description:
-     * The main task scheduler engine is called as a single and sole
-     * function call placed here in main() of the user project.
-     * From this point forward the code will be executed within the 
-     * task-scheduler main loop. when this loop is terminated due to
-     * a device restart (e.g. triggered by a catastrophic fault event),
-     * the code will return to main().
+     * The OS scheduler can be called directly by setting the 
+     * option START_OS_BEFORE_MAIN = 1, effectively bypassing
+     * main() completely.
      * 
-     * Users can place additional startup or exit code as needed.
-     * However, fundamental device configurations like oscillator 
-     * of peripheral initialization will only take place within the
-     * main task scheduler execution.
+     * if START_OS_BEFORE_MAIN = 0, the OS scheduler engine needs
+     * to be called manually from main() as a single and sole
+     * function call placed here in main() of the user project.
+     * 
+     * From this point forward the code will be executed within the 
+     * task-scheduler main loop. When this loop is terminated due to
+     * a device restart (e.g. triggered by a catastrophic fault event),
+     * the CPU will either be reset by the scheduler directly or
+     * the software is stalled at the end of the OS scheduler function.
+     * 
+     * Please note: The code will NOT return to main().
+     * 
      * ***************************************************************/
-    fres = OS_Execute();
-    
-    return(fres);
+    OS_Execute();
+        
+    return(0);
 }
