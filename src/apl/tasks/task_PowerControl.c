@@ -13,6 +13,7 @@
 #include "apl/tasks/task_PowerControl.h"
 #include "apl/resources/c4swbb_control.h"   // 4-Switch Buck/Boost Power Control State Machine Header
 
+#include "apl/resources/init_PWM.h"
 
 // Declare two 4-Switch Buck/Boost DC/DC converter objects
 volatile C4SWBB_PWRCTRL_t c4swbb_1;    // USB PD Port A
@@ -35,8 +36,32 @@ volatile uint16_t exec_PowerControl(void) {
 
     volatile uint16_t fres = 1;
     
+    // Both converters are supplied by the same power input and c4swbb_1 is the 
+    // instance sampling the input voltage. Once this voltage is within the nominal
+    // operating range, the POWER_SOURCE_DETECTED flag is set
+    // 
+    // Please note:
+    // This test is for startup only. There is no hysteresis and no shut-down event
+    // is triggered. This flag only provides an immediate indication. Power Supply
+    // Over/Under Voltage Lock Out are taken care of by the fault handler.
+    
+    if((C4SWBB_VIN_UVLO < c4swbb_1.data.v_in) && (c4swbb_1.data.v_in < C4SWBB_VIN_OVLO)) {
+        c4swbb_1.status.bits.power_source_detected = true;
+        c4swbb_2.status.bits.power_source_detected = true;
+    }
+    else {
+        c4swbb_1.status.bits.power_source_detected = false;
+        c4swbb_2.status.bits.power_source_detected = false;
+    }
+    
+    // Execute the state machines of converter 1 and 2
     fres &= exec_4SWBB_PowerController(&c4swbb_1);  // Execute 4-Switch Buck/Boost Converter #1 State Machine
     fres &= exec_4SWBB_PowerController(&c4swbb_2);  // Execute 4-Switch Buck/Boost Converter #2 State Machine
+    
+    Nop();
+    Nop();
+    Nop();
+    
     
     return (fres);
 }
@@ -51,10 +76,26 @@ volatile uint16_t init_PowerControl(void) {
 
     volatile uint16_t fres = 1;
 
+ECP39_INIT_OUTPUT;
+ECP44_INIT_OUTPUT;
+//return(1);  
+//    init_pwm_module();
+//    init_pwm_buck();
+//    
+//    PG1DC = (SWITCHING_PERIOD >> 2);
+//    PG1TRIGA = (SWITCHING_PERIOD >> 1);
+//
+//    PG1CONLbits.ON = 1;
+//    PG1IOCONLbits.OVRENH = 0;
+//    PG1IOCONLbits.OVRENL = 0;
+//    PG1STATbits.UPDREQ = 1;
+//
+//return(1);
+
     // Initialize the 4-switch buck/boost power controller objects for USB port A and B
     fres &= init_USBport_1(); // Initialize complete configuration of USB Port 1 power controller
     fres &= init_USBport_2(); // Initialize complete configuration of USB Port 2 power controller
-    
+  
     // Initialize PWM module base registers:
     // =====================================
     // This only needs to be called once at startup and applies to both USB PD ports.
@@ -82,11 +123,23 @@ volatile uint16_t init_PowerControl(void) {
     
     // Enable PWM module starting to trigger the ADC while outputs are 
     // still disabled
-    fres &= c4swbb_pwm_hold(&c4swbb_1);
-    fres &= c4swbb_pwm_hold(&c4swbb_2);
     
     fres &= c4swbb_pwm_enable(&c4swbb_1);
     fres &= c4swbb_pwm_enable(&c4swbb_2);
+    
+    fres &= c4swbb_pwm_release(&c4swbb_1);
+    fres &= c4swbb_pwm_release(&c4swbb_2);
+
+    PG1DC = 3000;
+    PG1TRIGA = 7000;
+    PG2DC = 3000;
+    PG4TRIGA = 1000;
+    PG5DC = 3000;
+    PG5TRIGA = 7000;
+    PG7DC = 3000;
+    PG7TRIGA = 1000;
+    
+    
     
     // return Success/Failure
     return (fres);
@@ -531,7 +584,7 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT1_ADC_Interrupt(
 #else
     #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #1"
 #endif
-{
+{ECP39_SET;
     // Call control loop update
     cha_vloop_Update(&cha_vloop);
     
@@ -541,7 +594,10 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT1_ADC_Interrupt(
     c4swbb_1.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
     
     // Clear the interrupt flag 
+    _ADCIF = 0;
+    FB_VBAT_ADC_IF = 0;
     FB_VOUT1_ADC_IF = 0;  
+ECP39_CLEAR;
 }
 
 /*!_FB_IOUT1_ADC_Interrupt
@@ -564,7 +620,7 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
 #else
     #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #1"
 #endif
-{
+{ECP39_SET;
     // Call control loop update
     cha_iloop_Update(&cha_iloop);
     
@@ -574,13 +630,15 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     c4swbb_1.data.temp = FB_TEMP1_ADCBUF; // Capture most recent temperature value
     
     // Clear the interrupt flag 
+    FB_TEMP1_ADC_IF = 0;
     #if (FB_IOUT1_ENABLE)
     FB_IOUT1_ADC_IF = 0;  
     #elif (FB_IIN1_ENABLE)
     FB_IIN1_ADC_IF = 0;  
     #else
     #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN SELECTED FOR USB PORT #2"
-    #endif    
+    #endif   
+ECP39_CLEAR;
 }
 
 /*!_FB_VOUT2_ADC_Interrupt
@@ -601,9 +659,9 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT2_ADC_Interrupt(
 #else
     #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #2"
 #endif
-{
+{ECP44_SET;
     // Call control loop update
-    cha_vloop_Update(&chb_vloop);
+    chb_vloop_Update(&chb_vloop);
     
     // Capture additional analog inputs
     c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
@@ -611,8 +669,9 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT2_ADC_Interrupt(
     c4swbb_2.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
     
     // Clear the interrupt flag 
+    FB_VBAT_ADC_IF = 0;
     FB_VOUT2_ADC_IF = 0;  
-
+ECP44_CLEAR;
 }
 
 /*!_FB_IOUT2_ADC_Interrupt
@@ -635,23 +694,25 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
 #else
     #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #2"
 #endif
-{
+{ECP44_SET;
     // Call control loop update
-    cha_iloop_Update(&chb_iloop);
+    chb_iloop_Update(&chb_iloop);
     
     // Capture additional analog inputs
     c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
     c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output current value
-//    c4swbb_2.data.temp = FB_TEMP2_ADCBUF; // Capture most recent temperature value
+    c4swbb_2.data.temp = FB_TEMP2_ADCBUF; // Capture most recent temperature value
     
     // Clear the interrupt flag 
+    FB_TEMP2_ADC_IF = 0;
     #if (FB_IOUT1_ENABLE)
     FB_IOUT2_ADC_IF = 0;  
     #elif (FB_IIN1_ENABLE)
     FB_IIN2_ADC_IF = 0;  
     #else
     #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN SELECTED FOR USB PORT #2"
-    #endif    
+    #endif   
+ECP44_CLEAR;
 }
 
 // EOF
