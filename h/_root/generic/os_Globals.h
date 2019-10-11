@@ -36,8 +36,8 @@
  * 07/28/2017	File created
  * ***********************************************************************************************/
 
-#ifndef PROJECT_GLOBAL_DECLARATIONS_H
-#define	PROJECT_GLOBAL_DECLARATIONS_H
+#ifndef OS_GLOBAL_DECLARATIONS_H
+#define	OS_GLOBAL_DECLARATIONS_H
 
 
 /* ***********************************************************************************************
@@ -113,6 +113,6 @@ typedef union
 
     
 
-#endif	/* PROJECT_GLOBAL_DECLARATIONS_H */
+#endif	/* OS_GLOBAL_DECLARATIONS_H */
 
 // EOF

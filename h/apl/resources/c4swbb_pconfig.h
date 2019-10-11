@@ -119,9 +119,9 @@ extern "C" {
                                     REG_PGCON_SOCS_LOCAL_EOC | \
                                     REG_PGCON_TRGMOD_REPEAT | \
                                     REG_PGCON_UPDMOD_IMMEDIATE | \
-                                    REG_PGCON_MSTEN_NO_BROADCAST | \
+                                    REG_PGCON_MSTEN_MASTER | \
                                     REG_PGCON_MPHSEL_INDEPENDENT | \
-                                    REG_PGCON_MPERSEL_INDEPENDENT | \
+                                    REG_PGCON_MPERSEL_MASTER | \
                                     REG_PGCON_MDCSEL_INDEPENDENT \
                                 )   // 0b0100000101000000
 
@@ -491,7 +491,7 @@ Description:
 
 #define C4SWBB_BOOSTLEG_PGxCONH     (   REG_PGCON_SOCS_LOCAL_EOC | \
                                         REG_PGCON_TRGMOD_REPEAT | \
-                                        REG_PGCON_UPDMOD_IMMEDIATE | \
+                                        REG_PGCON_UPDMOD_SLV_IMMEDIATE | \
                                         REG_PGCON_MSTEN_NO_BROADCAST | \
                                         REG_PGCON_MPHSEL_INDEPENDENT | \
                                         REG_PGCON_MPERSEL_INDEPENDENT | \

@@ -170,15 +170,15 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_PWRCTRL_t* pI
 
 
     // Initialize PWM generator for Boost leg
-    pg_config.PGxCON.value = (((uint32_t)C4SWBB_BUCKLEG_PGxCONH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxCONL));
-    pg_config.PGxSTAT.value = C4SWBB_BUCKLEG_PGxSTAT;
-    pg_config.PGxIOCON.value = (((uint32_t)C4SWBB_BUCKLEG_PGxIOCONH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxIOCONL));
-    pg_config.PGxEVT.value = (((uint32_t)C4SWBB_BUCKLEG_PGxEVTH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxEVTL));
-    pg_config.PGxFPCI.value = (((uint32_t)C4SWBB_BUCKLEG_PGxFPCIH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxFPCIL));
-    pg_config.PGxCLPCI.value = (((uint32_t)C4SWBB_BUCKLEG_PGxCLPCIH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxCLPCIL));
-    pg_config.PGxFFPCI.value = (((uint32_t)C4SWBB_BUCKLEG_PGxFFPCIH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxFFPCIL));
-    pg_config.PGxSPCI.value = (((uint32_t)C4SWBB_BUCKLEG_PGxSPCIH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxSPCIL));
-    pg_config.PGxLEBCON.value = (((uint32_t)C4SWBB_BUCKLEG_PGxLEBH << 16) | ((uint32_t)C4SWBB_BUCKLEG_PGxLEBL));
+    pg_config.PGxCON.value = (((uint32_t)C4SWBB_BOOSTLEG_PGxCONH << 16) | ((uint32_t)C4SWBB_BOOSTLEG_PGxCONL));
+    pg_config.PGxSTAT.value = C4SWBB_BOOSTLEG_PGxSTAT;
+    pg_config.PGxIOCON.value = (((uint32_t)C4SWBB_BOOSTLEG_PGxIOCONH << 16) | ((uint32_t)C4SWBB_BOOSTLEG_PGxIOCONL));
+    pg_config.PGxEVT.value = (((uint32_t)C4SWBB_BOOSTLEG_PGxEVTH << 16) | ((uint32_t)C4SWBB_BOOSTLEG_PGxEVTL));
+    pg_config.PGxFPCI.value = (((uint32_t)C4SWBB_BOOSTLEG_PGxFPCIH << 16) | ((uint32_t)C4SWBB_BOOSTLEG_PGxFPCIL));
+    pg_config.PGxCLPCI.value = (((uint32_t)C4SWBB_BOOSTLEG_PGxCLPCIH << 16) | ((uint32_t)C4SWBB_BOOSTLEG_PGxCLPCIL));
+    pg_config.PGxFFPCI.value = (((uint32_t)C4SWBB_BOOSTLEG_PGxFFPCIH << 16) | ((uint32_t)C4SWBB_BOOSTLEG_PGxFFPCIL));
+    pg_config.PGxSPCI.value = (((uint32_t)C4SWBB_BOOSTLEG_PGxSPCIH << 16) | ((uint32_t)C4SWBB_BOOSTLEG_PGxSPCIL));
+    pg_config.PGxLEBCON.value = (((uint32_t)C4SWBB_BOOSTLEG_PGxLEBH << 16) | ((uint32_t)C4SWBB_BOOSTLEG_PGxLEBL));
     
     // PWM timing configuration PWM generator Boost Leg
     pg_config.PGxLEB.value = C4SWBB_BOOSTLEG_PGxLEBL;
