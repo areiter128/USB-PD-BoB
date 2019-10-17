@@ -69,7 +69,6 @@
           <itemPath>../h/apl/resources/chb_iloop.h</itemPath>
           <itemPath>../h/apl/resources/chb_vloop.h</itemPath>
           <itemPath>../h/apl/resources/c4swbb_pconfig.h</itemPath>
-          <itemPath>../h/apl/resources/init_PWM.h</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../h/apl/tasks/task_Idle.h</itemPath>
@@ -177,7 +176,6 @@
           <itemPath>../src/apl/resources/chb_vloop.c</itemPath>
           <itemPath>../src/apl/resources/chb_vloop_asm.s</itemPath>
           <itemPath>../src/apl/resources/c4swbb_pconfig.c</itemPath>
-          <itemPath>../src/apl/resources/init_PWM.c</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../src/apl/tasks/task_Idle.c</itemPath>
@@ -250,7 +248,7 @@
         <targetDevice>dsPIC33CK256MP505</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>pk4hybrid</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>3</platform>

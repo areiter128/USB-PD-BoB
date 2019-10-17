@@ -13,8 +13,6 @@
 #include "apl/tasks/task_PowerControl.h"
 #include "apl/resources/c4swbb_control.h"   // 4-Switch Buck/Boost Power Control State Machine Header
 
-#include "apl/resources/init_PWM.h"
-
 // Declare two 4-Switch Buck/Boost DC/DC converter objects
 volatile C4SWBB_PWRCTRL_t c4swbb_1;    // USB PD Port A
 volatile C4SWBB_PWRCTRL_t c4swbb_2;    // USB PD Port B
@@ -75,9 +73,10 @@ volatile uint16_t exec_PowerControl(void) {
 volatile uint16_t init_PowerControl(void) {
 
     volatile uint16_t fres = 1;
-
+#ifdef __MA330048_P33CK_R30_USB_PD_BOB__
 ECP39_INIT_OUTPUT;
 ECP44_INIT_OUTPUT;
+#endif // __MA330048_P33CK_R30_USB_PD_BOB__
 //return(1);  
 //    init_pwm_module();
 //    init_pwm_buck();
@@ -587,7 +586,9 @@ volatile uint16_t init_USBport_2(void) {
 #if (FB_VOUT1_ENABLE)
 void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT1_ADC_Interrupt(void)
 {
+#ifdef __MA330048_P33CK_R30_USB_PD_BOB__    
 ECP39_SET;
+#endif // __MA330048_P33CK_R30_USB_PD_BOB__
 Nop();
 
     // Call control loop update
@@ -603,7 +604,9 @@ Nop();
     FB_VBAT_ADC_IF = 0;
     FB_VOUT1_ADC_IF = 0;  
     
-ECP39_CLEAR;
+#ifdef __MA330048_P33CK_R30_USB_PD_BOB__
+    ECP39_CLEAR;
+#endif // __MA330048_P33CK_R30_USB_PD_BOB__
 Nop();
 }
 #else
@@ -631,7 +634,10 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
 #else
     #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #1"
 #endif
-{ECP44_SET;
+{
+#ifdef __MA330048_P33CK_R30_USB_PD_BOB__    
+    ECP44_SET;
+#endif // __MA330048_P33CK_R30_USB_PD_BOB__
     // Call control loop update
     cha_iloop_Update(&cha_iloop);
     
@@ -649,7 +655,9 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     #else
     #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN SELECTED FOR USB PORT #2"
     #endif   
+#ifdef __MA330048_P33CK_R30_USB_PD_BOB__
 ECP44_CLEAR;
+#endif // __MA330048_P33CK_R30_USB_PD_BOB__
 }
 #else
     #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #1"
@@ -670,7 +678,10 @@ ECP44_CLEAR;
  * *****************************************************************************************************/
 #if (FB_VOUT2_ENABLE)
 void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT2_ADC_Interrupt(void)
-{ECP39_SET;
+{
+#ifdef __MA330048_P33CK_R30_USB_PD_BOB__
+    ECP39_SET;
+#endif // __MA330048_P33CK_R30_USB_PD_BOB__
     // Call control loop update
     chb_vloop_Update(&chb_vloop);
     
@@ -682,7 +693,9 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT2_ADC_Interrupt(
     // Clear the interrupt flag 
     FB_VBAT_ADC_IF = 0;
     FB_VOUT2_ADC_IF = 0;  
+#ifdef __MA330048_P33CK_R30_USB_PD_BOB__    
 ECP39_CLEAR;
+#endif // __MA330048_P33CK_R30_USB_PD_BOB__
 }
 #else
 //    #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #2"
