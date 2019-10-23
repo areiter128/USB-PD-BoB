@@ -270,9 +270,9 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.buck_leg.phase = 0; // Phase shift of converter #1 is ZERO
     c4swbb_1.buck_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
     c4swbb_1.buck_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
-    c4swbb_1.buck_leg.duty_ratio_init = PWM_DUTY_RATIO_MIN; // reset initial duty cycle
-    c4swbb_1.buck_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
-    c4swbb_1.buck_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
+    c4swbb_1.buck_leg.duty_ratio_init = DUTY_RATIO_INIT_BUCK_REG; // reset initial duty cycle
+    c4swbb_1.buck_leg.duty_ratio_min = DUTY_RATIO_MIN_BUCK_REG; // set minimum duty cycle
+    c4swbb_1.buck_leg.duty_ratio_max = DUTY_RATIO_MAX_BUCK_REG; // set maximum duty cycle
     c4swbb_1.buck_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     c4swbb_1.buck_leg.pwm_swap = false; // PWMxH and PWMxL are not swapped for buck converter operation
     c4swbb_1.buck_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
@@ -286,9 +286,9 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.boost_leg.phase = 0; // Phase shift of converter #1 is ZERO 
     c4swbb_1.boost_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
     c4swbb_1.boost_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
-    c4swbb_1.boost_leg.duty_ratio_init = PWM_DUTY_RATIO_MIN; // reset initial duty cycle
-    c4swbb_1.boost_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
-    c4swbb_1.boost_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
+    c4swbb_1.boost_leg.duty_ratio_init = DUTY_RATIO_INIT_BOOST_REG; // reset initial duty cycle
+    c4swbb_1.boost_leg.duty_ratio_min = DUTY_RATIO_MIN_BOOST_REG; // set minimum duty cycle
+    c4swbb_1.boost_leg.duty_ratio_max = DUTY_RATIO_MAX_BOOST_REG; // set maximum duty cycle
     c4swbb_1.boost_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     c4swbb_1.boost_leg.pwm_swap = true; // PWMxH and PWMxL are swapped for boost converter operation
     c4swbb_1.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
@@ -367,9 +367,8 @@ volatile uint16_t init_USBport_1(void) {
 
     // Initialize converter #1 current loop settings
     fres &= cha_iloop_Init(&cha_iloop);
-    
-    c4swbb_1.i_loop.minimum = DUTY_RATIO_MIN_REG;   // Minimum duty ratio is absolute clamping limit of current loop
-    c4swbb_1.i_loop.maximum = DUTY_RATIO_MAX_REG;   // Maximum duty ratio is absolute clamping limit of current loop
+    c4swbb_1.i_loop.minimum = DUTY_RATIO_MIN_BUCK_REG;   // Minimum duty ratio is absolute clamping limit of current loop
+    c4swbb_1.i_loop.maximum = (DUTY_RATIO_MAX_BUCK_REG + DUTY_RATIO_MAX_BOOST_REG);   // Maximum duty ratio is absolute clamping limit of current loop
     c4swbb_1.i_loop.feedback_offset = C4SWBB_IOUT_FEEDBACK_OFFSET;   // Current feedback signal offset
     c4swbb_1.i_loop.reference = IOUT_LCL_CLAMP; // Current loop reference value
     c4swbb_1.i_loop.trigger_offset = ADC_TRIG_OFFSET_IOUT; // Current sample ADC trigger offset (offset from 50% on-time)
@@ -430,9 +429,9 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.buck_leg.phase = PWM_PHASE_SFT; // Phase shift of converter #2 is 180° (half of switching frequency)
     c4swbb_2.buck_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
     c4swbb_2.buck_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
-    c4swbb_2.buck_leg.duty_ratio_init = PWM_DUTY_RATIO_MIN; // reset initial duty cycle
-    c4swbb_2.buck_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
-    c4swbb_2.buck_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
+    c4swbb_2.buck_leg.duty_ratio_init = DUTY_RATIO_INIT_BUCK_REG; // reset initial duty cycle
+    c4swbb_2.buck_leg.duty_ratio_min = DUTY_RATIO_MIN_BUCK_REG; // set minimum duty cycle
+    c4swbb_2.buck_leg.duty_ratio_max = DUTY_RATIO_MAX_BUCK_REG; // set maximum duty cycle
     c4swbb_2.buck_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     c4swbb_2.buck_leg.pwm_swap = 0; // PWMxH and PWMxL are not swapped for buck converter operation
     c4swbb_2.buck_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
@@ -446,9 +445,9 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.boost_leg.phase = PWM_PHASE_SFT; // Phase shift of converter #2 is 180° (half of switching frequency
     c4swbb_2.boost_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
     c4swbb_2.boost_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
-    c4swbb_2.boost_leg.duty_ratio_init = PWM_DUTY_RATIO_MIN; // reset initial duty cycle
-    c4swbb_2.boost_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
-    c4swbb_2.boost_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
+    c4swbb_2.boost_leg.duty_ratio_init = DUTY_RATIO_INIT_BOOST_REG; // reset initial duty cycle
+    c4swbb_2.boost_leg.duty_ratio_min = DUTY_RATIO_MIN_BOOST_REG; // set minimum duty cycle
+    c4swbb_2.boost_leg.duty_ratio_max = DUTY_RATIO_MAX_BOOST_REG; // set maximum duty cycle
     c4swbb_2.boost_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     c4swbb_2.boost_leg.pwm_swap = 1; // PWMxH and PWMxL are swapped for boost converter operation
     c4swbb_2.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW

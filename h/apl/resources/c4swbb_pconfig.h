@@ -544,8 +544,8 @@ Description:
     bit 1 POLH: PWMxH Output Polarity bit: 0 = Output pin is active-high
     bit 0 POLL: PWMxL Output Polarity bit: 0 = Output pin is active-high
  */
-#define C4SWBB_BOOSTLEG_PGxIOCONH   (   REG_IOCON_POLH_ACTIVE_LOW | \
-                                        REG_IOCON_POLL_ACTIVE_LOW | \
+#define C4SWBB_BOOSTLEG_PGxIOCONH   (   REG_IOCON_POLH_ACTIVE_HIGH | \
+                                        REG_IOCON_POLL_ACTIVE_HIGH | \
                                         REG_IOCON_PENx_COMP_PGx | \
                                         REG_IOCON_PMOD_COMPLEMENTARY | \
                                         REG_IOCON_DTCMPSEL_PCI_SYNC | \

@@ -478,37 +478,37 @@
 #define BOOSTH2_ADTRGSRC_2    0b00111 // = ADTRIGx_TRGSRC_PWM2_TRIG2
 
 // Device Pin #64 is RB13
-#define POOSTL2_TRIS    TRISBbits.TRISB13 // GPIO direction register bit
-#define POOSTL2_WR      LATBbits.LATB13 // GPIO port latch register bit
-#define POOSTL2_RD      PORTBbits.RB13 // GPIO port register bit
-#define POOSTL2_ODC     ODCBbits.ODCB13 // GPIO port open drain configuration register bit
-#define POOSTL2_CNPU    CNPUBbits.CNPUB13 // GPIO port pull-up resistor register bit
-#define POOSTL2_CNPD    CNPDBbits.CNPDB13 // GPIO port pull-down resistor register bit
-#define POOSTL2_CNEN0   CNEN0Bbits.CNEN0B13 // GPIO port change notification Enable register bit
-#define POOSTL2_CNSTAT  CNSTATBbits.CNSTATB13 // GPIO port change notification Status register bit
-#define POOSTL2_CNEN1   CNEN1Bbits.CNEN1B13 // GPIO port change notification Edge Select Enable register bit
-#define POOSTL2_CNF     CNFBbits.CNFB13 // GPIO port change notification flag bit register bit
-#define POOSTL2_RP      45 // Number of Remappable Pin
-#define _BOOSTL2_RPOR   _RP45R // Remappable Pin Register
-#define POOSTL2_SET     { asm volatile ("bset _LATB, #13 \n"); }
-#define POOSTL2_CLEAR   { asm volatile ("bclr _LATB, #13 \n"); }
-#define POOSTL2_TOGGLE  { asm volatile ("btg  _LATB, #13 \n"); }
-#define POOSTL2_IS_ANALOG_INPUT  false // Pin is/is not analog input 
-#define POOSTL2_INIT_OUTPUT  {POOSTL2_WR = PINSTATE_LOW; POOSTL2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
-#define POOSTL2_INIT_INPUT   {POOSTL2_WR = PINSTATE_HIGH; POOSTL2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
-#define POOSTL2_PGx_CHANNEL  2 // PWM channel index
-#define POOSTL2_PGx_PER      PG2PER // PWM channel period register
-#define POOSTL2_PGx_PHASE    PG2PHASE // PWM channel phase register
-#define POOSTL2_PGx_DC       PG2DC // PWM channel duty cycle register
-#define POOSTL2_PGx_DCA      PG2DCA// PWM channel duty cycle A register
-#define POOSTL2_PGx_DTH      PG2DTH // PWM channel rising edge dead time register
-#define POOSTL2_PGx_DTL      PG2DTL // PWM channel falling edge dead time register
-#define POOSTL2_PGx_OVRENL   PG2IOCONLbits.OVRENL // PWM channel IO config register override low control bit
-#define POOSTL2_PGx_PENL     PG2IOCONLbits.PENL // PWM channel IO config register pin enable low control bit
-#define POOSTL2_PGxUPDREQ    PG2STATbits.UPDREQ // PWM channel ADC trigger A register
-#define POOSTL2_PGxTRIGA     PG2TRIGA // PWM channel ADC trigger A register
-#define POOSTL2_PGxTRIGB     PG2TRIGB // PWM channel ADC trigger A register
-#define POOSTL2_PGxTRIGC     PG2TRIGC // PWM channel ADC trigger A register
+#define BOOSTL2_TRIS    TRISBbits.TRISB13 // GPIO direction register bit
+#define BOOSTL2_WR      LATBbits.LATB13 // GPIO port latch register bit
+#define BOOSTL2_RD      PORTBbits.RB13 // GPIO port register bit
+#define BOOSTL2_ODC     ODCBbits.ODCB13 // GPIO port open drain configuration register bit
+#define BOOSTL2_CNPU    CNPUBbits.CNPUB13 // GPIO port pull-up resistor register bit
+#define BOOSTL2_CNPD    CNPDBbits.CNPDB13 // GPIO port pull-down resistor register bit
+#define BOOSTL2_CNEN0   CNEN0Bbits.CNEN0B13 // GPIO port change notification Enable register bit
+#define BOOSTL2_CNSTAT  CNSTATBbits.CNSTATB13 // GPIO port change notification Status register bit
+#define BOOSTL2_CNEN1   CNEN1Bbits.CNEN1B13 // GPIO port change notification Edge Select Enable register bit
+#define BOOSTL2_CNF     CNFBbits.CNFB13 // GPIO port change notification flag bit register bit
+#define BOOSTL2_RP      45 // Number of Remappable Pin
+#define BBOOSTL2_RPOR   _RP45R // Remappable Pin Register
+#define BOOSTL2_SET     { asm volatile ("bset _LATB, #13 \n"); }
+#define BOOSTL2_CLEAR   { asm volatile ("bclr _LATB, #13 \n"); }
+#define BOOSTL2_TOGGLE  { asm volatile ("btg  _LATB, #13 \n"); }
+#define BOOSTL2_IS_ANALOG_INPUT  false // Pin is/is not analog input 
+#define BOOSTL2_INIT_OUTPUT  {POOSTL2_WR = PINSTATE_LOW; POOSTL2_TRIS = PINDIR_OUTPUT;} // initialization macro for digital output
+#define BOOSTL2_INIT_INPUT   {POOSTL2_WR = PINSTATE_HIGH; POOSTL2_TRIS = PINDIR_INPUT;} // initialization macro for digital input
+#define BOOSTL2_PGx_CHANNEL  2 // PWM channel index
+#define BOOSTL2_PGx_PER      PG2PER // PWM channel period register
+#define BOOSTL2_PGx_PHASE    PG2PHASE // PWM channel phase register
+#define BOOSTL2_PGx_DC       PG2DC // PWM channel duty cycle register
+#define BOOSTL2_PGx_DCA      PG2DCA// PWM channel duty cycle A register
+#define BOOSTL2_PGx_DTH      PG2DTH // PWM channel rising edge dead time register
+#define BOOSTL2_PGx_DTL      PG2DTL // PWM channel falling edge dead time register
+#define BOOSTL2_PGx_OVRENL   PG2IOCONLbits.OVRENL // PWM channel IO config register override low control bit
+#define BOOSTL2_PGx_PENL     PG2IOCONLbits.PENL // PWM channel IO config register pin enable low control bit
+#define BOOSTL2_PGxUPDREQ    PG2STATbits.UPDREQ // PWM channel ADC trigger A register
+#define BOOSTL2_PGxTRIGA     PG2TRIGA // PWM channel ADC trigger A register
+#define BOOSTL2_PGxTRIGB     PG2TRIGB // PWM channel ADC trigger A register
+#define BOOSTL2_PGxTRIGC     PG2TRIGC // PWM channel ADC trigger A register
 
 // Device Pin #1 is RB14
 #define BUCKH2_TRIS    TRISBbits.TRISB14 // GPIO direction register bit
