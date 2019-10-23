@@ -423,8 +423,6 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-ffffffffffffffff"/>
         <property key="poweroptions.powerenable" value="false"/>
-        <property key="programmerToGoFilePath"
-                  value="D:/Firmware/00173_USB_PD_BoB/firmware/project/usb_pd_bob.X/debug/00173_USB_PD_BOB_R20/usb_pd_bob_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
@@ -1266,13 +1264,13 @@
         <property key="MCCP/SCCP 7" value="true"/>
         <property key="MCCP/SCCP 8" value="true"/>
         <property key="MCCP/SCCP 9" value="true"/>
-        <property key="PG1" value="true"/>
-        <property key="PG2" value="true"/>
+        <property key="PG1" value="false"/>
+        <property key="PG2" value="false"/>
         <property key="PG3" value="true"/>
         <property key="PG4" value="true"/>
-        <property key="PG5" value="true"/>
+        <property key="PG5" value="false"/>
         <property key="PG6" value="true"/>
-        <property key="PG7" value="true"/>
+        <property key="PG7" value="false"/>
         <property key="PG8" value="true"/>
         <property key="PMP" value="true"/>
         <property key="PTGFRZ" value="true"/>
@@ -1306,8 +1304,6 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-2beff"/>
         <property key="poweroptions.powerenable" value="false"/>
-        <property key="programmerToGoFilePath"
-                  value="D:/Firmware/00173_USB_PD_BoB/firmware/project/usb_pd_bob.X/debug/MA330048_P33CK_R30/usb_pd_bob_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
