@@ -263,7 +263,7 @@ volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj)
 
     // Depending on if a fault state is active or not, set or reset fault counter
     if (!fltobj->status.bits.fltstat)
-    // if there is no active fault state...
+    // if no active FAULT FLAG has been set yet state...
     {
         if(fltobj->status.bits.fltactive) 
         // if a fault condition has been detected... 
@@ -299,9 +299,12 @@ volatile uint16_t SetFaultCondition(volatile FAULT_OBJECT_t* fltobj)
             // Check if fault reset counter limits have been exceeded
             if(fltobj->criteria.counter >= fltobj->criteria.reset_cnt_threshold)
             {
-                // Reset the FAULT STAT flag of the fault object
-                fltobj->status.bits.fltstat = 0; // set "fault status" bit
+                // Clear the FAULT STAT flag of the fault object
+                fltobj->status.bits.fltstat = 0; // clear "fault status" bit
                 
+                // Execute individual release response
+                f_res &= ExecFaultFlagReleaseHandler(fltobj); 
+
             }
 
         }
@@ -613,7 +616,10 @@ inline volatile uint16_t ExecGlobalFaultFlagRelease(volatile uint16_t fault_clas
     if((!(fault_class_code & FLT_CLASS_CRITICAL)) && (task_mgr.status.bits.global_fault))
     {
         // if fault is of class CRITICAL, reset error flag and force scheduler in standby mode
-        task_mgr.status.bits.global_fault = 0;  // reset global fault bit
+        task_mgr.status.bits.global_fault = 0;  // clear global fault bit
+        task_mgr.status.bits.fault_override = false; // clear global fault override bit
+        if(task_mgr.status.bits.startup_sequence_complete)
+        { task_mgr.op_mode.value = OP_MODE_IDLE; }      // force main scheduler into IDLE mode
     }
 
     if((!(fault_class_code & FLT_CLASS_WARNING)) && (task_mgr.status.bits.global_warning))
@@ -656,7 +662,7 @@ inline volatile uint16_t ExecGlobalFaultFlagRelease(volatile uint16_t fault_clas
 inline volatile uint16_t ExecFaultFlagReleaseHandler(volatile FAULT_OBJECT_t* fltobj)
 {
     volatile uint16_t fres = 1;
-    
+
     // if the fault object is not initialized, exit here
     if(fltobj == NULL) { return(1); }
 
@@ -717,8 +723,8 @@ volatile uint16_t exec_FaultCheckAll(void)
         if (user_fault_object_list[i]->status.bits.fltchken)
         {
             fres &= CheckFaultCondition(user_fault_object_list[i]);  // Check fault condition
-            fres &= SetFaultCondition(user_fault_object_list[i]);    // Set fault flags and execute user fault function
-
+            fres &= SetFaultCondition(user_fault_object_list[i]);    // Set fault flags and execute user fault response
+            
             // track global fault status
             if(user_fault_object_list[i]->status.bits.fltstat)
             { global_fault_present |= user_fault_object_list[i]->flt_class.value; }
@@ -727,37 +733,12 @@ volatile uint16_t exec_FaultCheckAll(void)
     }
 
     // =============================================================================
-    // Reset fault flags if no fault conditions are present
+    // Clear global fault flags if no fault conditions are present
     
     fres &= ExecGlobalFaultFlagRelease((FAULT_OBJECT_CLASS_e)global_fault_present);
         
-    // Set/reset operating mode when global fault flag has been reset 
-    if((task_mgr.op_mode.value == OP_MODE_FAULT) && (!task_mgr.status.bits.global_fault))
-    { 
-        // when recovering from active fault, check if user recovery functions have to be executed
-        for (i=0; i<user_fltobj_list_size; i++)
-        {
-            if(os_fault_object_list[i] != NULL) {
-            if(os_fault_object_list[i]->status.bits.fltchken)
-            { fres &= ExecFaultFlagReleaseHandler(os_fault_object_list[i]); }
-            }
-        }    
 
-        for (i=0; i<user_fltobj_list_size; i++)
-        {
-            if(user_fault_object_list[i] != NULL) {
-            if(user_fault_object_list[i]->status.bits.fltchken)
-            { fres &= ExecFaultFlagReleaseHandler(user_fault_object_list[i]); }
-            }
-        }    
-
-        task_mgr.status.bits.fault_override = false;   // Reset global fault override flag
-        task_mgr.status.bits.startup_sequence_complete = false; // Reset startup sequence complete flag
-        task_mgr.pre_op_mode.value = OP_MODE_FAULT;  // set pre_op_mode to provoke op-mode switch-over
-        task_mgr.op_mode.value = OP_MODE_STARTUP_SEQUENCE; // set op_mode to provoke op-mode switch-over
-
-    } 
-        
+    
     return(fres);
 
 }
