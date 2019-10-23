@@ -198,8 +198,10 @@ volatile uint16_t task_queue_idle[] = {
 volatile uint16_t task_queue_idle_size = (sizeof(task_queue_idle)/sizeof(task_queue_idle[0]));
 volatile uint16_t task_queue_idle_init(void)
 {
+#if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
     DBGLED_INIT_OUTPUT;
     DBGLED_WR = LED_ON;
+#endif
     Nop();
     return(1);
 }
@@ -251,8 +253,10 @@ volatile uint16_t task_queue_run[] = {
 volatile uint16_t task_queue_run_size = (sizeof(task_queue_run)/sizeof(task_queue_run[0]));
 volatile uint16_t task_queue_run_init(void)
 {
+#if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
     DBGLED_INIT_OUTPUT;
     DBGLED_WR = LED_OFF;
+#endif
     Nop();
     return(1);
 }
