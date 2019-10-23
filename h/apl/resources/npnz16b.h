@@ -1,5 +1,5 @@
 /* ***************************************************************************************
- * z-Domain Control Loop Designer Version 0.9.0.62.
+ * z-Domain Control Loop Designer Version 0.9.0.70.
  * ***************************************************************************************
  * Generic library header for z-domain compensation filter assembly functions
  * ***************************************************************************************/
@@ -13,21 +13,25 @@
 #include <stdbool.h>
 
 /* Status flags (Single Bit) */
-#define NPNZ16_STATUS_LSAT_SET		1
-#define NPNZ16_STATUS_LSAT_RESET	0
-#define NPNZ16_STATUS_USAT_SET		1
-#define NPNZ16_STATUS_USAT_RESET	0
-#define NPNZ16_STATUS_ENABLED		1
-#define NPNZ16_STATUS_DISABLED		0
+#define NPNZ16_STATUS_LSAT_SET             1
+#define NPNZ16_STATUS_LSAT_CLEAR           0
+#define NPNZ16_STATUS_USAT_SET             1
+#define NPNZ16_STATUS_USAT_CLEAR           0
+#define NPNZ16_STATUS_INPUT_INVERTED       1
+#define NPNZ16_STATUS_INPUT_NOT_INVERTED   0
+#define NPNZ16_STATUS_ENABLED              1
+#define NPNZ16_STATUS_DISABLED             0
 
 /* Status flags (bit-field) */
 typedef enum {
     CONTROLLER_STATUS_CLEAR = 0b0000000000000000,
     CONTROLLER_STATUS_SATUATION_MSK = 0b0000000000000011,
-    CONTROLLER_STATUS_LSAT_ON = 0b0000000000000001,
-    CONTROLLER_STATUS_LSAT_OFF = 0b0000000000000000,
-    CONTROLLER_STATUS_USAT_ON = 0b0000000000000010,
-    CONTROLLER_STATUS_USAT_OFF = 0b0000000000000000,
+    CONTROLLER_STATUS_LSAT_ACTIVE = 0b0000000000000001,
+    CONTROLLER_STATUS_LSAT_CLEAR = 0b0000000000000000,
+    CONTROLLER_STATUS_USAT_ACTIVE = 0b0000000000000010,
+    CONTROLLER_STATUS_USAT_CLEAR = 0b0000000000000000,
+    CONTROLLER_STATUS_INV_INPUT_OFF = 0b0000000000000000,
+    CONTROLLER_STATUS_INV_INPUT_ON = 0b0100000000000000,
     CONTROLLER_STATUS_ENABLE_OFF = 0b0000000000000000,
     CONTROLLER_STATUS_ENABLE_ON = 0b1000000000000000
 } CONTROLLER_STATUS_FLAGS_t;
@@ -48,7 +52,7 @@ typedef union {
         volatile unsigned : 1; // Bit 11: reserved
         volatile unsigned : 1; // Bit 12: reserved
         volatile unsigned : 1; // Bit 13: reserved
-        volatile unsigned : 1; // Bit 14: reserved
+        volatile unsigned invert_input: 1; // Bit 14: when set, most recent error input value to controller is inverted
         volatile unsigned enable : 1; // Bit 15: enables/disables control loop execution
     } __attribute__((packed))bits;    // Controller status bitfield for direct bit access
     volatile uint16_t value;          // Controller status full register access

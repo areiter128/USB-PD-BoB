@@ -1,8 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.0.61
+;  SDK Version: z-Domain Control Loop Designer v0.9.0.70
+;  AGS Version: Assembly Generator Script v1.2.1 (10/18/19)
 ;  Author:      M91406
-;  Date/Time:   10/11/2019 2:32:55 AM
+;  Date/Time:   10/23/2019 1:15:54 PM
 ; **********************************************************************************
 ;  2P2Z Control Library File (Dual Bitshift-Scaliing Mode)
 ; **********************************************************************************
@@ -18,9 +19,10 @@
 	
 ;------------------------------------------------------------------------------
 ; Define status flags bit positions
-	.equ NPMZ16_STATUS_ENABLE,      15    ; bit position of the ENABLE bit
-	.equ NPMZ16_STATUS_USAT,        1    ; bit position of the UPPER_SATURATION_FLAG_BIT
-	.equ NPMZ16_STATUS_LSAT,        0    ; bit position of the LOWER_SATURATION_FLAG_BIT
+	.equ NPMZ16_STATUS_ENABLE,       15    ; bit position of the ENABLE control bit
+	.equ NPMZ16_STATUS_INVERT_INPUT, 14    ; bit position of the INVERT_INPUT control bit
+	.equ NPMZ16_STATUS_USAT,         1    ; bit position of the UPPER_SATURATION_FLAG status bit
+	.equ NPMZ16_STATUS_LSAT,         0    ; bit position of the LOWER_SATURATION_FLAG status bit
 	
 ;------------------------------------------------------------------------------
 ; Address offset declarations for data structure addressing
@@ -105,10 +107,10 @@ _cha_iloop_Update:    ; provide global scope to routine
 ; Read data from input source and calculate error input to transfer function
 	mov [w0 + #offSourceRegister], w2    ; load pointer to input source register
 	mov [w2], w1    ; move value from input source into working register
-	mov [w0 + #offInputOffset], w2    ; load input offset value into working register
-	subr w2, w1, w1    ; subtract offset from recent input value
 	mov [w0 + #offControlReference], w2    ; move pointer to control reference into working register
 	subr w1, [w2], w1    ; calculate error (= reference - input)
+	mov [w0 + #offInputOffset], w2    ; load input offset value into working register
+	add w1, w2, w1    ; add offset to error value
 	mov [w0 + #offPreShift], w2    ; move error input scaler into working register
 	sl w1, w2, w1    ; normalize error result to fractional number format
 	
@@ -158,7 +160,7 @@ _cha_iloop_Update:    ; provide global scope to routine
 	
 ; Check for lower limit violation
 	mov [w0 + #offMinOutput], w6    ; load lower limit value
-	cpsgt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output > upper limit)
+	cpsgt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output > lower limit)
 	bra CHA_ILOOP_CLAMP_MIN_OVERRIDE    ; jump to override label if control output < lower limit
 	bclr w12, #NPMZ16_STATUS_LSAT    ; clear lower limit saturation flag bit
 	bra CHA_ILOOP_CLAMP_MIN_EXIT    ; jump to exit

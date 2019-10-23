@@ -1,14 +1,15 @@
 [GUI]
 CreateDate=08/01/19 4:10:47 PM
-SaveDate=10/11/2019 2:33:22 AM
+SaveDate=10/23/2019 1:16:00 PM
 Name=z-Domain Control Loop Designer
-Version=0.9.0.61
+Version=0.9.0.70
 WindoWState=Maximized
 Top=-8
 Left=-8
 Height=1066
 Width=1936
-TabHeight=244
+TabHeight=284
+AGS Version=1.2.1
 [ControlSetup]
 ControlType=1
 ScalingMode=2
@@ -31,6 +32,7 @@ FrequencyZ5=50000
 InputDataResolution=12
 FixedPointErrorMsg=0.5
 FixedPointErrorWarning=0.1
+FeedbackRectification=0
 [AssemblyGenerator]
 UserPrefix1=cha_
 UserPrefix2=iloop
@@ -72,3 +74,7 @@ ADCLatency=310
 PWMFrequency=350
 PWMDutyCycle=30
 ControlLoopLatency=175
+[generator_history]
+count=3
+1=2019-10-22 22:48:57||M91406||Update of control loop code after introducting DCLD v0.9.0.70||1; 2; 12; 1.00; 0; 1; 0; 300k; 400; 140k; 150k; 125000; 125000; 125000; 4700; 2.5k; 40000; 50000; 50000
+active_item=0
