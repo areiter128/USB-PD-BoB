@@ -32,7 +32,6 @@
           <itemPath>../h/apl/resources/chb_iloop.h</itemPath>
           <itemPath>../h/apl/resources/chb_vloop.h</itemPath>
           <itemPath>../h/apl/resources/c4swbb_pconfig.h</itemPath>
-          <itemPath>../h/apl/resources/init_PWM.h</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../h/apl/tasks/task_Idle.h</itemPath>
