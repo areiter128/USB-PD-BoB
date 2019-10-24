@@ -1,8 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.0.61
+;  SDK Version: z-Domain Control Loop Designer v0.9.0.70
+;  AGS Version: Assembly Generator Script v1.2.1 (10/18/19)
 ;  Author:      M91406
-;  Date/Time:   10/11/2019 2:34:42 AM
+;  Date/Time:   10/23/2019 1:16:57 PM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Single Bitshift-Scaling Mode)
 ; **********************************************************************************
@@ -18,9 +19,10 @@
 	
 ;------------------------------------------------------------------------------
 ; Define status flags bit positions
-	.equ NPMZ16_STATUS_ENABLE,      15    ; bit position of the ENABLE bit
-	.equ NPMZ16_STATUS_USAT,        1    ; bit position of the UPPER_SATURATION_FLAG_BIT
-	.equ NPMZ16_STATUS_LSAT,        0    ; bit position of the LOWER_SATURATION_FLAG_BIT
+	.equ NPMZ16_STATUS_ENABLE,       15    ; bit position of the ENABLE control bit
+	.equ NPMZ16_STATUS_INVERT_INPUT, 14    ; bit position of the INVERT_INPUT control bit
+	.equ NPMZ16_STATUS_USAT,         1    ; bit position of the UPPER_SATURATION_FLAG status bit
+	.equ NPMZ16_STATUS_LSAT,         0    ; bit position of the LOWER_SATURATION_FLAG status bit
 	
 ;------------------------------------------------------------------------------
 ; Address offset declarations for data structure addressing
@@ -154,7 +156,7 @@ _chb_vloop_Update:    ; provide global scope to routine
 	
 ; Check for lower limit violation
 	mov [w0 + #offMinOutput], w6    ; load lower limit value
-	cpsgt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output > upper limit)
+	cpsgt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output > lower limit)
 	bra CHB_VLOOP_CLAMP_MIN_OVERRIDE    ; jump to override label if control output < lower limit
 	bclr w12, #NPMZ16_STATUS_LSAT    ; clear lower limit saturation flag bit
 	bra CHB_VLOOP_CLAMP_MIN_EXIT    ; jump to exit

@@ -1,5 +1,5 @@
 /* ***************************************************************************************
- * z-Domain Control Loop Designer Version 0.9.0.61.
+ * z-Domain Control Loop Designer Version 0.9.0.70.
  * ***************************************************************************************
  * 2p2z compensation filter coefficients derived for following operating conditions:
  * ***************************************************************************************
@@ -16,10 +16,15 @@
 
 /* ***************************************************************************************
  * Data Arrays:
- * The cNPNZ_t data structure contains a pointer to derived coefficients in X-space and
- * other pointers to controller and error history in Y-space.
- * This source file declares the default parameters of the z-domain compensation filter.
- * These declarations are made publicly accessible through defines in chb_iloop.h
+ * This source file declares the default parameters of the z-domain compensation filter.  
+ * The cNPNZ_t data structure contains two pointers to A- and B- coefficient arrays and   
+ * two pointers to control and error history arrays.                                      
+ * For optimized data procesing during DSP computations, these arrays must be located in  
+ * specific memory locations (X-space for coefficient arrays and Y-space for control and  
+ * error history arrays).  
+ * The following declarations are used to define the array data contents, their length    
+ * and memory location. These declarations are made publicly accessible through defines   
+ * in chb_iloop.h
  * ***************************************************************************************/
 
 	volatile CHB_ILOOP_CONTROL_LOOP_COEFFICIENTS_t __attribute__((space(xmemory), near)) chb_iloop_coefficients; // A/B-Coefficients 

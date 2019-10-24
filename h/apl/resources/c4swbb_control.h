@@ -131,6 +131,7 @@ typedef struct {
     volatile uint16_t reference; // Control loop reference variable
     volatile uint16_t minimum; // output voltage clamping value (minimum)
     volatile uint16_t maximum; // output voltage clamping value (maximum)
+    volatile uint16_t control_output; // capture variable for the common control output
 } C4SWBB_LOOP_SETTINGS_t; // User defined settings for control loops; 
 
 /*!C4SWBB_STARTUP_SETTINGS_t
@@ -190,6 +191,39 @@ typedef struct {
     volatile uint16_t adtr1_scale;  // ADC Trigger 1 Post-Scaler Selection
     volatile uint16_t adtr1_offset; // ADC Trigger 1 Offset Selection
 } C4SWBB_SWITCH_NODE_SETTINGS_t; // Switching signal timing settings
+
+typedef union {
+    struct {
+        volatile unsigned : 1; // Bit 0: reserved
+        volatile unsigned : 1; // Bit 1: reserved
+        volatile unsigned : 1; // Bit 2: reserved
+        volatile unsigned : 1; // Bit 3: reserved
+        volatile unsigned : 1; // Bit 4: reserved
+        volatile unsigned : 1; // Bit 5: reserved
+        volatile unsigned : 1; // Bit 6: reserved
+        volatile unsigned : 1; // Bit 7: reserved
+        volatile unsigned : 1; // Bit 8: reserved
+        volatile unsigned : 1; // Bit 9: reserved
+        volatile unsigned : 1; // Bit 11: reserved
+        volatile unsigned : 1; // Bit 11: reserved
+        volatile unsigned : 1; // Bit 12: reserved
+        volatile unsigned : 1; // Bit 13: reserved
+        volatile unsigned : 1; // Bit 14: reserved
+        volatile unsigned enable : 1; // Bit 15: enables/disables PWM distribution module execution
+    } __attribute__((packed))bits;    // PWM distribution module status bit-field for direct bit access
+    volatile uint16_t value;          // PWM distribution module status full register access
+} __attribute__((packed))PWM_DIST_STATUS_t; // PWM distribution module status data structure
+
+typedef struct {
+    volatile PWM_DIST_STATUS_t status;       // status word of the PWM distribution module
+    volatile uint16_t* ptr_source;   // pointer to source memory address
+	volatile uint16_t* ptr_targetA;  // pointer to target A memory address
+	volatile uint16_t* ptr_targetB;  // pointer to target B memory address
+	volatile uint16_t limitA_min;   // minimum value of target A
+	volatile uint16_t limitA_max;   // maximum value of target A
+	volatile uint16_t limitB_min;   // minimum value of target B
+	volatile uint16_t limitB_max;   // maximum value of target B
+} C4SWBB_PWM_DISTRIBUTION_t;
 
 /*!C4SWBB_FEEDBACK_t
  * ***************************************************************************************************
@@ -262,11 +296,12 @@ typedef struct {
     volatile C4SWBB_LOOP_SETTINGS_t i_loop; // Current loop control data structure
     volatile C4SWBB_LOOP_SETTINGS_t v_loop; // Voltage loop control data structure
     volatile C4SWBB_SWITCH_NODE_SETTINGS_t boost_leg; // Settings for 4-switch buck/boost converter boost leg
-    volatile C4SWBB_SWITCH_NODE_SETTINGS_t buck_leg;  // Settings for 4-switch buck/boost converter buck leg
+    volatile C4SWBB_SWITCH_NODE_SETTINGS_t buck_leg; // Settings for 4-switch buck/boost converter buck leg
+    volatile C4SWBB_PWM_DISTRIBUTION_t pwm_dist; // Data structure for the PWM distribution module
     volatile C4SWBB_STARTUP_SETTINGS_t soft_start; // Soft-Start settings
 } C4SWBB_PWRCTRL_t; // Settings, status and operating data of the power controller
 
-     
+
 /* **********************************************************************************************
  *  Code example of how to start/control the power controller in your code
  * 
@@ -338,6 +373,8 @@ extern volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_PWRCTRL_t* pInstance
 extern volatile uint16_t c4swbb_adc_module_initialize(void);
 extern volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_PWRCTRL_t* pInstance);
 extern volatile uint16_t c4swbb_adc_enable(void);
+
+extern void c4swbb_pwm_update(volatile C4SWBB_PWM_DISTRIBUTION_t* c4swbb_pwm);
 
 #endif	/* _APL_RESOURCES_SOFT_START_H_ */
 

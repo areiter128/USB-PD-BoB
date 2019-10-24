@@ -1,5 +1,5 @@
 /* ***************************************************************************************
- * z-Domain Control Loop Designer Version 0.9.0.61.
+ * z-Domain Control Loop Designer Version 0.9.0.70.
  * ***************************************************************************************
  * 3p3z compensation filter coefficients derived for following operating conditions:
  * ***************************************************************************************
@@ -23,15 +23,16 @@
 
 /* ***************************************************************************************
  * Data Arrays:
- * The cNPNZ_t data structure contains a pointer to derived coefficients in X-space and
- * other pointers to controller and error history in Y-space.
- * This header file holds public declarations for variables and arrays defined in 
+ * The cNPNZ_t data structure contains pointers to coefficient, control and error history 
+ * arrays. The pointer target objects (variables and arrays) are defined in               
  * chb_vloop.c
+ * This header file holds the public declarations for these variables and arrays.         
  * 
- * Type definition for A- and B- coefficient arrays and error- and control-history arrays, 
- * which are aligned in memory for optimized addressing during DSP computations.           
- * These data structures need to be placed in specific memory locations to allow direct    
- * X/Y-access from the DSP. (coefficients in x-space, histories in y-space)                
+ * Type definitions for A- and B- coefficient arrays as well as error- and control history
+ * arrays are aligned in memory using the 'packed' attribute for optimized addressing     
+ * during DSP computations. These aligned data structures need to be placed in specific   
+ * memory locations to allow direct X/Y-access from the DSP. This X/Y-memory placement is 
+ * covered by the declarations used in chb_vloop.c               
  * ***************************************************************************************/
 
 	typedef struct

@@ -73,23 +73,11 @@ volatile uint16_t exec_PowerControl(void) {
 volatile uint16_t init_PowerControl(void) {
 
     volatile uint16_t fres = 1;
-#ifdef __MA330048_P33CK_R30_USB_PD_BOB__
-ECP39_INIT_OUTPUT;
-ECP44_INIT_OUTPUT;
-#endif // __MA330048_P33CK_R30_USB_PD_BOB__
-//return(1);  
-//    init_pwm_module();
-//    init_pwm_buck();
-//    
-//    PG1DC = (SWITCHING_PERIOD >> 2);
-//    PG1TRIGA = (SWITCHING_PERIOD >> 1);
-//
-//    PG1CONLbits.ON = 1;
-//    PG1IOCONLbits.OVRENH = 0;
-//    PG1IOCONLbits.OVRENL = 0;
-//    PG1STATbits.UPDREQ = 1;
-//
-//return(1);
+
+#if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
+    ECP39_INIT_OUTPUT;
+    ECP44_INIT_OUTPUT;
+#endif
 
     // Initialize the 4-switch buck/boost power controller objects for USB port A and B
     fres &= init_USBport_1(); // Initialize complete configuration of USB Port 1 power controller
@@ -109,7 +97,7 @@ ECP44_INIT_OUTPUT;
     // ADC core configuration
     fres &= c4swbb_adc_module_initialize();
     
-//    // Initialize all ADC input channels of one power controller
+    // Initialize all ADC input channels of one power controller
     fres &= c4swbb_adc_inputs_initialize(&c4swbb_1);
     fres &= c4swbb_adc_inputs_initialize(&c4swbb_2);
 
@@ -269,9 +257,9 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.buck_leg.phase = 0; // Phase shift of converter #1 is ZERO
     c4swbb_1.buck_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
     c4swbb_1.buck_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
-    c4swbb_1.buck_leg.duty_ratio_init = PWM_DUTY_RATIO_MIN; // reset initial duty cycle
-    c4swbb_1.buck_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
-    c4swbb_1.buck_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
+    c4swbb_1.buck_leg.duty_ratio_init = DUTY_RATIO_INIT_BUCK_REG; // reset initial duty cycle
+    c4swbb_1.buck_leg.duty_ratio_min = DUTY_RATIO_MIN_BUCK_REG; // set minimum duty cycle
+    c4swbb_1.buck_leg.duty_ratio_max = DUTY_RATIO_MAX_BUCK_REG; // set maximum duty cycle
     c4swbb_1.buck_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     c4swbb_1.buck_leg.pwm_swap = false; // PWMxH and PWMxL are not swapped for buck converter operation
     c4swbb_1.buck_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
@@ -285,9 +273,9 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.boost_leg.phase = 0; // Phase shift of converter #1 is ZERO 
     c4swbb_1.boost_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
     c4swbb_1.boost_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
-    c4swbb_1.boost_leg.duty_ratio_init = PWM_DUTY_RATIO_MIN; // reset initial duty cycle
-    c4swbb_1.boost_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
-    c4swbb_1.boost_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
+    c4swbb_1.boost_leg.duty_ratio_init = DUTY_RATIO_INIT_BOOST_REG; // reset initial duty cycle
+    c4swbb_1.boost_leg.duty_ratio_min = DUTY_RATIO_MIN_BOOST_REG; // set minimum duty cycle
+    c4swbb_1.boost_leg.duty_ratio_max = DUTY_RATIO_MAX_BOOST_REG; // set maximum duty cycle
     c4swbb_1.boost_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     c4swbb_1.boost_leg.pwm_swap = true; // PWMxH and PWMxL are swapped for boost converter operation
     c4swbb_1.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
@@ -366,16 +354,15 @@ volatile uint16_t init_USBport_1(void) {
 
     // Initialize converter #1 current loop settings
     fres &= cha_iloop_Init(&cha_iloop);
-    
-    c4swbb_1.i_loop.minimum = DUTY_RATIO_MIN_REG;   // Minimum duty ratio is absolute clamping limit of current loop
-    c4swbb_1.i_loop.maximum = DUTY_RATIO_MAX_REG;   // Maximum duty ratio is absolute clamping limit of current loop
+    c4swbb_1.i_loop.minimum = DUTY_RATIO_MIN_BUCK_REG;   // Minimum duty ratio is absolute clamping limit of current loop
+    c4swbb_1.i_loop.maximum = (DUTY_RATIO_MAX_BUCK_REG + DUTY_RATIO_MAX_BOOST_REG);   // Maximum duty ratio is absolute clamping limit of current loop
     c4swbb_1.i_loop.feedback_offset = C4SWBB_IOUT_FEEDBACK_OFFSET;   // Current feedback signal offset
     c4swbb_1.i_loop.reference = IOUT_LCL_CLAMP; // Current loop reference value
     c4swbb_1.i_loop.trigger_offset = ADC_TRIG_OFFSET_IOUT; // Current sample ADC trigger offset (offset from 50% on-time)
     
     c4swbb_1.i_loop.controller = &cha_iloop;   // 4-Switch Buck/Boost converter voltage loop controller
     c4swbb_1.i_loop.controller->ptrSource = &FB_IOUT1_ADCBUF; // Set pointer to data input source
-    c4swbb_1.i_loop.controller->ptrTarget = &BUCKH1_PGx_DC; // Set pointer to data output target
+    c4swbb_1.i_loop.controller->ptrTarget = &c4swbb_2.i_loop.control_output; // &BUCKH1_PGx_DC; // Set pointer to data output target
     c4swbb_1.i_loop.controller->ptrControlReference = &c4swbb_1.i_loop.reference; // Set pointer to user reference
     c4swbb_1.i_loop.controller->MinOutput = c4swbb_1.i_loop.minimum; // Load user minimum value
     c4swbb_1.i_loop.controller->MaxOutput = c4swbb_1.i_loop.maximum; // Load user maximum value
@@ -390,6 +377,16 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.i_loop.ctrl_Reset = &cha_iloop_Reset;     // Function pointer to CONTROL RESET routine
     
     c4swbb_1.i_loop.ctrl_Reset(&cha_iloop); // Call RESET routine of voltage loop controller
+
+    // Initializing the 4-Switch Buck/Boost PWM distribution module data structure
+    c4swbb_1.pwm_dist.ptr_source = &c4swbb_1.i_loop.control_output; // Set pointer to controller output value buffer2.i_loop.control_output; // Set pointer to controller output value buffer
+    c4swbb_1.pwm_dist.ptr_targetA = &BUCKH1_PGx_DC;         // Target A for PWM distribution is buck-leg PWM output HIGH
+    c4swbb_1.pwm_dist.ptr_targetA = &BOOSTH1_PGx_DC;        // Target B for PWM distribution is boost-leg PWM output HIGH
+    c4swbb_1.pwm_dist.limitA_min = DUTY_RATIO_MIN_BUCK_REG; // Min clamping threshold of buck PWM
+    c4swbb_1.pwm_dist.limitA_max = DUTY_RATIO_MAX_BUCK_REG; // Max clamping threshold of buck PWM
+    c4swbb_1.pwm_dist.limitB_min = DUTY_RATIO_MIN_BOOST_REG; // Min clamping threshold of boost PWM
+    c4swbb_1.pwm_dist.limitB_max = DUTY_RATIO_MAX_BOOST_REG; // Max clamping threshold of boost PWM
+
     
     // Initialize USB Port #1 Soft Start Settings
     c4swbb_1.soft_start.pwr_on_delay = C4SWBB_PODLY;    // Power-On Delay
@@ -429,9 +426,9 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.buck_leg.phase = PWM_PHASE_SFT; // Phase shift of converter #2 is 180° (half of switching frequency)
     c4swbb_2.buck_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
     c4swbb_2.buck_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
-    c4swbb_2.buck_leg.duty_ratio_init = PWM_DUTY_RATIO_MIN; // reset initial duty cycle
-    c4swbb_2.buck_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
-    c4swbb_2.buck_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
+    c4swbb_2.buck_leg.duty_ratio_init = DUTY_RATIO_INIT_BUCK_REG; // reset initial duty cycle
+    c4swbb_2.buck_leg.duty_ratio_min = DUTY_RATIO_MIN_BUCK_REG; // set minimum duty cycle
+    c4swbb_2.buck_leg.duty_ratio_max = DUTY_RATIO_MAX_BUCK_REG; // set maximum duty cycle
     c4swbb_2.buck_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     c4swbb_2.buck_leg.pwm_swap = 0; // PWMxH and PWMxL are not swapped for buck converter operation
     c4swbb_2.buck_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
@@ -445,9 +442,9 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.boost_leg.phase = PWM_PHASE_SFT; // Phase shift of converter #2 is 180° (half of switching frequency
     c4swbb_2.boost_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
     c4swbb_2.boost_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
-    c4swbb_2.boost_leg.duty_ratio_init = PWM_DUTY_RATIO_MIN; // reset initial duty cycle
-    c4swbb_2.boost_leg.duty_ratio_min = PWM_DUTY_RATIO_MIN; // set minimum duty cycle
-    c4swbb_2.boost_leg.duty_ratio_max = PWM_DUTY_RATIO_MAX; // set maximum duty cycle
+    c4swbb_2.boost_leg.duty_ratio_init = DUTY_RATIO_INIT_BOOST_REG; // reset initial duty cycle
+    c4swbb_2.boost_leg.duty_ratio_min = DUTY_RATIO_MIN_BOOST_REG; // set minimum duty cycle
+    c4swbb_2.boost_leg.duty_ratio_max = DUTY_RATIO_MAX_BOOST_REG; // set maximum duty cycle
     c4swbb_2.boost_leg.leb_period = LEB_PERIOD; // set leading edge blanking period
     c4swbb_2.boost_leg.pwm_swap = 1; // PWMxH and PWMxL are swapped for boost converter operation
     c4swbb_2.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
@@ -527,15 +524,15 @@ volatile uint16_t init_USBport_2(void) {
     // Initialize converter #2 current loop settings
     fres &= cha_iloop_Init(&chb_iloop);
 
-    c4swbb_2.i_loop.minimum = DUTY_RATIO_MIN_REG;   // Minimum duty ratio is absolute clamping limit of current loop
-    c4swbb_2.i_loop.maximum = DUTY_RATIO_MAX_REG;   // Maximum duty ratio is absolute clamping limit of current loop
+    c4swbb_2.i_loop.minimum = DUTY_RATIO_MIN_BUCK_REG;   // Minimum duty ratio is absolute clamping limit of current loop
+    c4swbb_2.i_loop.maximum = (DUTY_RATIO_MAX_BUCK_REG + DUTY_RATIO_MAX_BOOST_REG);   // Maximum duty ratio is absolute clamping limit of current loop
     c4swbb_2.i_loop.feedback_offset = C4SWBB_IOUT_FEEDBACK_OFFSET;   // Current feedback signal offset
     c4swbb_2.i_loop.reference = IOUT_LCL_CLAMP; // Current loop reference value
     c4swbb_2.i_loop.trigger_offset = ADC_TRIG_OFFSET_IOUT; // Current sample ADC trigger offset (offset from 50% on-time)
     
     c4swbb_2.i_loop.controller = &chb_iloop;   // 4-Switch Buck/Boost converter voltage loop controller
     c4swbb_2.i_loop.controller->ptrSource = &FB_IOUT2_ADCBUF; // Set pointer to data input source
-    c4swbb_2.i_loop.controller->ptrTarget = &BUCKH2_PGx_DC; // Set pointer to data output target
+    c4swbb_2.i_loop.controller->ptrTarget = &c4swbb_2.i_loop.control_output; // &BUCKH2_PGx_DC; // Set pointer to data output target
     c4swbb_2.i_loop.controller->ptrControlReference = &c4swbb_2.i_loop.reference; // Set pointer to user reference
     c4swbb_2.i_loop.controller->MinOutput = c4swbb_2.i_loop.minimum; // Load user minimum value
     c4swbb_2.i_loop.controller->MaxOutput = c4swbb_2.i_loop.maximum; // Load user maximum value
@@ -550,6 +547,15 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.i_loop.ctrl_Reset = &chb_iloop_Reset;     // Function pointer to CONTROL RESET routine
     
     c4swbb_2.i_loop.ctrl_Reset(&chb_iloop); // Call RESET routine of voltage loop controller
+
+    // Initializing the 4-Switch Buck/Boost PWM distribution module data structure
+    c4swbb_2.pwm_dist.ptr_source = &c4swbb_2.i_loop.control_output; // Set pointer to controller output value buffer
+    c4swbb_2.pwm_dist.ptr_targetA = &BUCKH2_PGx_DC;         // Target A for PWM distribution is buck-leg PWM output HIGH
+    c4swbb_2.pwm_dist.ptr_targetA = &BOOSTH2_PGx_DC;        // Target B for PWM distribution is boost-leg PWM output HIGH
+    c4swbb_2.pwm_dist.limitA_min = DUTY_RATIO_MIN_BUCK_REG; // Min clamping threshold of buck PWM
+    c4swbb_2.pwm_dist.limitA_max = DUTY_RATIO_MAX_BUCK_REG; // Max clamping threshold of buck PWM
+    c4swbb_2.pwm_dist.limitB_min = DUTY_RATIO_MIN_BOOST_REG; // Min clamping threshold of boost PWM
+    c4swbb_2.pwm_dist.limitB_max = DUTY_RATIO_MAX_BOOST_REG; // Max clamping threshold of boost PWM
     
     // Initialize USB Port #1 Soft Start Settings
     c4swbb_2.soft_start.pwr_on_delay = C4SWBB_PODLY;    // Power-On Delay
@@ -586,10 +592,9 @@ volatile uint16_t init_USBport_2(void) {
 #if (FB_VOUT1_ENABLE)
 void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT1_ADC_Interrupt(void)
 {
-#ifdef __MA330048_P33CK_R30_USB_PD_BOB__    
+#if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
 ECP39_SET;
-#endif // __MA330048_P33CK_R30_USB_PD_BOB__
-Nop();
+#endif
 
     // Call control loop update
     cha_vloop_Update(&cha_vloop);
@@ -604,10 +609,9 @@ Nop();
     FB_VBAT_ADC_IF = 0;
     FB_VOUT1_ADC_IF = 0;  
     
-#ifdef __MA330048_P33CK_R30_USB_PD_BOB__
+#if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
     ECP39_CLEAR;
-#endif // __MA330048_P33CK_R30_USB_PD_BOB__
-Nop();
+#endif
 }
 #else
     #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #1"
@@ -635,11 +639,13 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #1"
 #endif
 {
-#ifdef __MA330048_P33CK_R30_USB_PD_BOB__    
+#if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
     ECP44_SET;
-#endif // __MA330048_P33CK_R30_USB_PD_BOB__
+#endif
+    
     // Call control loop update
     cha_iloop_Update(&cha_iloop);
+    c4swbb_pwm_update(&c4swbb_1.pwm_dist);
     
     // Capture additional analog inputs
     c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
@@ -655,9 +661,10 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     #else
     #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN SELECTED FOR USB PORT #2"
     #endif   
-#ifdef __MA330048_P33CK_R30_USB_PD_BOB__
+
+#if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
 ECP44_CLEAR;
-#endif // __MA330048_P33CK_R30_USB_PD_BOB__
+#endif
 }
 #else
     #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #1"
@@ -679,9 +686,10 @@ ECP44_CLEAR;
 #if (FB_VOUT2_ENABLE)
 void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT2_ADC_Interrupt(void)
 {
-#ifdef __MA330048_P33CK_R30_USB_PD_BOB__
+#if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
     ECP39_SET;
-#endif // __MA330048_P33CK_R30_USB_PD_BOB__
+#endif
+    
     // Call control loop update
     chb_vloop_Update(&chb_vloop);
     
@@ -692,10 +700,11 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT2_ADC_Interrupt(
     
     // Clear the interrupt flag 
     FB_VBAT_ADC_IF = 0;
-    FB_VOUT2_ADC_IF = 0;  
-#ifdef __MA330048_P33CK_R30_USB_PD_BOB__    
-ECP39_CLEAR;
-#endif // __MA330048_P33CK_R30_USB_PD_BOB__
+    FB_VOUT2_ADC_IF = 0; 
+    
+#if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
+    ECP39_CLEAR;
+#endif
 }
 #else
 //    #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #2"
@@ -722,9 +731,14 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
 #else
     #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #2"
 #endif
-{ECP44_SET;
+{
+#if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
+    ECP44_SET;
+#endif
+    
     // Call control loop update
     chb_iloop_Update(&chb_iloop);
+    c4swbb_pwm_update(&c4swbb_2.pwm_dist);
     
     // Capture additional analog inputs
     c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
@@ -740,7 +754,10 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     #else
     #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN SELECTED FOR USB PORT #2"
     #endif   
-ECP44_CLEAR;
+
+#if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
+    ECP44_CLEAR;
+#endif
 }
 #else
 //    #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #2"
