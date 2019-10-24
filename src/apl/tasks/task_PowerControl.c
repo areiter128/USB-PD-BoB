@@ -341,8 +341,6 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.controller->MinOutput = c4swbb_1.v_loop.minimum; // Load user minimum value
     c4swbb_1.v_loop.controller->MaxOutput = c4swbb_1.v_loop.maximum; // Load user maximum value
     c4swbb_1.v_loop.controller->InputOffset = c4swbb_1.v_loop.feedback_offset; // Load user feedback offset value
-    c4swbb_1.v_loop.controller->ADCTriggerOffset = c4swbb_1.v_loop.trigger_offset; // Load user trigger offset value
-    c4swbb_1.v_loop.controller->ptrADCTriggerRegister = &FB_VOUT1_PGxTRIGy; // Load pointer to ADC trigger register
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_1.v_loop.ctrl_Init = &cha_vloop_Init;        // Function pointer to CONTROL INIT routine
@@ -367,8 +365,6 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.i_loop.controller->MinOutput = c4swbb_1.i_loop.minimum; // Load user minimum value
     c4swbb_1.i_loop.controller->MaxOutput = c4swbb_1.i_loop.maximum; // Load user maximum value
     c4swbb_1.i_loop.controller->InputOffset = c4swbb_1.i_loop.feedback_offset; // Load user feedback offset value
-    c4swbb_1.i_loop.controller->ADCTriggerOffset = c4swbb_1.i_loop.trigger_offset; // Load user trigger offset value
-    c4swbb_1.i_loop.controller->ptrADCTriggerRegister = &FB_IOUT1_PGxTRIGy; // Load pointer to ADC trigger register
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_1.i_loop.ctrl_Init = &cha_iloop_Init;        // Function pointer to CONTROL INIT routine
@@ -386,7 +382,12 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.pwm_dist.limitA_max = DUTY_RATIO_MAX_BUCK_REG; // Max clamping threshold of buck PWM
     c4swbb_1.pwm_dist.limitB_min = DUTY_RATIO_MIN_BOOST_REG; // Min clamping threshold of boost PWM
     c4swbb_1.pwm_dist.limitB_max = DUTY_RATIO_MAX_BOOST_REG; // Max clamping threshold of boost PWM
-
+    c4swbb_1.pwm_dist.ptr_adc_trigA = &FB_IOUT1_PGxTRIGy;    // Load pointer to ADC trigger A register (current trigger)
+    c4swbb_1.pwm_dist.adc_trigA_offset = c4swbb_1.i_loop.trigger_offset;    // Set ADC trigger A offset value (current trigger)
+    c4swbb_1.pwm_dist.ptr_adc_trigB = &FB_VOUT1_PGxTRIGy;   // Load pointer to ADC trigger B register (voltage trigger)
+    c4swbb_1.pwm_dist.adc_trigB_offset = c4swbb_1.v_loop.trigger_offset;   // Set ADC trigger B offset value (voltage trigger)
+    c4swbb_1.pwm_dist.status.bits.trigA_placement_enable = true; // Allow the PWM distribution module to auto-position the rigger of buck leg
+    c4swbb_1.pwm_dist.status.bits.trigB_placement_enable = true; // Allow the PWM distribution module to auto-position the rigger of boost leg
     
     // Initialize USB Port #1 Soft Start Settings
     c4swbb_1.soft_start.pwr_on_delay = C4SWBB_PODLY;    // Power-On Delay
@@ -510,8 +511,6 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.v_loop.controller->MinOutput = c4swbb_2.v_loop.minimum; // Load user minimum value
     c4swbb_2.v_loop.controller->MaxOutput = c4swbb_2.v_loop.maximum; // Load user maximum value
     c4swbb_2.v_loop.controller->InputOffset = c4swbb_2.v_loop.feedback_offset; // Load user feedback offset value
-    c4swbb_2.v_loop.controller->ADCTriggerOffset = c4swbb_2.v_loop.trigger_offset; // Load user trigger offset value
-    c4swbb_2.v_loop.controller->ptrADCTriggerRegister = &FB_VOUT2_PGxTRIGy; // Load pointer to ADC trigger register
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_2.v_loop.ctrl_Init = &chb_vloop_Init;        // Function pointer to CONTROL INIT routine
@@ -537,8 +536,6 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.i_loop.controller->MinOutput = c4swbb_2.i_loop.minimum; // Load user minimum value
     c4swbb_2.i_loop.controller->MaxOutput = c4swbb_2.i_loop.maximum; // Load user maximum value
     c4swbb_2.i_loop.controller->InputOffset = c4swbb_2.i_loop.feedback_offset; // Load user feedback offset value
-    c4swbb_2.i_loop.controller->ADCTriggerOffset = c4swbb_2.i_loop.trigger_offset; // Load user trigger offset value
-    c4swbb_2.i_loop.controller->ptrADCTriggerRegister = &FB_IOUT2_PGxTRIGy; // Load pointer to ADC trigger register
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_2.i_loop.ctrl_Init = &chb_iloop_Init;        // Function pointer to CONTROL INIT routine
@@ -556,6 +553,12 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.pwm_dist.limitA_max = DUTY_RATIO_MAX_BUCK_REG; // Max clamping threshold of buck PWM
     c4swbb_2.pwm_dist.limitB_min = DUTY_RATIO_MIN_BOOST_REG; // Min clamping threshold of boost PWM
     c4swbb_2.pwm_dist.limitB_max = DUTY_RATIO_MAX_BOOST_REG; // Max clamping threshold of boost PWM
+    c4swbb_2.pwm_dist.ptr_adc_trigA = &FB_IOUT2_PGxTRIGy;    // Load pointer to ADC trigger A register (current trigger)
+    c4swbb_2.pwm_dist.adc_trigA_offset = c4swbb_2.i_loop.trigger_offset;    // Set ADC trigger A offset value (current trigger)
+    c4swbb_2.pwm_dist.ptr_adc_trigB = &FB_VOUT2_PGxTRIGy;   // Load pointer to ADC trigger B register (voltage trigger)
+    c4swbb_2.pwm_dist.adc_trigB_offset = c4swbb_2.v_loop.trigger_offset;   // Set ADC trigger B offset value (voltage trigger)
+    c4swbb_2.pwm_dist.status.bits.trigA_placement_enable = true; // Allow the PWM distribution module to auto-position the rigger of buck leg
+    c4swbb_2.pwm_dist.status.bits.trigB_placement_enable = true; // Allow the PWM distribution module to auto-position the rigger of boost leg
     
     // Initialize USB Port #1 Soft Start Settings
     c4swbb_2.soft_start.pwr_on_delay = C4SWBB_PODLY;    // Power-On Delay
