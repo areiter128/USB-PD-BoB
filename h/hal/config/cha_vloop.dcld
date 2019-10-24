@@ -1,6 +1,6 @@
 [GUI]
 CreateDate=08/01/19 4:10:00 PM
-SaveDate=10/23/2019 1:16:43 PM
+SaveDate=10/24/2019 12:58:32 PM
 Name=z-Domain Control Loop Designer
 Version=0.9.0.70
 WindoWState=Maximized
@@ -9,7 +9,7 @@ Left=-8
 Height=1066
 Width=1936
 TabHeight=284
-AGS Version=1.2.1
+AGS Version=1.2.2
 [ControlSetup]
 ControlType=2
 ScalingMode=0
@@ -47,7 +47,7 @@ ContextSavingCoreStatusRegister=0
 EnforceCoreConfiguration=1
 AddEnableDisableFeature=1
 AddErrorNormalization=1
-AddADCTriggerPlacement=1
+AddADCTriggerPlacement=0
 AddShadowCopyControlInput=0
 AddShadowCopyErrorInput=0
 AddShadowCopyControlOutput=0
@@ -75,6 +75,7 @@ PWMFrequency=250
 PWMDutyCycle=30
 ControlLoopLatency=175
 [generator_history]
-count=2
+count=3
 1=2019-10-22 22:49:56||M91406||Update of control loop code after introducting DCLD v0.9.0.70||2; 0; 12; 0.20; 1; 0; 0; 300k; 50; 110k; 150k; 125000; 125000; 125000; 2.1k; 4.0k; 40000; 50000; 50000
-active_item=0
+active_item=3
+3=2019-10-24 12:58:18||M91406||Removed trigger placement||2; 0; 12; 0.20; 1; 0; 0; 300k; 50; 110k; 150k; 125000; 125000; 125000; 2.1k; 4.0k; 40000; 50000; 50000

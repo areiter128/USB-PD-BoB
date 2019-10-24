@@ -19,7 +19,7 @@
  * This source file declares the default parameters of the z-domain compensation filter.  
  * The cNPNZ_t data structure contains two pointers to A- and B- coefficient arrays and   
  * two pointers to control and error history arrays.                                      
- * For optimized data procesing during DSP computations, these arrays must be located in  
+ * For optimized data processing during DSP computations, these arrays must be located in  
  * specific memory locations (X-space for coefficient arrays and Y-space for control and  
  * error history arrays).  
  * The following declarations are used to define the array data contents, their length    

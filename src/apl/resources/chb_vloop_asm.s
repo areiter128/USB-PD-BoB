@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
 ;  SDK Version: z-Domain Control Loop Designer v0.9.0.70
-;  AGS Version: Assembly Generator Script v1.2.1 (10/18/19)
+;  AGS Version: Assembly Generator Script v1.2.2 (10/22/19)
 ;  Author:      M91406
-;  Date/Time:   10/23/2019 1:16:57 PM
+;  Date/Time:   10/24/2019 1:00:23 PM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Single Bitshift-Scaling Mode)
 ; **********************************************************************************
@@ -26,14 +26,14 @@
 	
 ;------------------------------------------------------------------------------
 ; Address offset declarations for data structure addressing
-	.equ offStatus,                 0    ; status word at address-offset=0
-	.equ offSourceRegister,         2    ; pointer to source memory address=2
-	.equ offTargetRegister,         4    ; pointer to tasrget memory address=2
-	.equ offControlReference,       6    ; pointer to control reference memory address=2
-	.equ offACoefficients,          8    ; pointer to A-coefficients array start address=2
-	.equ offBCoefficients,          10    ; pointer to B-coefficients array start address=2
-	.equ offControlHistory,         12    ; pointer to control history array start address=2
-	.equ offErrorHistory,           14    ; pointer to error history array start address=2
+	.equ offStatus,                 0    ; status word at address-offset
+	.equ offSourceRegister,         2    ; pointer to source memory address
+	.equ offTargetRegister,         4    ; pointer to target memory address
+	.equ offControlReference,       6    ; pointer to control reference memory address
+	.equ offACoefficients,          8    ; pointer to A-coefficients array start address
+	.equ offBCoefficients,          10    ; pointer to B-coefficients array start address
+	.equ offControlHistory,         12    ; pointer to control history array start address
+	.equ offErrorHistory,           14    ; pointer to error history array start address
 	.equ offACoeffArraySize,        16    ; size of the A-coefficients array
 	.equ offBCoeffArraySize,        18    ; size of the B-coefficients array
 	.equ offCtrlHistArraySize,      20    ; size of the control history array
@@ -169,14 +169,6 @@ _chb_vloop_Update:    ; provide global scope to routine
 ; Write control output value to target
 	mov [w0 + #offTargetRegister], w8    ; move pointer to target in to working register
 	mov w4, [w8]    ; move control output into target address
-	
-;------------------------------------------------------------------------------
-; Update ADC trigger position
-	asr w4, #1, w6
-	mov [w0 + #offADCTriggerOffset], w8
-	add w6, w8, w6
-	mov [w0 + #offADCTriggerRegister], w8
-	mov w6, [w8]
 	
 ;------------------------------------------------------------------------------
 ; Load pointer to first element of control history array

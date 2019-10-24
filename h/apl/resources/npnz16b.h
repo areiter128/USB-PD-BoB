@@ -93,8 +93,10 @@ typedef struct {
     volatile int16_t MaxOutput; // Maximum output value used for clamping (R/W)
 
     // Voltage/Average Current Mode Control Trigger handling
-    volatile uint16_t* ptrADCTriggerRegister; // Pointer to ADC trigger register (e.g. TRIG1)
-    volatile uint16_t ADCTriggerOffset; // ADC trigger offset to compensate propagation delays 
+//    volatile uint16_t* ptrADCTriggerRegister; // Pointer to ADC trigger register (e.g. TRIG1)
+//    volatile uint16_t ADCTriggerOffset; // ADC trigger offset to compensate propagation delays 
+    volatile uint16_t reserved1;
+    volatile uint16_t reserved2;
     
 } __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object
 
