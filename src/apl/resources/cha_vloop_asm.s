@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
 ;  SDK Version: z-Domain Control Loop Designer v0.9.0.70
-;  AGS Version: Assembly Generator Script v1.2.2 (10/22/19)
-;  Author:      M91406
-;  Date/Time:   10/24/2019 12:58:17 PM
+;  AGS Version: Assembly Generator Script v1.2.1 (10/18/19)
+;  Author:      C14220
+;  Date/Time:   10/24/2019 1:12:44 PM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Single Bitshift-Scaling Mode)
 ; **********************************************************************************
@@ -26,14 +26,14 @@
 	
 ;------------------------------------------------------------------------------
 ; Address offset declarations for data structure addressing
-	.equ offStatus,                 0    ; status word at address-offset
-	.equ offSourceRegister,         2    ; pointer to source memory address
-	.equ offTargetRegister,         4    ; pointer to target memory address
-	.equ offControlReference,       6    ; pointer to control reference memory address
-	.equ offACoefficients,          8    ; pointer to A-coefficients array start address
-	.equ offBCoefficients,          10    ; pointer to B-coefficients array start address
-	.equ offControlHistory,         12    ; pointer to control history array start address
-	.equ offErrorHistory,           14    ; pointer to error history array start address
+	.equ offStatus,                 0    ; status word at address-offset=0
+	.equ offSourceRegister,         2    ; pointer to source memory address=2
+	.equ offTargetRegister,         4    ; pointer to tasrget memory address=2
+	.equ offControlReference,       6    ; pointer to control reference memory address=2
+	.equ offACoefficients,          8    ; pointer to A-coefficients array start address=2
+	.equ offBCoefficients,          10    ; pointer to B-coefficients array start address=2
+	.equ offControlHistory,         12    ; pointer to control history array start address=2
+	.equ offErrorHistory,           14    ; pointer to error history array start address=2
 	.equ offACoeffArraySize,        16    ; size of the A-coefficients array
 	.equ offBCoeffArraySize,        18    ; size of the B-coefficients array
 	.equ offCtrlHistArraySize,      20    ; size of the control history array

@@ -126,10 +126,15 @@ volatile uint16_t init_PowerControl(void) {
     PG7DC = 3000;
     PG7TRIGA = 1000;
     
+    
+ 
     PG1STATbits.UPDREQ = 1;
     PG2STATbits.UPDREQ = 1;
     PG5STATbits.UPDREQ = 1;
     PG7STATbits.UPDREQ = 1;
+    
+ //   c4swbb_1.status.bits.autorun = 1;
+ //   c4swbb_2.status.bits.autorun = 1;   
     
     Nop();
     

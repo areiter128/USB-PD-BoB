@@ -5,21 +5,21 @@
  * ***************************************************************************************
  *
  * 	Controller Type:	3P3Z - Basic Voltage Mode Compensator
- * 	Sampling Frequency:	300000 Hz 
+ * 	Sampling Frequency:	350000 Hz 
  * 	Fixed Point Format:	15
  * 	Scaling Mode:		1 - Single Bit-Shift Scaling
  * 	Input Gain:			0.2
  * 
  * ***************************************************************************************/
 
-#include "apl/resources/chb_vloop.h"
+#include "../h/apl/resources/chb_vloop.h"
 
 /* ***************************************************************************************
  * Data Arrays:
  * This source file declares the default parameters of the z-domain compensation filter.  
  * The cNPNZ_t data structure contains two pointers to A- and B- coefficient arrays and   
  * two pointers to control and error history arrays.                                      
- * For optimized data processing during DSP computations, these arrays must be located in  
+ * For optimized data procesing during DSP computations, these arrays must be located in  
  * specific memory locations (X-space for coefficient arrays and Y-space for control and  
  * error history arrays).  
  * The following declarations are used to define the array data contents, their length    
@@ -51,17 +51,17 @@
 
 	volatile fractional chb_vloop_ACoefficients [3] = 
 	{
-		0x5A8C,	// Coefficient A1 will be multiplied with controller output u(n-1)
-		0x2374,	// Coefficient A2 will be multiplied with controller output u(n-2)
-		0x0202	// Coefficient A3 will be multiplied with controller output u(n-3)
+		0x6DEB,	// Coefficient A1 will be multiplied with controller output u(n-1)
+		0x1234,	// Coefficient A2 will be multiplied with controller output u(n-2)
+		0xFFE2	// Coefficient A3 will be multiplied with controller output u(n-3)
 	};
 
 	volatile fractional chb_vloop_BCoefficients [4] = 
 	{
-		0x7EB2,	// Coefficient B0 will be multiplied with error input e(n)
-		0x90F2,	// Coefficient B1 will be multiplied with error input e(n-1)
-		0x81BF,	// Coefficient B2 will be multiplied with error input e(n-2)
-		0x6F7F	// Coefficient B3 will be multiplied with error input e(n-3)
+		0x7FB4,	// Coefficient B0 will be multiplied with error input e(n)
+		0x8DE1,	// Coefficient B1 will be multiplied with error input e(n-1)
+		0x80A1,	// Coefficient B2 will be multiplied with error input e(n-2)
+		0x7274	// Coefficient B3 will be multiplied with error input e(n-3)
 	};
 
 

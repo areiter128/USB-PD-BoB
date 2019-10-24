@@ -139,10 +139,6 @@
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
-      <itemPath>../h/hal/config/cha_iloop.dcld</itemPath>
-      <itemPath>../h/hal/config/cha_vloop.dcld</itemPath>
-      <itemPath>../h/hal/config/chb_iloop.dcld</itemPath>
-      <itemPath>../h/hal/config/chb_vloop.dcld</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceFolderFilter></sourceFolderFilter>
