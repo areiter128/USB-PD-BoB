@@ -80,7 +80,7 @@ _c4swbb_pwm_update:    ; provide global scope to routine
     mov [w0 + offMaxLimitB], w4     ; move maximum data limit of target B into wreg
     
     ; Clamp buck leg duty cycle to specified limits
-	cpslt w8, w2                    ; compare values and skip next instruction if source is within buck leg duty cycle range (source < upper buck limit)
+    cpslt w8, w2                    ; compare values and skip next instruction if source is within buck leg duty cycle range (source < upper buck limit)
     mov w2, w8                      ; overwrite target A value with buck leg maximum
     cpsgt w8, w1                    ; compare values and skip next instruction if source is within buck leg duty cycle range (source > lower buck limit)
     mov w1, w8                      ; overwrite target A value with buck leg minimum
