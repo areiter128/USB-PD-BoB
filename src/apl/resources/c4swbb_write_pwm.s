@@ -76,7 +76,7 @@ _c4swbb_pwm_update:    ; provide global scope to routine
 
     mov [w0 + offMinLimitA], w1     ; move minimum data limit of target A into wreg
     mov [w0 + offMaxLimitA], w2     ; move maximum data limit of target A into wreg
-    mov [w0 + offMinLimitB], w3     ; move minimum data limit of target A into wreg
+    mov [w0 + offMinLimitB], w3     ; move minimum data limit of target B into wreg
     mov [w0 + offMaxLimitB], w4     ; move maximum data limit of target B into wreg
     
     ; Clamp buck leg duty cycle to specified limits
