@@ -385,7 +385,7 @@ volatile uint16_t init_USBport_1(void) {
     // Initializing the 4-Switch Buck/Boost PWM distribution module data structure
     c4swbb_1.pwm_dist.ptr_source = &c4swbb_1.i_loop.control_output; // Set pointer to controller output value buffer2.i_loop.control_output; // Set pointer to controller output value buffer
     c4swbb_1.pwm_dist.ptr_targetA = &BUCKH1_PGx_DC;         // Target A for PWM distribution is buck-leg PWM output HIGH
-    c4swbb_1.pwm_dist.ptr_targetA = &BOOSTH1_PGx_DC;        // Target B for PWM distribution is boost-leg PWM output HIGH
+    c4swbb_1.pwm_dist.ptr_targetB = &BOOSTH1_PGx_DC;        // Target B for PWM distribution is boost-leg PWM output HIGH
     c4swbb_1.pwm_dist.limitA_min = DUTY_RATIO_MIN_BUCK_REG; // Min clamping threshold of buck PWM
     c4swbb_1.pwm_dist.limitA_max = DUTY_RATIO_MAX_BUCK_REG; // Max clamping threshold of buck PWM
     c4swbb_1.pwm_dist.limitB_min = DUTY_RATIO_MIN_BOOST_REG; // Min clamping threshold of boost PWM
@@ -560,7 +560,7 @@ volatile uint16_t init_USBport_2(void) {
     // Initializing the 4-Switch Buck/Boost PWM distribution module data structure
     c4swbb_2.pwm_dist.ptr_source = &c4swbb_2.i_loop.control_output; // Set pointer to controller output value buffer
     c4swbb_2.pwm_dist.ptr_targetA = &BUCKH2_PGx_DC;         // Target A for PWM distribution is buck-leg PWM output HIGH
-    c4swbb_2.pwm_dist.ptr_targetA = &BOOSTH2_PGx_DC;        // Target B for PWM distribution is boost-leg PWM output HIGH
+    c4swbb_2.pwm_dist.ptr_targetB = &BOOSTH2_PGx_DC;        // Target B for PWM distribution is boost-leg PWM output HIGH
     c4swbb_2.pwm_dist.limitA_min = DUTY_RATIO_MIN_BUCK_REG; // Min clamping threshold of buck PWM
     c4swbb_2.pwm_dist.limitA_max = DUTY_RATIO_MAX_BUCK_REG; // Max clamping threshold of buck PWM
     c4swbb_2.pwm_dist.limitB_min = DUTY_RATIO_MIN_BOOST_REG; // Min clamping threshold of boost PWM
