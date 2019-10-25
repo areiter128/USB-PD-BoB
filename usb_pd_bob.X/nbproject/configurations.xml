@@ -139,6 +139,10 @@
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
+      <itemPath>cha_iloop.dcld</itemPath>
+      <itemPath>cha_vloop.dcld</itemPath>
+      <itemPath>chb_iloop.dcld</itemPath>
+      <itemPath>chb_vloop.dcld</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceFolderFilter></sourceFolderFilter>
@@ -168,10 +172,10 @@
     <conf name="00173_USB_PD_BOB_R20" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>dsPIC33CK64MP505</targetDevice>
+        <targetDevice>dsPIC33CK128MP505</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.41</languageToolchainVersion>
         <platform>3</platform>
@@ -483,6 +487,7 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
