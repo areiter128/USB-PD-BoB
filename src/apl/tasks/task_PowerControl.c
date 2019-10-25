@@ -110,32 +110,35 @@ volatile uint16_t init_PowerControl(void) {
     
     // Enable PWM module starting to trigger the ADC while outputs are 
     // still disabled
+  
     
     fres &= c4swbb_pwm_enable(&c4swbb_1);
     fres &= c4swbb_pwm_enable(&c4swbb_2);
     
+    
     fres &= c4swbb_pwm_release(&c4swbb_1);
     fres &= c4swbb_pwm_release(&c4swbb_2);
-
-    PG1DC = 3000;
+    /*
+    PG1DC = 3000;     //buck leg
     PG1TRIGA = 7000;
-    PG2DC = 3000;
+    PG2DC = 1000;     //boost leg
     PG2TRIGA = 1000;
-    PG5DC = 3000;
+    PG5DC = 3000;     //buck leg
     PG5TRIGA = 7000;
-    PG7DC = 3000;
+    PG7DC = 1000;     //boost leg
     PG7TRIGA = 1000;
-    
-    
- 
+    */
     PG1STATbits.UPDREQ = 1;
     PG2STATbits.UPDREQ = 1;
     PG5STATbits.UPDREQ = 1;
     PG7STATbits.UPDREQ = 1;
+   
     
- //   c4swbb_1.status.bits.autorun = 1;
- //   c4swbb_2.status.bits.autorun = 1;   
-    
+   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
+   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
+   
+   c4swbb_1.status.bits.autorun = 1;
+   c4swbb_2.status.bits.autorun = 1;  
     Nop();
     
     // return Success/Failure
@@ -394,6 +397,10 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.pwm_dist.status.bits.trigA_placement_enable = true; // Allow the PWM distribution module to auto-position the rigger of buck leg
     c4swbb_1.pwm_dist.status.bits.trigB_placement_enable = true; // Allow the PWM distribution module to auto-position the rigger of boost leg
     
+    //Added this to enable PWM distribution routine
+    c4swbb_1.pwm_dist.status.bits.enable = true;
+    
+    
     // Initialize USB Port #1 Soft Start Settings
     c4swbb_1.soft_start.pwr_on_delay = C4SWBB_PODLY;    // Power-On Delay
     c4swbb_1.soft_start.ramp_period = C4SWBB_RPER;      // Ramp-Up Period
@@ -565,6 +572,10 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.pwm_dist.status.bits.trigA_placement_enable = true; // Allow the PWM distribution module to auto-position the rigger of buck leg
     c4swbb_2.pwm_dist.status.bits.trigB_placement_enable = true; // Allow the PWM distribution module to auto-position the rigger of boost leg
     
+    //Added this to enable PWM distribution routine
+    c4swbb_2.pwm_dist.status.bits.enable = true;
+    
+    
     // Initialize USB Port #1 Soft Start Settings
     c4swbb_2.soft_start.pwr_on_delay = C4SWBB_PODLY;    // Power-On Delay
     c4swbb_2.soft_start.ramp_period = C4SWBB_RPER;      // Ramp-Up Period
@@ -579,9 +590,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.data.i_out = 0;    // Reset output current value
     c4swbb_2.data.v_out = 0;    // Reset output voltage value
     c4swbb_2.data.temp = 0;     // Reset converter temperature value
-    
-    return(fres);
-    
+    return(fres);   
 }
 
 /*!_FB_VOUT1_ADC_Interrupt
