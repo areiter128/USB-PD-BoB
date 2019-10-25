@@ -368,7 +368,7 @@ volatile uint16_t init_USBport_1(void) {
     
     c4swbb_1.i_loop.controller = &cha_iloop;   // 4-Switch Buck/Boost converter voltage loop controller
     c4swbb_1.i_loop.controller->ptrSource = &FB_IOUT1_ADCBUF; // Set pointer to data input source
-    c4swbb_1.i_loop.controller->ptrTarget = &c4swbb_2.i_loop.control_output; // &BUCKH1_PGx_DC; // Set pointer to data output target
+    c4swbb_1.i_loop.controller->ptrTarget = &c4swbb_1.i_loop.control_output; // &BUCKH1_PGx_DC; // Set pointer to data output target
     c4swbb_1.i_loop.controller->ptrControlReference = &c4swbb_1.i_loop.reference; // Set pointer to user reference
     c4swbb_1.i_loop.controller->MinOutput = c4swbb_1.i_loop.minimum; // Load user minimum value
     c4swbb_1.i_loop.controller->MaxOutput = c4swbb_1.i_loop.maximum; // Load user maximum value
