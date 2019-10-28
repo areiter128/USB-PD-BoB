@@ -5,14 +5,14 @@
  * ***************************************************************************************
  *
  * 	Controller Type:	2P2Z - Basic Current Mode Compensator
- * 	Sampling Frequency:	300000 Hz 
+ * 	Sampling Frequency:	350000 Hz 
  * 	Fixed Point Format:	15
  * 	Scaling Mode:		3 - Dual Bit-Shift Scaling
  * 	Input Gain:			1
  * 
  * ***************************************************************************************/
 
-#include "apl/resources/chb_iloop.h"
+#include "../h/apl/resources/chb_iloop.h"
 
 /* ***************************************************************************************
  * Data Arrays:
@@ -49,15 +49,15 @@
 
 	volatile fractional chb_iloop_ACoefficients [2] = 
 	{
-		0x67D0,	// Coefficient A1 will be multiplied with controller output u(n-1)
-		0x1831	// Coefficient A2 will be multiplied with controller output u(n-2)
+		0x7172,	// Coefficient A1 will be multiplied with controller output u(n-1)
+		0x0E8F	// Coefficient A2 will be multiplied with controller output u(n-2)
 	};
 
 	volatile fractional chb_iloop_BCoefficients [3] = 
 	{
-		0x6CB9,	// Coefficient B0 will be multiplied with error input e(n)
-		0x0A34,	// Coefficient B1 will be multiplied with error input e(n-1)
-		0x9D7B	// Coefficient B2 will be multiplied with error input e(n-2)
+		0x6528,	// Coefficient B0 will be multiplied with error input e(n)
+		0x0831,	// Coefficient B1 will be multiplied with error input e(n-1)
+		0xA309	// Coefficient B2 will be multiplied with error input e(n-2)
 	};
 
 

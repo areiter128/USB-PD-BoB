@@ -207,8 +207,8 @@ typedef union {
         volatile unsigned : 1; // Bit 11: reserved
         volatile unsigned : 1; // Bit 11: reserved
         volatile unsigned : 1; // Bit 12: reserved
-        volatile unsigned : 1; // Bit 13: reserved
-        volatile unsigned : 1; // Bit 14: reserved
+        volatile unsigned trigB_placement_enable: 1; // Bit 13: Control bit enabling/disabling the trigger B placement
+        volatile unsigned trigA_placement_enable: 1; // Bit 14: Control bit enabling/disabling the trigger A placement
         volatile unsigned enable : 1; // Bit 15: enables/disables PWM distribution module execution
     } __attribute__((packed))bits;    // PWM distribution module status bit-field for direct bit access
     volatile uint16_t value;          // PWM distribution module status full register access
@@ -223,6 +223,11 @@ typedef struct {
 	volatile uint16_t limitA_max;   // maximum value of target A
 	volatile uint16_t limitB_min;   // minimum value of target B
 	volatile uint16_t limitB_max;   // maximum value of target B
+    // Voltage/Average Current Mode Control Trigger handling
+    volatile uint16_t* ptr_adc_trigA; // Pointer to ADC trigger A register (e.g. PG1TRIGA)
+    volatile uint16_t adc_trigA_offset; // ADC trigger offset of trigger A to compensate propagation delays 
+    volatile uint16_t* ptr_adc_trigB; // Pointer to ADC trigger B register (e.g. PG5TRIGB)
+    volatile uint16_t adc_trigB_offset; // ADC trigger offset of trigger B to compensate propagation delays 
 } C4SWBB_PWM_DISTRIBUTION_t;
 
 /*!C4SWBB_FEEDBACK_t

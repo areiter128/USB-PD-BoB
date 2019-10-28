@@ -1,20 +1,20 @@
 [GUI]
 CreateDate=08/01/19 4:10:47 PM
-SaveDate=10/24/2019 12:57:50 PM
+SaveDate=10/24/2019 1:12:17 PM
 Name=z-Domain Control Loop Designer
 Version=0.9.0.70
 WindoWState=Maximized
 Top=-8
 Left=-8
-Height=1066
-Width=1936
+Height=876
+Width=1616
 TabHeight=284
-AGS Version=1.2.2
+AGS Version=1.2.1
 [ControlSetup]
 ControlType=1
 ScalingMode=2
 QFormat=1
-SamplingFrequency=300k
+SamplingFrequency=350k
 InputGain=1.00
 InputGainNormalization=0
 BiDirectionalFeedback=1
@@ -34,7 +34,7 @@ FixedPointErrorMsg=0.5
 FixedPointErrorWarning=0.1
 FeedbackRectification=0
 [AssemblyGenerator]
-UserPrefix1=cha_
+UserPrefix1=chb_
 UserPrefix2=iloop
 UseUserPrefix=1
 UseUserPrefixVar=1
@@ -61,10 +61,10 @@ ExportCSource=1
 ExportCHeader=1
 ExportCLib=1
 EnableOneClickExport=1
-ASMSourcePath=..\..\..\src\apl\resources\
-CSourcePath=..\..\..\src\apl\resources\
-CHeaderPath=..\..\apl\resources\
-CLibPath=..\..\apl\resources\
+ASMSourcePath=..\src\apl\resources\
+CSourcePath=..\src\apl\resources\
+CHeaderPath=..\h\apl\resources\
+CLibPath=..\h\apl\resources\
 IncludeCHeaderPathInCSource=1
 IncludeCLibPathInCHeader=1
 [TimingGraph]
@@ -76,6 +76,7 @@ PWMDutyCycle=30
 ControlLoopLatency=175
 [generator_history]
 count=4
-1=2019-10-22 22:48:57||M91406||Update of control loop code after introducting DCLD v0.9.0.70||1; 2; 12; 1.00; 0; 1; 0; 300k; 400; 140k; 150k; 125000; 125000; 125000; 4700; 2.5k; 40000; 50000; 50000
+1=2019-10-22 22:50:29||M91406||Update of control loop code after introducting DCLD v0.9.0.70||1; 2; 12; 1.00; 0; 1; 0; 300k; 400; 140k; 150k; 125000; 125000; 125000; 4700; 2.5k; 40000; 50000; 50000
 active_item=4
-4=2019-10-24 12:57:17||M91406||Removed ADC trigger placement||1; 2; 12; 1.00; 0; 1; 0; 300k; 400; 140k; 150k; 125000; 125000; 125000; 4700; 2.5k; 40000; 50000; 50000
+3=2019-10-24 12:59:39||M91406||Removed ADC trigger placement||1; 2; 12; 1.00; 0; 1; 0; 300k; 400; 140k; 150k; 125000; 125000; 125000; 4700; 2.5k; 40000; 50000; 50000
+4=2019-10-24 13:12:11||C14220||(Autosafe)||1; 2; 12; 1.00; 0; 1; 0; 350k; 400; 140k; 150k; 125000; 125000; 125000; 4700; 2.5k; 40000; 50000; 50000

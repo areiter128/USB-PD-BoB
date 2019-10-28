@@ -5,7 +5,7 @@
  * ***************************************************************************************
  *
  * 	Controller Type:	3P3Z - Basic Voltage Mode Compensator
- * 	Sampling Frequency:	300000 Hz 
+ * 	Sampling Frequency:	350000 Hz 
  * 	Fixed Point Format:	15
  * 	Scaling Mode:		1 - Single Bit-Shift Scaling
  * 	Input Gain:			0.2
@@ -19,7 +19,7 @@
 #include <dsp.h>
 #include <stdint.h>
 
-#include "apl/resources/npnz16b.h"
+#include "../h/apl/resources/npnz16b.h"
 
 /* ***************************************************************************************
  * Data Arrays:

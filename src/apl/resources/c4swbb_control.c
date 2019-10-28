@@ -15,6 +15,11 @@
 // (none)
 
 
+#define C4SWBB_VMC              0           // Flag for voltage mode control
+#define C4SWBB_ACMC             1           // Flag for average current mode control
+#define C4SWBB_CONTROL_MODE     C4SWBB_ACMC // Active control mode selection
+
+
 /*!exec_4SWBB_PowerController()
  * *****************************************************************************************************
  * Summary:
@@ -166,13 +171,15 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
             pInstance->status.bits.busy = true;
 
             // Hijack voltage loop controller reference
+            
+            
             #if (C4SWBB_CONTROL_MODE == C4SWBB_VMC)
             pInstance->soft_start.v_reference = 0; // Reset Soft-Start Voltage Reference
             #elif (C4SWBB_CONTROL_MODE == C4SWBB_ACMC)
             pInstance->soft_start.v_reference = 0; // Reset Soft-Start Voltage Reference
             pInstance->soft_start.i_reference = 0; // Reset Soft-Start Current Reference
             #endif
-            
+
             // Voltage loop reference is hijacked by the soft-start reference
             pInstance->v_loop.controller->ptrControlReference = &pInstance->soft_start.v_reference;
             

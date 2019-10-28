@@ -2,8 +2,8 @@
 ; **********************************************************************************
 ;  SDK Version: z-Domain Control Loop Designer v0.9.0.70
 ;  AGS Version: Assembly Generator Script v1.2.1 (10/18/19)
-;  Author:      M91406
-;  Date/Time:   10/23/2019 1:16:57 PM
+;  Author:      C14220
+;  Date/Time:   10/24/2019 1:10:41 PM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Single Bitshift-Scaling Mode)
 ; **********************************************************************************
@@ -169,14 +169,6 @@ _chb_vloop_Update:    ; provide global scope to routine
 ; Write control output value to target
 	mov [w0 + #offTargetRegister], w8    ; move pointer to target in to working register
 	mov w4, [w8]    ; move control output into target address
-	
-;------------------------------------------------------------------------------
-; Update ADC trigger position
-	asr w4, #1, w6
-	mov [w0 + #offADCTriggerOffset], w8
-	add w6, w8, w6
-	mov [w0 + #offADCTriggerRegister], w8
-	mov w6, [w8]
 	
 ;------------------------------------------------------------------------------
 ; Load pointer to first element of control history array

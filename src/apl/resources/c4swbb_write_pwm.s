@@ -21,6 +21,8 @@
 ;------------------------------------------------------------------------------
 ; Define status flags bit positions
 	.equ PWMDIST_STATUS_ENABLE,     15    ; bit position of the ENABLE control bit
+	.equ PWMDIST_TRIGA_ENABLE,      14    ; bit position of the ENABLE_TRIGA_PLACEMENT control bit
+	.equ PWMDIST_TRIGB_ENABLE,      13    ; bit position of the ENABLE_TRIGB_PLACEMENT control bit
 	
 ;------------------------------------------------------------------------------
 ; Address offset declarations for data structure addressing
@@ -32,7 +34,11 @@
 	.equ offMaxLimitA,              10   ; maximum value of target A
 	.equ offMinLimitB,              12   ; minimum value of target B
 	.equ offMaxLimitB,              14   ; maximum value of target B
-
+	.equ offPtrADCTrigRegA,         16    ; pointer to ADC trigger A register memory address
+	.equ offADCTrigOffsetA,         18    ; value of ADC trigger A offset
+	.equ offPtrADCTrigRegB,         20    ; pointer to ADC trigger B register memory address
+	.equ offADCTrigOffsetB,         22    ; value of ADC trigger B offset
+    
 ;------------------------------------------------------------------------------
 ;local inclusions.
 	.section .text    ; place code in the code section
@@ -70,11 +76,11 @@ _c4swbb_pwm_update:    ; provide global scope to routine
 
     mov [w0 + offMinLimitA], w1     ; move minimum data limit of target A into wreg
     mov [w0 + offMaxLimitA], w2     ; move maximum data limit of target A into wreg
-    mov [w0 + offMinLimitB], w3     ; move minimum data limit of target A into wreg
+    mov [w0 + offMinLimitB], w3     ; move minimum data limit of target B into wreg
     mov [w0 + offMaxLimitB], w4     ; move maximum data limit of target B into wreg
     
     ; Clamp buck leg duty cycle to specified limits
-	cpslt w8, w2                    ; compare values and skip next instruction if source is within buck leg duty cycle range (source < upper buck limit)
+    cpslt w8, w2                    ; compare values and skip next instruction if source is within buck leg duty cycle range (source < upper buck limit)
     mov w2, w8                      ; overwrite target A value with buck leg maximum
     cpsgt w8, w1                    ; compare values and skip next instruction if source is within buck leg duty cycle range (source > lower buck limit)
     mov w1, w8                      ; overwrite target A value with buck leg minimum
@@ -95,6 +101,32 @@ _c4swbb_pwm_update:    ; provide global scope to routine
     mov w8, [w1]                    ; write value to target A (buck PWM module)
     mov w9, [w2]                    ; write value to target B (boost PWM module)
 	
+    
+;------------------------------------------------------------------------------
+; Update ADC trigger A position
+	btss w12, #PWMDIST_TRIGA_ENABLE
+	bra C4SWBB_PWM_UPDATE_BYPASS
+    
+	asr w8, #1, w7
+	mov [w0 + #offADCTrigOffsetA], w8
+	add w7, w8, w7
+	mov [w0 + #offPtrADCTrigRegA], w8
+	mov w7, [w8]
+    
+    C4SWBB_TRIGA_UPDATE_BYPASS:
+;------------------------------------------------------------------------------
+; Update ADC trigger B position
+    
+    btss w12, #PWMDIST_TRIGB_ENABLE
+    bra C4SWBB_TRIGB_UPDATE_BYPASS
+    
+	asr w9, #1, w7
+	mov [w0 + #offADCTrigOffsetB], w9
+	add w7, w9, w7
+	mov [w0 + #offPtrADCTrigRegB], w9
+	mov w7, [w9]
+
+    C4SWBB_TRIGB_UPDATE_BYPASS:
 ;------------------------------------------------------------------------------
 ; Enable/Disable bypass branch target
 	C4SWBB_PWM_UPDATE_BYPASS:

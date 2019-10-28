@@ -213,10 +213,10 @@
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
-      <itemPath>../h/hal/config/cha_iloop.dcld</itemPath>
-      <itemPath>../h/hal/config/cha_vloop.dcld</itemPath>
-      <itemPath>../h/hal/config/chb_iloop.dcld</itemPath>
-      <itemPath>../h/hal/config/chb_vloop.dcld</itemPath>
+      <itemPath>cha_iloop.dcld</itemPath>
+      <itemPath>cha_vloop.dcld</itemPath>
+      <itemPath>chb_iloop.dcld</itemPath>
+      <itemPath>chb_vloop.dcld</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceFolderFilter></sourceFolderFilter>
@@ -366,9 +366,6 @@
         <property key="relax" value="false"/>
         <property key="warning-level" value="emit-warnings"/>
       </C30-AS>
-      <C30-CO>
-        <property key="coverage-enable" value=""/>
-      </C30-CO>
       <C30-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="boot-eeprom" value="no_eeprom"/>
@@ -565,6 +562,7 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
@@ -1335,9 +1333,6 @@
         <property key="relax" value="false"/>
         <property key="warning-level" value="emit-warnings"/>
       </C30-AS>
-      <C30-CO>
-        <property key="coverage-enable" value=""/>
-      </C30-CO>
       <C30-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="boot-eeprom" value="no_eeprom"/>
@@ -1428,13 +1423,13 @@
         <property key="MCCP/SCCP 7" value="true"/>
         <property key="MCCP/SCCP 8" value="true"/>
         <property key="MCCP/SCCP 9" value="true"/>
-        <property key="PG1" value="true"/>
-        <property key="PG2" value="true"/>
+        <property key="PG1" value="false"/>
+        <property key="PG2" value="false"/>
         <property key="PG3" value="true"/>
         <property key="PG4" value="true"/>
-        <property key="PG5" value="true"/>
+        <property key="PG5" value="false"/>
         <property key="PG6" value="true"/>
-        <property key="PG7" value="true"/>
+        <property key="PG7" value="false"/>
         <property key="PG8" value="true"/>
         <property key="PMP" value="true"/>
         <property key="PTGFRZ" value="true"/>
