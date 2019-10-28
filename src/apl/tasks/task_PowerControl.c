@@ -134,8 +134,8 @@ volatile uint16_t init_PowerControl(void) {
     PG7STATbits.UPDREQ = 1;
    
     
-   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_20V ;    // Set reference to 5V
-   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_20V ;    // Set reference to 5V
+   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_9V ;    // Set reference to 5V
+   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_9V ;    // Set reference to 5V
    
    c4swbb_1.status.bits.autorun = 1;
    c4swbb_2.status.bits.autorun = 0;  
