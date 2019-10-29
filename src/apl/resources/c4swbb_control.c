@@ -88,6 +88,12 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
             // Clear the BUSY bit
             pInstance->status.bits.busy = false; 
             
+            // Adding the following 2 lines allows successful contract negotiation. Also must prevent fault bit being set in default
+            // state. NEED TO FIGURE OUT WHY GETTING IN TO DEFAULT state.
+            
+            pInstance->v_loop.reference = 0;
+            pInstance->i_loop.reference = 0;
+            
             // If the power controller is enabled, the START command is received and no 
             // active fault condition is pending, enter soft-start process
             if( (pInstance->status.bits.enabled) && 
@@ -493,7 +499,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
             c4SWBB_shut_down(pInstance);
             
             pInstance->status.bits.busy = false; // Clear the BUSY bit indicating a delay/ramp period being executed
-            pInstance->status.bits.fault_active = true;
+//            pInstance->status.bits.fault_active = true;
             pInstance->status.bits.GO = false;
             pInstance->status.bits.op_status = CONVERTER_STATE_STANDBY;
             
