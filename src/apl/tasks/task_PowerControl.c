@@ -116,7 +116,7 @@ volatile uint16_t init_PowerControl(void) {
     //fres &= c4swbb_pwm_enable(&c4swbb_2);
     
     
-    fres &= c4swbb_pwm_release(&c4swbb_1);
+    //fres &= c4swbb_pwm_release(&c4swbb_1);
     //fres &= c4swbb_pwm_release(&c4swbb_2);
     /*
     PG1DC = 3000;     //buck leg
