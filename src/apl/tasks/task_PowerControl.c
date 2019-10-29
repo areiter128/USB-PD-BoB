@@ -113,11 +113,11 @@ volatile uint16_t init_PowerControl(void) {
   
     
     fres &= c4swbb_pwm_enable(&c4swbb_1);
-    fres &= c4swbb_pwm_enable(&c4swbb_2);
+    //fres &= c4swbb_pwm_enable(&c4swbb_2);
     
     
     fres &= c4swbb_pwm_release(&c4swbb_1);
-    fres &= c4swbb_pwm_release(&c4swbb_2);
+    //fres &= c4swbb_pwm_release(&c4swbb_2);
     /*
     PG1DC = 3000;     //buck leg
     PG1TRIGA = 7000;
@@ -128,17 +128,17 @@ volatile uint16_t init_PowerControl(void) {
     PG7DC = 1000;     //boost leg
     PG7TRIGA = 1000;
     */
-    PG1STATbits.UPDREQ = 1;
-    PG2STATbits.UPDREQ = 1;
-    PG5STATbits.UPDREQ = 1;
-    PG7STATbits.UPDREQ = 1;
+    //PG1STATbits.UPDREQ = 1;
+    //PG2STATbits.UPDREQ = 1;
+    //PG5STATbits.UPDREQ = 1;
+    //PG7STATbits.UPDREQ = 1;
    
     
-   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_9V ;    // Set reference to 5V
-   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_9V ;    // Set reference to 5V
+   //c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_9V ;    // Set reference to 5V
+   //c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_9V ;    // Set reference to 5V
    
-   c4swbb_1.status.bits.autorun = 1;
-   c4swbb_2.status.bits.autorun = 0;  
+   //c4swbb_1.status.bits.autorun = 1;
+   //c4swbb_2.status.bits.autorun = 0;  
     Nop();
     
     // return Success/Failure
