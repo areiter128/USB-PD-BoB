@@ -35,8 +35,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "_root/generic/os_Globals.h"       // Include OS header definitions
-#include "hal/hal.h"                        // Include hardware abstraction layer
 #include "apl/resources/c4swbb_pconfig.h"   // 4-Switch Buck/Boost Power Control Peripheral Configuration Header
 #include "apl/resources/npnz16b.h"          // Generic nPnZ control loop header file
 

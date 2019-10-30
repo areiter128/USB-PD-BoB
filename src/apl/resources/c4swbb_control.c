@@ -7,8 +7,10 @@
 
 
 #include <xc.h>
+#include "hal/hal.h"                        // Include hardware abstraction layer
 #include "mcal/mcal.h"                      // Microcontroller Abstraction Layer Header
 
+#include "_root/generic/os_Globals.h"       // Include OS header definitions
 #include "apl/resources/c4swbb_control.h"   // 4-Switch Buck/Boost Converter State Machine Header
 
 /* === private state machine counter variables ===================================================== */
@@ -22,7 +24,7 @@
 
 /* === private state machine function prototypes =================================================== */
 
-volatile uint16_t c4SWBB_TimingUpdate(volatile C4SWBB_PWRCTRL_t* pInstance);
+//volatile uint16_t c4SWBB_TimingUpdate(volatile C4SWBB_PWRCTRL_t* pInstance);
 
 /*!c4SWBB_TimingUpdate()
  * *****************************************************************************************************
@@ -120,7 +122,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
          * 
          * After these steps, the state machine will switch into state CONVERTER_STATE_RESUME
          */
-        case CONVERTER_STATE_RESET:
+//        case CONVERTER_STATE_RESET:
         case CONVERTER_STATE_INITIALIZE:
 
             // Set the BUSY bit indicating state machine is executing a control step
