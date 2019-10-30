@@ -27,19 +27,19 @@ volatile uint16_t c4SWBB_TimingUpdate(volatile C4SWBB_PWRCTRL_t* pInstance);
 /*!c4SWBB_TimingUpdate()
  * *****************************************************************************************************
  * Summary:
- * Executes the 4-Switch Buck Boost Power Controller state machine
+ * Calculates Software-Timer Thresholds of the 4-Switch Buck Boost Power Controller state machine
  *
  * Parameters: 
  * C4SWBB_POWER_CONTROLLER_t* pInstance     Instance of a 4-SW BB DC/DC converter object
  *
  * Description:
- * This routine executes the state machine, driving a 4-switch buck boost controller. This engine is 
- * completely self-sufficient in terms of tracking the converter progress during start up, shut down,
- * standby, fault or under normal operating conditions. 
- * 
- * At startup, the power controller initializes the required peripherals and basic power controller
- * state machine data structure including its voltage and current loop controllers. Once everything
- * is set up, the state machine drops into standby mode, waiting for being enabled.
+ * The task manager executes a list of declared functions with a delay of 100 usec. A task, which is
+ * listed with two other functions in the same list, the effective call rate would be 3x BASE CLOCK 
+ * (e.g. 3x 100 usec = 300 usec). When a task queue is switchted to a list containing five tasks, the
+ * effective call interval of one individual task would change to 5x BASE CLOCK (e.g. 5x 100 usec = 
+ * 500 usec). To make sure all internal state machine timings are kept constant and within the desired
+ * time frame, this routine is called every time the task manager sets the TASK_QUEUE_SWITCH status bit, 
+ * indicating that the most recent task queue has been changed. 
  * 
  * *****************************************************************************************************/
 
