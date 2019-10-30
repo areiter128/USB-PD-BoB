@@ -35,6 +35,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "_root/generic/os_Globals.h"       // Include OS header definitions
+#include "hal/hal.h"                        // Include hardware abstraction layer
 #include "apl/resources/c4swbb_pconfig.h"   // 4-Switch Buck/Boost Power Control Peripheral Configuration Header
 #include "apl/resources/npnz16b.h"          // Generic nPnZ control loop header file
 
@@ -102,7 +104,7 @@ typedef union {
         volatile C4SWBB_RAMP_DIRECTION_e tune_dir : 1; // Bit <12>: (read only) Flag indicating the direction of the tune-in ramp when the reference is changed (0=up or 1=down)
         volatile bool GO : 1; // Bit <13>: POWER SUPPLY START bit (will trigger startup procedure when set)
         volatile bool autorun : 1; // Bit <14>: Auto-Start will automatically enable the converter and set the GO bit when ready
-        volatile bool enabled : 1; // Bit <15>: Enable-bit (when disabled, power supply will reset in STANDBY mode)
+        volatile bool enable : 1; // Bit <15>: Enable-bit (when disabled, power supply will reset in STANDBY mode)
     } __attribute__((packed))bits; // data structure for single bit addressing operations
     volatile uint16_t value; // buffer for 16-bit word read/write operations
 } C4SWBB_STATUS_t; // Power converter operation status bits
@@ -149,12 +151,14 @@ typedef struct {
 
 typedef struct {
     volatile uint16_t counter; // Soft-Start Execution Counter (read only)
-    volatile uint16_t pwr_on_delay; // Soft-Start Power On Delay
+    volatile uint16_t pwr_on_delay; // Soft-Start POWER ON DELAY
+    volatile uint16_t pod_counter; // Soft-Start Execution POWER ON DELAY Counter (read only)
     volatile uint16_t precharge_delay; // Soft-Start Bootstrap Capacitor pre-charge delay
     volatile uint16_t ramp_period; // Soft-Start Ramp-Up Duration
     volatile uint16_t ramp_v_ref_increment; // Soft-Start Single Voltage Reference Increment per Step
     volatile uint16_t ramp_i_ref_increment; // Soft-Start Single Current Reference Increment per Step
-    volatile uint16_t pwr_good_delay; // Soft-Start Power Good Delay
+    volatile uint16_t pwr_good_delay; // Soft-Start POWER GOOD DELAY
+    volatile uint16_t pgd_counter; // Soft-Start Execution POWER GOOD DELAY Counter (read only)
     volatile uint16_t v_reference; // Soft-Start target voltage loop reference value (read only)
     volatile uint16_t i_reference; // Soft-Start target current loop reference value (read only)
     volatile uint16_t inrush_limit; // User defined setting of additional inrush current limit during startup 
