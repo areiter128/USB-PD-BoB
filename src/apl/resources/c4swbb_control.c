@@ -642,7 +642,7 @@ volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstan
     pInstance->status.bits.adc_active = false; // reset ADC_ACTIVE flag bit
     pInstance->status.bits.pwm_active = false; // reset PWM_ACTIVE flag bit
     pInstance->status.bits.tune_dir = 0; // reset voltage tune-in direction to UP
-    pInstance->status.bits.fault_active = false; // reset power controller global fault flag bit
+        pInstance->status.bits.fault_active = false; // reset power controller global fault flag bit
     pInstance->status.bits.GO = 0; // reset GO bit
     pInstance->status.bits.autorun = false; // clear AUTORUN bit
     pInstance->status.bits.enabled = false; // disable power controller
