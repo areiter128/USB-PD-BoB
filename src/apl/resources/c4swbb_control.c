@@ -481,7 +481,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
         case CONVERTER_STATE_COMPLETE:
 
             if(!pInstance->status.bits.autorun){
-                if(!pInstance->status.bits.enabled)
+                if(!pInstance->status.bits.enable)
                 { pInstance->status.bits.op_status = CONVERTER_STATE_RESET; } // Always Auto-Clear GO bit
             }
                 
@@ -686,7 +686,7 @@ volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstan
     pInstance->status.bits.fault_active = false; // reset power controller global fault flag bit
     pInstance->status.bits.GO = 0; // reset GO bit
     pInstance->status.bits.autorun = false; // clear AUTORUN bit
-    pInstance->status.bits.enabled = false; // disable power controller
+    pInstance->status.bits.enable = false; // disable power controller
     pInstance->status.bits.op_status = CONVERTER_STATE_INITIALIZE; // reset state machine
     
     return(1);
@@ -782,7 +782,7 @@ volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
     pInstance->status.bits.fault_active = false; // reset power controller global fault flag bit
     pInstance->status.bits.GO = 0; // reset GO bit
     pInstance->status.bits.autorun = false; // clear AUTORUN bit
-    pInstance->status.bits.enabled = false; // disable power controller
+    pInstance->status.bits.enable = false; // disable power controller
     pInstance->status.bits.op_status = CONVERTER_STATE_INITIALIZE; // reset state machine
     
     return(1);

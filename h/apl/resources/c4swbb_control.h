@@ -104,7 +104,7 @@ typedef union {
         volatile C4SWBB_RAMP_DIRECTION_e tune_dir : 1; // Bit <12>: (read only) Flag indicating the direction of the tune-in ramp when the reference is changed (0=up or 1=down)
         volatile bool GO : 1; // Bit <13>: POWER SUPPLY START bit (will trigger startup procedure when set)
         volatile bool autorun : 1; // Bit <14>: Auto-Start will automatically enable the converter and set the GO bit when ready
-        volatile bool enabled : 1; // Bit <15>: Enable-bit (when disabled, power supply will reset in STANDBY mode)
+        volatile bool enable : 1; // Bit <15>: Enable-bit (when disabled, power supply will reset in STANDBY mode)
     } __attribute__((packed))bits; // data structure for single bit addressing operations
     volatile uint16_t value; // buffer for 16-bit word read/write operations
 } C4SWBB_STATUS_t; // Power converter operation status bits
