@@ -14,11 +14,52 @@
 /* === private state machine counter variables ===================================================== */
 // (none)
 
-
+/* === private state machine defines =============================================================== */
+// (none)
 #define C4SWBB_VMC              0           // Flag for voltage mode control
 #define C4SWBB_ACMC             1           // Flag for average current mode control
 #define C4SWBB_CONTROL_MODE     C4SWBB_ACMC // Active control mode selection
 
+/* === private state machine function prototypes =================================================== */
+
+volatile uint16_t c4SWBB_TimingUpdate(volatile C4SWBB_PWRCTRL_t* pInstance);
+
+/*!c4SWBB_TimingUpdate()
+ * *****************************************************************************************************
+ * Summary:
+ * Executes the 4-Switch Buck Boost Power Controller state machine
+ *
+ * Parameters: 
+ * C4SWBB_POWER_CONTROLLER_t* pInstance     Instance of a 4-SW BB DC/DC converter object
+ *
+ * Description:
+ * This routine executes the state machine, driving a 4-switch buck boost controller. This engine is 
+ * completely self-sufficient in terms of tracking the converter progress during start up, shut down,
+ * standby, fault or under normal operating conditions. 
+ * 
+ * At startup, the power controller initializes the required peripherals and basic power controller
+ * state machine data structure including its voltage and current loop controllers. Once everything
+ * is set up, the state machine drops into standby mode, waiting for being enabled.
+ * 
+ * *****************************************************************************************************/
+
+volatile uint16_t c4SWBB_TimingUpdate(volatile C4SWBB_PWRCTRL_t* pInstance) {
+    
+    // Update Power On Delay
+    pInstance->soft_start.pwr_on_delay = 
+        (volatile uint16_t)(C4SWBB_PODLY / (task_mgr.task_queue_ubound + 1));
+    
+    // Update Power Good Delay
+    pInstance->soft_start.pwr_good_delay = 
+        (volatile uint16_t)(C4SWBB_PGDLY / (task_mgr.task_queue_ubound + 1));
+
+    // Update Ramp-Up Period
+    pInstance->soft_start.ramp_period = 
+        (volatile uint16_t)(C4SWBB_RPER / (task_mgr.task_queue_ubound + 1));
+
+    return(1);
+    
+}
 
 /*!exec_4SWBB_PowerController()
  * *****************************************************************************************************
