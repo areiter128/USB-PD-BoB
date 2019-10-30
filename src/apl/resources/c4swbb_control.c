@@ -155,10 +155,13 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
             pInstance->status.bits.busy = true;
             
             // delay startup until POWER ON DELAY has expired
-            if(pInstance->soft_start.counter++ > pInstance->soft_start.pwr_on_delay) {
+            if(pInstance->soft_start.pod_counter++ > pInstance->soft_start.pwr_on_delay) {
 
-                pInstance->soft_start.counter = 0;  // Reset soft-start counter
-                pInstance->status.bits.op_status = CONVERTER_STATE_BOOTSTRAP_PRECHARGE; // switch to soft-start phase BOOTSTRAP_PRECHARGE
+                // Set POWER ON DELAY counter to maximum to bypass this delay in future startups
+                pInstance->soft_start.pod_counter = (pInstance->soft_start.pwr_on_delay + 1);  
+                
+                // switch to soft-start phase BOOTSTRAP_PRECHARGE
+                pInstance->status.bits.op_status = CONVERTER_STATE_BOOTSTRAP_PRECHARGE; 
                 
             }
                 
@@ -439,9 +442,11 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
             pInstance->status.bits.busy = true;
             
             // Enforce POWER GOOD Delay
-            if(pInstance->soft_start.counter++ > pInstance->soft_start.pwr_good_delay) {
-                pInstance->status.bits.op_status = CONVERTER_STATE_COMPLETE;  // set startup process COMPLETE
-                pInstance->soft_start.counter = 0;  // reset startup counter
+            if(pInstance->soft_start.pgd_counter++ > pInstance->soft_start.pwr_good_delay) {
+                // Set POWER GOOD DELAY counter to maximum to effectively bypass this delay in future startups
+                pInstance->soft_start.pgd_counter = (pInstance->soft_start.pwr_good_delay + 1);  
+                // set startup process COMPLETE
+                pInstance->status.bits.op_status = CONVERTER_STATE_COMPLETE;  
             }
             Nop();
             break;
@@ -655,15 +660,16 @@ volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstan
     pInstance->i_loop.reference = 0; // Reset the control reference of the current control loop
     
     // Reset Startup Settings
-    pInstance->soft_start.pwr_good_delay = 0; // reset state machine
     pInstance->soft_start.counter = 0; // reset startup counter
     pInstance->soft_start.v_reference = 0;  // reset voltage tuning reference
     pInstance->soft_start.i_reference = 0;  // reset current tuning reference
     pInstance->soft_start.inrush_limit = 0; // reset soft-start inrush current limit
     pInstance->soft_start.pwr_on_delay = 0;  // set power-on delay
+    pInstance->soft_start.pod_counter = 0; // reset the POWER ON DELAY counter
     pInstance->soft_start.precharge_delay = 10;  // set pre-charge delay
     pInstance->soft_start.ramp_period = 0;  // set ramp up period
     pInstance->soft_start.pwr_good_delay = 0;  // set power good delay
+    pInstance->soft_start.pgd_counter = 0; // reset the POWER GOOD DELAY counter
     
     // Reset data buffers
     pInstance->data.v_in = 0;   // clear input voltage buffer
@@ -750,15 +756,16 @@ volatile uint16_t init_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
     pInstance->i_loop.reference = 0; // Reset the control reference of the current control loop
     
     // Reset Startup Settings
-    pInstance->soft_start.pwr_good_delay = 0; // reset state machine
     pInstance->soft_start.counter = 0; // reset startup counter
     pInstance->soft_start.v_reference = 0;  // reset voltage tuning reference
     pInstance->soft_start.i_reference = 0;  // reset current tuning reference
     pInstance->soft_start.inrush_limit = 0; // reset soft-start inrush current limit
     pInstance->soft_start.pwr_on_delay = 0;  // set power-on delay
+    pInstance->soft_start.pod_counter = 0;  // Reset POWER ON DELAY counter
     pInstance->soft_start.precharge_delay = 10;  // set pre-charge delay
     pInstance->soft_start.ramp_period = 0;  // set ramp up period
     pInstance->soft_start.pwr_good_delay = 0;  // set power good delay
+    pInstance->soft_start.pgd_counter = 0;  // Reset POWER GOOD DELAY counter
     
     // Reset data buffers
     pInstance->data.v_in = 0;   // clear input voltage buffer
