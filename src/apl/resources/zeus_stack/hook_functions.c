@@ -142,7 +142,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             //Drive 0V on VBUS line of "u8PortNum" Port
             p_port_instance->data.v_ref = C4SWBB_VOUT_REF_5V;
             p_port_instance->status.bits.autorun = false;
-            p_port_instance->status.bits.enabled = false;
+            p_port_instance->status.bits.enable = false;
             p_port_instance->status.bits.GO = 0;
             /* Clear the enable pin for the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_CLEAR);
@@ -154,7 +154,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             //Drive 5V on VBUS line of "u8PortNum" Port
             p_port_instance->data.v_ref = C4SWBB_VOUT_REF_5V;
             p_port_instance->status.bits.autorun = false;
-            p_port_instance->status.bits.enabled = true;
+            p_port_instance->status.bits.enable = true;
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
@@ -166,7 +166,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             //Drive 9V on VBUS line of "u8PortNum" Port
             p_port_instance->data.v_ref = C4SWBB_VOUT_REF_9V;
             p_port_instance->status.bits.autorun = false;
-            p_port_instance->status.bits.enabled = true;
+            p_port_instance->status.bits.enable = true;
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
@@ -178,7 +178,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             //Drive 15V on VBUS line of "u8PortNum" Port
             p_port_instance->data.v_ref = C4SWBB_VOUT_REF_15V;
             p_port_instance->status.bits.autorun = false;
-            p_port_instance->status.bits.enabled = true;
+            p_port_instance->status.bits.enable = true;
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
@@ -190,7 +190,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             //Drive 20V on VBUS line of "u8PortNum" Port
             p_port_instance->data.v_ref = C4SWBB_VOUT_REF_20V;
             p_port_instance->status.bits.autorun = false;
-            p_port_instance->status.bits.enabled = true;
+            p_port_instance->status.bits.enable = true;
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
