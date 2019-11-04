@@ -100,6 +100,10 @@ volatile uint16_t init_taskPDStack(void)
     // Set up the secondary UART for use by the PD stack
     DEBUG_init();
     
+    // Set RC2 as output for debugging
+    TRISCbits.TRISC2 = 0;
+    LATCbits.LATC2 = 0;
+    
     PD_Init();
     LOG_PRINT(LOG_INFO, "Init TASK PD Stack done\r\n");
 

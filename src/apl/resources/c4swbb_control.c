@@ -8,6 +8,7 @@
 
 #include <xc.h>
 #include "mcal/mcal.h"                      // Microcontroller Abstraction Layer Header
+#include "hal/config/syscfg_startup.h"
 
 #include "apl/resources/c4swbb_control.h"   // 4-Switch Buck/Boost Converter State Machine Header
 
@@ -15,9 +16,9 @@
 // (none)
 
 
-#define C4SWBB_VMC              0           // Flag for voltage mode control
-#define C4SWBB_ACMC             1           // Flag for average current mode control
-#define C4SWBB_CONTROL_MODE     C4SWBB_ACMC // Active control mode selection
+//#define C4SWBB_VMC              0           // Flag for voltage mode control
+//#define C4SWBB_ACMC             1           // Flag for average current mode control
+//#define C4SWBB_CONTROL_MODE     C4SWBB_ACMC // Active control mode selection
 
 
 /*!exec_4SWBB_PowerController()
@@ -73,7 +74,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
                 }
                
             }
-            
+    
             break;
 
         /*!CONVERTER_STATE_STANDBY
@@ -374,8 +375,9 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
 
             #if (C4SWBB_CONTROL_MODE == C4SWBB_ACMC)
             // increment current limit 
-            pInstance->v_loop.controller->MaxOutput += pInstance->soft_start.ramp_i_ref_increment; // Increment maximum current limit
-
+            //JMS pInstance->v_loop.controller->MaxOutput += pInstance->soft_start.ramp_i_ref_increment; // Increment maximum current limit
+            pInstance->v_loop.controller->MaxOutput = pInstance->i_loop.maximum;
+            
             // check if ramp is complete or can to be skipped
             if ( (pInstance->v_loop.controller->MaxOutput >= pInstance->i_loop.maximum) || // current ramp is complete
                 ((pInstance->data.v_out & 0x003F) == (pInstance->soft_start.v_reference & 0x003F)) ) // output voltage feedback signal is within ~50mV of regulation
@@ -399,7 +401,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
          * POWER GOOD delay has expired before the soft-start process is marked as 
          * CONVERTER_STATE_COMPLETE */
         case CONVERTER_STATE_POWER_GOOD:
-            
+
             // Set the BUSY bit indicating a delay/ramp period being executed
             pInstance->status.bits.busy = true;
             
