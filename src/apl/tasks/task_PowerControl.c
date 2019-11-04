@@ -382,7 +382,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.i_loop.ctrl_Precharge = &cha_iloop_Precharge; // Function pointer to CONTROL PRECHARGE routine
     c4swbb_1.i_loop.ctrl_Reset = &cha_iloop_Reset;     // Function pointer to CONTROL RESET routine
     
-    c4swbb_1.i_loop.ctrl_Reset(&cha_iloop); // Call RESET routine of voltage loop controller
+    c4swbb_1.i_loop.ctrl_Reset(&cha_iloop); // Call RESET routine of current loop controller
 
     // Initializing the 4-Switch Buck/Boost PWM distribution module data structure
     c4swbb_1.pwm_dist.ptr_source = &c4swbb_1.i_loop.control_output; // Set pointer to controller output value buffer2.i_loop.control_output; // Set pointer to controller output value buffer
@@ -508,7 +508,7 @@ volatile uint16_t init_USBport_2(void) {
     // Initialize converter #1 voltage loop controller settings
 
     // Initialize basic controller settings of voltage loop object
-    fres &= cha_vloop_Init(&chb_vloop);
+    fres &= chb_vloop_Init(&chb_vloop);
 
     // Hardware-specific voltage loop controller settings
     c4swbb_2.v_loop.minimum = IOUT_LCL_CLAMP;   // Minimum output value of voltage loop is absolute current limit
@@ -535,7 +535,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.v_loop.ctrl_Reset(&chb_vloop); // Call RESET routine of voltage loop controller
 
     // Initialize converter #2 current loop settings
-    fres &= cha_iloop_Init(&chb_iloop);
+    fres &= chb_iloop_Init(&chb_iloop);
 
     c4swbb_2.i_loop.minimum = DUTY_RATIO_MIN_BUCK_REG;   // Minimum duty ratio is absolute clamping limit of current loop
     c4swbb_2.i_loop.maximum = (DUTY_RATIO_MAX_BUCK_REG + DUTY_RATIO_MAX_BOOST_REG);   // Maximum duty ratio is absolute clamping limit of current loop
@@ -578,7 +578,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.pwm_dist.status.bits.enable = true;
     
     
-    // Initialize USB Port #1 Soft Start Settings
+    // Initialize USB Port #2 Soft Start Settings
     c4swbb_2.soft_start.pwr_on_delay = C4SWBB_PODLY;    // Power-On Delay
     c4swbb_2.soft_start.ramp_period = C4SWBB_RPER;      // Ramp-Up Period
     c4swbb_2.soft_start.pwr_good_delay = C4SWBB_PGDLY;  // Power-Good Delay
@@ -587,7 +587,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.soft_start.inrush_limit = IOUT_INRUSH_CLAMP; // Set soft-start inrush current limit
 
     
-    // Reset runtime data output of USB port #1
+    // Reset runtime data output of USB port #2
     c4swbb_2.data.v_in = 0;     // Reset input current value
     c4swbb_2.data.i_out = 0;    // Reset output current value
     c4swbb_2.data.v_out = 0;    // Reset output voltage value

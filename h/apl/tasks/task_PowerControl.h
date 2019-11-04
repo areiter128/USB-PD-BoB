@@ -57,14 +57,14 @@ extern "C" {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    extern volatile C4SWBB_PWRCTRL_t c4swbb_1;
-    extern volatile C4SWBB_PWRCTRL_t c4swbb_2;
+    extern volatile C4SWBB_PWRCTRL_t c4swbb_1; // USB PD Port A
+    extern volatile C4SWBB_PWRCTRL_t c4swbb_2; // USB PD Port B    
 
     // Public function prototypes
     extern volatile uint16_t init_PowerControl(void);
     extern volatile uint16_t exec_PowerControl(void);
     extern volatile uint16_t reset_PowerControl(void);
-    
+
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */
