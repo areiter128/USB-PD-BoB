@@ -363,7 +363,6 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
          * In average current mode the inner loop will limit the voltage as soon as the current 
          * reference limit is hit and the output is switched to constant current mode. */
         case CONVERTER_STATE_V_RAMP_UP:
-
             // Set the BUSY bit indicating a delay/ramp period being executed
             pInstance->status.bits.busy = true;
 
@@ -384,15 +383,13 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
             
             // When soft-start reference hits/exceeds user reference and output voltage feedback
             // signal is within ~50mV of regulation, end ramp
-            if ( (pInstance->soft_start.v_reference >= pInstance->v_loop.reference) &&              
-                 ((pInstance->data.v_out & 0x003F) == (pInstance->soft_start.v_reference & 0x003F)) )
+            if (pInstance->soft_start.v_reference >= pInstance->data.v_ref)
             {
-            
                 // Match voltage loop reference
-                pInstance->soft_start.v_reference = pInstance->v_loop.reference; 
+                pInstance->soft_start.v_reference = pInstance->data.v_ref; 
                 
                 // Re-assign controller voltage loop reference
-                pInstance->v_loop.controller->ptrControlReference = &pInstance->v_loop.reference;
+                pInstance->v_loop.controller->ptrControlReference = &pInstance->data.v_ref;
                 
                 // Switch soft-start phase
                 #if (C4SWBB_CONTROL_MODE == C4SWBB_VMC)
@@ -461,6 +458,9 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
             // increment current limit 
             pInstance->v_loop.controller->MaxOutput += pInstance->soft_start.ramp_i_ref_increment; // Increment maximum current limit
 
+            //This line of code bypasses the CONVERTER_STATE_I_RAMP_UP
+            pInstance->v_loop.controller->MaxOutput = pInstance->v_loop.maximum;
+            
             // check if ramp is complete or can to be skipped
             if ( (pInstance->v_loop.controller->MaxOutput >= pInstance->i_loop.maximum) || // current ramp is complete
                 ((pInstance->data.v_out & 0x003F) == (pInstance->soft_start.v_reference & 0x003F)) ) // output voltage feedback signal is within ~50mV of regulation
@@ -574,6 +574,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
 
             }
             
+            
             break;
 
         /*!State Machine Fall-Back 
@@ -591,8 +592,6 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
             
             break;
     }
-
-
     
     return(fres);
 }
