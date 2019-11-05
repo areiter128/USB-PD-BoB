@@ -42,7 +42,6 @@ volatile uint16_t exec_PowerControl(void) {
     // This test is for startup only. There is no hysteresis and no shut-down event
     // is triggered. This flag only provides an immediate indication. Power Supply
     // Over/Under Voltage Lock Out are taken care of by the fault handler.
-LATCbits.LATC2 = 1;
     
     if((C4SWBB_VIN_UVLO < c4swbb_1.data.v_in) && (c4swbb_1.data.v_in < C4SWBB_VIN_OVLO)) {
         c4swbb_1.status.bits.power_source_detected = true;
@@ -60,8 +59,6 @@ LATCbits.LATC2 = 1;
     Nop();
     Nop();
     Nop();
-    
-LATCbits.LATC2 = 0;
     
     return (fres);
 }

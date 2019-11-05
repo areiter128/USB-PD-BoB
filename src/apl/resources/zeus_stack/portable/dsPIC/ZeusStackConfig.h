@@ -2264,7 +2264,7 @@ Example:
 	#define CONFIG_PORT_n_SOURCE_NUM_OF_PDOS		4
 	</code> 
 **************************************************************************************************/
-#define CONFIG_PORT_0_SOURCE_NUM_OF_PDOS      2     
+#define CONFIG_PORT_0_SOURCE_NUM_OF_PDOS      4     
 
 /**************************************************************************************************
 	Description:
@@ -2910,7 +2910,7 @@ Example:
 #define CONFIG_PORT_1_POWER_ROLE                1
 #define CONFIG_PORT_1_DATA_ROLE                 1
 #define CONFIG_PORT_1_RP_CURRENT_VALUE          2        		            /* 0- RP_DISABLED(To be set for Sink), 1- DEFAULT_CURRENT ,2- CURRENT_15 ,3- CURRENT_30 */
-#define CONFIG_PORT_1_SOURCE_NUM_OF_PDOS        2      
+#define CONFIG_PORT_1_SOURCE_NUM_OF_PDOS        4      
 #define CONFIG_PORT_1_SOURCE_PDO_1_USB_COM      0
 #define CONFIG_PORT_1_SOURCE_PDO_1_CURRENT      3000
 #define CONFIG_PORT_1_SOURCE_PDO_1_VOLTAGE      5000  

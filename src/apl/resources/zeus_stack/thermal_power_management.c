@@ -71,7 +71,6 @@ uint8_t check_power_budget(uint8_t port_num, uint16_t max_current_requested, uin
     
     requested_port_power_mw = ((uint32_t)DPM_GET_VOLTAGE_FROM_PDO_MILLI_V(gasPortConfigurationData[port_num].u32PDO[pdo_requested-1]) *
                            (uint32_t) max_current_requested) / 100;
-    debug_uart_tx_flush();
     LOG_PRINT2(LOG_DEBUG, "CHECK_POWER: Port %d requested %ld mW\r\n", port_num, requested_port_power_mw);
             
     if ((used_power_mw + requested_port_power_mw) > (power_budget_watts * 1000))
