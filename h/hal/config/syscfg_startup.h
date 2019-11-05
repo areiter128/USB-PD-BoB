@@ -54,9 +54,9 @@
  * 
  * *************************************************************************************************/
 
-#define C4SWBB_POWER_ON_DELAY    5e-3      // power on delay in [sec]
-#define C4SWBB_RAMP_PERIOD       25e-3       // ramp period in [sec]
-#define C4SWBB_POWER_GOOD_DELAY  5e-3      // power good in [sec]
+#define C4SWBB_POWER_ON_DELAY    (float)(10.0e-3)      // power on delay in [sec]
+#define C4SWBB_RAMP_PERIOD       (float)(10.0e-3)       // ramp period in [sec]
+#define C4SWBB_POWER_GOOD_DELAY  (float)(100.0e-3)      // power good in [sec]
 
 #define C4SWBB_VMC              0           // Flag for voltage mode control
 #define C4SWBB_ACMC             1           // Flag for average current mode control
