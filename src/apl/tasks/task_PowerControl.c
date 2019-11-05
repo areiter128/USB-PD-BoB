@@ -116,8 +116,13 @@ volatile uint16_t init_PowerControl(void) {
     fres &= c4swbb_pwm_enable(&c4swbb_2);
     
     
-    fres &= c4swbb_pwm_release(&c4swbb_1);
-    fres &= c4swbb_pwm_release(&c4swbb_2);
+    c4swbb_1.status.bits.enable = true;
+    c4swbb_2.status.bits.enable = true;
+    
+    //fres &= c4swbb_pwm_release(&c4swbb_1);
+    //fres &= c4swbb_pwm_release(&c4swbb_2);
+    
+    TRISCbits.TRISC2 = 0;  //used for debug
     /*
     PG1DC = 3000;     //buck leg
     PG1TRIGA = 7000;
@@ -134,10 +139,10 @@ volatile uint16_t init_PowerControl(void) {
     PG7STATbits.UPDREQ = 1;
    
     
-   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_9V ;    // Set reference to 5V
-   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_9V ;    // Set reference to 5V
+   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
+   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
    
-   c4swbb_1.status.bits.autorun = 1;
+   c4swbb_1.status.bits.autorun = 0;
    c4swbb_2.status.bits.autorun = 0;  
     Nop();
     
