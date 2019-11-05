@@ -21,7 +21,7 @@
 #define C4SWBB_VMC              0           // Flag for voltage mode control
 #define C4SWBB_ACMC             1           // Flag for average current mode control
 #define C4SWBB_CONTROL_MODE     C4SWBB_ACMC // Active control mode selection
-
+ 
 /* === private state machine function prototypes =================================================== */
 
 //volatile uint16_t c4SWBB_TimingUpdate(volatile C4SWBB_PWRCTRL_t* pInstance);
@@ -147,9 +147,9 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
             pInstance->i_loop.ctrl_Reset(pInstance->i_loop.controller); // Reset inner current loop control histories
             
             // Reset all status bits 
-            pInstance->status.bits.power_source_detected = false;
-            pInstance->status.bits.pwm_active = false;
-            pInstance->status.bits.adc_active = false;
+            //pInstance->status.bits.power_source_detected = false;
+            //pInstance->status.bits.pwm_active = false;
+            //pInstance->status.bits.adc_active = false;
 
             // Switch to STANDBY mode
             pInstance->status.bits.op_status = CONVERTER_STATE_STANDBY;  
