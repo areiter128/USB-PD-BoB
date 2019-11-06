@@ -5,6 +5,8 @@
  * Created on May 27, 2019, 3:11 PM
  */
 
+#define CH2    //selects which channel RC2 is assigned to for ISR timing
+
 
 #include <xc.h>
 #include <stdint.h>
@@ -114,8 +116,8 @@ volatile uint16_t init_PowerControl(void) {
     fres &= c4swbb_pwm_enable(&c4swbb_1);
     //fres &= c4swbb_pwm_enable(&c4swbb_2);
     
-    
-    c4swbb_1.status.bits.enable = true;
+    PG2PHASE = 6000;
+    //c4swbb_1.status.bits.enable = true;
     c4swbb_2.status.bits.enable = true;
     
     //fres &= c4swbb_pwm_release(&c4swbb_1);
@@ -138,11 +140,11 @@ volatile uint16_t init_PowerControl(void) {
     //PG7STATbits.UPDREQ = 1;
    
     
-   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
-   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
+   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_9V ;    // Set reference to 5V
+   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_9V ;    // Set reference to 5V
    
    c4swbb_1.status.bits.autorun = 0;
-   c4swbb_2.status.bits.autorun = 0;  
+   c4swbb_2.status.bits.autorun = 1;  
     Nop();
     
     // return Success/Failure
@@ -440,7 +442,7 @@ volatile uint16_t init_USBport_2(void) {
     // Load PWM settings from hardware and microcontroller abstraction layers (HAL and MCAL)
     c4swbb_2.buck_leg.pwm_instance = BUCKH2_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_2.buck_leg.period = SWITCHING_PERIOD; // set switching period 
-    c4swbb_2.buck_leg.phase = PWM_PHASE_SFT; // Phase shift of converter #2 is 180° (half of switching frequency)
+    c4swbb_2.buck_leg.phase = 0;//PWM_PHASE_SFT; // Phase shift of converter #2 is 180° (half of switching frequency)
     c4swbb_2.buck_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
     c4swbb_2.buck_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
     c4swbb_2.buck_leg.duty_ratio_init = DUTY_RATIO_INIT_BUCK_REG; // reset initial duty cycle
@@ -456,7 +458,7 @@ volatile uint16_t init_USBport_2(void) {
 
     c4swbb_2.boost_leg.pwm_instance = BOOSTH2_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_2.boost_leg.period = SWITCHING_PERIOD; // set switching period 
-    c4swbb_2.boost_leg.phase = PWM_PHASE_SFT; // Phase shift of converter #2 is 180° (half of switching frequency
+    c4swbb_2.boost_leg.phase = 0; //PWM_PHASE_SFT; // Phase shift of converter #2 is 180° (half of switching frequency
     c4swbb_2.boost_leg.dead_time_rising = PWM_DEAD_TIME_LE;  // set half-bridge dead time at leading edge
     c4swbb_2.boost_leg.dead_time_falling = PWM_DEAD_TIME_FE; // set half-bridge dead time at falling edge
     c4swbb_2.boost_leg.duty_ratio_init = DUTY_RATIO_INIT_BOOST_REG; // reset initial duty cycle
@@ -573,8 +575,8 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.pwm_dist.adc_trigA_offset = c4swbb_2.i_loop.trigger_offset;    // Set ADC trigger A offset value (current trigger)
     c4swbb_2.pwm_dist.ptr_adc_trigB = &FB_VOUT2_PGxTRIGy;   // Load pointer to ADC trigger B register (voltage trigger)
     c4swbb_2.pwm_dist.adc_trigB_offset = c4swbb_2.v_loop.trigger_offset;   // Set ADC trigger B offset value (voltage trigger)
-    c4swbb_2.pwm_dist.status.bits.trigA_placement_enable = true; // Allow the PWM distribution module to auto-position the rigger of buck leg
-    c4swbb_2.pwm_dist.status.bits.trigB_placement_enable = true; // Allow the PWM distribution module to auto-position the rigger of boost leg
+    c4swbb_2.pwm_dist.status.bits.trigA_placement_enable = true; // Allow the PWM distribution module to auto-position the trigger of buck leg
+    c4swbb_2.pwm_dist.status.bits.trigB_placement_enable = true; // Allow the PWM distribution module to auto-position the trigger of boost leg
     
     //Added this to enable PWM distribution routine
     c4swbb_2.pwm_dist.status.bits.enable = true;
@@ -617,6 +619,10 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT1_ADC_Interrupt(
 ECP39_SET;
 #endif
 
+#if defined (CH1)
+//LATCbits.LATC2 = 1;
+#endif
+
     // Call control loop update
     cha_vloop_Update(&cha_vloop);
     
@@ -632,6 +638,9 @@ ECP39_SET;
     
 #if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
     ECP39_CLEAR;
+#endif
+#if defined (CH1)
+//LATCbits.LATC2 = 0;
 #endif
 }
 #else
@@ -664,6 +673,10 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     ECP44_SET;
 #endif
     
+#if defined (CH1)
+//LATCbits.LATC2 = 1;
+#endif
+
     // Call control loop update
     cha_iloop_Update(&cha_iloop);
     c4swbb_pwm_update(&c4swbb_1.pwm_dist);
@@ -686,6 +699,11 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
 #if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
 ECP44_CLEAR;
 #endif
+
+#if defined (CH1)
+//LATCbits.LATC2 = 0;
+#endif
+
 }
 #else
     #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #1"
@@ -711,6 +729,10 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT2_ADC_Interrupt(
     ECP39_SET;
 #endif
     
+#if defined (CH2)
+//LATCbits.LATC2 = 1;
+#endif
+
     // Call control loop update
     chb_vloop_Update(&chb_vloop);
     
@@ -726,6 +748,11 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT2_ADC_Interrupt(
 #if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
     ECP39_CLEAR;
 #endif
+    
+#if defined (CH2)
+//LATCbits.LATC2 = 0;
+#endif
+
 }
 #else
 //    #pragma message "WARNING: NO VOLTAGE FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #2"
@@ -757,8 +784,13 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     ECP44_SET;
 #endif
     
+#if defined (CH2)
+LATCbits.LATC2 = 1;
+#endif
+    
     // Call control loop update
     chb_iloop_Update(&chb_iloop);
+LATCbits.LATC2 = 0;    
     c4swbb_pwm_update(&c4swbb_2.pwm_dist);
     
     // Capture additional analog inputs
@@ -779,6 +811,11 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
 #if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
     ECP44_CLEAR;
 #endif
+    
+#if defined (CH2)
+//LATCbits.LATC2 = 0;
+#endif
+
 }
 #else
 //    #pragma message "WARNING: NO CURRENT FEEDBACK SIGNAL HAS BEEN ENABLED FOR USB PORT #2"

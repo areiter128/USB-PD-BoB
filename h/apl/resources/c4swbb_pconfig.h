@@ -194,7 +194,7 @@ extern "C" {
                                         REG_PGEVT_ADTR1EN2_PGxTRIGB_DISABLED | \
                                         REG_PGEVT_ADTR1EN1_PGxTRIGA_ENABLED | \
                                         REG_PGEVT_UPDTRG_PGxTRIGA | \
-                                        REG_PGEVT_PGTRGSEL_PGxTRIGA \
+                                        REG_PGEVT_PGTRGSEL_EOC \
                                     )  // 0b0000000000011001
 
 /*!PGxEVTH: PWM GENERATOR x EVENT REGISTER HIGH
@@ -489,12 +489,12 @@ Description:
     bit 3-0 SOCS[3:0]: Start-of-Cycle Selection bits(1,2,3): 0000 = Local EOC ? PWM Generator is self-triggered
  */
 
-#define C4SWBB_BOOSTLEG_PGxCONH     (   REG_PGCON_SOCS_LOCAL_EOC | \
+#define C4SWBB_BOOSTLEG_PGxCONH     (   PGCON_SOCS_PWM1_5 | \
                                         REG_PGCON_TRGMOD_REPEAT | \
                                         REG_PGCON_UPDMOD_SLV_IMMEDIATE | \
                                         REG_PGCON_MSTEN_NO_BROADCAST | \
                                         REG_PGCON_MPHSEL_INDEPENDENT | \
-                                        REG_PGCON_MPERSEL_INDEPENDENT | \
+                                        REG_PGCON_MPERSEL_MASTER | \
                                         REG_PGCON_MDCSEL_INDEPENDENT \
                                     )   // 0b0100000101000000
 
