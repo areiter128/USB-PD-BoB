@@ -1,5 +1,5 @@
 /* ***************************************************************************************
- * z-Domain Control Loop Designer Version 0.9.0.70.
+ * z-Domain Control Loop Designer Version 0.9.0.72.
  * ***************************************************************************************
  * Generic library header for z-domain compensation filter assembly functions
  * ***************************************************************************************/
@@ -93,8 +93,10 @@ typedef struct {
     volatile int16_t MaxOutput; // Maximum output value used for clamping (R/W)
 
     // Voltage/Average Current Mode Control Trigger handling
-    volatile uint16_t* ptrADCTriggerRegister; // Pointer to ADC trigger register (e.g. TRIG1)
-    volatile uint16_t ADCTriggerOffset; // ADC trigger offset to compensate propagation delays 
+    volatile uint16_t* ptrADCTriggerARegister; // Pointer to ADC trigger #1 register (e.g. TRIG1)
+    volatile uint16_t ADCTriggerAOffset; // ADC trigger #1 offset to compensate propagation delays 
+    volatile uint16_t* ptrADCTriggerBRegister; // Pointer to ADC trigger #2 register (e.g. TRIG2)
+    volatile uint16_t ADCTriggerBOffset; // ADC trigger #2 offset to compensate propagation delays 
     
 } __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object
 
