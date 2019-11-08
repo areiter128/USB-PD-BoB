@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.0.70
-;  AGS Version: Assembly Generator Script v1.2.1 (10/18/19)
-;  Author:      C14220
-;  Date/Time:   10/24/2019 1:10:41 PM
+;  SDK Version: z-Domain Control Loop Designer v0.9.0.72
+;  AGS Version: Assembly Generator Script v1.2.3 (11/07/19)
+;  Author:      M91406
+;  Date/Time:   11/08/2019 2:09:47 AM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Single Bitshift-Scaling Mode)
 ; **********************************************************************************
@@ -26,14 +26,14 @@
 	
 ;------------------------------------------------------------------------------
 ; Address offset declarations for data structure addressing
-	.equ offStatus,                 0    ; status word at address-offset=0
-	.equ offSourceRegister,         2    ; pointer to source memory address=2
-	.equ offTargetRegister,         4    ; pointer to tasrget memory address=2
-	.equ offControlReference,       6    ; pointer to control reference memory address=2
-	.equ offACoefficients,          8    ; pointer to A-coefficients array start address=2
-	.equ offBCoefficients,          10    ; pointer to B-coefficients array start address=2
-	.equ offControlHistory,         12    ; pointer to control history array start address=2
-	.equ offErrorHistory,           14    ; pointer to error history array start address=2
+	.equ offStatus,                 0    ; status word at address-offset
+	.equ offSourceRegister,         2    ; pointer to source memory address
+	.equ offTargetRegister,         4    ; pointer to target memory address
+	.equ offControlReference,       6    ; pointer to control reference memory address
+	.equ offACoefficients,          8    ; pointer to A-coefficients array start address
+	.equ offBCoefficients,          10    ; pointer to B-coefficients array start address
+	.equ offControlHistory,         12    ; pointer to control history array start address
+	.equ offErrorHistory,           14    ; pointer to error history array start address
 	.equ offACoeffArraySize,        16    ; size of the A-coefficients array
 	.equ offBCoeffArraySize,        18    ; size of the B-coefficients array
 	.equ offCtrlHistArraySize,      20    ; size of the control history array
@@ -45,8 +45,10 @@
 	.equ offInputOffset,            32    ; input source offset value
 	.equ offMinOutput,              34    ; minimum clamping value of control output
 	.equ offMaxOutput,              36    ; maximum clamping value of control output
-	.equ offADCTriggerRegister,     38    ; pointer to ADC trigger register memory address
-	.equ offADCTriggerOffset,       40    ; value of ADC trigger offset
+	.equ offADCTriggerARegister,    38    ; pointer to ADC trigger #1 register memory address
+	.equ offADCTriggerAOffset,      40    ; value of ADC trigger #1 offset
+	.equ offADCTriggerBRegister,    42    ; pointer to ADC trigger #2 register memory address
+	.equ offADCTriggerBOffset,      44    ; value of ADC trigger #2 offset
 	
 ;------------------------------------------------------------------------------
 ;local inclusions.
@@ -62,11 +64,6 @@ _chb_vloop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Save working registers
-	push.s    ; save shadowed working registers (w0...w3)
-	push w4    ; save working registers used for MAC operations (w4, w6, w8, w10)
-	push w6
-	push w8
-	push w10
 	push w12    ; save working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------
@@ -191,16 +188,15 @@ _chb_vloop_Update:    ; provide global scope to routine
 	pop CORCON    ; restore CPU configuration registers
 	
 ;------------------------------------------------------------------------------
-; Enable/Disable bypass branch target
-	CHB_VLOOP_BYPASS_LOOP:
+; Enable/Disable bypass branch target with dummy read of source buffer
+	goto CHB_VLOOP_EXIT_LOOP    ; when enabled, step over dummy read and go straight to EXIT
+	CHB_VLOOP_BYPASS_LOOP:    ; Enable/Disable bypass branch target to perform dummy read of source to clear the source buffer
+	mov [w0 + #offSourceRegister], w2    ; load pointer to input source register
+	mov [w2], w1    ; move value from input source into working register
+	CHB_VLOOP_EXIT_LOOP:    ; Exit control loop branch target
 	
 ;------------------------------------------------------------------------------
 ; Restore working registers
-	pop.s    ; restore shadowed working registers (w0...w3)
-	pop w4    ; restore working registers used for MAC operations w4, w6, w8, w10)
-	pop w6
-	pop w8
-	pop w10
 	pop w12    ; restore working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------

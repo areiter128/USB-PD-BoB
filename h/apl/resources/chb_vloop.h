@@ -1,5 +1,5 @@
 /* ***************************************************************************************
- * z-Domain Control Loop Designer Version 0.9.0.70.
+ * z-Domain Control Loop Designer Version 0.9.0.72.
  * ***************************************************************************************
  * 3p3z compensation filter coefficients derived for following operating conditions:
  * ***************************************************************************************
