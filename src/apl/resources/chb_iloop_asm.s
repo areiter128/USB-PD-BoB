@@ -3,7 +3,7 @@
 ;  SDK Version: z-Domain Control Loop Designer v0.9.0.72
 ;  AGS Version: Assembly Generator Script v1.2.3 (11/07/19)
 ;  Author:      M91406
-;  Date/Time:   11/08/2019 2:09:21 AM
+;  Date/Time:   11/08/2019 2:30:23 AM
 ; **********************************************************************************
 ;  2P2Z Control Library File (Dual Bitshift-Scaliing Mode)
 ; **********************************************************************************
@@ -170,21 +170,6 @@ _chb_iloop_Update:    ; provide global scope to routine
 ; Write control output value to target
 	mov [w0 + #offTargetRegister], w8    ; move pointer to target in to working register
 	mov w4, [w8]    ; move control output into target address
-	
-;------------------------------------------------------------------------------
-; Update ADC trigger A position
-	asr w4, #1, w6
-	mov [w0 + #offADCTriggerAOffset], w8
-	add w6, w8, w10
-	mov [w0 + #offADCTriggerARegister], w8
-	mov w10, [w8]
-	
-;------------------------------------------------------------------------------
-; Update ADC trigger B position
-	mov [w0 + #offADCTriggerBOffset], w8
-	add w6, w8, w10
-	mov [w0 + #offADCTriggerBRegister], w8
-	mov w10, [w8]
 	
 ;------------------------------------------------------------------------------
 ; Load pointer to first element of control history array
