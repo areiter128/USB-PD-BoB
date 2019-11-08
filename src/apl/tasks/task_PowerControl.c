@@ -347,7 +347,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.feedback_offset = C4SWBB_VOUT_OFFSET;   // Voltage feedback signal offset
     c4swbb_1.v_loop.reference = C4SWBB_VOUT_REF; // Voltage loop reference value
     c4swbb_1.v_loop.trigger_offset = ADC_TRIG_OFFSET_VOUT; // Voltage sample ADC trigger offset (offset from 50% on-time)
-    
+
     // Assign voltage loop object to 4-switch buck/boost converter instance
     c4swbb_1.v_loop.controller = &cha_vloop;        // 4-Switch Buck/Boost converter voltage loop controller
     c4swbb_1.v_loop.controller->ptrSource = &FB_VOUT1_ADCBUF; // Load pointer to user data input source
@@ -372,7 +372,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.i_loop.feedback_offset = C4SWBB_IOUT_FEEDBACK_OFFSET;   // Current feedback signal offset
     c4swbb_1.i_loop.reference = IOUT_LCL_CLAMP; // Current loop reference value
     c4swbb_1.i_loop.trigger_offset = ADC_TRIG_OFFSET_IOUT; // Current sample ADC trigger offset (offset from 50% on-time)
-    
+
     c4swbb_1.i_loop.controller = &cha_iloop;   // 4-Switch Buck/Boost converter voltage loop controller
     c4swbb_1.i_loop.controller->ptrSource = &FB_IOUT1_ADCBUF; // Set pointer to data input source
     c4swbb_1.i_loop.controller->ptrTarget = &c4swbb_1.i_loop.control_output; // &BUCKH1_PGx_DC; // Set pointer to data output target
