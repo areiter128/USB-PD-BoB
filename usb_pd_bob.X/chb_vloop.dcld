@@ -1,20 +1,20 @@
 [GUI]
 CreateDate=08/01/19 4:10:00 PM
-SaveDate=11/08/2019 2:30:48 AM
+SaveDate=11/11/2019 12:54:43 AM
 Name=z-Domain Control Loop Designer
-Version=0.9.0.72
+Version=0.9.0.75
 WindoWState=Maximized
 Top=-8
 Left=-8
 Height=1066
 Width=1936
 TabHeight=284
-AGS Version=1.2.3
+AGS Version=1.2.4
 [ControlSetup]
 ControlType=2
 ScalingMode=0
 QFormat=1
-SamplingFrequency=350k
+SamplingFrequency=175k
 InputGain=0.20
 InputGainNormalization=1
 BiDirectionalFeedback=0
@@ -58,6 +58,10 @@ AddAntiWindupMinimumClamping=1
 AddDisableDummyReadFeature=1
 AddADCTriggerAPlacement=0
 AddADCTriggerBPlacement=0
+AddDataProviderSource=1
+AddDataProviderControlInput=1
+AddDataProviderErrorInput=0
+AddDataProviderControlOutput=0
 [CodeGenerationPaths]
 ExportASMSource=1
 ExportCSource=1
@@ -78,12 +82,10 @@ PWMFrequency=250
 PWMDutyCycle=30
 ControlLoopLatency=175
 [generator_history]
-count=8
+count=11
 1=2019-10-22 22:50:55||M91406||Update of control loop code after introducting DCLD v0.9.0.70||2; 0; 12; 0.20; 1; 0; 0; 300k; 50; 110k; 150k; 125000; 125000; 125000; 2.1k; 4.0k; 40000; 50000; 50000
-active_item=8
+active_item=11
 3=2019-10-24 13:00:23||M91406||Removed ADC trigger placement||2; 0; 12; 0.20; 1; 0; 0; 300k; 50; 110k; 150k; 125000; 125000; 125000; 2.1k; 4.0k; 40000; 50000; 50000
 4=2019-10-24 13:10:16||C14220||(Autosafe)||2; 0; 12; 0.20; 1; 0; 0; 350k; 50; 110k; 150k; 125000; 125000; 125000; 2.1k; 4.0k; 40000; 50000; 50000
 5=2019-10-24 13:10:41||C14220||(Autosafe)||2; 0; 12; 0.20; 1; 0; 0; 350k; 50; 110k; 150k; 125000; 125000; 125000; 2.1k; 4.0k; 40000; 50000; 50000
-6=2019-11-08 02:09:36||M91406||(Autosafe)||2; 0; 12; 0.20; 1; 0; 0; 350k; 50; 110k; 150k; 125000; 125000; 125000; 2.1k; 4.0k; 40000; 50000; 50000
-7=2019-11-08 02:09:48||M91406||(Autosafe)||2; 0; 12; 0.20; 1; 0; 0; 350k; 50; 110k; 150k; 125000; 125000; 125000; 2.1k; 4.0k; 40000; 50000; 50000
-8=2019-11-08 02:30:43||M91406||(Autosafe)||2; 0; 12; 0.20; 1; 0; 0; 350k; 50; 110k; 150k; 125000; 125000; 125000; 2.1k; 4.0k; 40000; 50000; 50000
+11=2019-11-11 00:53:42||M91406||Set sampling frequency to 175 kHz||2; 0; 12; 0.20; 1; 0; 0; 175k; 50; 110k; 150k; 125000; 125000; 125000; 2.1k; 4.0k; 40000; 50000; 50000
