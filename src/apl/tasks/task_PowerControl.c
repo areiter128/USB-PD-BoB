@@ -117,34 +117,37 @@ volatile uint16_t init_PowerControl(void) {
     fres &= c4swbb_pwm_enable(&c4swbb_1);
     fres &= c4swbb_pwm_enable(&c4swbb_2);
     
-    PG2PHASE = 6000;
-    //c4swbb_1.status.bits.enable = true;
+    PG2PHASE = 0;
+    PG7PHASE = 0;
+            
+    c4swbb_1.status.bits.enable = true;
     c4swbb_2.status.bits.enable = true;
     
     //fres &= c4swbb_pwm_release(&c4swbb_1);
     //fres &= c4swbb_pwm_release(&c4swbb_2);
     
     TRISCbits.TRISC2 = 0;  //used for debug
-    /*
-    PG1DC = 3000;     //buck leg
-    PG1TRIGA = 7000;
-    PG2DC = 1000;     //boost leg
-    PG2TRIGA = 1000;
-    PG5DC = 3000;     //buck leg
-    PG5TRIGA = 7000;
-    PG7DC = 1000;     //boost leg
-    PG7TRIGA = 1000;
-    */
+    
+    //Max 1428 for 350kHz
+    PG1TRIGA = 100;    
+    //PG7TRIGA = 20;
+    //PG2TRIGA = 20;
+    
+    PG5TRIGA = 100;
+    
+    //PG7TRIGA = 20;
+    Nop();
+    
     PG1STATbits.UPDREQ = 1;
     PG2STATbits.UPDREQ = 1;
     PG5STATbits.UPDREQ = 1;
     PG7STATbits.UPDREQ = 1;
    
     
-   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_9V ;    // Set reference to 5V
-   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_9V ;    // Set reference to 5V
+   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
+   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
    
-   c4swbb_1.status.bits.autorun = 0;
+   c4swbb_1.status.bits.autorun = 1;
    c4swbb_2.status.bits.autorun = 1;  
     Nop();
     
