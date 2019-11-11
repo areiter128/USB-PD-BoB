@@ -694,7 +694,7 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     ECP44_SET;
 #endif
     
-#if defined (CH1)
+#if defined CH1|| defined ALL
 //LATCbits.LATC2 = 1;
 #endif
 
@@ -721,7 +721,7 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
 ECP44_CLEAR;
 #endif
 
-#if defined (CH1)
+#if defined CH1|| defined ALL
 //LATCbits.LATC2 = 0;
 #endif
 
