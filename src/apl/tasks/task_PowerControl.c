@@ -623,28 +623,45 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT1_ADC_Interrupt(
 ECP39_SET;
 #endif
 
-#if defined (CH1)
-//LATCbits.LATC2 = 1;
+#if defined CH1|| defined ALL
+LATCbits.LATC2 = 1;
 #endif
 
     // Call control loop update
     cha_vloop_Update(&cha_vloop);
+    cha_iloop_Update(&cha_iloop);
+    c4swbb_pwm_update(&c4swbb_1.pwm_dist);
+    
+    
+    PG5STATbits.UPDREQ = 1;
+    PG7STATbits.UPDREQ = 1;
+    
+    
     
     // Capture additional analog inputs
     c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
     c4swbb_1.data.v_out = FB_VOUT1_ADCBUF; // Capture most recent output voltage value
-    c4swbb_1.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
+    c4swbb_1.data.i_out = FB_IOUT1_ADCBUF; // Capture most recent output current value
+    c4swbb_1.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value 
+    c4swbb_1.data.temp = FB_TEMP1_ADCBUF; // Capture most recent temperature value
     
     // Clear the interrupt flag 
     _ADCIF = 0;
-    FB_VBAT_ADC_IF = 0;
     FB_VOUT1_ADC_IF = 0;  
+    FB_IOUT1_ADC_IF = 0;
+    FB_VBAT_ADC_IF = 0;
+    FB_TEMP1_ADC_IF = 0;
+
+    
+    //Software trigger for VBAT,TEMP1 and TEMP2 - samples stored in next ISR
+    ADCON3Lbits.SWCTRG = 1;
+    
     
 #if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
     ECP39_CLEAR;
 #endif
-#if defined (CH1)
-//LATCbits.LATC2 = 0;
+#if defined CH1|| defined ALL
+LATCbits.LATC2 = 0;
 #endif
 }
 #else
