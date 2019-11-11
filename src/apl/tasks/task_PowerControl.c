@@ -350,7 +350,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.feedback_offset = C4SWBB_VOUT_OFFSET;   // Voltage feedback signal offset
     c4swbb_1.v_loop.reference = C4SWBB_VOUT_REF; // Voltage loop reference value
     c4swbb_1.v_loop.trigger_offset = ADC_TRIG_OFFSET_VOUT; // Voltage sample ADC trigger offset (offset from 50% on-time)
-    
+
     // Assign voltage loop object to 4-switch buck/boost converter instance
     c4swbb_1.v_loop.controller = &cha_vloop;        // 4-Switch Buck/Boost converter voltage loop controller
     c4swbb_1.v_loop.controller->ptrSource = &FB_VOUT1_ADCBUF; // Load pointer to user data input source
@@ -359,6 +359,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.controller->MinOutput = c4swbb_1.v_loop.minimum; // Load user minimum value
     c4swbb_1.v_loop.controller->MaxOutput = c4swbb_1.v_loop.maximum; // Load user maximum value
     c4swbb_1.v_loop.controller->InputOffset = c4swbb_1.v_loop.feedback_offset; // Load user feedback offset value
+    c4swbb_1.v_loop.controller->ptrDataProviderControlInput = &c4swbb_1.data.v_out; // Setting pointer to output voltage variable for automatic update
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_1.v_loop.ctrl_Init = &cha_vloop_Init;        // Function pointer to CONTROL INIT routine
@@ -375,7 +376,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.i_loop.feedback_offset = C4SWBB_IOUT_FEEDBACK_OFFSET;   // Current feedback signal offset
     c4swbb_1.i_loop.reference = IOUT_LCL_CLAMP; // Current loop reference value
     c4swbb_1.i_loop.trigger_offset = ADC_TRIG_OFFSET_IOUT; // Current sample ADC trigger offset (offset from 50% on-time)
-    
+
     c4swbb_1.i_loop.controller = &cha_iloop;   // 4-Switch Buck/Boost converter voltage loop controller
     c4swbb_1.i_loop.controller->ptrSource = &FB_IOUT1_ADCBUF; // Set pointer to data input source
     c4swbb_1.i_loop.controller->ptrTarget = &c4swbb_1.i_loop.control_output; // &BUCKH1_PGx_DC; // Set pointer to data output target
@@ -383,6 +384,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.i_loop.controller->MinOutput = c4swbb_1.i_loop.minimum; // Load user minimum value
     c4swbb_1.i_loop.controller->MaxOutput = c4swbb_1.i_loop.maximum; // Load user maximum value
     c4swbb_1.i_loop.controller->InputOffset = c4swbb_1.i_loop.feedback_offset; // Load user feedback offset value
+    c4swbb_1.i_loop.controller->ptrDataProviderControlInput = &c4swbb_1.data.i_out; // Setting pointer to output current variable for automatic update
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_1.i_loop.ctrl_Init = &cha_iloop_Init;        // Function pointer to CONTROL INIT routine
@@ -533,6 +535,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.v_loop.controller->MinOutput = c4swbb_2.v_loop.minimum; // Load user minimum value
     c4swbb_2.v_loop.controller->MaxOutput = c4swbb_2.v_loop.maximum; // Load user maximum value
     c4swbb_2.v_loop.controller->InputOffset = c4swbb_2.v_loop.feedback_offset; // Load user feedback offset value
+    c4swbb_2.v_loop.controller->ptrDataProviderControlInput = &c4swbb_2.data.v_out; // Setting pointer to output voltage variable for automatic update
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_2.v_loop.ctrl_Init = &chb_vloop_Init;        // Function pointer to CONTROL INIT routine
@@ -558,6 +561,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.i_loop.controller->MinOutput = c4swbb_2.i_loop.minimum; // Load user minimum value
     c4swbb_2.i_loop.controller->MaxOutput = c4swbb_2.i_loop.maximum; // Load user maximum value
     c4swbb_2.i_loop.controller->InputOffset = c4swbb_2.i_loop.feedback_offset; // Load user feedback offset value
+    c4swbb_2.i_loop.controller->ptrDataProviderControlInput = &c4swbb_2.data.i_out; // Setting pointer to output current variable for automatic update
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_2.i_loop.ctrl_Init = &chb_iloop_Init;        // Function pointer to CONTROL INIT routine
@@ -640,10 +644,15 @@ LATCbits.LATC2 = 1;
     
     // Capture additional analog inputs
     c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
+<<<<<<< HEAD
     c4swbb_1.data.v_out = FB_VOUT1_ADCBUF; // Capture most recent output voltage value
     c4swbb_1.data.i_out = FB_IOUT1_ADCBUF; // Capture most recent output current value
     c4swbb_1.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value 
     c4swbb_1.data.temp = FB_TEMP1_ADCBUF; // Capture most recent temperature value
+=======
+//    c4swbb_1.data.v_out = FB_VOUT1_ADCBUF; // Capture most recent output voltage value
+    c4swbb_1.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
+>>>>>>> 03a3fcb5bc696c75df9ae37f5e187d1f97187f27
     
     // Clear the interrupt flag 
     _ADCIF = 0;
@@ -704,7 +713,7 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     
     // Capture additional analog inputs
     c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-    c4swbb_1.data.i_out = FB_IOUT1_ADCBUF; // Capture most recent output current value
+//    c4swbb_1.data.i_out = FB_IOUT1_ADCBUF; // Capture most recent output current value
     c4swbb_1.data.temp = FB_TEMP1_ADCBUF; // Capture most recent temperature value
     
     // Clear the interrupt flag 
@@ -768,8 +777,12 @@ LATCbits.LATC2 = 1;
     LATCbits.LATC2 = 0;   
     // Capture additional analog inputs
     c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
+<<<<<<< HEAD
     c4swbb_2.data.v_out = FB_VOUT2_ADCBUF; // Capture most recent output voltage value
     c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output voltage value
+=======
+//    c4swbb_2.data.v_out = FB_VOUT2_ADCBUF; // Capture most recent output voltage value
+>>>>>>> 03a3fcb5bc696c75df9ae37f5e187d1f97187f27
     c4swbb_2.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
     c4swbb_2.data.temp = FB_TEMP2_ADCBUF;
     // Clear the interrupt flag 
@@ -831,7 +844,7 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     
     // Capture additional analog inputs
     c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-    c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output current value
+//    c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output current value
     c4swbb_2.data.temp = FB_TEMP2_ADCBUF; // Capture most recent temperature value
     
     // Clear the interrupt flag 

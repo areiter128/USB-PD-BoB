@@ -679,7 +679,7 @@ volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstan
     pInstance->v_loop.feedback_offset = 0; // Reset the feedback offset setting of the voltage control loop
     pInstance->v_loop.minimum = 0; // Reset the minimum output setting of the voltage control loop
     pInstance->v_loop.maximum = 0; // Reset the maximum output setting of the voltage control loop
-    pInstance->v_loop.trigger_offset = 0; // Reset the ADC trigger offset setting of the voltage control loop
+    pInstance->v_loop.trigger_offset = 0; // Reset the ADC trigger A offset setting of the voltage control loop
     pInstance->v_loop.reference = 0; // Reset the control reference of the voltage control loop
         
     pInstance->i_loop.controller = 0; // Clear pointer to current control loop object

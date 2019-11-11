@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.0.70
-;  AGS Version: Assembly Generator Script v1.2.1 (10/18/19)
-;  Author:      C14220
-;  Date/Time:   10/24/2019 1:13:39 PM
+;  SDK Version: z-Domain Control Loop Designer v0.9.0.75
+;  AGS Version: Assembly Generator Script v1.2.4 (11/08/19)
+;  Author:      M91406
+;  Date/Time:   11/11/2019 12:52:31 AM
 ; **********************************************************************************
 ;  2P2Z Control Library File (Dual Bitshift-Scaliing Mode)
 ; **********************************************************************************
@@ -27,13 +27,13 @@
 ;------------------------------------------------------------------------------
 ; Address offset declarations for data structure addressing
 	.equ offStatus,                 0    ; status word at address-offset=0
-	.equ offSourceRegister,         2    ; pointer to source memory address=2
-	.equ offTargetRegister,         4    ; pointer to tasrget memory address=2
-	.equ offControlReference,       6    ; pointer to control reference memory address=2
-	.equ offACoefficients,          8    ; pointer to A-coefficients array start address=2
-	.equ offBCoefficients,          10    ; pointer to B-coefficients array start address=2
-	.equ offControlHistory,         12    ; pointer to control history array start address=2
-	.equ offErrorHistory,           14    ; pointer to error history array start address=2
+	.equ offSourceRegister,         2    ; pointer to source memory address
+	.equ offTargetRegister,         4    ; pointer to target memory address
+	.equ offControlReference,       6    ; pointer to control reference memory address
+	.equ offACoefficients,          8    ; pointer to A-coefficients array start address
+	.equ offBCoefficients,          10    ; pointer to B-coefficients array start address
+	.equ offControlHistory,         12    ; pointer to control history array start address
+	.equ offErrorHistory,           14    ; pointer to error history array start address
 	.equ offACoeffArraySize,        16    ; size of the A-coefficients array
 	.equ offBCoeffArraySize,        18    ; size of the B-coefficients array
 	.equ offCtrlHistArraySize,      20    ; size of the control history array
@@ -45,8 +45,13 @@
 	.equ offInputOffset,            32    ; input source offset value
 	.equ offMinOutput,              34    ; minimum clamping value of control output
 	.equ offMaxOutput,              36    ; maximum clamping value of control output
-	.equ offADCTriggerRegister,     38    ; pointer to ADC trigger register memory address
-	.equ offADCTriggerOffset,       40    ; value of ADC trigger offset
+	.equ offADCTriggerARegister,    38    ; pointer to ADC trigger #1 register memory address
+	.equ offADCTriggerAOffset,      40    ; value of ADC trigger #1 offset
+	.equ offADCTriggerBRegister,    42    ; pointer to ADC trigger #2 register memory address
+	.equ offADCTriggerBOffset,      44    ; value of ADC trigger #2 offset
+	.equ offPtrControlInput,        46    ; pointer to external data buffer of most recent control input
+	.equ offPtrControlError,        48    ; pointer to external data buffer of most recent control error
+	.equ offPtrControlOutput,       50    ; pointer to external data buffer of most recent control output
 	
 ;------------------------------------------------------------------------------
 ;local inclusions.
@@ -62,11 +67,6 @@ _cha_iloop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Save working registers
-	push.s    ; save shadowed working registers (w0...w3)
-	push w4    ; save working registers used for MAC operations (w4, w6, w8, w10)
-	push w6
-	push w8
-	push w10
 	push w12    ; save working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------
@@ -107,6 +107,8 @@ _cha_iloop_Update:    ; provide global scope to routine
 ; Read data from input source and calculate error input to transfer function
 	mov [w0 + #offSourceRegister], w2    ; load pointer to input source register
 	mov [w2], w1    ; move value from input source into working register
+	mov [w0 + #offPtrControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
+	mov w1, [w2]    ; copy most recent controller input value to given data buffer target
 	mov [w0 + #offControlReference], w2    ; move pointer to control reference into working register
 	subr w1, [w2], w1    ; calculate error (= reference - input)
 	mov [w0 + #offInputOffset], w2    ; load input offset value into working register
@@ -193,16 +195,17 @@ _cha_iloop_Update:    ; provide global scope to routine
 	pop CORCON    ; restore CPU configuration registers
 	
 ;------------------------------------------------------------------------------
-; Enable/Disable bypass branch target
-	CHA_ILOOP_BYPASS_LOOP:
+; Enable/Disable bypass branch target with dummy read of source buffer
+	goto CHA_ILOOP_EXIT_LOOP    ; when enabled, step over dummy read and go straight to EXIT
+	CHA_ILOOP_BYPASS_LOOP:    ; Enable/Disable bypass branch target to perform dummy read of source to clear the source buffer
+	mov [w0 + #offSourceRegister], w2    ; load pointer to input source register
+	mov [w2], w1    ; move value from input source into working register
+	mov [w0 + #offPtrControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
+	mov w1, [w2]    ; copy most recent controller input value to given data buffer target
+	CHA_ILOOP_EXIT_LOOP:    ; Exit control loop branch target
 	
 ;------------------------------------------------------------------------------
 ; Restore working registers
-	pop.s    ; restore shadowed working registers (w0...w3)
-	pop w4    ; restore working registers used for MAC operations w4, w6, w8, w10)
-	pop w6
-	pop w8
-	pop w10
 	pop w12    ; restore working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------

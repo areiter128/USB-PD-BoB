@@ -181,7 +181,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.1.51"/>
+        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.2.66"/>
       </packs>
       <compileType>
         <linkerTool>
