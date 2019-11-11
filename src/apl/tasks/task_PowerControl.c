@@ -5,8 +5,8 @@
  * Created on May 27, 2019, 3:11 PM
  */
 
-#define CH2    //selects which channel RC2 is assigned to for ISR timing
-
+ //selects which channel RC2 is assigned to for ISR timing
+#define ALL   
 
 #include <xc.h>
 #include <stdint.h>
