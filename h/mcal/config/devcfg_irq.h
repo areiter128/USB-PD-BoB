@@ -42,11 +42,11 @@
 #define SHRADCORE_EISEL_TAD     8 // Number of Tad cycles by which the interrupts should be generated early to conversion completion (0-8)
 
 #define FB_VOUT1_ENABLE         true // enable/disable usage of this analog input
-#define FB_VOUT1_ISR_PRIORITY   4 // interrupt priority for this analog input
+#define FB_VOUT1_ISR_PRIORITY   5 // interrupt priority for this analog input
 #define FB_VOUT1_ISR_ENABLE     true // interrupt enable/disable for this analog input
 #define FB_VOUT1_EIE_ENABLE     true // early interrupt enable/disable for this analog input
-#define FB_VOUT1_PGxTRIGy       BOOSTH1_PGxTRIGA // ADC Trigger 1 Compare Register for current feedback
-#define FB_VOUT1_TRGSRC         BOOSTH1_ADTRGSRC_1 // ADC Trigger Source of this analog input
+#define FB_VOUT1_PGxTRIGy       BUCKH1_PGxTRIGA // ADC Trigger 1 Compare Register for current feedback
+#define FB_VOUT1_TRGSRC         BUCKH1_ADTRGSRC_1 // ADC Trigger Source of this analog input
 
 #define FB_IIN1_ENABLE          false // enable/disable usage of this analog input
 #define FB_IIN1_ISR_PRIORITY    5 // interrupt priority for this analog input
