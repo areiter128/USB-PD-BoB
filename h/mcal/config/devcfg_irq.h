@@ -67,26 +67,26 @@
 #define FB_TEMP1_ISR_ENABLE     false // interrupt priority for this analog input
 #define FB_TEMP1_EIE_ENABLE     true // early interrupt enable/disable for this analog input
 #define FB_TEMP1_PGxTRIGy       BUCKH1_PGxTRIGA // ADC Trigger 1 Compare Register for current feedback
-#define FB_TEMP1_TRGSRC         BUCKH1_ADTRGSRC_1 // ADC Trigger Source of this analog input
+#define FB_TEMP1_TRGSRC         0b00001// // ADC Trigger Source of this analog input
 
 #define FB_VOUT2_ENABLE         true // enable/disable usage of this analog input
 #define FB_VOUT2_ISR_PRIORITY   4 // interrupt priority for this analog input
 #define FB_VOUT2_ISR_ENABLE     true // interrupt priority for this analog input
 #define FB_VOUT2_EIE_ENABLE     true // early interrupt enable/disable for this analog input
-#define FB_VOUT2_PGxTRIGy       BOOSTH2_PGxTRIGA // ADC Trigger 1 Compare Register for current feedback
-#define FB_VOUT2_TRGSRC         BOOSTH2_ADTRGSRC_1 // ADC Trigger Source of this analog input
+#define FB_VOUT2_PGxTRIGy       BUCKH2_PGxTRIGA // ADC Trigger 1 Compare Register for current feedback
+#define FB_VOUT2_TRGSRC         BUCKH2_ADTRGSRC_1 // ADC Trigger Source of this analog input
 
 #define FB_IIN2_ENABLE          false // enable/disable usage of this analog input
 #define FB_IIN2_ISR_PRIORITY    5 // interrupt priority for this analog input
 #define FB_IIN2_ISR_ENABLE      false // interrupt priority for this analog input
-#define FB_IIN2_EIE_ENABLE      true // early interrupt enable/disable for this analog input
+#define FB_IIN2_EIE_ENABLE      false // early interrupt enable/disable for this analog input
 #define FB_IIN2_PGxTRIGy        BUCKH2_PGxTRIGA // ADC Trigger 1 Compare Register for current feedback
 #define FB_IIN2_TRGSRC          BUCKH2_ADTRGSRC_1 // ADC Trigger Source of this analog input
 
 #define FB_IOUT2_ENABLE         true // enable/disable usage of this analog input
 #define FB_IOUT2_ISR_PRIORITY   5 // interrupt priority for this analog input
-#define FB_IOUT2_ISR_ENABLE     true // interrupt priority for this analog input
-#define FB_IOUT2_EIE_ENABLE     true // early interrupt enable/disable for this analog input
+#define FB_IOUT2_ISR_ENABLE     false // interrupt priority for this analog input
+#define FB_IOUT2_EIE_ENABLE     false // early interrupt enable/disable for this analog input
 #define FB_IOUT2_PGxTRIGy       BUCKH2_PGxTRIGA // ADC Trigger 1 Compare Register for current feedback
 #define FB_IOUT2_TRGSRC         BUCKH2_ADTRGSRC_1 // ADC Trigger Source of this analog input
 
