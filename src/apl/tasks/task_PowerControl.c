@@ -404,8 +404,8 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.pwm_dist.adc_trigA_offset = c4swbb_1.i_loop.trigger_offset;    // Set ADC trigger A offset value (current trigger)
     c4swbb_1.pwm_dist.ptr_adc_trigB = &FB_VOUT1_PGxTRIGy;   // Load pointer to ADC trigger B register (voltage trigger)
     c4swbb_1.pwm_dist.adc_trigB_offset = c4swbb_1.v_loop.trigger_offset;   // Set ADC trigger B offset value (voltage trigger)
-    c4swbb_1.pwm_dist.status.bits.trigA_placement_enable = true; // Allow the PWM distribution module to auto-position the rigger of buck leg
-    c4swbb_1.pwm_dist.status.bits.trigB_placement_enable = true; // Allow the PWM distribution module to auto-position the rigger of boost leg
+    c4swbb_1.pwm_dist.status.bits.trigA_placement_enable = false; // Allow the PWM distribution module to auto-position the rigger of buck leg
+    c4swbb_1.pwm_dist.status.bits.trigB_placement_enable = false; // Allow the PWM distribution module to auto-position the rigger of boost leg
     
     //Added this to enable PWM distribution routine
     c4swbb_1.pwm_dist.status.bits.enable = true;
