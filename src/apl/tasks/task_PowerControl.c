@@ -633,7 +633,7 @@ ECP39_SET;
     
     // Capture additional analog inputs
     c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-    c4swbb_1.data.v_out = FB_VOUT1_ADCBUF; // Capture most recent output voltage value
+//    c4swbb_1.data.v_out = FB_VOUT1_ADCBUF; // Capture most recent output voltage value
     c4swbb_1.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
     
     // Clear the interrupt flag 
@@ -688,7 +688,7 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     
     // Capture additional analog inputs
     c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-    c4swbb_1.data.i_out = FB_IOUT1_ADCBUF; // Capture most recent output current value
+//    c4swbb_1.data.i_out = FB_IOUT1_ADCBUF; // Capture most recent output current value
     c4swbb_1.data.temp = FB_TEMP1_ADCBUF; // Capture most recent temperature value
     
     // Clear the interrupt flag 
@@ -743,7 +743,7 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT2_ADC_Interrupt(
     
     // Capture additional analog inputs
     c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-    c4swbb_2.data.v_out = FB_VOUT2_ADCBUF; // Capture most recent output voltage value
+//    c4swbb_2.data.v_out = FB_VOUT2_ADCBUF; // Capture most recent output voltage value
     c4swbb_2.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
     
     // Clear the interrupt flag 
@@ -800,7 +800,7 @@ LATCbits.LATC2 = 0;
     
     // Capture additional analog inputs
     c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-    c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output current value
+//    c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output current value
     c4swbb_2.data.temp = FB_TEMP2_ADCBUF; // Capture most recent temperature value
     
     // Clear the interrupt flag 
