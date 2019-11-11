@@ -356,6 +356,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.controller->MinOutput = c4swbb_1.v_loop.minimum; // Load user minimum value
     c4swbb_1.v_loop.controller->MaxOutput = c4swbb_1.v_loop.maximum; // Load user maximum value
     c4swbb_1.v_loop.controller->InputOffset = c4swbb_1.v_loop.feedback_offset; // Load user feedback offset value
+    c4swbb_1.v_loop.controller->ptrDataProviderControlInput = &c4swbb_1.data.v_out; // Setting pointer to output voltage variable for automatic update
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_1.v_loop.ctrl_Init = &cha_vloop_Init;        // Function pointer to CONTROL INIT routine
@@ -380,6 +381,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.i_loop.controller->MinOutput = c4swbb_1.i_loop.minimum; // Load user minimum value
     c4swbb_1.i_loop.controller->MaxOutput = c4swbb_1.i_loop.maximum; // Load user maximum value
     c4swbb_1.i_loop.controller->InputOffset = c4swbb_1.i_loop.feedback_offset; // Load user feedback offset value
+    c4swbb_1.i_loop.controller->ptrDataProviderControlInput = &c4swbb_1.data.i_out; // Setting pointer to output current variable for automatic update
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_1.i_loop.ctrl_Init = &cha_iloop_Init;        // Function pointer to CONTROL INIT routine
@@ -530,6 +532,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.v_loop.controller->MinOutput = c4swbb_2.v_loop.minimum; // Load user minimum value
     c4swbb_2.v_loop.controller->MaxOutput = c4swbb_2.v_loop.maximum; // Load user maximum value
     c4swbb_2.v_loop.controller->InputOffset = c4swbb_2.v_loop.feedback_offset; // Load user feedback offset value
+    c4swbb_2.v_loop.controller->ptrDataProviderControlInput = &c4swbb_2.data.v_out; // Setting pointer to output voltage variable for automatic update
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_2.v_loop.ctrl_Init = &chb_vloop_Init;        // Function pointer to CONTROL INIT routine
@@ -555,6 +558,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.i_loop.controller->MinOutput = c4swbb_2.i_loop.minimum; // Load user minimum value
     c4swbb_2.i_loop.controller->MaxOutput = c4swbb_2.i_loop.maximum; // Load user maximum value
     c4swbb_2.i_loop.controller->InputOffset = c4swbb_2.i_loop.feedback_offset; // Load user feedback offset value
+    c4swbb_2.i_loop.controller->ptrDataProviderControlInput = &c4swbb_2.data.i_out; // Setting pointer to output current variable for automatic update
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_2.i_loop.ctrl_Init = &chb_iloop_Init;        // Function pointer to CONTROL INIT routine
