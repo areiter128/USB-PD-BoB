@@ -124,7 +124,7 @@ typedef struct {
     volatile cNPNZ16b_t* controller; // pointer to control loop object data structure
     volatile uint16_t (*ctrl_Init)(volatile cNPNZ16b_t*); // Function pointer to INIT routine
     void (*ctrl_Reset)(volatile cNPNZ16b_t*); // Function pointer to RESET routine
-    void (*ctrl_Precharge)(volatile cNPNZ16b_t*, volatile uint16_t, volatile uint16_t); // Function pointer to PRECHARGE routine
+    void (*ctrl_Precharge)(volatile cNPNZ16b_t*, volatile fractional, volatile fractional); // Function pointer to PRECHARGE routine
     void (*ctrl_Update)(volatile cNPNZ16b_t*); // Function pointer to UPDATE routine
     volatile uint16_t feedback_offset; // Feedback offset value for calibration or bidirectional feedback signals
     volatile uint16_t trigger_offset; // ADC trigger offset value for trigger fine-tuning
