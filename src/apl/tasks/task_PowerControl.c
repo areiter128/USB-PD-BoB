@@ -821,13 +821,12 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     ECP44_SET;
 #endif
     
-#if defined (CH2)
-LATCbits.LATC2 = 1;
+#if defined CH2|| defined ALL
+//LATCbits.LATC2 = 1;
 #endif
     
     // Call control loop update
-    chb_iloop_Update(&chb_iloop);
-LATCbits.LATC2 = 0;    
+    chb_iloop_Update(&chb_iloop);    
     c4swbb_pwm_update(&c4swbb_2.pwm_dist);
     
     // Capture additional analog inputs
@@ -849,7 +848,7 @@ LATCbits.LATC2 = 0;
     ECP44_CLEAR;
 #endif
     
-#if defined (CH2)
+#if defined CH2|| defined ALL
 //LATCbits.LATC2 = 0;
 #endif
 
