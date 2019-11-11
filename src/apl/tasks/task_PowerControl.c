@@ -635,25 +635,17 @@ LATCbits.LATC2 = 1;
     cha_vloop_Update(&cha_vloop);
     cha_iloop_Update(&cha_iloop);
     c4swbb_pwm_update(&c4swbb_1.pwm_dist);
-    
-    
+      
     PG5STATbits.UPDREQ = 1;
-    PG7STATbits.UPDREQ = 1;
-    
-    
+    PG7STATbits.UPDREQ = 1;   
     
     // Capture additional analog inputs
     c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-<<<<<<< HEAD
-    c4swbb_1.data.v_out = FB_VOUT1_ADCBUF; // Capture most recent output voltage value
-    c4swbb_1.data.i_out = FB_IOUT1_ADCBUF; // Capture most recent output current value
+    //c4swbb_1.data.v_out = FB_VOUT1_ADCBUF; // Capture most recent output voltage value  
+    //c4swbb_1.data.i_out = FB_IOUT1_ADCBUF; // Capture most recent output current value
     c4swbb_1.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value 
     c4swbb_1.data.temp = FB_TEMP1_ADCBUF; // Capture most recent temperature value
-=======
-//    c4swbb_1.data.v_out = FB_VOUT1_ADCBUF; // Capture most recent output voltage value
-    c4swbb_1.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
->>>>>>> 03a3fcb5bc696c75df9ae37f5e187d1f97187f27
-    
+
     // Clear the interrupt flag 
     _ADCIF = 0;
     FB_VOUT1_ADC_IF = 0;  
@@ -770,19 +762,12 @@ LATCbits.LATC2 = 1;
  
     PG1STATbits.UPDREQ = 1;
     PG2STATbits.UPDREQ = 1;
-    
-    
-    
-    
+   
     LATCbits.LATC2 = 0;   
     // Capture additional analog inputs
     c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-<<<<<<< HEAD
-    c4swbb_2.data.v_out = FB_VOUT2_ADCBUF; // Capture most recent output voltage value
-    c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output voltage value
-=======
-//    c4swbb_2.data.v_out = FB_VOUT2_ADCBUF; // Capture most recent output voltage value
->>>>>>> 03a3fcb5bc696c75df9ae37f5e187d1f97187f27
+    //c4swbb_2.data.v_out = FB_VOUT2_ADCBUF; // Capture most recent output voltage value
+    //c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output voltage value
     c4swbb_2.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
     c4swbb_2.data.temp = FB_TEMP2_ADCBUF;
     // Clear the interrupt flag 
