@@ -459,7 +459,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
             pInstance->v_loop.controller->MaxOutput += pInstance->soft_start.ramp_i_ref_increment; // Increment maximum current limit
 
             //This line of code bypasses the CONVERTER_STATE_I_RAMP_UP
-            pInstance->v_loop.controller->MaxOutput = pInstance->v_loop.maximum;
+            pInstance->v_loop.controller->MaxOutput = pInstance->i_loop.maximum;
             
             // check if ramp is complete or can to be skipped
             if ( (pInstance->v_loop.controller->MaxOutput >= pInstance->i_loop.maximum) || // current ramp is complete
