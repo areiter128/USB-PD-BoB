@@ -408,6 +408,8 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.pwm_dist.adc_trigB_offset = c4swbb_1.v_loop.trigger_offset;   // Set ADC trigger B offset value (voltage trigger)
     c4swbb_1.pwm_dist.status.bits.trigA_placement_enable = false; // Allow the PWM distribution module to auto-position the rigger of buck leg
     c4swbb_1.pwm_dist.status.bits.trigB_placement_enable = false; // Allow the PWM distribution module to auto-position the rigger of boost leg
+    c4swbb_1.pwm_dist.ssm_bit_mask = SSM_MOD_RANGE_MASK;   // Define bit-mask to limit Spread Spectrum Modulation range
+    c4swbb_1.pwm_dist.status.bits.ssm_enable = false;   // Spread Spectrum Modulation disabled
     
     //Added this to enable PWM distribution routine
     c4swbb_1.pwm_dist.status.bits.enable = true;
@@ -585,9 +587,11 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.pwm_dist.adc_trigB_offset = c4swbb_2.v_loop.trigger_offset;   // Set ADC trigger B offset value (voltage trigger)
     c4swbb_2.pwm_dist.status.bits.trigA_placement_enable = false; // Allow the PWM distribution module to auto-position the trigger of buck leg
     c4swbb_2.pwm_dist.status.bits.trigB_placement_enable = false; // Allow the PWM distribution module to auto-position the trigger of boost leg
+    c4swbb_2.pwm_dist.ssm_bit_mask = SSM_MOD_RANGE_MASK;   // Define bit-mask to limit Spread Spectrum Modulation range
+    c4swbb_2.pwm_dist.status.bits.ssm_enable = false;   // Spread Spectrum Modulation disabled
     
-    //Added this to enable PWM distribution routine
-    c4swbb_2.pwm_dist.status.bits.enable = true;
+    // Added this to enable PWM distribution routine
+    c4swbb_2.pwm_dist.status.bits.enable = true;        // Enable PWM distribution for buck and boost leg
     
     
     // Initialize USB Port #2 Soft Start Settings
@@ -648,13 +652,20 @@ LATCbits.LATC2 = 1;
 
     // Clear the interrupt flag 
     _ADCIF = 0;
-    FB_VOUT1_ADC_IF = 0;  
+    #if (FB_VOUT1_ENABLE)
+    FB_VOUT1_ADC_IF = 0; 
+    #endif
+    #if (FB_IOUT1_ENABLE)
     FB_IOUT1_ADC_IF = 0;
+    #endif
+    #if (FB_VBAT_ENABLE)
     FB_VBAT_ADC_IF = 0;
+    #endif
+    #if (FB_TEMP1_ENABLE)
     FB_TEMP1_ADC_IF = 0;
-
+    #endif
     
-    //Software trigger for VBAT,TEMP1 and TEMP2 - samples stored in next ISR
+    // Software trigger for VBAT,TEMP1 and TEMP2 - samples stored in next ISR
     ADCON3Lbits.SWCTRG = 1;
     
     
@@ -770,14 +781,23 @@ LATCbits.LATC2 = 1;
     //c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output voltage value
     c4swbb_2.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
     c4swbb_2.data.temp = FB_TEMP2_ADCBUF;
+    
     // Clear the interrupt flag 
     _ADCIF = 0;
-    FB_VOUT2_ADC_IF = 0;  
+    #if (FB_VOUT2_ENABLE)
+    FB_VOUT2_ADC_IF = 0; 
+    #endif
+    #if (FB_IOUT2_ENABLE)
     FB_IOUT2_ADC_IF = 0;
+    #endif
+    #if (FB_VBAT_ENABLE)
     FB_VBAT_ADC_IF = 0;
+    #endif
+    #if (FB_TEMP2_ENABLE)
     FB_TEMP2_ADC_IF = 0;
+    #endif
      
-    //Software trigger for VBAT,TEMP1 - samples stored in next ISR
+    // Software trigger for VBAT,TEMP1 - samples stored in next ISR
     ADCON3Lbits.SWCTRG = 1;
     
 #if defined (__MA330048_P33CK_R30_USB_PD_BOB__)

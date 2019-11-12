@@ -204,7 +204,7 @@ typedef union {
         volatile unsigned : 1; // Bit 5: reserved
         volatile unsigned : 1; // Bit 6: reserved
         volatile unsigned : 1; // Bit 7: reserved
-        volatile unsigned : 1; // Bit 8: reserved
+        volatile unsigned ssm_enable: 1; // Bit 8: Control bit enabling/disabling Spread Spectrum Modulation
         volatile unsigned : 1; // Bit 9: reserved
         volatile unsigned : 1; // Bit 11: reserved
         volatile unsigned : 1; // Bit 11: reserved
@@ -217,7 +217,7 @@ typedef union {
 } __attribute__((packed))PWM_DIST_STATUS_t; // PWM distribution module status data structure
 
 typedef struct {
-    volatile PWM_DIST_STATUS_t status;       // status word of the PWM distribution module
+    volatile PWM_DIST_STATUS_t status; // status word of the PWM distribution module
     volatile uint16_t* ptr_source;   // pointer to source memory address
 	volatile uint16_t* ptr_targetA;  // pointer to target A memory address
 	volatile uint16_t* ptr_targetB;  // pointer to target B memory address
@@ -230,6 +230,8 @@ typedef struct {
     volatile uint16_t adc_trigA_offset; // ADC trigger offset of trigger A to compensate propagation delays 
     volatile uint16_t* ptr_adc_trigB; // Pointer to ADC trigger B register (e.g. PG5TRIGB)
     volatile uint16_t adc_trigB_offset; // ADC trigger offset of trigger B to compensate propagation delays 
+    // Spread Spectrum Modulation
+    volatile uint16_t ssm_bit_mask;    // Bit mask defining the modulation range
 } C4SWBB_PWM_DISTRIBUTION_t;
 
 /*!C4SWBB_FEEDBACK_t

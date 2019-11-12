@@ -63,13 +63,20 @@
 #define IOUT_4SWBB_TRIP_CONV2   1.100       // [A] Upper boost switch threshold for output current - PWM5&PWM7 Buck-Boost leg
 #define IOUT_4SWBB_RESET_CONV2  0.900       // [A] Lower boost switch threshold for output current - PWM5&PWM7 Buck-Boost leg
 
-#define DUTY_RATIO_BUCK_LEG_INIT    0.0525      // Initial duty ratio of buck leg at PWM start
-#define DUTY_RATIO_MIN_BUCK         0.0525      // Minimum duty ration buck leg
-#define DUTY_RATIO_MAX_BUCK         0.8950      // maximum duty ratio buck leg
+#define DUTY_RATIO_BUCK_LEG_INIT    0.0525  // Initial duty ratio of buck leg at PWM start
+#define DUTY_RATIO_MIN_BUCK         0.0525  // Minimum duty ration buck leg
+#define DUTY_RATIO_MAX_BUCK         0.8950  // maximum duty ratio buck leg
 
-#define DUTY_RATIO_BOOST_LEG_INIT   0.0525      // Initial duty ratio of boost leg at PWM start
-#define DUTY_RATIO_MIN_BOOST        0.0525      // Minimum duty ration boost leg
-#define DUTY_RATIO_MAX_BOOST        0.7000      // maximum duty ratio boost leg
+#define DUTY_RATIO_BOOST_LEG_INIT   0.0525  // Initial duty ratio of boost leg at PWM start
+#define DUTY_RATIO_MIN_BOOST        0.0525  // Minimum duty ration boost leg
+#define DUTY_RATIO_MAX_BOOST        0.7000  // maximum duty ratio boost leg
+
+
+#define SSM_MOD_RANGE_LEVEL_1       0x7E00  // Spread Spectrum Modulation Range of +/- 1.6 %
+#define SSM_MOD_RANGE_LEVEL_2       0x7C00  // Spread Spectrum Modulation Range of +/- 3.2 %
+#define SSM_MOD_RANGE_LEVEL_3       0x7800  // Spread Spectrum Modulation Range of +/- 6.7 %
+
+#define SPREAD_SPECTRUM_MODULATION_RANGE    SSM_MOD_RANGE_LEVEL_1    // Range between 0-10 % 
 
 
 /*!System Configuration Limits
@@ -115,7 +122,7 @@
 #define DUTY_RATIO_MIN_BOOST_REG    (uint16_t)((float)DUTY_RATIO_MIN_BOOST * (float)SWITCHING_PERIOD)
 #define DUTY_RATIO_MAX_BOOST_REG    (uint16_t)((float)DUTY_RATIO_MAX_BOOST * (float)SWITCHING_PERIOD)
 
-
+#define SSM_MOD_RANGE_MASK      (uint16_t)(SPREAD_SPECTRUM_MODULATION_RANGE)
 
 
 #endif	/* __SYSTEM_DESIGN_LIMITS_H__ */
