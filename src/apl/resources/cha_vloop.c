@@ -73,7 +73,7 @@ volatile fractional cha_vloop_BCoefficients [4] =
 };
 
 // Coefficient normalization factors
-volatile int16_t cha_vloop_pre_scaler = -3;
+volatile int16_t cha_vloop_pre_scaler = 3;
 volatile int16_t cha_vloop_post_shift_A = 0;
 volatile int16_t cha_vloop_post_shift_B = 0;
 volatile fractional cha_vloop_post_scaler = 0x0000;
