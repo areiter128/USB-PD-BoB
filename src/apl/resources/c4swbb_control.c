@@ -389,7 +389,8 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
                 pInstance->soft_start.v_reference = pInstance->data.v_ref; 
                 
                 // Re-assign controller voltage loop reference
-                pInstance->v_loop.controller->ptrControlReference = &pInstance->data.v_ref;
+                pInstance->v_loop.reference = pInstance->data.v_ref;
+                pInstance->v_loop.controller->ptrControlReference = &pInstance->v_loop.reference;
                 
                 // Switch soft-start phase
                 #if (C4SWBB_CONTROL_MODE == C4SWBB_VMC)
