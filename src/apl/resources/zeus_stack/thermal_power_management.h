@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-#define POWER_BUDGET_DEFAULT_WATTS    (uint32_t)60    
+#define POWER_BUDGET_DEFAULT_WATTS    (uint32_t)100    
     
 #define THERMAL_HYSTERESIS             3
 
