@@ -25,6 +25,43 @@
           <itemPath>../h/apl/config/UserTasks.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
+          <logicalFolder name="f4" displayName="pd_debug_uart" projectFiles="true">
+            <itemPath>../src/apl/resources/pd_debug_uart/debug_uart.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f3" displayName="pd_timer" projectFiles="true">
+            <itemPath>../src/apl/resources/pd_timer/upd_timer.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="spi2" projectFiles="true">
+            <itemPath>../src/apl/resources/spi2/spi2.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f1" displayName="Zeus_PD_stack" projectFiles="true">
+            <logicalFolder name="f1" displayName="include" projectFiles="true">
+              <itemPath>../src/apl/resources/zeus_stack/include/ProjectVersion.h</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/include/cfg_globals.h</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/include/debug.h</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/include/generic_defs.h</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/include/generic_timer.h</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/include/int_globals.h</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/include/policy_engine.h</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/include/policy_engine_fwup.h</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/include/policy_manager.h</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/include/protocol_layer.h</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/include/stdinc.h</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/include/typeC_control.h</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/include/upd_hw.h</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/include/upd_interrupts.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="pd" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="portable" projectFiles="true">
+              <logicalFolder name="f1" displayName="dsPIC" projectFiles="true">
+                <itemPath>../src/apl/resources/zeus_stack/portable/dsPIC/ZeusStackConfig.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <itemPath>../src/apl/resources/zeus_stack/hook_functions.h</itemPath>
+            <itemPath>../src/apl/resources/zeus_stack/thermal_power_management.h</itemPath>
+          </logicalFolder>
+          <itemPath>../h/apl/resources/fdrv_FunctionPDStack.h</itemPath>
           <itemPath>../h/apl/resources/npnz16b.h</itemPath>
           <itemPath>../h/apl/resources/c4swbb_control.h</itemPath>
           <itemPath>../h/apl/resources/cha_iloop.h</itemPath>
@@ -35,6 +72,7 @@
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../h/apl/tasks/task_Idle.h</itemPath>
+          <itemPath>../h/apl/tasks/task_PDStack.h</itemPath>
           <itemPath>../h/apl/tasks/task_PowerControl.h</itemPath>
         </logicalFolder>
         <itemPath>../h/apl/apl.h</itemPath>
@@ -93,6 +131,39 @@
           <itemPath>../src/apl/config/UserTasks.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
+          <logicalFolder name="f4" displayName="pd_debug_uart" projectFiles="true">
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="pd_timer" projectFiles="true">
+          </logicalFolder>
+          <logicalFolder name="f3" displayName="spi2" projectFiles="true">
+            <itemPath>../src/apl/resources/spi2/spi2.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f1" displayName="Zeus_PD_stack" projectFiles="true">
+            <logicalFolder name="f1" displayName="include" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="pd" projectFiles="true">
+              <itemPath>../src/apl/resources/zeus_stack/pd/cfg_globals.c</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/pd/debug.c</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/pd/generic_timer.c</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/pd/int_globals.c</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/pd/pd_main.c</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/pd/policy_engine.c</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/pd/policy_engine_fwup.c</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/pd/policy_engine_snk.c</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/pd/policy_engine_src.c</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/pd/policy_manager.c</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/pd/protocol_layer.c</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/pd/typeC_control.c</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/pd/upd_hw.c</itemPath>
+              <itemPath>../src/apl/resources/zeus_stack/pd/upd_interrupts.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="portable" projectFiles="true">
+              <logicalFolder name="f1" displayName="dsPIC" projectFiles="true">
+              </logicalFolder>
+            </logicalFolder>
+            <itemPath>../src/apl/resources/zeus_stack/hook_functions.c</itemPath>
+            <itemPath>../src/apl/resources/zeus_stack/thermal_power_management.c</itemPath>
+          </logicalFolder>
           <itemPath>../src/apl/resources/c4swbb_control.c</itemPath>
           <itemPath>../src/apl/resources/cha_iloop.c</itemPath>
           <itemPath>../src/apl/resources/cha_iloop_asm.s</itemPath>
@@ -107,6 +178,7 @@
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../src/apl/tasks/task_Idle.c</itemPath>
+          <itemPath>../src/apl/tasks/task_PDStack.c</itemPath>
           <itemPath>../src/apl/tasks/task_PowerControl.c</itemPath>
         </logicalFolder>
         <itemPath>../src/apl/apl.c</itemPath>
@@ -177,7 +249,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>pk4hybrid</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.41</languageToolchainVersion>
+        <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -268,7 +340,7 @@
         <property key="scalar-model" value="default"/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
-        <appendMe value="-finline"/>
+        <appendMe value="-Wno-switch -std=gnu99"/>
       </C30>
       <C30-AR>
         <property key="additional-options-chop-files" value="false"/>
@@ -342,7 +414,8 @@
         <property key="warn-section-align" value="false"/>
       </C30-LD>
       <C30Global>
-        <property key="common-include-directories" value=""/>
+        <property key="common-include-directories"
+                  value="..\src\apl\resources\zeus_stack\include;..\src\apl\resources\zeus_stack\portable\dsPIC;..\src\apl\resources\pd_debug_uart"/>
         <property key="dual-boot-partition" value="0"/>
         <property key="fast-math" value="false"/>
         <property key="generic-16-bit" value="false"/>
@@ -490,6 +563,7 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
@@ -1096,8 +1170,7 @@
         <property key="ToolFirmwareOption.UpdateOptions"
                   value="ToolFirmwareOption.UseLatest"/>
         <property key="communication.activationmode" value="nohv"/>
-        <property key="communication.interface"
-                  value="${communication.interface.default}"/>
+        <property key="communication.interface" value=""/>
         <property key="communication.speed" value="${communication.speed.default}"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="memories.aux" value="false"/>
@@ -1112,7 +1185,7 @@
         <property key="memories.instruction.ram.ranges"
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
-        <property key="memories.programmemory.ranges" value="0-15eff"/>
+        <property key="memories.programmemory.ranges" value="0-aeff"/>
         <property key="poweroptions.powerenable" value="false"/>
         <property key="programmerToGoImageName" value="usb_pd_bob_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
@@ -1127,14 +1200,15 @@
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preserveeeprom" value="false"/>
         <property key="programoptions.preserveeeprom.ranges" value=""/>
-        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges"
+                  value="0-ffffffffffffffff"/>
         <property key="programoptions.preserveprogramrange" value="false"/>
         <property key="programoptions.preserveuserid" value="false"/>
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
         <property key="ptgSendImage" value="true"/>
-        <property key="voltagevalue" value="3.25"/>
+        <property key="voltagevalue" value="3.3"/>
       </pk4hybrid>
     </conf>
     <conf name="MA330048_P33CK_R30" type="2">
@@ -1145,7 +1219,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.41</languageToolchainVersion>
+        <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -1310,7 +1384,8 @@
         <property key="warn-section-align" value="false"/>
       </C30-LD>
       <C30Global>
-        <property key="common-include-directories" value=""/>
+        <property key="common-include-directories"
+                  value="..\src\apl\resources\zeus_stack\portable\dsPIC;..\src\apl\resources\zeus_stack\include;..\src\apl\resources\pd_debug_uart;..\src\apl\resources\pd_timer"/>
         <property key="dual-boot-partition" value="0"/>
         <property key="fast-math" value="false"/>
         <property key="generic-16-bit" value="false"/>
