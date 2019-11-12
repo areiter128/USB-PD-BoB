@@ -5,8 +5,8 @@
  * Created on May 27, 2019, 3:11 PM
  */
 
-#define CH2    //selects which channel RC2 is assigned to for ISR timing
-
+ //selects which channel RC2 is assigned to for ISR timing
+#define ALL   
 
 #include <xc.h>
 #include <stdint.h>
@@ -116,24 +116,27 @@ volatile uint16_t init_PowerControl(void) {
     fres &= c4swbb_pwm_enable(&c4swbb_1);
     fres &= c4swbb_pwm_enable(&c4swbb_2);
     
-    PG2PHASE = 6000;
-    //c4swbb_1.status.bits.enable = true;
+    PG2PHASE = 0;
+    PG7PHASE = 0;
+            
+    c4swbb_1.status.bits.enable = true;
     //c4swbb_2.status.bits.enable = true;
     
     fres &= c4swbb_pwm_release(&c4swbb_1);
     fres &= c4swbb_pwm_release(&c4swbb_2);
     
     TRISCbits.TRISC2 = 0;  //used for debug
-    /*
-    PG1DC = 3000;     //buck leg
-    PG1TRIGA = 7000;
-    PG2DC = 1000;     //boost leg
-    PG2TRIGA = 1000;
-    PG5DC = 3000;     //buck leg
-    PG5TRIGA = 7000;
-    PG7DC = 1000;     //boost leg
-    PG7TRIGA = 1000;
-    */
+    
+    //Max 1428 for 350kHz
+    PG1TRIGA = 100;    
+    //PG7TRIGA = 20;
+    //PG2TRIGA = 20;
+    
+    PG5TRIGA = 100;
+    
+    //PG7TRIGA = 20;
+    Nop();
+    
     //PG1STATbits.UPDREQ = 1;
     //PG2STATbits.UPDREQ = 1;
     //PG5STATbits.UPDREQ = 1;
@@ -143,7 +146,7 @@ volatile uint16_t init_PowerControl(void) {
    c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
    c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
    
-   c4swbb_1.status.bits.autorun = 0;
+   c4swbb_1.status.bits.autorun = 1;
    c4swbb_2.status.bits.autorun = 0;  
     Nop();
     
@@ -346,7 +349,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.feedback_offset = C4SWBB_VOUT_OFFSET;   // Voltage feedback signal offset
     c4swbb_1.v_loop.reference = C4SWBB_VOUT_REF; // Voltage loop reference value
     c4swbb_1.v_loop.trigger_offset = ADC_TRIG_OFFSET_VOUT; // Voltage sample ADC trigger offset (offset from 50% on-time)
-    
+
     // Assign voltage loop object to 4-switch buck/boost converter instance
     c4swbb_1.v_loop.controller = &cha_vloop;        // 4-Switch Buck/Boost converter voltage loop controller
     c4swbb_1.v_loop.controller->ptrSource = &FB_VOUT1_ADCBUF; // Load pointer to user data input source
@@ -355,6 +358,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.controller->MinOutput = c4swbb_1.v_loop.minimum; // Load user minimum value
     c4swbb_1.v_loop.controller->MaxOutput = c4swbb_1.v_loop.maximum; // Load user maximum value
     c4swbb_1.v_loop.controller->InputOffset = c4swbb_1.v_loop.feedback_offset; // Load user feedback offset value
+    c4swbb_1.v_loop.controller->ptrDataProviderControlInput = &c4swbb_1.data.v_out; // Setting pointer to output voltage variable for automatic update
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_1.v_loop.ctrl_Init = &cha_vloop_Init;        // Function pointer to CONTROL INIT routine
@@ -371,7 +375,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.i_loop.feedback_offset = C4SWBB_IOUT_FEEDBACK_OFFSET;   // Current feedback signal offset
     c4swbb_1.i_loop.reference = IOUT_LCL_CLAMP; // Current loop reference value
     c4swbb_1.i_loop.trigger_offset = ADC_TRIG_OFFSET_IOUT; // Current sample ADC trigger offset (offset from 50% on-time)
-    
+
     c4swbb_1.i_loop.controller = &cha_iloop;   // 4-Switch Buck/Boost converter voltage loop controller
     c4swbb_1.i_loop.controller->ptrSource = &FB_IOUT1_ADCBUF; // Set pointer to data input source
     c4swbb_1.i_loop.controller->ptrTarget = &c4swbb_1.i_loop.control_output; // &BUCKH1_PGx_DC; // Set pointer to data output target
@@ -379,6 +383,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.i_loop.controller->MinOutput = c4swbb_1.i_loop.minimum; // Load user minimum value
     c4swbb_1.i_loop.controller->MaxOutput = c4swbb_1.i_loop.maximum; // Load user maximum value
     c4swbb_1.i_loop.controller->InputOffset = c4swbb_1.i_loop.feedback_offset; // Load user feedback offset value
+    c4swbb_1.i_loop.controller->ptrDataProviderControlInput = &c4swbb_1.data.i_out; // Setting pointer to output current variable for automatic update
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_1.i_loop.ctrl_Init = &cha_iloop_Init;        // Function pointer to CONTROL INIT routine
@@ -400,8 +405,10 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.pwm_dist.adc_trigA_offset = c4swbb_1.i_loop.trigger_offset;    // Set ADC trigger A offset value (current trigger)
     c4swbb_1.pwm_dist.ptr_adc_trigB = &FB_VOUT1_PGxTRIGy;   // Load pointer to ADC trigger B register (voltage trigger)
     c4swbb_1.pwm_dist.adc_trigB_offset = c4swbb_1.v_loop.trigger_offset;   // Set ADC trigger B offset value (voltage trigger)
-    c4swbb_1.pwm_dist.status.bits.trigA_placement_enable = true; // Allow the PWM distribution module to auto-position the rigger of buck leg
-    c4swbb_1.pwm_dist.status.bits.trigB_placement_enable = true; // Allow the PWM distribution module to auto-position the rigger of boost leg
+    c4swbb_1.pwm_dist.status.bits.trigA_placement_enable = false; // Allow the PWM distribution module to auto-position the rigger of buck leg
+    c4swbb_1.pwm_dist.status.bits.trigB_placement_enable = false; // Allow the PWM distribution module to auto-position the rigger of boost leg
+    c4swbb_1.pwm_dist.ssm_bit_mask = SSM_MOD_RANGE_MASK;   // Define bit-mask to limit Spread Spectrum Modulation range
+    c4swbb_1.pwm_dist.status.bits.ssm_enable = false;   // Spread Spectrum Modulation disabled
     
     //Added this to enable PWM distribution routine
     c4swbb_1.pwm_dist.status.bits.enable = true;
@@ -529,6 +536,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.v_loop.controller->MinOutput = c4swbb_2.v_loop.minimum; // Load user minimum value
     c4swbb_2.v_loop.controller->MaxOutput = c4swbb_2.v_loop.maximum; // Load user maximum value
     c4swbb_2.v_loop.controller->InputOffset = c4swbb_2.v_loop.feedback_offset; // Load user feedback offset value
+    c4swbb_2.v_loop.controller->ptrDataProviderControlInput = &c4swbb_2.data.v_out; // Setting pointer to output voltage variable for automatic update
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_2.v_loop.ctrl_Init = &chb_vloop_Init;        // Function pointer to CONTROL INIT routine
@@ -554,6 +562,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.i_loop.controller->MinOutput = c4swbb_2.i_loop.minimum; // Load user minimum value
     c4swbb_2.i_loop.controller->MaxOutput = c4swbb_2.i_loop.maximum; // Load user maximum value
     c4swbb_2.i_loop.controller->InputOffset = c4swbb_2.i_loop.feedback_offset; // Load user feedback offset value
+    c4swbb_2.i_loop.controller->ptrDataProviderControlInput = &c4swbb_2.data.i_out; // Setting pointer to output current variable for automatic update
     
     // Assign control functions by loading function pointers into the data structure
     c4swbb_2.i_loop.ctrl_Init = &chb_iloop_Init;        // Function pointer to CONTROL INIT routine
@@ -575,11 +584,13 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.pwm_dist.adc_trigA_offset = c4swbb_2.i_loop.trigger_offset;    // Set ADC trigger A offset value (current trigger)
     c4swbb_2.pwm_dist.ptr_adc_trigB = &FB_VOUT2_PGxTRIGy;   // Load pointer to ADC trigger B register (voltage trigger)
     c4swbb_2.pwm_dist.adc_trigB_offset = c4swbb_2.v_loop.trigger_offset;   // Set ADC trigger B offset value (voltage trigger)
-    c4swbb_2.pwm_dist.status.bits.trigA_placement_enable = true; // Allow the PWM distribution module to auto-position the trigger of buck leg
-    c4swbb_2.pwm_dist.status.bits.trigB_placement_enable = true; // Allow the PWM distribution module to auto-position the trigger of boost leg
+    c4swbb_2.pwm_dist.status.bits.trigA_placement_enable = false; // Allow the PWM distribution module to auto-position the trigger of buck leg
+    c4swbb_2.pwm_dist.status.bits.trigB_placement_enable = false; // Allow the PWM distribution module to auto-position the trigger of boost leg
+    c4swbb_2.pwm_dist.ssm_bit_mask = SSM_MOD_RANGE_MASK;   // Define bit-mask to limit Spread Spectrum Modulation range
+    c4swbb_2.pwm_dist.status.bits.ssm_enable = false;   // Spread Spectrum Modulation disabled
     
-    //Added this to enable PWM distribution routine
-    c4swbb_2.pwm_dist.status.bits.enable = true;
+    // Added this to enable PWM distribution routine
+    c4swbb_2.pwm_dist.status.bits.enable = true;        // Enable PWM distribution for buck and boost leg
     
     
     // Initialize USB Port #2 Soft Start Settings
@@ -619,28 +630,49 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT1_ADC_Interrupt(
 ECP39_SET;
 #endif
 
-#if defined (CH1)
-//LATCbits.LATC2 = 1;
+#if defined CH1|| defined ALL
+LATCbits.LATC2 = 1;
 #endif
 
     // Call control loop update
     cha_vloop_Update(&cha_vloop);
+    cha_iloop_Update(&cha_iloop);
+    c4swbb_pwm_update(&c4swbb_1.pwm_dist);
+      
+    PG5STATbits.UPDREQ = 1;
+    PG7STATbits.UPDREQ = 1;   
     
     // Capture additional analog inputs
     c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-    c4swbb_1.data.v_out = FB_VOUT1_ADCBUF; // Capture most recent output voltage value
-    c4swbb_1.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
-    
+    //c4swbb_1.data.v_out = FB_VOUT1_ADCBUF; // Capture most recent output voltage value  
+    //c4swbb_1.data.i_out = FB_IOUT1_ADCBUF; // Capture most recent output current value
+    c4swbb_1.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value 
+    c4swbb_1.data.temp = FB_TEMP1_ADCBUF; // Capture most recent temperature value
+
     // Clear the interrupt flag 
     _ADCIF = 0;
+    #if (FB_VOUT1_ENABLE)
+    FB_VOUT1_ADC_IF = 0; 
+    #endif
+    #if (FB_IOUT1_ENABLE)
+    FB_IOUT1_ADC_IF = 0;
+    #endif
+    #if (FB_VBAT_ENABLE)
     FB_VBAT_ADC_IF = 0;
-    FB_VOUT1_ADC_IF = 0;  
+    #endif
+    #if (FB_TEMP1_ENABLE)
+    FB_TEMP1_ADC_IF = 0;
+    #endif
+    
+    // Software trigger for VBAT,TEMP1 and TEMP2 - samples stored in next ISR
+    ADCON3Lbits.SWCTRG = 1;
+    
     
 #if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
     ECP39_CLEAR;
 #endif
-#if defined (CH1)
-//LATCbits.LATC2 = 0;
+#if defined CH1|| defined ALL
+LATCbits.LATC2 = 0;
 #endif
 }
 #else
@@ -673,7 +705,7 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     ECP44_SET;
 #endif
     
-#if defined (CH1)
+#if defined CH1|| defined ALL
 //LATCbits.LATC2 = 1;
 #endif
 
@@ -683,7 +715,7 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     
     // Capture additional analog inputs
     c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-    c4swbb_1.data.i_out = FB_IOUT1_ADCBUF; // Capture most recent output current value
+//    c4swbb_1.data.i_out = FB_IOUT1_ADCBUF; // Capture most recent output current value
     c4swbb_1.data.temp = FB_TEMP1_ADCBUF; // Capture most recent temperature value
     
     // Clear the interrupt flag 
@@ -700,7 +732,7 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
 ECP44_CLEAR;
 #endif
 
-#if defined (CH1)
+#if defined CH1|| defined ALL
 //LATCbits.LATC2 = 0;
 #endif
 
@@ -729,27 +761,49 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT2_ADC_Interrupt(
     ECP39_SET;
 #endif
     
-#if defined (CH2)
-//LATCbits.LATC2 = 1;
+#if defined CH2|| defined ALL
+LATCbits.LATC2 = 1;
 #endif
 
-    // Call control loop update
+    // Call control loop update 
     chb_vloop_Update(&chb_vloop);
-    
+    chb_iloop_Update(&chb_iloop);    
+    c4swbb_pwm_update(&c4swbb_2.pwm_dist);
+ 
+    PG1STATbits.UPDREQ = 1;
+    PG2STATbits.UPDREQ = 1;
+   
+    LATCbits.LATC2 = 0;   
     // Capture additional analog inputs
     c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-    c4swbb_2.data.v_out = FB_VOUT2_ADCBUF; // Capture most recent output voltage value
+    //c4swbb_2.data.v_out = FB_VOUT2_ADCBUF; // Capture most recent output voltage value
+    //c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output voltage value
     c4swbb_2.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
+    c4swbb_2.data.temp = FB_TEMP2_ADCBUF;
     
     // Clear the interrupt flag 
-    FB_VBAT_ADC_IF = 0;
+    _ADCIF = 0;
+    #if (FB_VOUT2_ENABLE)
     FB_VOUT2_ADC_IF = 0; 
+    #endif
+    #if (FB_IOUT2_ENABLE)
+    FB_IOUT2_ADC_IF = 0;
+    #endif
+    #if (FB_VBAT_ENABLE)
+    FB_VBAT_ADC_IF = 0;
+    #endif
+    #if (FB_TEMP2_ENABLE)
+    FB_TEMP2_ADC_IF = 0;
+    #endif
+     
+    // Software trigger for VBAT,TEMP1 - samples stored in next ISR
+    ADCON3Lbits.SWCTRG = 1;
     
 #if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
     ECP39_CLEAR;
 #endif
     
-#if defined (CH2)
+#if defined CH2|| defined ALL
 //LATCbits.LATC2 = 0;
 #endif
 
@@ -784,18 +838,17 @@ void __attribute__ ((__interrupt__, auto_psv, context)) _FB_IIN2_ADC_Interrupt(v
     ECP44_SET;
 #endif
     
-#if defined (CH2)
-LATCbits.LATC2 = 1;
+#if defined CH2|| defined ALL
+//LATCbits.LATC2 = 1;
 #endif
     
     // Call control loop update
-    chb_iloop_Update(&chb_iloop);
-LATCbits.LATC2 = 0;    
+    chb_iloop_Update(&chb_iloop);    
     c4swbb_pwm_update(&c4swbb_2.pwm_dist);
     
     // Capture additional analog inputs
     c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-    c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output current value
+//    c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output current value
     c4swbb_2.data.temp = FB_TEMP2_ADCBUF; // Capture most recent temperature value
     
     // Clear the interrupt flag 
@@ -812,7 +865,7 @@ LATCbits.LATC2 = 0;
     ECP44_CLEAR;
 #endif
     
-#if defined (CH2)
+#if defined CH2|| defined ALL
 //LATCbits.LATC2 = 0;
 #endif
 

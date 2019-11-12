@@ -460,7 +460,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
             pInstance->v_loop.controller->MaxOutput = pInstance->i_loop.maximum;
             
             //This line of code bypasses the CONVERTER_STATE_I_RAMP_UP
-            pInstance->v_loop.controller->MaxOutput = pInstance->v_loop.maximum;
+            pInstance->v_loop.controller->MaxOutput = pInstance->i_loop.maximum;
             
             // check if ramp is complete or can to be skipped
             if ( (pInstance->v_loop.controller->MaxOutput >= pInstance->i_loop.maximum) || // current ramp is complete
@@ -680,7 +680,7 @@ volatile uint16_t reset_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstan
     pInstance->v_loop.feedback_offset = 0; // Reset the feedback offset setting of the voltage control loop
     pInstance->v_loop.minimum = 0; // Reset the minimum output setting of the voltage control loop
     pInstance->v_loop.maximum = 0; // Reset the maximum output setting of the voltage control loop
-    pInstance->v_loop.trigger_offset = 0; // Reset the ADC trigger offset setting of the voltage control loop
+    pInstance->v_loop.trigger_offset = 0; // Reset the ADC trigger A offset setting of the voltage control loop
     pInstance->v_loop.reference = 0; // Reset the control reference of the voltage control loop
         
     pInstance->i_loop.controller = 0; // Clear pointer to current control loop object

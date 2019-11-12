@@ -23,6 +23,7 @@
 	.equ PWMDIST_STATUS_ENABLE,     15    ; bit position of the ENABLE control bit
 	.equ PWMDIST_TRIGA_ENABLE,      14    ; bit position of the ENABLE_TRIGA_PLACEMENT control bit
 	.equ PWMDIST_TRIGB_ENABLE,      13    ; bit position of the ENABLE_TRIGB_PLACEMENT control bit
+	.equ PWMDIST_SSM_ENABLE,         8    ; bit position of the ENABLE_SPREAD_SPECTRUM_MODULATION control bit
 	
 ;------------------------------------------------------------------------------
 ; Address offset declarations for data structure addressing
@@ -38,6 +39,7 @@
 	.equ offADCTrigOffsetA,         18    ; value of ADC trigger A offset
 	.equ offPtrADCTrigRegB,         20    ; pointer to ADC trigger B register memory address
 	.equ offADCTrigOffsetB,         22    ; value of ADC trigger B offset
+    .equ offSSMBitMask,             24    ; bit mask defining spread spectrum modulation limit window
     
 ;------------------------------------------------------------------------------
 ;local inclusions.
@@ -67,7 +69,7 @@ _c4swbb_pwm_update:    ; provide global scope to routine
 	mov [w0 + #offStatus], w12
 	btss w12, #PWMDIST_STATUS_ENABLE
 	bra C4SWBB_PWM_UPDATE_BYPASS
-	
+
 ;------------------------------------------------------------------------------
 ; Write control output value to target A
     mov [w0 + offPtrSource], w1     ; load pointer to input data into wreg
@@ -95,7 +97,8 @@ _c4swbb_pwm_update:    ; provide global scope to routine
     cpsgt w9, w3                    ; compare values and skip next instruction if source is within boost leg duty cycle range (source - target A > lower boost limit)
     mov w3, w9                      ; overwrite target B value with buck leg minimum
     
-    ; write distributed values into target registers A and B
+;------------------------------------------------------------------------------
+; write distributed values into target registers A and B
     mov [w0 + offPtrTargetA], w1    ; load pointer to target A into wreg
     mov [w0 + offPtrTargetB], w2    ; load pointer to target B into wreg
     mov w8, [w1]                    ; write value to target A (buck PWM module)
@@ -127,6 +130,24 @@ _c4swbb_pwm_update:    ; provide global scope to routine
 	mov w7, [w9]
 
     C4SWBB_TRIGB_UPDATE_BYPASS:
+
+;------------------------------------------------------------------------------
+; when SSM is enabled, create modulation factor and multiply all timing values
+    btss w12, #PWMDIST_SSM_ENABLE   ; test SSM_ENABLE bit and skip next instruction if set
+    bra C4SWBB_PWM_SSM_BYPASS       ; bypass SSM calculation
+
+    ;mov [w0 + offSSMBitMask], w10   ; load spread spectrum modulation range limit bit mask
+    ;mov _LFSR, w11                  ; load most recent value from LFSR register
+    ;IOR w11, w10, w10               ; OR mask with LFSR value => modulation factor
+
+    ; multiply SSM factor with period, duty cycle and ADC trigger locations
+    ;mpy w9*w10, a                  ; multiply period
+    ;sac.r a, w9                    ; store most recent accumulator result in working register
+    ;mov w9
+    ;    mpy w9*w10, a              ; multiply period
+    
+    C4SWBB_PWM_SSM_BYPASS:          ; SSM bypass branch target
+    
 ;------------------------------------------------------------------------------
 ; Enable/Disable bypass branch target
 	C4SWBB_PWM_UPDATE_BYPASS:
