@@ -770,15 +770,10 @@ LATCbits.LATC2 = 1;
     chb_vloop_Update(&chb_vloop);
     chb_iloop_Update(&chb_iloop);    
     c4swbb_pwm_update(&c4swbb_2.pwm_dist);
- 
-    PG1STATbits.UPDREQ = 1;
-    PG2STATbits.UPDREQ = 1;
-   
-    LATCbits.LATC2 = 0;   
+
+       
     // Capture additional analog inputs
     c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-    //c4swbb_2.data.v_out = FB_VOUT2_ADCBUF; // Capture most recent output voltage value
-    //c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output voltage value
     c4swbb_2.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
     c4swbb_2.data.temp = FB_TEMP2_ADCBUF;
     
@@ -788,18 +783,18 @@ LATCbits.LATC2 = 1;
     FB_VOUT2_ADC_IF = 0; 
     #endif
     #if (FB_IOUT2_ENABLE)
-    FB_IOUT2_ADC_IF = 0;
+    //FB_IOUT2_ADC_IF = 0;
     #endif
     #if (FB_VBAT_ENABLE)
-    FB_VBAT_ADC_IF = 0;
+    //FB_VBAT_ADC_IF = 0;
     #endif
     #if (FB_TEMP2_ENABLE)
-    FB_TEMP2_ADC_IF = 0;
+    //FB_TEMP2_ADC_IF = 0;
     #endif
      
     // Software trigger for VBAT,TEMP1 - samples stored in next ISR
     ADCON3Lbits.SWCTRG = 1;
-    
+    LATCbits.LATC2 = 0;
 #if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
     ECP39_CLEAR;
 #endif
