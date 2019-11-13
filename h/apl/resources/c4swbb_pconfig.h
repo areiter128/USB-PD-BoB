@@ -426,7 +426,17 @@ extern "C" {
                                         REG_PGxLEBCON_LEBTRG_PLF_DISABLE \
                                     )  // 0b0000000000000000
 
-/*!PWM Generator Timing Registers
+#define C4SWBB_2_PG1LEBH            (   REG_LEBCON_PWMPCI_PG5 | \
+                                        REG_PGxLEBCON_LEBTRG_PHR_DISABLE | \
+                                        REG_PGxLEBCON_LEBTRG_PHF_DISABLE | \
+                                        REG_PGxLEBCON_LEBTRG_PLR_DISABLE | \
+                                        REG_PGxLEBCON_LEBTRG_PLF_DISABLE \
+                                    )  // 0b0000000000000000
+    
+    
+    
+    
+    /*!PWM Generator Timing Registers
 
 Description: 
 
