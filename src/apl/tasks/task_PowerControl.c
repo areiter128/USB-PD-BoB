@@ -95,7 +95,12 @@ volatile uint16_t init_PowerControl(void) {
     // Load PWM configurations for PWM generators for both ports
     fres &= c4swbb_pwm_generators_initialize(&c4swbb_1); // Initialize PWM generators of USB Port A
     fres &= c4swbb_pwm_generators_initialize(&c4swbb_2); // Initialize PWM generators of USB Port B
-
+    
+    //Custom setup for c4swbb_2 to use PCI to sync c2 buck leg to ch 1 buck leg
+    PG1LEBH = C4SWBB_2_PG1LEBH;      //PG5 available to PCI logic
+    PG1CONH = C4SWBB_2_PGxCONH;      //Trigger is via PCI logic from PG5
+    PG1SPCIL = 0b1001000000000001;
+    PG1SPCIH = 0x0000;
     // ADC core configuration
     fres &= c4swbb_adc_module_initialize();
     
