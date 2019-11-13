@@ -199,14 +199,14 @@ extern "C" {
     bit 9 ADTR1EN2: ADC Trigger 1 Source is PGxTRIGB Compare Event Enable bit: 0 = PGxTRIGB register compare event is disabled as trigger source for ADC Trigger 1
     bit 8 ADTR1EN1: ADC Trigger 1 Source is PGxTRIGA Compare Event Enable bit: 0 = PGxTRIGA register compare event is disabled as trigger source for ADC Trigger 1
     bit 7-5 Unimplemented: Read as ?0?
-    bit 4-3 UPDTRG[1:0]: Update Trigger Select bits: 11 = A write of the PGxTRIGA register automatically sets the UPDATE bit
+    bit 4-3 UPDTRG[1:0]: Update Trigger Select bits: 01 = A write of the PDC register automatically sets the UPDATE bit
     bit 2-0 PGTRGSEL[2:0]: PWM Generator Trigger Output Selection bits(1): 001 = PGxTRIGA compare event is the PWM Generator trigger
  */
 #define C4SWBB_BUCKLEG_PGxEVTL      (   REG_PGEVT_ADTR1PS_POSTSCALE_1 | \
                                         REG_PGEVT_ADTR1EN3_PGxTRIGC_DISABLED | \
                                         REG_PGEVT_ADTR1EN2_PGxTRIGB_DISABLED | \
                                         REG_PGEVT_ADTR1EN1_PGxTRIGA_ENABLED | \
-                                        REG_PGEVT_UPDTRG_PGxTRIGA | \
+                                        REG_PGEVT_UPDTRG_PGxDC | \
                                         REG_PGEVT_PGTRGSEL_EOC \
                                     )  // 0b0000000000011001
 
