@@ -656,13 +656,13 @@ LATCbits.LATC2 = 1;
     FB_VOUT1_ADC_IF = 0; 
     #endif
     #if (FB_IOUT1_ENABLE)
-    FB_IOUT1_ADC_IF = 0;
+    //FB_IOUT1_ADC_IF = 0;
     #endif
     #if (FB_VBAT_ENABLE)
-    FB_VBAT_ADC_IF = 0;
+    //FB_VBAT_ADC_IF = 0;
     #endif
     #if (FB_TEMP1_ENABLE)
-    FB_TEMP1_ADC_IF = 0;
+    //FB_TEMP1_ADC_IF = 0;
     #endif
     
     // Software trigger for VBAT,TEMP1 and TEMP2 - samples stored in next ISR
