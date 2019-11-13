@@ -514,7 +514,7 @@ Description:
 
 #define C4SWBB_BOOSTLEG_PGxCONH     (   PGCON_SOCS_PWM1_5 | \
                                         REG_PGCON_TRGMOD_REPEAT | \
-                                        REG_PGCON_UPDMOD_SLV_IMMEDIATE | \
+                                        REG_PGCON_UPDMOD_IMMEDIATE | \
                                         REG_PGCON_MSTEN_NO_BROADCAST | \
                                         REG_PGCON_MPHSEL_INDEPENDENT | \
                                         REG_PGCON_MPERSEL_MASTER | \
