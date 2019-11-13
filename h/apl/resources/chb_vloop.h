@@ -1,12 +1,12 @@
 /* ********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.0.75
+ * z-Domain Control Loop Designer, Version 0.9.0.76
  * ********************************************************************************
  * 3p3z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
  * ********************************************************************************
  *
  *  Controller Type:    3P3Z - Basic Voltage Mode Compensator
- *  Sampling Frequency: 175000 Hz
+ *  Sampling Frequency: 87500 Hz
  *  Fixed Point Format: 15
  *  Scaling Mode:       1 - Single Bit-Shift Scaling
  *  Input Gain:         0.2
@@ -15,8 +15,8 @@
  * CGS Version:         1.0.0
  * CGS Date:            11/08/19
  * *******************************************************************************
- * User:                M91406
- * Date/Time:           11/11/2019 12:53:41 AM
+ * User:                C14220
+ * Date/Time:           11/12/2019 10:10:51 AM
  * *******************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_CHB_VLOOP_H__
