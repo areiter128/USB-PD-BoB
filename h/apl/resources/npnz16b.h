@@ -1,5 +1,5 @@
 /* ********************************************************************************
-* z-Domain Control Loop Designer, Version 0.9.0.75
+* z-Domain Control Loop Designer, Version 0.9.0.76
 * ********************************************************************************
 * Generic library header for z-domain compensation filter assembly functions
 * CGS Version: 1.0.0
