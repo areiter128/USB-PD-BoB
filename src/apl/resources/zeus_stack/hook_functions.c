@@ -145,7 +145,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.bits.enable = false;
             p_port_instance->status.bits.GO = 0;
             /* Clear the enable pin for the port power switch */
-            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_CLEAR);
+            //JMS UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_CLEAR);
 
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 0V\r\n");
             break;
@@ -216,6 +216,7 @@ void hw_portpower_enab_dis_VBUSDischarge(uint8_t u8PortNum, uint8_t u8EnableDisa
             // Enable the VBUS Discharge for "u8PortNum" Port
             // Set the discharge enable high
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO2, UPD_GPIO_SET);
+            HOOK_DEBUG_PORT_STR (u8PortNum,"ENABLE Discharge\r\n");
             break;
 
         }
@@ -224,6 +225,11 @@ void hw_portpower_enab_dis_VBUSDischarge(uint8_t u8PortNum, uint8_t u8EnableDisa
             // Disable the VBUS Discharge for "u8PortNum" Port
             // Set the discharge enable low
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO2, UPD_GPIO_CLEAR);
+            
+            /* Clear the enable pin for the port power switch when we disable VBUS */
+            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_CLEAR);
+
+            HOOK_DEBUG_PORT_STR (u8PortNum,"DISABLE Discharge\r\n");
             break;
 
         }
