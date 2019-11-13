@@ -134,11 +134,11 @@ volatile uint16_t init_PowerControl(void) {
     TRISCbits.TRISC2 = 0;  //used for debug
     
     //Max 1428 for 350kHz
-    PG1TRIGA = 100;    
+    PG1TRIGA = 200;    
     //PG7TRIGA = 20;
     //PG2TRIGA = 20;
     
-    PG5TRIGA = 100;
+    PG5TRIGA = 200;
     
     //PG7TRIGA = 20;
     Nop();
@@ -149,8 +149,8 @@ volatile uint16_t init_PowerControl(void) {
     PG7STATbits.UPDREQ = 1;
    
     
-   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_9V ;    // Set reference to 5V
-   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_9V ;    // Set reference to 5V
+   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_15V ;    // Set reference to 5V
+   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_15V ;    // Set reference to 5V
    
    c4swbb_1.status.bits.autorun = 1;
    c4swbb_2.status.bits.autorun = 1;  
