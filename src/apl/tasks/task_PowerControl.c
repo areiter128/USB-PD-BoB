@@ -6,7 +6,7 @@
  */
 
  //selects which channel RC2 is assigned to for ISR timing
-#define ALL   
+//#define ALL   
 
 #include <xc.h>
 #include <stdint.h>
@@ -793,7 +793,7 @@ LATCbits.LATC2 = 1;
      
     // Software trigger for VBAT,TEMP1 - samples stored in next ISR
     ADCON3Lbits.SWCTRG = 1;
-    LATCbits.LATC2 = 0;
+    //LATCbits.LATC2 = 0;
 #if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
     ECP39_CLEAR;
 #endif
