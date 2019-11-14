@@ -2378,7 +2378,7 @@ Example:
 	#define CONFIG_PORT_n_SOURCE_PDO_3_CURRENT		3000 (Maximum current value is configured as 3A)
 	</code>
 **************************************************************************************************/         
-#define CONFIG_PORT_0_SOURCE_PDO_3_CURRENT  2500
+#define CONFIG_PORT_0_SOURCE_PDO_3_CURRENT  3000
 
 /**************************************************************************************************
 	Description:
@@ -2421,7 +2421,7 @@ Example:
 	#define CONFIG_PORT_n_SOURCE_PDO_4_CURRENT		3000 (Maximum current value is configured as 3A)
 	</code>
 **************************************************************************************************/         
-#define CONFIG_PORT_0_SOURCE_PDO_4_CURRENT  2250
+#define CONFIG_PORT_0_SOURCE_PDO_4_CURRENT  3000
 
 /**************************************************************************************************
 	Description:
@@ -2917,10 +2917,10 @@ Example:
 #define CONFIG_PORT_1_SOURCE_PDO_2_CURRENT      3000
 #define CONFIG_PORT_1_SOURCE_PDO_2_VOLTAGE      9000
 #define CONFIG_PORT_1_SOURCE_PDO_3_USB_COM      0
-#define CONFIG_PORT_1_SOURCE_PDO_3_CURRENT      2500
+#define CONFIG_PORT_1_SOURCE_PDO_3_CURRENT      3000
 #define CONFIG_PORT_1_SOURCE_PDO_3_VOLTAGE      15000
 #define CONFIG_PORT_1_SOURCE_PDO_4_USB_COM      0
-#define CONFIG_PORT_1_SOURCE_PDO_4_CURRENT      2250
+#define CONFIG_PORT_1_SOURCE_PDO_4_CURRENT      3000
 #define CONFIG_PORT_1_SOURCE_PDO_4_VOLTAGE      20000
 #define CONFIG_PORT_1_SOURCE_PDO_5_USB_COM      0
 #define CONFIG_PORT_1_SOURCE_PDO_5_CURRENT      0          
