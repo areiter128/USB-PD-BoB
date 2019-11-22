@@ -1,8 +1,8 @@
 [GUI]
 CreateDate=08/01/19 4:10:47 PM
-SaveDate=11/11/2019 12:55:06 AM
+SaveDate=11/19/2019 5:00:28 PM
 Name=z-Domain Control Loop Designer
-Version=0.9.0.75
+Version=0.9.0.77
 WindoWState=Maximized
 Top=-8
 Left=-8
@@ -74,6 +74,7 @@ CHeaderPath=..\h\apl\resources\
 CLibPath=..\h\apl\resources\
 IncludeCHeaderPathInCSource=1
 IncludeCLibPathInCHeader=1
+MPLABX_ProjectDirectory=.\
 [TimingGraph]
 ControlLoopOptimization=0
 CPUClock=100
