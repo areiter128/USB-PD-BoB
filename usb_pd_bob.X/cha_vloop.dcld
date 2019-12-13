@@ -1,13 +1,13 @@
 [GUI]
 CreateDate=08/01/19 4:10:00 PM
-SaveDate=11/11/2019 12:55:42 AM
+SaveDate=11/30/2019 8:33:41 AM
 Name=z-Domain Control Loop Designer
-Version=0.9.0.75
-WindoWState=Maximized
-Top=-8
-Left=-8
-Height=1066
-Width=1936
+Version=0.9.0.76
+WindoWState=Minimized
+Top=-32000
+Left=-32000
+Height=28
+Width=160
 TabHeight=284
 AGS Version=1.2.4
 [ControlSetup]
@@ -42,9 +42,9 @@ ContextSaving=1
 ContextSavingShadowRegisters=0
 ContextSavingMACRegisters=0
 ContextSavingAccumulatorRegisters=0
-ContextSavingCoreConfigRegister=1
+ContextSavingCoreConfigRegister=0
 ContextSavingCoreStatusRegister=0
-EnforceCoreConfiguration=1
+EnforceCoreConfiguration=0
 AddEnableDisableFeature=1
 AddErrorNormalization=1
 AddADCTriggerPlacement=0
