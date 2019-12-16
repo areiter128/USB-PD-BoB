@@ -587,7 +587,7 @@ volatile uint16_t c4swbb_adc_enable(void) {
     volatile uint16_t fres = 1;
 
     fres &= smpsHSADC_Module_Enable();
-    fres &= smpsHSADC_Core_CheckReady();
+    fres &= smpsHSADC_Cores_CheckReady();
     
     return(fres);
 }
