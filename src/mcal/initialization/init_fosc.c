@@ -54,7 +54,7 @@ volatile uint16_t MainOscillator_Initialize(void) {
     
     volatile uint16_t fres = 1;
 
-    fres &= init_FRCCLK_Defaults(MAIN_CLOCK_SPEED);
+    fres &= smpsOSC_FRC_DefaultInitialize(MAIN_CLOCK_SPEED);
 
     return(fres);
 }
@@ -84,7 +84,7 @@ volatile uint16_t AuxOscillator_Initialize(void) {
 
     volatile uint16_t fres = 1;
     
-    fres &= init_AUXCLK_Defaults(AUX_CLOCK_SPEED);
+    fres &= smpsOSC_AUXCLK_DefaultInitialize(AUX_CLOCK_SPEED);
    
     return(fres);
 }

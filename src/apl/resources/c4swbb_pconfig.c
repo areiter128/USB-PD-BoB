@@ -239,8 +239,8 @@ volatile uint16_t c4swbb_pwm_enable(volatile C4SWBB_PWRCTRL_t* pInstance) {
 
     // Enable PWM channels of buck and boost leg
     fres &= c4swbb_pwm_hold(pInstance);
-    fres &= hspwm_enable_pwm(pInstance->buck_leg.pwm_instance, true);
-    fres &= hspwm_enable_pwm(pInstance->boost_leg.pwm_instance, true);
+    fres &= smpsHSPWM_Enable(pInstance->buck_leg.pwm_instance, true);
+    fres &= smpsHSPWM_Enable(pInstance->boost_leg.pwm_instance, true);
     
     if (fres) { pInstance->status.bits.pwm_active = true; }
     
@@ -270,8 +270,8 @@ volatile uint16_t c4swbb_pwm_disable(volatile C4SWBB_PWRCTRL_t* pInstance) {
     if(pInstance == NULL) { return(0); }
 
     // Disable PWM channels of buck and boost leg
-    fres &= hspwm_disable_pwm(pInstance->buck_leg.pwm_instance);
-    fres &= hspwm_disable_pwm(pInstance->boost_leg.pwm_instance);
+    fres &= smpsHSPWM_Disable(pInstance->buck_leg.pwm_instance);
+    fres &= smpsHSPWM_Disable(pInstance->boost_leg.pwm_instance);
     
     if (fres) { pInstance->status.bits.pwm_active = false; }
     
@@ -304,8 +304,8 @@ volatile uint16_t c4swbb_pwm_hold(volatile C4SWBB_PWRCTRL_t* pInstance) {
     if(pInstance == NULL) { return(0); }
 
     // Disable PWM generator outputs of buck and boost leg without disabling the PWM
-    fres &= hspwm_ovr_hold(pInstance->buck_leg.pwm_instance);
-    fres &= hspwm_ovr_hold(pInstance->boost_leg.pwm_instance);
+    fres &= smpsHSPWM_OVR_Hold(pInstance->buck_leg.pwm_instance);
+    fres &= smpsHSPWM_OVR_Hold(pInstance->boost_leg.pwm_instance);
     
     return(fres); // return failure/success or error code
     
@@ -335,8 +335,8 @@ volatile uint16_t c4swbb_pwm_release(volatile C4SWBB_PWRCTRL_t* pInstance) {
     if(pInstance == NULL) { return(0); }
 
     // Disable PWM generator outputs of buck and boost leg without disabling the PWM
-    fres &= hspwm_ovr_release(pInstance->buck_leg.pwm_instance);
-    fres &= hspwm_ovr_release(pInstance->boost_leg.pwm_instance);
+    fres &= smpsHSPWM_OVR_Release(pInstance->buck_leg.pwm_instance);
+    fres &= smpsHSPWM_OVR_Release(pInstance->boost_leg.pwm_instance);
     
     return(fres); // return failure/success or error code
     
@@ -415,7 +415,7 @@ volatile uint16_t c4swbb_adc_module_initialize(void) {
     admod_cfg.cores.core1.samc_en = ADCON4_SAMCxEN_DISABLED;
     
     // Initialize ADC module base registers
-    fres &= hsadc_adc_module_initialize(admod_cfg);  // Write ADC module configuration to registers
+    fres &= smpsHSADC_Module_Initialize(admod_cfg);  // Write ADC module configuration to registers
 
     return(fres);
 }
@@ -478,7 +478,7 @@ volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_PWRCTRL_t* pInsta
         adin_cfg.config.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vout.interrupt_enable);
 
         // Set output voltage ADC input configuration
-        fres &= hsadc_adc_input_initialize(adin_cfg); 
+        fres &= smpsHSADC_ADInput_Initialize(adin_cfg); 
 
     }
         
@@ -505,7 +505,7 @@ volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_PWRCTRL_t* pInsta
         adin_cfg.config.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_iout.interrupt_enable);
 
         // Set output current ADC input configuration
-        fres &= hsadc_adc_input_initialize(adin_cfg); 
+        fres &= smpsHSADC_ADInput_Initialize(adin_cfg); 
     
     }
     
@@ -532,7 +532,7 @@ volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_PWRCTRL_t* pInsta
         adin_cfg.config.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_vin.interrupt_enable);
 
         // Set output voltage ADC input configuration
-        fres &= hsadc_adc_input_initialize(adin_cfg); 
+        fres &= smpsHSADC_ADInput_Initialize(adin_cfg); 
   
     }
     
@@ -559,7 +559,7 @@ volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_PWRCTRL_t* pInsta
         adin_cfg.config.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_temp.interrupt_enable);
 
         // Set temperature ADC input configuration
-        fres &= hsadc_adc_input_initialize(adin_cfg); 
+        fres &= smpsHSADC_ADInput_Initialize(adin_cfg); 
 
     }
     
@@ -586,8 +586,8 @@ volatile uint16_t c4swbb_adc_enable(void) {
     
     volatile uint16_t fres = 1;
 
-    fres &= hsadc_module_enable();
-    fres &= hsadc_adc_cores_check_ready();
+    fres &= smpsHSADC_Module_Enable();
+    fres &= smpsHSADC_Core_CheckReady();
     
     return(fres);
 }
