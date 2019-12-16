@@ -25,15 +25,16 @@
  * Author: James Schaffer - C41076
  * 
  * Summary:
- * Zeus USB PD Stack Task
+ * PSF USB PD Stack Task
  * 
  * Description:
  * 
  * This file contains functions that implement the task that initializes
- * and runs the Zeus USB PD Stack.
+ * and runs the PSF USB PD Stack.
  * 
  * History:
  * 05/23/2019	File created
+ * 12/16/2019   Changed from the Zeus stack to the PSF Stack
  * ***************************************************************************/
 
 // This is a guard condition so that contents of this file are not included
@@ -44,7 +45,6 @@
 #include <xc.h>   
 #include <stdint.h>
 #include <stdbool.h>
-//#include "ZeusStackConfig.h"
 #include "../PSF/Source/include/psf_stdinc.h"
 #include "../PSF/SOC_Portable/dsPIC/PSF_Config.h"
 #include "../PSF/SOC_Portable/dsPIC/PSF_APIHook.h"

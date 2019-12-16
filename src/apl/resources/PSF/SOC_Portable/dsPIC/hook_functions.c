@@ -27,14 +27,12 @@
 #include <stdbool.h>
 #include <string.h>
 
-//#include "portable/dsPIC/ZeusStackConfig.h"
 #include "PSF_Config.h"
 #include "psf_stdinc.h"
 
 #include "debug_uart.h"
 #include <libpic30.h>
 
-//#include "thermal_power_management.h"
 #include "apl/resources/c4swbb_control.h"
 #include "apl/tasks/task_PowerControl.h"
 

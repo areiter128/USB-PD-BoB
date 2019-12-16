@@ -25,15 +25,16 @@
  * Author: James Schaffer - C41076  
  * 
  * Summary:
- * Zeus USB PD Stack Task
+ * PSF USB PD Stack Task
  * 
  * Description:
  * 
  * This file contains functions that implement the task that initializes
- * and runs the Zeus USB PD Stack.
+ * and runs the PSF USB PD Stack.
  * 
  * History:
  * 05/23/2019	File created
+ * 12/16/2019   Changed from the Zeus stack to the PSF Stack
  * ***************************************************************************/
 
 #include <xc.h>
@@ -50,25 +51,25 @@ volatile FUNCTION_PD_STACK_CONFIG_t taskPDStack_config;
 volatile uint16_t task_PDStack(void)
 {
     uint8_t index;
-    static uint16_t test_counter = 0;
-    static uint8_t upd_led_toggle = 0;
-    
-    if (test_counter++ > 4000)
-    {
-        test_counter = 0;
-        // Blink LEDS on UPD350s at the telemetry transmit interval
-        if (upd_led_toggle++ & 0x01)
-        {
-            port_led_on(PORT0);
-            port_led_on(PORT1);
-        }
-        else
-        {
-            port_led_off(PORT0);
-            port_led_off(PORT1);
-        }
-
-    }
+//    static uint16_t test_counter = 0;
+//    static uint8_t upd_led_toggle = 0;
+//    
+//    if (test_counter++ > 4000)
+//    {
+//        test_counter = 0;
+//        // Blink LEDS on UPD350s at the telemetry transmit interval
+//        if (upd_led_toggle++ & 0x01)
+//        {
+//            port_led_on(PORT0);
+//            port_led_on(PORT1);
+//        }
+//        else
+//        {
+//            port_led_off(PORT0);
+//            port_led_off(PORT1);
+//        }
+//
+//    }
     
     
     if (taskPDStack_config.status.flags.enable)
@@ -85,7 +86,6 @@ volatile uint16_t task_PDStack(void)
         
         // Call the main PD Stack state machine
         MchpPSF_RUN();
-        //PD_Run();
     }
     
     debug_uart_tx();
@@ -96,7 +96,6 @@ volatile uint16_t task_PDStack(void)
 volatile uint16_t init_taskPDStack(void)
 {
     uint16_t reg_data_16;
-    //char debug_string[20];
     
     // Set up the secondary UART for use by the PD stack
     DEBUG_init();
@@ -105,10 +104,10 @@ volatile uint16_t init_taskPDStack(void)
     TRISCbits.TRISC2 = 0;
     LATCbits.LATC2 = 0;
     
-    //PD_Init();
+    // Initialize the PSF stack.
     MchpPSF_Init();
     
-    LOG_PRINT(LOG_INFO, "Init TASK PD Stack done\r\n");
+    LOG_PRINT(LOG_INFO, "Init TASK PSF Stack initialization done\r\n");
 
     // Configure UPD350 gpio pins for functions used outside of the stack
     configure_upd350_gpio();
