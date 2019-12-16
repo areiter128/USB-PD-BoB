@@ -347,8 +347,8 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
             #endif            
 
             // set initial PWM duty ratio for buck and boost leg assuming buck mode
-            fres &= hspwm_set_duty_cycle(pInstance->buck_leg.pwm_instance, int_dummy, 0);
-            fres &= hspwm_set_duty_cycle(pInstance->boost_leg.pwm_instance, pInstance->boost_leg.duty_ratio_max, 0);
+            fres &= smpsHSPWM_SetDutyCycle(pInstance->buck_leg.pwm_instance, int_dummy, 0);
+            fres &= smpsHSPWM_SetDutyCycle(pInstance->boost_leg.pwm_instance, pInstance->boost_leg.duty_ratio_max, 0);
 
             // switch to soft-start phase RAMP UP
             pInstance->status.bits.op_status = CONVERTER_STATE_V_RAMP_UP;

@@ -82,7 +82,7 @@ volatile uint16_t c4swbb_pwm_module_initialize(volatile C4SWBB_PWRCTRL_t* pInsta
     pmod_cfg.MPER.value = pInstance->buck_leg.period;
     
     // call module configuration function
-    fres &= hspwm_init_pwm_module(pmod_cfg);
+    fres &= smpsHSPWM_Module_Initialize(pmod_cfg);
     
     
     return(fres);
@@ -166,7 +166,7 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_PWRCTRL_t* pI
     pg_config.PGxEVT.bits.ADTR2EN = (pInstance->buck_leg.adtr2_source & 0x0007); // ADC trigger 2 source is PGxTRIGA/B/C compare event
     
     // Write PWM generator configuration to PWM module
-    fres &= hspwm_init_pwm_generator(pInstance->buck_leg.pwm_instance, pg_config);
+    fres &= smpsHSPWM_Channel_Initialize(pInstance->buck_leg.pwm_instance, pg_config);
 
 
     // Initialize PWM generator for Boost leg
@@ -209,7 +209,7 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_PWRCTRL_t* pI
     pg_config.PGxEVT.bits.ADTR2EN = (pInstance->boost_leg.adtr2_source & 0x0007); // ADC trigger 2 source is PGxTRIGA/B/C compare event
     
     // Write PWM generator configuration to PWM module
-    fres &= hspwm_init_pwm_generator(pInstance->boost_leg.pwm_instance, pg_config);
+    fres &= smpsHSPWM_Channel_Initialize(pInstance->boost_leg.pwm_instance, pg_config);
 
     return(fres);
     
