@@ -54,7 +54,9 @@
 
 #define ADC_REF              3.300 // ADC reference voltage in V
 #define ADC_RESOLUTION       12.0  // ADC resolution in [bit]
+#define ADC_RES              (uint16_t)(pow(2, ADC_RESOLUTION)-1) // ADC resolution as integer
 #define ADC_GRANULARITY      (float)(ADC_REF / pow(2.0, ADC_RESOLUTION)) // ADC granularity in [V/tick]
+#define ADC_SCALER           (float)(((float)(ADC_RES))/((float)(ADC_REF))) // ADC Scaling in ticks/V
 
 /*!Hardware Abstraction
  * *************************************************************************************************
