@@ -88,26 +88,6 @@ extern "C" {
  * GENERIC DEFINES
  * ***********************************************************************************************/
  
- 
-/* ***********************************************************************************************
- * MACRO DEFINITIONS
- * ***********************************************************************************************/
-    
-#ifndef WDT_RESET
-#define WDT_RESET		asm volatile ("CLRWDT\n")
-#endif
-#ifndef PWRSAV_IDLE
-#define PWRSAV_IDLE		asm volatile ("PWRSAV #1\n")
-#endif
-#ifndef PWRSAV_SLEEP
-#define PWRSAV_SLEEP	asm volatile ("PWRSAV #0\n")
-#endif
-#ifndef CPU_RESET
-#define CPU_RESET		asm volatile ("RESET\n")
-#endif
-//#ifndef ALTWREG_SWAP
-//#define ALTWREG_SWAP(x)    asm volatile ( "PUSH.W W0 \n CTXTSWP #" + x + "POP.W W0 \n")
-//#endif
     
 /* ***********************************************************************************************
  * PROTOTYPES
