@@ -129,8 +129,8 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
             pInstance->status.bits.busy = true;
             
             
-            fres &= hspwm_ovr_hold(pInstance->buck_leg.pwm_instance); // Hold buck leg PWM
-            fres &= hspwm_ovr_hold(pInstance->boost_leg.pwm_instance); // Hold boost leg PWM
+            fres &= smpsHSPWM_OVR_Hold(pInstance->buck_leg.pwm_instance); // Hold buck leg PWM
+            fres &= smpsHSPWM_OVR_Hold(pInstance->boost_leg.pwm_instance); // Hold boost leg PWM
 
             pInstance->v_loop.controller->status.bits.enable = false;
             pInstance->i_loop.controller->status.bits.enable = false;
@@ -367,8 +367,8 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
             pInstance->status.bits.busy = true;
 
             // Enable PWM outputs in initial state
-            fres &= hspwm_ovr_release(pInstance->buck_leg.pwm_instance); // Release buck leg PWM
-            fres &= hspwm_ovr_release(pInstance->boost_leg.pwm_instance); // Release boost leg PWM
+            fres &= smpsHSPWM_OVR_Release(pInstance->buck_leg.pwm_instance); // Release buck leg PWM
+            fres &= smpsHSPWM_OVR_Release(pInstance->boost_leg.pwm_instance); // Release boost leg PWM
 
             // Enable control loops
             #if (C4SWBB_CONTROL_MODE == C4SWBB_VMC)
@@ -618,8 +618,8 @@ volatile uint16_t c4SWBB_shut_down(volatile C4SWBB_PWRCTRL_t* pInstance) {
     volatile uint16_t fres = 1;
     
     // Overriding PWM output pins with pin states defined in PGxIOCONL->OVRDAT
-    fres &= hspwm_ovr_hold(pInstance->buck_leg.pwm_instance);
-    fres &= hspwm_ovr_hold(pInstance->boost_leg.pwm_instance);
+    fres &= smpsHSPWM_OVR_Hold(pInstance->buck_leg.pwm_instance);
+    fres &= smpsHSPWM_OVR_Hold(pInstance->boost_leg.pwm_instance);
     
     // void functions don't return values and therefore their execution doesn't get checked
     pInstance->v_loop.ctrl_Reset(pInstance->v_loop.controller);
