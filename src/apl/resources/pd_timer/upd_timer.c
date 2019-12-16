@@ -51,7 +51,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 //#include "generic_timer.h"
-#include "stdinc.h"
+//#include "stdinc.h"
 
 /**
   Section: Data Type Definitions

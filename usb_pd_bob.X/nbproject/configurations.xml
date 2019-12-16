@@ -31,35 +31,36 @@
           <logicalFolder name="f3" displayName="pd_timer" projectFiles="true">
             <itemPath>../src/apl/resources/pd_timer/upd_timer.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="spi2" projectFiles="true">
-            <itemPath>../src/apl/resources/spi2/spi2.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f1" displayName="Zeus_PD_stack" projectFiles="true">
-            <logicalFolder name="f1" displayName="include" projectFiles="true">
-              <itemPath>../src/apl/resources/zeus_stack/include/ProjectVersion.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/cfg_globals.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/debug.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/generic_defs.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/generic_timer.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/int_globals.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/policy_engine.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/policy_engine_fwup.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/policy_manager.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/protocol_layer.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/stdinc.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/typeC_control.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/upd_hw.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/upd_interrupts.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="pd" projectFiles="true">
-            </logicalFolder>
-            <logicalFolder name="f3" displayName="portable" projectFiles="true">
-              <logicalFolder name="f1" displayName="dsPIC" projectFiles="true">
-                <itemPath>../src/apl/resources/zeus_stack/portable/dsPIC/ZeusStackConfig.h</itemPath>
+          <logicalFolder name="f1" displayName="PSF" projectFiles="true">
+            <logicalFolder name="f1" displayName="SOC_Portable" projectFiles="true">
+              <logicalFolder name="dsPIC" displayName="dsPIC" projectFiles="true">
+                <itemPath>../src/apl/resources/PSF/SOC_Portable/dsPIC/PSF_APIHook.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/SOC_Portable/dsPIC/PSF_Config.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/SOC_Portable/dsPIC/hook_functions.h</itemPath>
               </logicalFolder>
             </logicalFolder>
-            <itemPath>../src/apl/resources/zeus_stack/hook_functions.h</itemPath>
-            <itemPath>../src/apl/resources/zeus_stack/thermal_power_management.h</itemPath>
+            <logicalFolder name="Source" displayName="Source" projectFiles="true">
+              <logicalFolder name="f1" displayName="include" projectFiles="true">
+                <itemPath>../src/apl/resources/PSF/Source/include/ProjectVersion.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/cfg_globals.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/debug.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/generic_defs.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/int_globals.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/pd_timer.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/policy_engine.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/policy_engine_fwup.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/policy_manager.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/portpower_control.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/protocol_layer.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/psf_stdinc.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/typeC_control.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/upd_hw.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/upd_interrupts.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="spi2" projectFiles="true">
+            <itemPath>../src/apl/resources/spi2/spi2.h</itemPath>
           </logicalFolder>
           <itemPath>../h/apl/resources/fdrv_FunctionPDStack.h</itemPath>
           <itemPath>../h/apl/resources/npnz16b.h</itemPath>
@@ -137,34 +138,34 @@
           <logicalFolder name="f2" displayName="pd_timer" projectFiles="true">
             <itemPath>../src/apl/resources/pd_timer/upd_timer.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="spi2" projectFiles="true">
-            <itemPath>../src/apl/resources/spi2/spi2.c</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f1" displayName="Zeus_PD_stack" projectFiles="true">
-            <logicalFolder name="f1" displayName="include" projectFiles="true">
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="pd" projectFiles="true">
-              <itemPath>../src/apl/resources/zeus_stack/pd/cfg_globals.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/debug.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/generic_timer.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/int_globals.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/pd_main.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/policy_engine.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/policy_engine_fwup.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/policy_engine_snk.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/policy_engine_src.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/policy_manager.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/protocol_layer.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/typeC_control.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/upd_hw.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/upd_interrupts.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f3" displayName="portable" projectFiles="true">
-              <logicalFolder name="f1" displayName="dsPIC" projectFiles="true">
+          <logicalFolder name="PSF" displayName="PSF" projectFiles="true">
+            <logicalFolder name="f2" displayName="SOC_Portable" projectFiles="true">
+              <logicalFolder name="f1" displayName="dspic" projectFiles="true">
+                <itemPath>../src/apl/resources/PSF/SOC_Portable/dsPIC/hook_functions.c</itemPath>
               </logicalFolder>
             </logicalFolder>
-            <itemPath>../src/apl/resources/zeus_stack/hook_functions.c</itemPath>
-            <itemPath>../src/apl/resources/zeus_stack/thermal_power_management.c</itemPath>
+            <logicalFolder name="f1" displayName="Source" projectFiles="true">
+              <logicalFolder name="PD3_0" displayName="PD3_0" projectFiles="true">
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/cfg_globals.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/debug.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/int_globals.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/pd_main.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/pd_timer.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/policy_engine.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/policy_engine_fwup.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/policy_engine_snk.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/policy_engine_src.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/policy_manager.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/portpower_control.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/protocol_layer.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/typeC_control.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/upd_hw.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/upd_interrupts.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f3" displayName="spi2" projectFiles="true">
+            <itemPath>../src/apl/resources/spi2/spi2.c</itemPath>
           </logicalFolder>
           <itemPath>../src/apl/resources/c4swbb_control.c</itemPath>
           <itemPath>../src/apl/resources/cha_iloop.c</itemPath>
@@ -417,14 +418,14 @@
       </C30-LD>
       <C30Global>
         <property key="common-include-directories"
-                  value="..\src\apl\resources\zeus_stack\include;..\src\apl\resources\zeus_stack\portable\dsPIC;..\src\apl\resources\pd_debug_uart"/>
+                  value="..\src\apl\resources\PSF\Source\include;..\src\apl\resources\PSF\SOC_Portable\dsPIC;..\src\apl\resources\pd_debug_uart"/>
         <property key="dual-boot-partition" value="0"/>
         <property key="fast-math" value="false"/>
         <property key="generic-16-bit" value="false"/>
         <property key="legacy-libc" value="true"/>
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros"
-                  value="__00173_USB_PD_BOB_R20__;__CODE_OPT_LEVEL_3__"/>
+                  value="__00173_USB_PD_BOB_R20__;__CODE_OPT_LEVEL_3__;CONFIG_HOOK_DEBUG_MSG=1"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>

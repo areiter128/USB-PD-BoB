@@ -44,7 +44,10 @@
 #include <xc.h>   
 #include <stdint.h>
 #include <stdbool.h>
-#include "ZeusStackConfig.h"
+//#include "ZeusStackConfig.h"
+#include "../PSF/Source/include/psf_stdinc.h"
+#include "../PSF/SOC_Portable/dsPIC/PSF_Config.h"
+#include "../PSF/SOC_Portable/dsPIC/PSF_APIHook.h"
 #include "upd_interrupts.h"
 #include "_root/generic/os_Globals.h"
 #include "apl/resources/fdrv_FunctionPDStack.h"
