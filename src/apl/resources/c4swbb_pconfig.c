@@ -559,7 +559,7 @@ volatile uint16_t c4swbb_adc_inputs_initialize(volatile C4SWBB_PWRCTRL_t* pInsta
         adin_cfg.config.interrupt_enable = (volatile uint16_t)(pInstance->feedback.ad_temp.interrupt_enable);
 
         // Set temperature ADC input configuration
-        fres &= smpsHSADC_ADInput_Initialize(adin_cfg); 
+        fres &= smpsADC_ADInput_Initialize(adin_cfg); 
 
     }
     
