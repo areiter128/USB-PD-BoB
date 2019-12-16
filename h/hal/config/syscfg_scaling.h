@@ -54,7 +54,7 @@
 
 #define ADC_REF              3.300 // ADC reference voltage in V
 #define ADC_RESOLUTION       12.0  // ADC resolution in [bit]
-#define ADC_GRANULARITY      (float)(ADC_REF / pow(2.0, ADC_RESOLUTION)) // ADC granularity in [V/tick]
+#define ADC_GRANULARITY  (float)(ADC_REF / pow(2.0, ADC_RESOLUTION)) // ADC granularity in [V/tick]
 
 /*!Hardware Abstraction
  * *************************************************************************************************
@@ -193,19 +193,19 @@
 
 #define VIN_DIVIDER_RATIO           (float)((float)C4SWBB_VIN_AMP_GAIN * ((float)C4SWBB_VIN_DIV_R2) / ((float)(C4SWBB_VIN_DIV_R1 + C4SWBB_VIN_DIV_R2)))
 #define VIN_DIVIDER_RATIO_INV       (float)( 1.0 / VIN_DIVIDER_RATIO )
-#define VIN_FB_OFFSET               (uint16_t)(C4SWBB_VIN_FEEDBACK_OFFSET * ADC_SCALER)    // Input voltage sense offset ADC ticks
+#define VIN_FB_OFFSET               (uint16_t)(C4SWBB_VIN_FEEDBACK_OFFSET * HSADC_SCALER)    // Input voltage sense offset ADC ticks
 
 #define VOUT_DIVIDER_RATIO          (float)((float)C4SWBB_VOUT_AMP_GAIN * ((float)C4SWBB_VOUT_DIV_R2) / ((float)(C4SWBB_VOUT_DIV_R1 + C4SWBB_VOUT_DIV_R2)))
 #define VOUT_DIVIDER_RATIO_INV      (float)( 1.0 / VOUT_DIVIDER_RATIO )
-#define VOUT_FB_OFFSET              (int16_t)(C4SWBB_VOUT_SENSE_OFFSET * ADC_SCALER)   // Output voltage sense offset ADC ticks
+#define VOUT_FB_OFFSET              (int16_t)(C4SWBB_VOUT_SENSE_OFFSET * HSADC_SCALER)   // Output voltage sense offset ADC ticks
 
 #define IOUT_SCALER_RATIO_I2V       (float)((float)C4SWBB_CS_SHUNT_RESISTANCE * (float)C4SWBB_CS_AMP_GAIN) // Current feeback ratio in [V/A] => used to convert current into feedback voltage
 #define IOUT_SCALER_RATIO_V2I       (float)(1.0/((float)IOUT_SCALER_RATIO_I2V))  // Current feeback ratio in [A/V] => used to convert feedback voltage into current
-#define IOUT_SCALER_RATIO_TICKS     (uint16_t)((float)IOUT_SCALER_RATIO_I2V * (float)ADC_SCALER) // Current feeback ratio in [Ticks/A] => used to convert current into ADC ticks
+#define IOUT_SCALER_RATIO_TICKS     (uint16_t)((float)IOUT_SCALER_RATIO_I2V * (float)HSADC_SCALER) // Current feeback ratio in [Ticks/A] => used to convert current into ADC ticks
 
-#define IOUT_SCALER_OFFSET_TICKS    (uint16_t)((float)C4SWBB_IOUT_FEEDBACK_OFFSET * (float)ADC_SCALER) // Current sense offset ADC ticks
+#define IOUT_SCALER_OFFSET_TICKS    (uint16_t)((float)C4SWBB_IOUT_FEEDBACK_OFFSET * (float)HSADC_SCALER) // Current sense offset ADC ticks
 #define IOUT_PROPAGATION_DELAY      (uint16_t)((float)C4SWBB_CS_PROPAGATION_DELAY /(float)T_ACLK) // current feedback signal phase shift
-#define IOUT_COMMON_MODE_V_MIN      (uint16_t)((float)C4SWBB_CS_COMMON_MODE_V_MIN * (float)VOUT_DIVIDER_RATIO * (float)ADC_SCALER) // Current sense minimum common mode voltage ADC ticks
+#define IOUT_COMMON_MODE_V_MIN      (uint16_t)((float)C4SWBB_CS_COMMON_MODE_V_MIN * (float)VOUT_DIVIDER_RATIO * (float)HSADC_SCALER) // Current sense minimum common mode voltage ADC ticks
 
 
 #endif	/* _HARDWARE_ABSTRACTION_LAYER_SYSTEM_SCALING_H_ */
