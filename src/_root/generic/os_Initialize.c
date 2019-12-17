@@ -79,7 +79,7 @@ volatile uint16_t CLOCK_Initialize(void){
     //Remove: fres = init_SoftwareWatchDogTimer();
     fres &= MainOscillator_Initialize(); // Initialize main oscillator
     fres &= AuxOscillator_Initialize(); // Initialize auxiliary clock for PWM and ADC
-    fres &= osc_get_frequencies(0);     // Update clock settings of global system_frequencies object
+    fres &= smpsOSC_GetFrequencies(0);     // Update clock settings of global system_frequencies object
    
     // Setup and start Timer1 as base clock for the task scheduler
     fres &= OSTimer_Initialize(); // Initialize timer @ configured task tick frequency
@@ -164,8 +164,8 @@ volatile uint16_t DEVICE_Reset(void){
     volatile uint16_t fres = 1;
     
     // Device reset
-    fres &= gpio_init();               // Sets all device pins to DIGITAL INPUT, disabling all open-drain and pull-up/-down settings
-    fres &= pmd_reset(PMD_POWER_OFF);  // Turns off power and clocks to all peripheral modules offering a PMD control bit
+    fres &= smpsGPIO_Initialize(); // Sets all device pins to DIGITAL INPUT, disabling all open-drain and pull-up/-down settings
+    fres &= smpsPMD_SetPowerStateAll(PMD_POWER_OFF); // Turns off power and clocks to all peripheral modules offering a PMD control bit
     
     return(fres);
     
