@@ -36,6 +36,14 @@ volatile uint16_t exec_PowerControl(void) {
 
     volatile uint16_t fres = 1;
     
+    /* ToDo: This is for debugging purposes only. REMOVE WHEN DONE!*/
+    if(c4swbb_1.data.v_ref > VOUT_OVP_RELEASE)
+    {
+        Nop();
+        Nop();
+        Nop();
+    }
+    
     // Both converters are supplied by the same power input and c4swbb_1 is the 
     // instance sampling the input voltage. Once this voltage is within the nominal
     // operating range, the POWER_SOURCE_DETECTED flag is set
