@@ -34,34 +34,6 @@
           <logicalFolder name="f2" displayName="spi2" projectFiles="true">
             <itemPath>../src/apl/resources/spi2/spi2.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="Zeus_PD_stack" projectFiles="true">
-            <logicalFolder name="f1" displayName="include" projectFiles="true">
-              <itemPath>../src/apl/resources/zeus_stack/include/ProjectVersion.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/cfg_globals.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/debug.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/generic_defs.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/generic_timer.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/int_globals.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/policy_engine.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/policy_engine_fwup.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/policy_manager.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/protocol_layer.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/stdinc.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/typeC_control.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/upd_hw.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/upd_interrupts.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="pd" projectFiles="true">
-            </logicalFolder>
-            <logicalFolder name="f3" displayName="portable" projectFiles="true">
-              <logicalFolder name="f1" displayName="dsPIC" projectFiles="true">
-                <itemPath>../src/apl/resources/zeus_stack/portable/dsPIC/ZeusStackConfig.h</itemPath>
-              </logicalFolder>
-            </logicalFolder>
-            <itemPath>../src/apl/resources/zeus_stack/hook_functions.h</itemPath>
-            <itemPath>../src/apl/resources/zeus_stack/thermal_power_management.h</itemPath>
-          </logicalFolder>
-          <itemPath>../h/apl/resources/fdrv_FunctionPDStack.h</itemPath>
           <itemPath>../h/apl/resources/npnz16b.h</itemPath>
           <itemPath>../h/apl/resources/c4swbb_control.h</itemPath>
           <itemPath>../h/apl/resources/cha_iloop.h</itemPath>
@@ -212,7 +184,7 @@
         <targetDevice>dsPIC33CK128MP505</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>PICkit3PlatformTool</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.41</languageToolchainVersion>
         <platform>3</platform>
@@ -445,6 +417,7 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UpdateOptions"
                   value="ToolFirmwareOption.UseLatest"/>
+        <property key="communication.interface.jtag" value="2wire"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
@@ -471,6 +444,8 @@
         <property key="programoptions.pgmentry.voltage" value="low"/>
         <property key="programoptions.pgmspeed" value="Med"/>
         <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges"
+                  value="${memories.dataflash.default}"/>
         <property key="programoptions.preserveeeprom" value="false"/>
         <property key="programoptions.preserveeeprom.ranges" value=""/>
         <property key="programoptions.preserveprogram.ranges" value=""/>
@@ -1183,11 +1158,11 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.36</languageToolchainVersion>
+        <languageToolchainVersion>1.41</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.1.51"/>
+        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.2.66"/>
       </packs>
       <compileType>
         <linkerTool>

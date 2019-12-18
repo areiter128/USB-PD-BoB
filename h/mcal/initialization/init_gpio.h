@@ -37,7 +37,7 @@
 /* ***********************************************************************************************
  * PROTOTYPES
  * ***********************************************************************************************/
-extern volatile uint16_t GPIO_initialize(void);
+extern volatile uint16_t GPIO_Initialize(void);
 
 #endif	/* MCAL_PORT_AND_PIN_CONFIGURATION_H */
 

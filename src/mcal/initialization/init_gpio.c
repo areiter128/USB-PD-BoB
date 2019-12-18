@@ -26,7 +26,7 @@
 
 #include "mcal/mcal.h"
 
-volatile uint16_t GPIO_initialize(void) {
+volatile uint16_t GPIO_Initialize(void) {
     
     Nop();
     
