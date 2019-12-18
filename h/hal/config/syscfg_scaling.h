@@ -152,7 +152,6 @@
     // PWM time base Settings
     #define f_ACLK                      4e+9        // 4 GHz PWM tick rate
     #define T_ACLK                      250e-12     // 250 ps PWM resolution
-    #define PWM_PCLKDIV_PRIMARY         1           // PWM Input Clock Divider
 
 #endif
 
@@ -177,17 +176,17 @@
 
 // Macro calculating Leading Edge Blanking period counter value based on time base frequency selection
 #define REG_LEB_PERIOD_MASK         0b1111111111111111
-#define LEB_PERIOD                  ((uint16_t)((uint16_t)(((float)(LEADING_EDGE_BLANKING_PER))/((float)(T_ACLK))) >> PWM_PCLKDIV_PRIMARY))
+#define LEB_PERIOD                  ((uint16_t)(((float)(LEADING_EDGE_BLANKING_PER))/((float)(T_ACLK))) & REG_LEB_PERIOD_MASK)
 
 // Macro calculating ADC offset period counter value based on time base frequency selection
-#define ADC_TRIG_OFFSET_VOUT        ((uint16_t)((uint16_t)(((float)(ADC_TRIGGER_OFFSET_VOUT))/((float)(T_ACLK))) >> PWM_PCLKDIV_PRIMARY) & REG_LEB_PERIOD_MASK)
-#define ADC_TRIG_OFFSET_IOUT        ((uint16_t)((uint16_t)(((float)(ADC_TRIGGER_OFFSET_IOUT))/((float)(T_ACLK))) >> PWM_PCLKDIV_PRIMARY) & REG_LEB_PERIOD_MASK)
+#define ADC_TRIG_OFFSET_VOUT        ((uint16_t)((float)(ADC_TRIGGER_OFFSET_VOUT) / (float)(T_ACLK))) 
+#define ADC_TRIG_OFFSET_IOUT        ((uint16_t)((float)(ADC_TRIGGER_OFFSET_IOUT) / (float)(T_ACLK))) 
 
 // Macros calculating Dead Time Rising/Falling Edge period counter value based on time base frequency selection
 #define REG_DTRx_VALID_BIT_MSK      0b0011111111111111
 #define REG_ALTDTRx_VALID_BIT_MSK   0b0011111111111111
-#define PWM_DEAD_TIME_LE            ((uint16_t)((uint16_t)(((float)(PWM_DEAD_TIME_RISING))/((float)(T_ACLK))) >> PWM_PCLKDIV_PRIMARY) & REG_DTRx_VALID_BIT_MSK)
-#define PWM_DEAD_TIME_FE            ((uint16_t)((uint16_t)(((float)(PWM_DEAD_TIME_FALLING))/((float)(T_ACLK))) >> PWM_PCLKDIV_PRIMARY) & REG_ALTDTRx_VALID_BIT_MSK)
+#define PWM_DEAD_TIME_LE            ((uint16_t)(((float)(PWM_DEAD_TIME_RISING))/((float)(T_ACLK))) & REG_DTRx_VALID_BIT_MSK)
+#define PWM_DEAD_TIME_FE            ((uint16_t)(((float)(PWM_DEAD_TIME_FALLING))/((float)(T_ACLK))) & REG_ALTDTRx_VALID_BIT_MSK)
 
 // Macros calculating register values based on the physical values given above
 
