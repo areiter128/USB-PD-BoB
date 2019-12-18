@@ -64,9 +64,9 @@
 #define IOUT_4SWBB_TRIP_CONV2   1.100       // [A] Upper boost switch threshold for output current - PWM5&PWM7 Buck-Boost leg
 #define IOUT_4SWBB_RESET_CONV2  0.900       // [A] Lower boost switch threshold for output current - PWM5&PWM7 Buck-Boost leg
 
-#define TEMP_RELEASE_LIMIT      60.00       // Temperature in [ï¿½C] at which warning status flag bit will be cleared
-#define TEMP_WARNING_LIMIT      80.00       // Temperature in [ï¿½C] at which a warning status flag bit should be set
-#define TEMP_PROTECTION_LIMIT   100.0       // Temperature in [ï¿½C] at which the power supply will be shut down
+#define TEMP_RELEASE_LIMIT      60.00       // Temperature in [°C] at which warning status flag bit will be cleared
+#define TEMP_WARNING_LIMIT      80.00       // Temperature in [°C] at which a warning status flag bit should be set
+#define TEMP_PROTECTION_LIMIT   100.0       // Temperature in [°C] at which the power supply will be shut down
 
 #define DUTY_RATIO_BUCK_LEG_INIT    0.0525  // Initial duty ratio of buck leg at PWM start
 #define DUTY_RATIO_MIN_BUCK         0.0525  // Minimum duty ration buck leg
