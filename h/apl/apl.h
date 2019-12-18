@@ -38,11 +38,13 @@
 
 /* User Configuration Files */
 #include "apl/config/UserAppManager.h"
+#include "apl/config/UserFaultObjects.h"
 #include "_root/generic/os_Globals.h"
 
 /* User Tasks */
 #include "apl/tasks/task_Idle.h"
 #include "apl/tasks/task_PowerControl.h"
+#include "../h/apl/tasks/task_PDStack.h"
 
 /* ***********************************************************************************************
  * GLOBAL APPLICATION LAYER USER OPTIONS
