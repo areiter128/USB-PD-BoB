@@ -36,14 +36,6 @@ volatile uint16_t exec_PowerControl(void) {
 
     volatile uint16_t fres = 1;
     
-    /* ToDo: This is for debugging purposes only. REMOVE WHEN DONE!*/
-    if(c4swbb_1.data.v_ref > VOUT_OVP_RELEASE)
-    {
-        Nop();
-        Nop();
-        Nop();
-    }
-    
     // Both converters are supplied by the same power input and c4swbb_1 is the 
     // instance sampling the input voltage. Once this voltage is within the nominal
     // operating range, the POWER_SOURCE_DETECTED flag is set
@@ -61,6 +53,26 @@ volatile uint16_t exec_PowerControl(void) {
         c4swbb_1.status.bits.power_source_detected = false;
         c4swbb_2.status.bits.power_source_detected = false;
     }
+
+    // The power supply fault flag is only reset if ALL fault objects have been cleared
+    // 
+    // Please note:
+    // Output Over Current conditions are allowed and will result in a hard limitation
+    // of the output current at the defined level. Thus over current conditions will NOT 
+    // lead to an automatic shut down of the converter.
+    
+    c4swbb_1.status.bits.fault_active = (volatile bool)(
+                fltobj_UnderVoltageLockOut.status.bits.fltstat | 
+                fltobj_OverVoltageLockOut.status.bits.fltstat |
+                fltobj_OverVoltageProtection_USBPort_1.status.bits.fltstat
+            );
+
+    c4swbb_2.status.bits.fault_active = (volatile bool)(
+                fltobj_UnderVoltageLockOut.status.bits.fltstat | 
+                fltobj_OverVoltageLockOut.status.bits.fltstat |
+                fltobj_OverVoltageProtection_USBPort_2.status.bits.fltstat
+            );
+
     
     // Execute the state machines of converter 1 and 2
     fres &= exec_4SWBB_PowerController(&c4swbb_1);  // Execute 4-Switch Buck/Boost Converter #1 State Machine
@@ -69,6 +81,7 @@ volatile uint16_t exec_PowerControl(void) {
     Nop();
     Nop();
     Nop();
+    
     
     return (fres);
 }
@@ -102,7 +115,12 @@ volatile uint16_t init_PowerControl(void) {
     // Load PWM configurations for PWM generators for both ports
     fres &= c4swbb_pwm_generators_initialize(&c4swbb_1); // Initialize PWM generators of USB Port A
     fres &= c4swbb_pwm_generators_initialize(&c4swbb_2); // Initialize PWM generators of USB Port B
-
+    
+    //Custom setup for c4swbb_2 to use PCI to sync c2 buck leg to ch 1 buck leg
+    PG1LEBH = C4SWBB_2_PG1LEBH;      //PG5 available to PCI logic
+    PG1CONH = C4SWBB_2_PGxCONH;      //Trigger is via PCI logic from PG5
+    PG1SPCIL = 0b1001000000000001;
+    PG1SPCIH = 0x0000;
     // ADC core configuration
     fres &= c4swbb_adc_module_initialize();
     
@@ -128,34 +146,34 @@ volatile uint16_t init_PowerControl(void) {
     PG7PHASE = 0;
             
     c4swbb_1.status.bits.enable = true;
-    //c4swbb_2.status.bits.enable = true;
+    c4swbb_2.status.bits.enable = true;
     
-    fres &= c4swbb_pwm_release(&c4swbb_1);
-    fres &= c4swbb_pwm_release(&c4swbb_2);
+    //fres &= c4swbb_pwm_release(&c4swbb_1);
+    //fres &= c4swbb_pwm_release(&c4swbb_2);
     
     TRISCbits.TRISC2 = 0;  //used for debug
     
     //Max 1428 for 350kHz
-    PG1TRIGA = 100;    
+    PG1TRIGA = 200;    
     //PG7TRIGA = 20;
     //PG2TRIGA = 20;
     
-    PG5TRIGA = 100;
+    PG5TRIGA = 200;
     
     //PG7TRIGA = 20;
     Nop();
     
-    //PG1STATbits.UPDREQ = 1;
-    //PG2STATbits.UPDREQ = 1;
-    //PG5STATbits.UPDREQ = 1;
-    //PG7STATbits.UPDREQ = 1;
+    PG1STATbits.UPDREQ = 1;
+    PG2STATbits.UPDREQ = 1;
+    PG5STATbits.UPDREQ = 1;
+    PG7STATbits.UPDREQ = 1;
    
     
-   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
-   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
+   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_15V ;    // Set reference to 5V
+   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_15V ;    // Set reference to 5V
    
    c4swbb_1.status.bits.autorun = 1;
-   c4swbb_2.status.bits.autorun = 0;  
+   c4swbb_2.status.bits.autorun = 1;  
     Nop();
     
     // return Success/Failure
@@ -171,6 +189,9 @@ volatile uint16_t init_PowerControl(void) {
 volatile uint16_t reset_PowerControl(void) {
     
     volatile uint16_t fres = 0;
+
+    c4swbb_1.status.bits.fault_active = true; // Set FAULT flag
+    c4swbb_2.status.bits.fault_active = true; // Set FAULT flag
     
     fres &= c4SWBB_shut_down(&c4swbb_1);  // Shut Down 4-Switch Buck/Boost Converter #1 State Machine
     fres &= c4SWBB_shut_down(&c4swbb_2);  // Shut Down 4-Switch Buck/Boost Converter #2 State Machine
@@ -647,13 +668,8 @@ LATCbits.LATC2 = 1;
     cha_iloop_Update(&cha_iloop);
     c4swbb_pwm_update(&c4swbb_1.pwm_dist);
       
-    PG5STATbits.UPDREQ = 1;
-    PG7STATbits.UPDREQ = 1;   
-    
     // Capture additional analog inputs
     c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-    //c4swbb_1.data.v_out = FB_VOUT1_ADCBUF; // Capture most recent output voltage value  
-    //c4swbb_1.data.i_out = FB_IOUT1_ADCBUF; // Capture most recent output current value
     c4swbb_1.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value 
     c4swbb_1.data.temp = FB_TEMP1_ADCBUF; // Capture most recent temperature value
 
@@ -663,13 +679,13 @@ LATCbits.LATC2 = 1;
     FB_VOUT1_ADC_IF = 0; 
     #endif
     #if (FB_IOUT1_ENABLE)
-    FB_IOUT1_ADC_IF = 0;
+    //FB_IOUT1_ADC_IF = 0;
     #endif
     #if (FB_VBAT_ENABLE)
-    FB_VBAT_ADC_IF = 0;
+    //FB_VBAT_ADC_IF = 0;
     #endif
     #if (FB_TEMP1_ENABLE)
-    FB_TEMP1_ADC_IF = 0;
+    //FB_TEMP1_ADC_IF = 0;
     #endif
     
     // Software trigger for VBAT,TEMP1 and TEMP2 - samples stored in next ISR
@@ -777,15 +793,10 @@ LATCbits.LATC2 = 1;
     chb_vloop_Update(&chb_vloop);
     chb_iloop_Update(&chb_iloop);    
     c4swbb_pwm_update(&c4swbb_2.pwm_dist);
- 
-    PG1STATbits.UPDREQ = 1;
-    PG2STATbits.UPDREQ = 1;
-   
-    LATCbits.LATC2 = 0;   
+
+       
     // Capture additional analog inputs
     c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
-    //c4swbb_2.data.v_out = FB_VOUT2_ADCBUF; // Capture most recent output voltage value
-    //c4swbb_2.data.i_out = FB_IOUT2_ADCBUF; // Capture most recent output voltage value
     c4swbb_2.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
     c4swbb_2.data.temp = FB_TEMP2_ADCBUF;
     
@@ -795,18 +806,18 @@ LATCbits.LATC2 = 1;
     FB_VOUT2_ADC_IF = 0; 
     #endif
     #if (FB_IOUT2_ENABLE)
-    FB_IOUT2_ADC_IF = 0;
+    //FB_IOUT2_ADC_IF = 0;
     #endif
     #if (FB_VBAT_ENABLE)
-    FB_VBAT_ADC_IF = 0;
+    //FB_VBAT_ADC_IF = 0;
     #endif
     #if (FB_TEMP2_ENABLE)
-    FB_TEMP2_ADC_IF = 0;
+    //FB_TEMP2_ADC_IF = 0;
     #endif
      
     // Software trigger for VBAT,TEMP1 - samples stored in next ISR
     ADCON3Lbits.SWCTRG = 1;
-    
+    LATCbits.LATC2 = 0;
 #if defined (__MA330048_P33CK_R30_USB_PD_BOB__)
     ECP39_CLEAR;
 #endif

@@ -32,11 +32,10 @@
  * Created on June 22, 2018, 01:14 PM
  ******************************************************************************/
 
-#include "xc.h"
+#include <xc.h>
 #include <stdint.h>
+#include <stdbool.h>
 
-#include "apl/apl.h"
-#include "hal/hal.h"
 #include "apl/config/UserFaultObjects.h"
 
 /*!User-Defined Fault Objects
@@ -54,7 +53,26 @@
  * ***********************************************************************************************/
 
 // Fault objects of user firmware modules 
-volatile FAULT_OBJECT_t fltobj_MyFaultObject;
+volatile FAULT_OBJECT_t fltobj_UnderVoltageLockOut;     // Custom FAULT object UVLO shutting down the power supply 
+                                                        // when input voltage drops below minimum
+volatile FAULT_OBJECT_t fltobj_OverVoltageLockOut;      // Custom FAULT object OVLO shutting down the power supply 
+                                                        // when input voltage goes above maximum
+volatile FAULT_OBJECT_t fltobj_OverVoltageProtection_USBPort_1; // Custom FAULT object OVP shutting down the power supply 
+																// when output voltage goes above maximum
+volatile FAULT_OBJECT_t fltobj_OverCurrentProtection_USBPort_1; // Custom FAULT object OCP settings a WARNING flag bit
+                                                                // when output current goes into limitation
+volatile FAULT_OBJECT_t fltobj_OverTempWarning_USBPort_1;       // Custom FAULT object OTW shutting down the power supply 
+																// when output voltage goes above maximum
+volatile FAULT_OBJECT_t fltobj_OverTempProtection_USBPort_1;    // Custom FAULT object OTP shutting down the power supply 
+																// when output current goes above maximum
+volatile FAULT_OBJECT_t fltobj_OverVoltageProtection_USBPort_2; // Custom FAULT object OVP shutting down the power supply 
+																// when output voltage goes above maximum
+volatile FAULT_OBJECT_t fltobj_OverCurrentProtection_USBPort_2; // Custom FAULT object OCP settings a WARNING flag bit
+                                                                // when output current goes into limitation
+volatile FAULT_OBJECT_t fltobj_OverTempWarning_USBPort_2;       // Custom FAULT object OTW settings a WARNING flag bit
+                                                                // when output current goes above warning threshold
+volatile FAULT_OBJECT_t fltobj_OverTempProtection_USBPort_2;    // Custom FAULT object OTP shutting down the power supply 
+																// when output current goes above maximum
 
 
 /*!user_fault_object_list[]
