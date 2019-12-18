@@ -36,7 +36,9 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <math.h>
+
 #include "_root/generic/os_Globals.h"
+#include "apl/config/UserFaultObjects.h"
 
 /* private function prototypes */
 volatile uint16_t CheckFaultCondition(volatile FAULT_OBJECT_t* fltobj);
