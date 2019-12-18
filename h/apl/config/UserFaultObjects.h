@@ -50,7 +50,7 @@ typedef enum {
         
 //    FLTOBJ_POWER_SOURCE_FAILURE, // Input voltage is out of range preventing DC/DC converters to run
     FLTOBJ_POWER_CONTROL_FAILURE_PORT_A, // A critical fault was detected in DC/DC converter of port A
-    FLTOBJ_POWER_CONTROL_FAILURE_PORT_B // A critical fault was detected in DC/DC converter of port B
+    FLTOBJ_POWER_CONTROL_FAILURE_PORT_B, // A critical fault was detected in DC/DC converter of port B
 //    FLTOBJ_SOFT_START, // Fault object Soft-Start Failure
         
     FLTOBJ_UVLO, // Fault object Under Voltage Lock-Out
@@ -58,7 +58,7 @@ typedef enum {
     FLTOBJ_OVP_USB_PORT_1, // Fault object Output Over Voltage Protection of USB port converter #1
     FLTOBJ_OCP_USB_PORT_1, // Fault object Over Current Protection of USB port converter #1
     FLTOBJ_OTW_USB_PORT_1, // Fault object Over Temperature Warning of USB port converter #1
-    FLTOBJ_OTP_USB_PORT_1  // Fault object Over Temperature Protection of USB port converter #1
+    FLTOBJ_OTP_USB_PORT_1, // Fault object Over Temperature Protection of USB port converter #1
     FLTOBJ_OVP_USB_PORT_2, // Fault object Output Over Voltage Protection of USB port converter #2
     FLTOBJ_OCP_USB_PORT_2, // Fault object Over Current Protection of USB port converter #2
     FLTOBJ_OTW_USB_PORT_2, // Fault object Over Temperature Warning of USB port converter #2
