@@ -54,9 +54,7 @@
 
 #define ADC_REF              3.300 // ADC reference voltage in V
 #define ADC_RESOLUTION       12.0  // ADC resolution in [bit]
-#define ADC_RES              (uint16_t)(pow(2, ADC_RESOLUTION)-1) // ADC resolution as integer
-#define ADC_GRANULARITY      (float)(ADC_REF / pow(2.0, ADC_RESOLUTION)) // ADC granularity in [V/tick]
-#define ADC_SCALER           (float)(((float)(ADC_RES))/((float)(ADC_REF))) // ADC Scaling in ticks/V
+#define ADC_GRANULARITY  (float)(ADC_REF / pow(2.0, ADC_RESOLUTION)) // ADC granularity in [V/tick]
 
 /*!Hardware Abstraction
  * *************************************************************************************************
@@ -140,8 +138,9 @@
     #define C4SWBB_CS_COMMON_MODE_V_MIN 0.0       // Common mode minimum voltage at which the amplifier starts to provide an output signal
 
     #define C4SWBB_IOUT_IS_BI_DIRECTIONAL   false       // Current sens is (0=uni-directional, 1=bi-directional)
-    #define C4SWBB_IOUT_FEEDBACK_OFFSET     2020       // Current sense zero offset, 2048 ideal value but need to regulate at no load
+    #define C4SWBB_IOUT_FEEDBACK_OFFSET     1860       // Current sense zero offset, 2048 ideal value but need to regulate at no load
                                                        // so 2020 offset allows current loop to integrate down to correct duty cycle for no load
+													   // Further decreasing the reference adds a small gain to the current loop but stabilizes the converter at no load
     // System Settings
     #define SWITCHING_FREQUENCY         350e+3      // Nominal switching frequency per converter phase in [Hz]
     #define PWM_NO_OF_PHASES            2.0         // this board has two converters running parallel. Both will be operated 180° out of phase
@@ -154,7 +153,6 @@
     // PWM time base Settings
     #define f_ACLK                      4e+9        // 4 GHz PWM tick rate
     #define T_ACLK                      250e-12     // 250 ps PWM resolution
-    #define PWM_PCLKDIV_PRIMARY         1           // PWM Input Clock Divider
 
 #endif
 
@@ -179,35 +177,35 @@
 
 // Macro calculating Leading Edge Blanking period counter value based on time base frequency selection
 #define REG_LEB_PERIOD_MASK         0b1111111111111111
-#define LEB_PERIOD                  ((uint16_t)((uint16_t)(((float)(LEADING_EDGE_BLANKING_PER))/((float)(T_ACLK))) >> PWM_PCLKDIV_PRIMARY))
+#define LEB_PERIOD                  ((uint16_t)(((float)(LEADING_EDGE_BLANKING_PER))/((float)(T_ACLK))) & REG_LEB_PERIOD_MASK)
 
 // Macro calculating ADC offset period counter value based on time base frequency selection
-#define ADC_TRIG_OFFSET_VOUT        ((uint16_t)((uint16_t)(((float)(ADC_TRIGGER_OFFSET_VOUT))/((float)(T_ACLK))) >> PWM_PCLKDIV_PRIMARY) & REG_LEB_PERIOD_MASK)
-#define ADC_TRIG_OFFSET_IOUT        ((uint16_t)((uint16_t)(((float)(ADC_TRIGGER_OFFSET_IOUT))/((float)(T_ACLK))) >> PWM_PCLKDIV_PRIMARY) & REG_LEB_PERIOD_MASK)
+#define ADC_TRIG_OFFSET_VOUT        ((uint16_t)((float)(ADC_TRIGGER_OFFSET_VOUT) / (float)(T_ACLK))) 
+#define ADC_TRIG_OFFSET_IOUT        ((uint16_t)((float)(ADC_TRIGGER_OFFSET_IOUT) / (float)(T_ACLK))) 
 
 // Macros calculating Dead Time Rising/Falling Edge period counter value based on time base frequency selection
 #define REG_DTRx_VALID_BIT_MSK      0b0011111111111111
 #define REG_ALTDTRx_VALID_BIT_MSK   0b0011111111111111
-#define PWM_DEAD_TIME_LE            ((uint16_t)((uint16_t)(((float)(PWM_DEAD_TIME_RISING))/((float)(T_ACLK))) >> PWM_PCLKDIV_PRIMARY) & REG_DTRx_VALID_BIT_MSK)
-#define PWM_DEAD_TIME_FE            ((uint16_t)((uint16_t)(((float)(PWM_DEAD_TIME_FALLING))/((float)(T_ACLK))) >> PWM_PCLKDIV_PRIMARY) & REG_ALTDTRx_VALID_BIT_MSK)
+#define PWM_DEAD_TIME_LE            ((uint16_t)(((float)(PWM_DEAD_TIME_RISING))/((float)(T_ACLK))) & REG_DTRx_VALID_BIT_MSK)
+#define PWM_DEAD_TIME_FE            ((uint16_t)(((float)(PWM_DEAD_TIME_FALLING))/((float)(T_ACLK))) & REG_ALTDTRx_VALID_BIT_MSK)
 
 // Macros calculating register values based on the physical values given above
 
 #define VIN_DIVIDER_RATIO           (float)((float)C4SWBB_VIN_AMP_GAIN * ((float)C4SWBB_VIN_DIV_R2) / ((float)(C4SWBB_VIN_DIV_R1 + C4SWBB_VIN_DIV_R2)))
 #define VIN_DIVIDER_RATIO_INV       (float)( 1.0 / VIN_DIVIDER_RATIO )
-#define VIN_FB_OFFSET               (uint16_t)(C4SWBB_VIN_FEEDBACK_OFFSET * ADC_SCALER)    // Input voltage sense offset ADC ticks
+#define VIN_FB_OFFSET               (uint16_t)(C4SWBB_VIN_FEEDBACK_OFFSET * HSADC_SCALER)    // Input voltage sense offset ADC ticks
 
 #define VOUT_DIVIDER_RATIO          (float)((float)C4SWBB_VOUT_AMP_GAIN * ((float)C4SWBB_VOUT_DIV_R2) / ((float)(C4SWBB_VOUT_DIV_R1 + C4SWBB_VOUT_DIV_R2)))
 #define VOUT_DIVIDER_RATIO_INV      (float)( 1.0 / VOUT_DIVIDER_RATIO )
-#define VOUT_FB_OFFSET              (int16_t)(C4SWBB_VOUT_SENSE_OFFSET * ADC_SCALER)   // Output voltage sense offset ADC ticks
+#define VOUT_FB_OFFSET              (int16_t)(C4SWBB_VOUT_SENSE_OFFSET * HSADC_SCALER)   // Output voltage sense offset ADC ticks
 
 #define IOUT_SCALER_RATIO_I2V       (float)((float)C4SWBB_CS_SHUNT_RESISTANCE * (float)C4SWBB_CS_AMP_GAIN) // Current feeback ratio in [V/A] => used to convert current into feedback voltage
 #define IOUT_SCALER_RATIO_V2I       (float)(1.0/((float)IOUT_SCALER_RATIO_I2V))  // Current feeback ratio in [A/V] => used to convert feedback voltage into current
-#define IOUT_SCALER_RATIO_TICKS     (uint16_t)((float)IOUT_SCALER_RATIO_I2V * (float)ADC_SCALER) // Current feeback ratio in [Ticks/A] => used to convert current into ADC ticks
+#define IOUT_SCALER_RATIO_TICKS     (uint16_t)((float)IOUT_SCALER_RATIO_I2V * (float)HSADC_SCALER) // Current feeback ratio in [Ticks/A] => used to convert current into ADC ticks
 
-#define IOUT_SCALER_OFFSET_TICKS    (uint16_t)((float)C4SWBB_IOUT_FEEDBACK_OFFSET * (float)ADC_SCALER) // Current sense offset ADC ticks
+#define IOUT_SCALER_OFFSET_TICKS    (uint16_t)((float)C4SWBB_IOUT_FEEDBACK_OFFSET * (float)HSADC_SCALER) // Current sense offset ADC ticks
 #define IOUT_PROPAGATION_DELAY      (uint16_t)((float)C4SWBB_CS_PROPAGATION_DELAY /(float)T_ACLK) // current feedback signal phase shift
-#define IOUT_COMMON_MODE_V_MIN      (uint16_t)((float)C4SWBB_CS_COMMON_MODE_V_MIN * (float)VOUT_DIVIDER_RATIO * (float)ADC_SCALER) // Current sense minimum common mode voltage ADC ticks
+#define IOUT_COMMON_MODE_V_MIN      (uint16_t)((float)C4SWBB_CS_COMMON_MODE_V_MIN * (float)VOUT_DIVIDER_RATIO * (float)HSADC_SCALER) // Current sense minimum common mode voltage ADC ticks
 
 
 #endif	/* _HARDWARE_ABSTRACTION_LAYER_SYSTEM_SCALING_H_ */
