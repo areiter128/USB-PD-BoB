@@ -53,6 +53,26 @@ volatile uint16_t exec_PowerControl(void) {
         c4swbb_1.status.bits.power_source_detected = false;
         c4swbb_2.status.bits.power_source_detected = false;
     }
+
+    // The power supply fault flag is only reset if ALL fault objects have been cleared
+    // 
+    // Please note:
+    // Output Over Current conditions are allowed and will result in a hard limitation
+    // of the output current at the defined level. Thus over current conditions will NOT 
+    // lead to an automatic shut down of the converter.
+    
+    c4swbb_1.status.bits.fault_active = (volatile bool)(
+                fltobj_UnderVoltageLockOut.status.bits.fltstat | 
+                fltobj_OverVoltageLockOut.status.bits.fltstat |
+                fltobj_OverVoltageProtection_USBPort_1.status.bits.fltstat
+            );
+
+    c4swbb_2.status.bits.fault_active = (volatile bool)(
+                fltobj_UnderVoltageLockOut.status.bits.fltstat | 
+                fltobj_OverVoltageLockOut.status.bits.fltstat |
+                fltobj_OverVoltageProtection_USBPort_2.status.bits.fltstat
+            );
+
     
     // Execute the state machines of converter 1 and 2
     fres &= exec_4SWBB_PowerController(&c4swbb_1);  // Execute 4-Switch Buck/Boost Converter #1 State Machine
@@ -169,6 +189,9 @@ volatile uint16_t init_PowerControl(void) {
 volatile uint16_t reset_PowerControl(void) {
     
     volatile uint16_t fres = 0;
+
+    c4swbb_1.status.bits.fault_active = true; // Set FAULT flag
+    c4swbb_2.status.bits.fault_active = true; // Set FAULT flag
     
     fres &= c4SWBB_shut_down(&c4swbb_1);  // Shut Down 4-Switch Buck/Boost Converter #1 State Machine
     fres &= c4SWBB_shut_down(&c4swbb_2);  // Shut Down 4-Switch Buck/Boost Converter #2 State Machine
