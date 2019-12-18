@@ -38,6 +38,7 @@
 
 /* User Configuration Files */
 #include "apl/config/UserAppManager.h"
+#include "apl/config/UserFaultObjects.h"
 #include "_root/generic/os_Globals.h"
 
 /* User Tasks */
