@@ -138,7 +138,7 @@
     #define C4SWBB_CS_COMMON_MODE_V_MIN 0.0       // Common mode minimum voltage at which the amplifier starts to provide an output signal
 
     #define C4SWBB_IOUT_IS_BI_DIRECTIONAL   false       // Current sens is (0=uni-directional, 1=bi-directional)
-    #define C4SWBB_IOUT_FEEDBACK_OFFSET     2020       // Current sense zero offset, 2048 ideal value but need to regulate at no load
+    #define C4SWBB_IOUT_FEEDBACK_OFFSET     1900       // Current sense zero offset, 2048 ideal value but need to regulate at no load
                                                        // so 2020 offset allows current loop to integrate down to correct duty cycle for no load
     // System Settings
     #define SWITCHING_FREQUENCY         350e+3      // Nominal switching frequency per converter phase in [Hz]

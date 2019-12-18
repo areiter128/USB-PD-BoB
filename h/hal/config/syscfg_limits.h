@@ -56,12 +56,17 @@
 
 #define IOUT_MINIMUM            0.000       // absolute minimum average output current during normal operation
 #define IOUT_MAX_STARTUP        1.000       // absolute minimum average output current during startup (inrush current limit)
-#define IOUT_MAXIMUM            3.500       // absolute maximum average output current during normal operation
+#define IOUT_MAXIMUM            1.200       // absolute maximum average output current during normal operation
+#define IOUT_OVER_CURRENT_LIMIT 1.500       // absolute maximum average output current during normal operation
     
 #define IOUT_4SWBB_TRIP_CONV1   1.100       // [A] Upper boost switch threshold for output current - PWM1&PWM2 Buck-Boost leg
 #define IOUT_4SWBB_RESET_CONV1  0.900       // [A] Lower boost switch threshold for output current - PWM1&PWM2 Buck-Boost leg
 #define IOUT_4SWBB_TRIP_CONV2   1.100       // [A] Upper boost switch threshold for output current - PWM5&PWM7 Buck-Boost leg
 #define IOUT_4SWBB_RESET_CONV2  0.900       // [A] Lower boost switch threshold for output current - PWM5&PWM7 Buck-Boost leg
+
+#define TEMP_RELEASE_LIMIT      60.00       // Temperature in [�C] at which warning status flag bit will be cleared
+#define TEMP_WARNING_LIMIT      80.00       // Temperature in [�C] at which a warning status flag bit should be set
+#define TEMP_PROTECTION_LIMIT   100.0       // Temperature in [�C] at which the power supply will be shut down
 
 #define DUTY_RATIO_BUCK_LEG_INIT    0.0525  // Initial duty ratio of buck leg at PWM start
 #define DUTY_RATIO_MIN_BUCK         0.0525  // Minimum duty ration buck leg
@@ -104,9 +109,16 @@
 #define VOUT_OVP_RELEASE        (uint16_t)(((float)VOUT_MAXIMUM - (float)VOUT_MAXIMUM_HYST) * (float)VOUT_DIVIDER_RATIO * (float)HSADC_SCALER) // Input voltage sense ADC ticks
 #define VOUT_MAX_DEV            (uint16_t)((float)VOUT_DIVIDER_RATIO * (float)VOUT_MAX_DEVIATION * HSADC_SCALER)   // Maximum allowed output voltage deviation in ADC ticks 
 
-#define IOUT_LCL_CLAMP          (uint16_t)((((float)IOUT_MINIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
-#define IOUT_INRUSH_CLAMP       (uint16_t)((((float)IOUT_MAX_STARTUP * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
-#define IOUT_OCL_TRIP           (uint16_t)((((float)IOUT_MAXIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
+#define IOUT_LCL_CLAMP          (uint16_t)((((float)IOUT_MINIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output current sense ADC ticks
+#define IOUT_INRUSH_CLAMP       (uint16_t)((((float)IOUT_MAX_STARTUP * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output current sense ADC ticks
+#define IOUT_OCL_TRIP           (uint16_t)((((float)IOUT_OVER_CURRENT_LIMIT * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output current sense ADC ticks
+#define IOUT_OCL_RELEASE        (uint16_t)((((float)IOUT_MAXIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output current sense ADC ticks
+
+#define TEMP_OTW_TRIP           (uint16_t)(((float)TEMP_WARNING_LIMIT * (float)TEMP_SLOPE_TICKS) + (float)TEMP_OFFSET_TICKS) // Temperature sense ADC ticks
+#define TEMP_OTW_RELEASE        (uint16_t)(((float)TEMP_RELEASE_LIMIT * (float)TEMP_SLOPE_TICKS) + (float)TEMP_OFFSET_TICKS) // Temperature sense ADC ticks
+
+#define TEMP_OTP_TRIP           (uint16_t)(((float)TEMP_PROTECTION_LIMIT  * (float)TEMP_SLOPE_TICKS) + (float)TEMP_OFFSET_TICKS) // Temperature sense ADC ticks
+#define TEMP_OTP_RELEASE        (uint16_t)(((float)TEMP_RELEASE_LIMIT  * (float)TEMP_SLOPE_TICKS) + (float)TEMP_OFFSET_TICKS) // Temperature sense ADC ticks
 
 // 4-Switch Buck/Boost operation PWM-leg control
 
