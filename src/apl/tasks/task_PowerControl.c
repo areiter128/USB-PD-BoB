@@ -14,7 +14,6 @@
 
 #include "apl/tasks/task_PowerControl.h"
 #include "apl/resources/c4swbb_control.h"   // 4-Switch Buck/Boost Power Control State Machine Header
-#include "apl/config/UserFaultObjects.h"
 
 // Declare two 4-Switch Buck/Boost DC/DC converter objects
 volatile C4SWBB_PWRCTRL_t c4swbb_1;    // USB PD Port A
