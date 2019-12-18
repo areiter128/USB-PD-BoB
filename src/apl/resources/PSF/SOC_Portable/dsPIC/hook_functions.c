@@ -82,35 +82,23 @@ void port_led_off(uint8_t u8PortNum)
 // *****************************************************************************
 void hw_portpower_init(uint8_t port_number)
 {
-//    uint8_t port_number;
-//    uint32_t reg_data;
-        
     // Configure the UPD GPIO pins to be used for discharge
     // and port power switch enable set the pins low to disable the discharge circuit
     // and disable the PPS.  Here we assume that the discharge control and PPS are 
     // on the same GPIO on all UPD350 devices.
-    //for (port_number = 0; port_number < CONFIG_PD_PORT_COUNT; port_number++)
-    //{
-        // Set up PIO2 as output defaulting low for PPS discharge control (active high)
-        UPD_GPIOSetDirection(port_number, eUPD_PIO2, UPD_GPIO_SETDIR_OUTPUT);
-        UPD_GPIOSetBufferType(port_number, eUPD_PIO2, UPD_GPIO_SETBUF_PUSHPULL);
-        UPD_GPIOSetClearOutput(port_number, eUPD_PIO2, UPD_GPIO_CLEAR);
-        UPD_GPIOEnableDisable(port_number, eUPD_PIO2, UPD_ENABLE_GPIO);
+
+    // Set up PIO2 as output defaulting low for PPS discharge control (active high)
+    UPD_GPIOSetDirection(port_number, eUPD_PIO2, UPD_GPIO_SETDIR_OUTPUT);
+    UPD_GPIOSetBufferType(port_number, eUPD_PIO2, UPD_GPIO_SETBUF_PUSHPULL);
+    UPD_GPIOSetClearOutput(port_number, eUPD_PIO2, UPD_GPIO_CLEAR);
+    UPD_GPIOEnableDisable(port_number, eUPD_PIO2, UPD_ENABLE_GPIO);
         
-        // Set up PIO7 as output defaulting low for PPS Enable control (active high)
-        UPD_GPIOSetDirection(port_number, eUPD_PIO7, UPD_GPIO_SETDIR_OUTPUT);
-        UPD_GPIOSetBufferType(port_number, eUPD_PIO7, UPD_GPIO_SETBUF_PUSHPULL);
-        UPD_GPIOSetClearOutput(port_number, eUPD_PIO7, UPD_GPIO_CLEAR);
-        UPD_GPIOEnableDisable(port_number, eUPD_PIO7, UPD_ENABLE_GPIO);
+    // Set up PIO7 as output defaulting low for PPS Enable control (active high)
+    UPD_GPIOSetDirection(port_number, eUPD_PIO7, UPD_GPIO_SETDIR_OUTPUT);
+    UPD_GPIOSetBufferType(port_number, eUPD_PIO7, UPD_GPIO_SETBUF_PUSHPULL);
+    UPD_GPIOSetClearOutput(port_number, eUPD_PIO7, UPD_GPIO_CLEAR);
+    UPD_GPIOEnableDisable(port_number, eUPD_PIO7, UPD_ENABLE_GPIO);
 
-        
-//        // Set up the debounce register for PIO5 (the fault input from power switch)
-//        // default is 10 * 1us
-//        reg_data = 0x00000400;
-//        UPD_RegisterWrite(port_number, 0x0070, (uint8_t *)&reg_data, BYTE_LEN_4);
-
-
-    //}
 }
 
 void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage, uint16_t u16Current)
@@ -134,7 +122,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage, uint16_
             return;
     }
         /*
-     * Set up the port's buck converter to produce the proper voltage level
+     * Set up the port's power supply parameters to produce the proper voltage level
      */
     switch(u16VBUS_Voltage)
     {
@@ -437,34 +425,6 @@ void hw_spi_cs_set (uint8_t u8Portnum, uint8_t EnDis)
 
 }
 
-//void hw_spi_cs_low (uint8_t u8Portnum)
-//{
-//    if (u8Portnum == 0)
-//    {
-//        //Set pin level low for respective GPIO that is connected to the UPD350 SPI CS pin
-//        LATBbits.LATB7 = 0;
-//    }
-//    else if (u8Portnum == 1)
-//    {
-//        //Set pin level low for respective GPIO that is connected to the UPD350 SPI CS pin
-//        LATDbits.LATD13 = 0;
-//    }
-//
-//}
-//
-//void hw_spi_cs_high (uint8_t u8Portnum)
-//{
-//    if (u8Portnum == 0)
-//    {
-//        //Set pin level high for respective GPIO that is connected to the UPD350 SPI CS pin
-//        LATBbits.LATB7 = 1;
-//    }
-//    else if (u8Portnum == 1)
-//    {
-//        //Set pin level high for respective GPIO that is connected to the UPD350 SPI CS pin
-//        LATDbits.LATD13 = 1;
-//    }
-//}
 
 void SPI_Write(uint8_t *pu8WriteBuffer, uint16_t u16Writelength)
 {
@@ -548,12 +508,12 @@ void hook_policy_engine_pre_process(uint8_t u8PortNum, uint8_t *u8DataBuf, uint8
     
 }
 
-#ifdef EXCLUDE
+#ifdef EXCLUDE_UNUSED_HOOK_FUNCTIONS
 uint8_t hook_pdo_request_post_process_valid(uint8_t port_num, uint16_t max_current, uint8_t pdo_requested)
 {
     return (check_power_budget(port_num, max_current, pdo_requested));
 }
-#endif //EXCLUDE
+#endif // EXCLUDE_UNUSED_HOOK_FUNCTIONS
 
 void hook_notify_pd_events_cb(uint8_t port_num, uint8_t event)
 {
