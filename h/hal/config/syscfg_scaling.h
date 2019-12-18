@@ -138,9 +138,13 @@
     #define C4SWBB_CS_COMMON_MODE_V_MIN 0.0       // Common mode minimum voltage at which the amplifier starts to provide an output signal
 
     #define C4SWBB_IOUT_IS_BI_DIRECTIONAL   false       // Current sens is (0=uni-directional, 1=bi-directional)
-    #define C4SWBB_IOUT_FEEDBACK_OFFSET     1860       // Current sense zero offset, 2048 ideal value but need to regulate at no load
+    #define C4SWBB_IOUT_FEEDBACK_OFFSET     1900       // Current sense zero offset, 2048 ideal value but need to regulate at no load
                                                        // so 2020 offset allows current loop to integrate down to correct duty cycle for no load
-													   // Further decreasing the reference adds a small gain to the current loop but stabilizes the converter at no load
+
+    // Temperature sensor is MCP9700A
+    #define TEMP_SENSE_OFFSET           0.500  // output voltage at 0° C
+    #define TEMP_SENSE_SLOPE            0.010  // output voltage slope per ° C
+
     // System Settings
     #define SWITCHING_FREQUENCY         350e+3      // Nominal switching frequency per converter phase in [Hz]
     #define PWM_NO_OF_PHASES            2.0         // this board has two converters running parallel. Both will be operated 180° out of phase
@@ -207,6 +211,8 @@
 #define IOUT_PROPAGATION_DELAY      (uint16_t)((float)C4SWBB_CS_PROPAGATION_DELAY /(float)T_ACLK) // current feedback signal phase shift
 #define IOUT_COMMON_MODE_V_MIN      (uint16_t)((float)C4SWBB_CS_COMMON_MODE_V_MIN * (float)VOUT_DIVIDER_RATIO * (float)HSADC_SCALER) // Current sense minimum common mode voltage ADC ticks
 
+#define TEMP_OFFSET_TICKS           (uint16_t)((float)TEMP_SENSE_OFFSET * (float)HSADC_SCALER)
+#define TEMP_SLOPE_TICKS            (uint16_t)((float)TEMP_SENSE_SLOPE * (float)HSADC_SCALER)
 
 #endif	/* _HARDWARE_ABSTRACTION_LAYER_SYSTEM_SCALING_H_ */
 
