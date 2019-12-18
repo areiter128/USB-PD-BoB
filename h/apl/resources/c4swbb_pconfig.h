@@ -125,6 +125,19 @@ extern "C" {
                                     REG_PGCON_MDCSEL_INDEPENDENT \
                                 )   // 0b0100000101000000
 
+ #define C4SWBB_2_PGxCONH      ( \
+                                    PGCON_SOCS_TRG_PCISYNC | \
+                                    REG_PGCON_TRGMOD_REPEAT | \
+                                    REG_PGCON_UPDMOD_IMMEDIATE | \
+                                    REG_PGCON_MSTEN_MASTER | \
+                                    REG_PGCON_MPHSEL_INDEPENDENT | \
+                                    REG_PGCON_MPERSEL_MASTER | \
+                                    REG_PGCON_MDCSEL_INDEPENDENT \
+                                )   // 0b0100000101000000
+    
+    
+    
+    
 /*!PGxSTAT: PWM GENERATOR x STATUS REGISTER
 
     Always clear all status bits
@@ -186,14 +199,14 @@ extern "C" {
     bit 9 ADTR1EN2: ADC Trigger 1 Source is PGxTRIGB Compare Event Enable bit: 0 = PGxTRIGB register compare event is disabled as trigger source for ADC Trigger 1
     bit 8 ADTR1EN1: ADC Trigger 1 Source is PGxTRIGA Compare Event Enable bit: 0 = PGxTRIGA register compare event is disabled as trigger source for ADC Trigger 1
     bit 7-5 Unimplemented: Read as ?0?
-    bit 4-3 UPDTRG[1:0]: Update Trigger Select bits: 11 = A write of the PGxTRIGA register automatically sets the UPDATE bit
+    bit 4-3 UPDTRG[1:0]: Update Trigger Select bits: 01 = A write of the PDC register automatically sets the UPDATE bit
     bit 2-0 PGTRGSEL[2:0]: PWM Generator Trigger Output Selection bits(1): 001 = PGxTRIGA compare event is the PWM Generator trigger
  */
 #define C4SWBB_BUCKLEG_PGxEVTL      (   REG_PGEVT_ADTR1PS_POSTSCALE_1 | \
                                         REG_PGEVT_ADTR1EN3_PGxTRIGC_DISABLED | \
                                         REG_PGEVT_ADTR1EN2_PGxTRIGB_DISABLED | \
                                         REG_PGEVT_ADTR1EN1_PGxTRIGA_ENABLED | \
-                                        REG_PGEVT_UPDTRG_PGxTRIGA | \
+                                        REG_PGEVT_UPDTRG_PGxDC | \
                                         REG_PGEVT_PGTRGSEL_EOC \
                                     )  // 0b0000000000011001
 
@@ -413,7 +426,17 @@ extern "C" {
                                         REG_PGxLEBCON_LEBTRG_PLF_DISABLE \
                                     )  // 0b0000000000000000
 
-/*!PWM Generator Timing Registers
+#define C4SWBB_2_PG1LEBH            (   REG_LEBCON_PWMPCI_PG5 | \
+                                        REG_PGxLEBCON_LEBTRG_PHR_DISABLE | \
+                                        REG_PGxLEBCON_LEBTRG_PHF_DISABLE | \
+                                        REG_PGxLEBCON_LEBTRG_PLR_DISABLE | \
+                                        REG_PGxLEBCON_LEBTRG_PLF_DISABLE \
+                                    )  // 0b0000000000000000
+    
+    
+    
+    
+    /*!PWM Generator Timing Registers
 
 Description: 
 
@@ -489,9 +512,9 @@ Description:
     bit 3-0 SOCS[3:0]: Start-of-Cycle Selection bits(1,2,3): 0000 = Local EOC ? PWM Generator is self-triggered
  */
 
-#define C4SWBB_BOOSTLEG_PGxCONH     (   PGCON_SOCS_PWM1_5 | \
+#define C4SWBB_BOOSTLEG_PGxCONH     (   REG_PGCON_SOCS_PWM1_5 | \
                                         REG_PGCON_TRGMOD_REPEAT | \
-                                        REG_PGCON_UPDMOD_SLV_IMMEDIATE | \
+                                        REG_PGCON_UPDMOD_IMMEDIATE | \
                                         REG_PGCON_MSTEN_NO_BROADCAST | \
                                         REG_PGCON_MPHSEL_INDEPENDENT | \
                                         REG_PGCON_MPERSEL_MASTER | \
@@ -559,14 +582,14 @@ Description:
     bit 9 ADTR1EN2: ADC Trigger 1 Source is PGxTRIGB Compare Event Enable bit: 0 = PGxTRIGB register compare event is disabled as trigger source for ADC Trigger 1
     bit 8 ADTR1EN1: ADC Trigger 1 Source is PGxTRIGA Compare Event Enable bit: 0 = PGxTRIGA register compare event is disabled as trigger source for ADC Trigger 1
     bit 7-5 Unimplemented: Read as ?0?
-    bit 4-3 UPDTRG[1:0]: Update Trigger Select bits: 11 = A write of the PGxTRIGA register automatically sets the UPDATE bit
+    bit 4-3 UPDTRG[1:0]: Update Trigger Select bits: 01 = A write of the PDC register automatically sets the UPDATE bit
     bit 2-0 PGTRGSEL[2:0]: PWM Generator Trigger Output Selection bits(1): 001 = PGxTRIGA compare event is the PWM Generator trigger
  */
 #define C4SWBB_BOOSTLEG_PGxEVTL     (   REG_PGEVT_ADTR1PS_POSTSCALE_1 | \
                                         REG_PGEVT_ADTR1EN3_PGxTRIGC_DISABLED | \
                                         REG_PGEVT_ADTR1EN2_PGxTRIGB_DISABLED | \
                                         REG_PGEVT_ADTR1EN1_PGxTRIGA_ENABLED | \
-                                        REG_PGEVT_UPDTRG_PGxTRIGA | \
+                                        REG_PGEVT_UPDTRG_PGxDC | \
                                         REG_PGEVT_PGTRGSEL_PGxTRIGA \
                                     )  // 0b0000000000011001
 
