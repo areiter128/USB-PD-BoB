@@ -1,12 +1,12 @@
 /* ********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.0.76
+ * z-Domain Control Loop Designer, Version 0.9.0.75
  * ********************************************************************************
  * 2p2z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
  * ********************************************************************************
  *
  *  Controller Type:    2P2Z - Basic Current Mode Compensator
- *  Sampling Frequency: 87500 Hz
+ *  Sampling Frequency: 175000 Hz
  *  Fixed Point Format: 15
  *  Scaling Mode:       3 - Dual Bit-Shift Scaling
  *  Input Gain:         1
@@ -15,8 +15,8 @@
  * CGS Version:         1.0.0
  * CGS Date:            11/08/19
  * *******************************************************************************
- * User:                C14220
- * Date/Time:           11/12/2019 10:10:40 AM
+ * User:                M91406
+ * Date/Time:           11/11/2019 12:53:15 AM
  * *******************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_CHB_ILOOP_H__

@@ -123,14 +123,14 @@
 // Buck-Leg #2 ADC Trigger Generator Settings
 #define BUCKH2_PGxEVT_ADTR1EN   0b001   // PGxTRIGA register compare event is enabled as trigger source for ADC Trigger 1
 #define BUCKH2_PGxEVT_ADTR1PS   0b00011 // ADC Trigger 1 Postscaler Selection: Trigger will be generated every other cycle
-#define BUCKH2_PGxEVT_ADTR1OFS  0b00011 // ADC Trigger 1 Offset Selection: Offset by 1 trigger event
+#define BUCKH2_PGxEVT_ADTR1OFS  0b00000 // ADC Trigger 1 Offset Selection: Offset by 1 trigger event
 #define BUCKH2_PGxEVT_ADTR2EN   0b000   // All PGxTRIGn registers compare events are disabled as trigger source for ADC Trigger 2
 #define BUCKH2_PGxEVT_EVTSEL    0b11    // Time base interrupts are disabled
 
 // Boost-Leg #2 ADC Trigger Generator Settings
 #define BOOSTH2_PGxEVT_ADTR1EN  0b001   // PGxTRIGA register compare event is enabled as trigger source for ADC Trigger 1
 #define BOOSTH2_PGxEVT_ADTR1PS  0b00011 // ADC Trigger 1 Postscaler Selection: Trigger will be generated every other cycle
-#define BOOSTH2_PGxEVT_ADTR1OFS 0b00011 // ADC Trigger 1 Offset Selection: Offset by 1 trigger event 
+#define BOOSTH2_PGxEVT_ADTR1OFS 0b00000 // ADC Trigger 1 Offset Selection: Offset by 1 trigger event 
 #define BOOSTH2_PGxEVT_ADTR2EN  0b000   // All PGxTRIGn registers compare events are disabled as trigger source for ADC Trigger 2
 #define BOOSTH2_PGxEVT_EVTSEL   0b11    // Time base interrupts are disabled
 

@@ -164,8 +164,8 @@ volatile uint16_t DEVICE_Reset(void){
     volatile uint16_t fres = 1;
     
     // Device reset
-    fres &= smpsGPIO_Initialize(); // Sets all device pins to DIGITAL INPUT, disabling all open-drain and pull-up/-down settings
-    fres &= smpsPMD_SetPowerStateAll(PMD_POWER_OFF); // Turns off power and clocks to all peripheral modules offering a PMD control bit
+    fres &= smpsGPIO_Initialize();               // Sets all device pins to DIGITAL INPUT, disabling all open-drain and pull-up/-down settings
+    fres &= smpsPMD_SetPowerStateAll(PMD_POWER_OFF);  // Turns off power and clocks to all peripheral modules offering a PMD control bit
     
     return(fres);
     

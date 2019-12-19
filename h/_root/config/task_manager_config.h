@@ -60,7 +60,7 @@
  * and therefore becomes practically obsolete. 
  * 
 *****************************************************************************/
-#define START_OS_BEFORE_MAIN   1 // Enable/disable execution OS befroe main()
+#define START_OS_BEFORE_MAIN   0 // Enable/disable execution OS befroe main()
 
 /*!EXECUTE_DEVICE_RESET
  *****************************************************************************

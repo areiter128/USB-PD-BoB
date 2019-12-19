@@ -1,12 +1,12 @@
 /* **********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.0.76
+ * z-Domain Control Loop Designer, Version 0.9.0.75
  * **********************************************************************************
  * 2p2z compensation filter coefficients derived for following operating
  * conditions:
  * **********************************************************************************
  *
  *  Controller Type:    2P2Z - Basic Current Mode Compensator
- *  Sampling Frequency: 87500 Hz
+ *  Sampling Frequency: 175000 Hz
  *  Fixed Point Format: 15
  *  Scaling Mode:       3 - Dual Bit-Shift Scaling
  *  Input Gain:         1
@@ -15,8 +15,8 @@
  * CGS Version:         1.0.0
  * CGS Date:            11/08/19
  * *********************************************************************************
- * User:                C14220
- * Date/Time:           11/12/2019 10:10:19 AM
+ * User:                M91406
+ * Date/Time:           11/11/2019 12:52:31 AM
  * ********************************************************************************/
 
 #include "../h/apl/resources/cha_iloop.h"
@@ -57,15 +57,15 @@ volatile uint16_t cha_iloop_ErrorHistory_size = (sizeof(cha_iloop_histories.Erro
  * ********************************************************************************/
 volatile fractional cha_iloop_ACoefficients [2] =
 {
-    0x2A7B, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x5586  // Coefficient A2 will be multiplied with controller output u(n-2)
+    0x48DE, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0x3723  // Coefficient A2 will be multiplied with controller output u(n-2)
 };
 
 volatile fractional cha_iloop_BCoefficients [3] =
 {
-    0x54F5, // Coefficient B0 will be multiplied with error input e(n-0)
-    0x1889, // Coefficient B1 will be multiplied with error input e(n-1)
-    0xC394  // Coefficient B2 will be multiplied with error input e(n-2)
+    0x439B, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x0A86, // Coefficient B1 will be multiplied with error input e(n-1)
+    0xC6EB  // Coefficient B2 will be multiplied with error input e(n-2)
 };
 
 // Coefficient normalization factors
