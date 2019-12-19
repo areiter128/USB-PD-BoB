@@ -710,7 +710,7 @@ ECP39_SET;
     ECP39_CLEAR;
 #endif
 #if defined CH1|| defined ALL
-LATCbits.LATC2 = 0;
+//LATCbits.LATC2 = 0;
 #endif
 }
 #else
