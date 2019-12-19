@@ -126,8 +126,8 @@ extern "C" {
                                 )   // 0b0100000101000000
 
  #define C4SWBB_2_PGxCONH      ( \
-                                    PGCON_SOCS_TRG_PCISYNC | \
-                                    REG_PGCON_TRGMOD_REPEAT | \
+                                    REG_PGCON_SOCS_TRG_PCISYNC | \
+                                    REG_PGCON_TRGMOD_REPEAT  | \
                                     REG_PGCON_UPDMOD_IMMEDIATE | \
                                     REG_PGCON_MSTEN_MASTER | \
                                     REG_PGCON_MPHSEL_INDEPENDENT | \
