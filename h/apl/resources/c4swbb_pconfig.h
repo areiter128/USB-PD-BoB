@@ -602,7 +602,7 @@ Description:
                                         REG_PGEVT_ADTR1EN3_PGxTRIGC_DISABLED | \
                                         REG_PGEVT_ADTR1EN2_PGxTRIGB_DISABLED | \
                                         REG_PGEVT_ADTR1EN1_PGxTRIGA_ENABLED | \
-                                        REG_PGEVT_UPDTRG_PGxTRIGA | \
+                                        REG_PGEVT_UPDTRG_PGxDC | \
                                         REG_PGEVT_PGTRGSEL_PGxTRIGA \
                                     )  // 0b0000000000011001
 
