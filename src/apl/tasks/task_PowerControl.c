@@ -671,22 +671,16 @@ ECP39_SET;
 #endif
 
 #if defined CH1|| defined ALL
-LATCbits.LATC2 = 1;
+//LATCbits.LATC2 = 1;
 #endif
 
     // Call control loop update
     cha_vloop_Update(&cha_vloop);
-    
-    buffer[cntbuff]=*cha_vloop.ptrTarget;
-    cntbuff++;
-    if(cntbuff>=2000)
-        cntbuff=0;
-    
     cha_iloop_Update(&cha_iloop);
     c4swbb_pwm_update(&c4swbb_1.pwm_dist);
       
-    PG5STATbits.UPDREQ = 1;
-    PG7STATbits.UPDREQ = 1;
+    //PG5STATbits.UPDREQ = 1;
+    //PG7STATbits.UPDREQ = 1;
     
     // Capture additional analog inputs
     c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
