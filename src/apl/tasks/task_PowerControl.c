@@ -652,6 +652,7 @@ volatile uint16_t init_USBport_2(void) {
  * 4-switch buck/boost converter #1.
  * 
  * *****************************************************************************************************/
+short buffer[2000],cntbuff=0;
 #if (FB_VOUT1_ENABLE)
 void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT1_ADC_Interrupt(void)
 {
@@ -665,6 +666,12 @@ LATCbits.LATC2 = 1;
 
     // Call control loop update
     cha_vloop_Update(&cha_vloop);
+    
+    buffer[cntbuff]=*cha_vloop.ptrTarget;
+    cntbuff++;
+    if(cntbuff>=2000)
+        cntbuff=0;
+    
     cha_iloop_Update(&cha_iloop);
     c4swbb_pwm_update(&c4swbb_1.pwm_dist);
       

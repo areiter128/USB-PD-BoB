@@ -249,7 +249,7 @@
         <targetDevice>dsPIC33CK128MP505</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>pk4hybrid</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.41</languageToolchainVersion>
         <platform>3</platform>
@@ -1154,7 +1154,7 @@
         <property key="PG2" value="true"/>
         <property key="PG3" value="true"/>
         <property key="PG4" value="true"/>
-        <property key="PG5" value="true"/>
+        <property key="PG5" value="false"/>
         <property key="PG6" value="true"/>
         <property key="PG7" value="true"/>
         <property key="PG8" value="true"/>
@@ -1175,6 +1175,7 @@
                   value="ToolFirmwareOption.UseLatest"/>
         <property key="communication.activationmode" value="nohv"/>
         <property key="communication.interface" value=""/>
+        <property key="communication.interface.jtag" value="2wire"/>
         <property key="communication.speed" value="${communication.speed.default}"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="memories.aux" value="false"/>
@@ -1191,6 +1192,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-aeff"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="C:/Users/m91169/To_backup/programmi1/UPD_bob2/Usb_PD_bob/usb_pd_bob.X/debug/00173_USB_PD_BOB_R20/usb_pd_bob_ptg"/>
         <property key="programmerToGoImageName" value="usb_pd_bob_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
@@ -1200,8 +1203,10 @@
         <property key="programoptions.pgdconfig" value="pull down"/>
         <property key="programoptions.pgdresistor.value" value="4.7"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>
-        <property key="programoptions.pgmspeed" value="Med"/>
+        <property key="programoptions.pgmspeed" value="Max"/>
         <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges"
+                  value="${memories.dataflash.default}"/>
         <property key="programoptions.preserveeeprom" value="false"/>
         <property key="programoptions.preserveeeprom.ranges" value=""/>
         <property key="programoptions.preserveprogram.ranges"
@@ -1211,6 +1216,7 @@
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
+        <property key="ptgProgramImage" value="true"/>
         <property key="ptgSendImage" value="true"/>
         <property key="voltagevalue" value="3.3"/>
       </pk4hybrid>
@@ -1472,6 +1478,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-2beff"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="C:/Users/m91169/To_backup/programmi1/UPD_bob2/Usb_PD_bob/usb_pd_bob.X/debug/MA330048_P33CK_R30/usb_pd_bob_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
