@@ -814,8 +814,8 @@ LATCbits.LATC2 = 1;
     c4swbb_2.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
     c4swbb_2.data.temp = FB_TEMP2_ADCBUF;
     
-    PG1STATbits.UPDREQ = 1;
-    PG2STATbits.UPDREQ = 1;
+    //PG1STATbits.UPDREQ = 1;
+    //PG2STATbits.UPDREQ = 1;
     
     // Clear the interrupt flag 
     _ADCIF = 0;
