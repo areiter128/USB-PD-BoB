@@ -56,8 +56,8 @@
 
 #define IOUT_MINIMUM            0.000       // absolute minimum average output current during normal operation
 #define IOUT_MAX_STARTUP        1.000       // absolute minimum average output current during startup (inrush current limit)
-#define IOUT_MAXIMUM            1.200       // absolute maximum average output current during normal operation
-#define IOUT_OVER_CURRENT_LIMIT 1.500       // absolute maximum average output current during normal operation
+#define IOUT_MAXIMUM            4.000       // absolute maximum average output current during normal operation
+#define IOUT_OVER_CURRENT_LIMIT 4.500       // absolute maximum average output current during normal operation
     
 #define IOUT_4SWBB_TRIP_CONV1   1.100       // [A] Upper boost switch threshold for output current - PWM1&PWM2 Buck-Boost leg
 #define IOUT_4SWBB_RESET_CONV1  0.900       // [A] Lower boost switch threshold for output current - PWM1&PWM2 Buck-Boost leg
