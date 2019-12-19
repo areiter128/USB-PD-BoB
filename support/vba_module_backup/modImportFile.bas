@@ -31,7 +31,7 @@ Dim cdum As Variant
 
     For i = TABLE_START_ROW To TABLE_END_ROW
     
-        If Len(Trim(Cells(i, COL_PINNO))) = 0 Then Exit For
+        If Len(Trim(Cells(i, COL_MSTR_SOURCE))) = 0 Then Exit For
         
         'Delete row entries
         Cells(i, COL_PORTNO) = ""
@@ -39,7 +39,7 @@ Dim cdum As Variant
         Cells(i, COL_RPxNO) = ""
 '        Cells(i, COL_USER_LABEL) = ""      ' do not delete user label
         If Cells(2, 2) = "SINGLE CORE" Then
-            Cells(i, COL_COREASIGN) = "NONE"
+            Cells(i, COL_COREASIGN) = "MSTR"
         ElseIf Cells(2, 2) = "DUAL CORE" Then
             Cells(i, COL_COREASIGN) = "MSTR"
         End If

@@ -34,11 +34,14 @@
                 <sourceRootElem>../h/sfl/libapi</sourceRootElem>
                 <sourceRootElem>../h/sfl/isr</sourceRootElem>
                 <sourceRootElem>../src</sourceRootElem>
-                <sourceRootElem>../common</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
                     <name>00173_USB_PD_BOB_R20</name>
+                    <type>2</type>
+                </confElem>
+                <confElem>
+                    <name>MA330048_P33CK_R30</name>
                     <type>2</type>
                 </confElem>
             </confList>

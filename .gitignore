@@ -2,8 +2,10 @@
 #
 # Set up for Microchip/MPLAB X development
 #
-# Updated May  7, 2015, John Haroian
-# Updated May 30, 2019, M91406
+# John Haroian
+# Updated May 7, 2015
+# Andreas Reiter
+' Updated May 27, 2019
 
 # Object files
 *.o
@@ -29,6 +31,10 @@ disassembly/
 *.bash
 Makefile-genesis.properties
 
+# MPLAB X Trace specific
+*.log
+*.inx
+
 # KDE specific
 .directory
 
@@ -38,3 +44,4 @@ Makefile-genesis.properties
 
 
 
+documentation

@@ -42,25 +42,42 @@
  * 
  * History:
  * Created on May 19, 2019, 09:32 AM
+ * Test Comment GGM
  ******************************************************************************/
 
-#include "_root/generic/task_scheduler.h"
+#include "_root/generic/os_Scheduler.h"
 
 int main(void) {
 
-    volatile uint16_t fres = 0;
-    
 #if __DEBUG
 // In debug mode these NOPs can be used to place a breakpoint before
 // the start of the main task scheduler
     Nop();
     Nop();
     Nop();
-    Nop();
-    Nop();
 #endif
     
-    fres = exec_scheduler();
-    
-    return(fres);
+    /*!OS_Execute()
+     * ****************************************************************
+     * Description:
+     * The OS scheduler can be called directly by setting the 
+     * option START_OS_BEFORE_MAIN = 1, effectively bypassing
+     * main() completely.
+     * 
+     * if START_OS_BEFORE_MAIN = 0, the OS scheduler engine needs
+     * to be called manually from main() as a single and sole
+     * function call placed here in main() of the user project.
+     * 
+     * From this point forward the code will be executed within the 
+     * task-scheduler main loop. When this loop is terminated due to
+     * a device restart (e.g. triggered by a catastrophic fault event),
+     * the CPU will either be reset by the scheduler directly or
+     * the software is stalled at the end of the OS scheduler function.
+     * 
+     * Please note: The code will NOT return to main().
+     * 
+     * ***************************************************************/
+    OS_Execute();
+        
+    return(0);
 }

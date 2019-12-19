@@ -49,8 +49,8 @@ extern "C" {
  * INCLUDES
  * ***********************************************************************************************/
 /* generic drivers */
-#include "../../../plib/p33SMPS_mcal.X/p33SMPS_plib.h"  //"../../../plib/p33SMPS_mcal.X/p33SMPS_plib.h"
-
+#include "../../../plib/p33SMPS_mcal.X/p33SMPS_plib.h"
+    
 /* ***********************************************************************************************
  * Define a macro in the project properties as filter for hardware specific pin mapping
  * ***********************************************************************************************/
@@ -58,7 +58,17 @@ extern "C" {
 */
 
 /* Include hardware descriptor file */
+#include "mcal/config/devcfg_dsp.h"
+#include "mcal/config/devcfg_irq.h"
+#include "mcal/config/devcfg_oscillator.h"
 #include "mcal/config/devcfg_pinmap.h"
+
+    // Hardware-specific peripheral initialization
+#include "mcal/initialization/init_gpio.h"
+#include "mcal/initialization/init_irq.h"
+#include "mcal/initialization/init_dsp.h"
+#include "mcal/initialization/init_timer.h"
+#include "mcal/initialization/init_fosc.h"
 
 /* generic peripheral drives */    
 #include "dsPIC33C/p33SMPS_irq.h"
@@ -78,26 +88,6 @@ extern "C" {
  * GENERIC DEFINES
  * ***********************************************************************************************/
  
- 
-/* ***********************************************************************************************
- * MACRO DEFINITIONS
- * ***********************************************************************************************/
-    
-#ifndef WDT_RESET
-#define WDT_RESET		asm volatile ("CLRWDT\n")
-#endif
-#ifndef PWRSAV_IDLE
-#define PWRSAV_IDLE		asm volatile ("PWRSAV #1\n")
-#endif
-#ifndef PWRSAV_SLEEP
-#define PWRSAV_SLEEP	asm volatile ("PWRSAV #0\n")
-#endif
-#ifndef CPU_RESET
-#define CPU_RESET		asm volatile ("RESET\n")
-#endif
-//#ifndef ALTWREG_SWAP
-//#define ALTWREG_SWAP(x)    asm volatile ( "PUSH.W W0 \n CTXTSWP #" + x + "POP.W W0 \n")
-//#endif
     
 /* ***********************************************************************************************
  * PROTOTYPES

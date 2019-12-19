@@ -57,100 +57,66 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "_root/generic/fdrv_TrapHandler.h"
-#include "_root/config/globals.h"
+#include "_root/generic/fdrv_FaultHandler.h"
 
-uint16_t __attribute__((__persistent__))trap_counter;
-uint16_t __attribute__((__persistent__))trap_identifier;
-volatile TRAP_LOGGER_t traplog;          // data structure used as buffer for trap monitoring
+// data structure used as buffer for trap monitoring
+volatile __attribute__((__persistent__)) TRAP_LOGGER_t traplog; 
 
 
-volatile uint16_t init_SoftTraps(bool accumulator_a_overflow_trap_enable, 
+/*!init_SoftTraps
+ * *************************************************************************************************
+ * Summary:
+ * Configures the software-configurable traps
+ * 
+ * Description:
+ * This routine sets the DSP-specific traps for overflow-events of accumulator A and B. 
+ * 
+ * ************************************************************************************************/
+volatile uint16_t init_SoftTraps(
+                bool accumulator_a_overflow_trap_enable, 
                 bool accumulator_b_overflow_trap_enable, 
                 bool accumulator_catastrophic_overflow_trap_enable)
 {
-
-    
+    _OVATE = accumulator_a_overflow_trap_enable; // Enable Accumulator A Overflow Trap Enable bit
+    _OVBTE = accumulator_b_overflow_trap_enable; // Enable Accumulator B Overflow Trap Enable bit
+    _COVTE = accumulator_catastrophic_overflow_trap_enable; // Enable Catastrophic Overflow Trap Enable bit
     
     return(1);
 }
 
-// =================================================================================================
-//
-// Save Last Trap Status
-//
-// =================================================================================================
-//
-// This routine saves the most recent trap information in persistent variables to make
-// them available after a soft CPU reset.
-//
-// =================================================================================================
-void SaveTrapStatus()
-{
-//    trap_identifier = traplog.trap_id;
-//    traplog.count = trap_counter;
-    return;
-}
 
-// =================================================================================================
-//
-// Get Last Trap Status
-//
-// =================================================================================================
-//
-// This routine recovers the most recent trap information from persistent variables to make
-// them available after a soft CPU reset.
-//
-// =================================================================================================
-volatile uint16_t GetTrapStatus()
-{
-//    traplog.trap_id = trap_identifier;
-//    trap_counter = traplog.count;
-    return(1);
-}
-
-// =================================================================================================
-//
-// DefaultTrapHandler
-//
-// =================================================================================================
-//
-// This routine can be used as omnibus fault message for all traps. Each trap can be identified 
-// by a unique trap ID.
-//
-// Users may modify the basic framework provided here to suit to the needs of their application.
-//
-// =================================================================================================
-
+/*!DefaultTrapHandler
+ * *************************************************************************************************
+ * Summary:
+ * Centralized trap handler routine
+ * 
+ * Description:
+ * This routine is used as centralized trap handler for all traps. Each trap is identified 
+ * and logged by a unique trap ID and the status bits of traps and interrupt vectors are 
+ * captured
+ * 
+ * Users may modify the basic framework provided here to suit to the needs of their application.
+ *
+ * ************************************************************************************************/
 void DefaultTrapHandler(TRAP_ID_e trap_id) {
 
-    volatile uint32_t i = 0;
-    
-    traplog.inttreg.reg_block = INTTREG;
-    traplog.trap_id = trap_id;
-    traplog.count++;
-    SaveTrapStatus();
+    // Capture Trap logger values
+    traplog.trap_id = trap_id; // Capture Trap ID
+    traplog.trap_count++; // Capture occurrence 
 
-    /* ToDo: EXPERIMENTAL TEST CODE */
-    
- //Remove:   _PTEN = 0;
-    while(1)
-    {
+    // Capture recent status of interrupt, reset control and trap flag bits
+    CaptureCPUInterruptStatus();
+ 
+    // -------------------------------------------------
+    #ifdef __DEBUG
+    while(1) {
+        Nop();  // Use these NOPs to place breakpoint
         Nop();
         Nop();
-        Nop();
-
-        for( i=500000; i>0; i-- );
-        for( i=500000; i>0; i-- );
-        for( i=500000; i>0; i-- );
-        for( i=500000; i>0; i-- );
-
-        #ifdef DBGLED_TOGGLE
-        DBGLED_TOGGLE;
-        #endif
     }
-    /* ToDo: EXPERIMENTAL TEST CODE END */
+    #endif
+    // -------------------------------------------------
     
-    CPU_RESET;
     return;
 }
 
@@ -169,33 +135,11 @@ void DefaultTrapHandler(TRAP_ID_e trap_id) {
 // =================================================================================================
 
 void __attribute__((interrupt, no_auto_psv)) _ReservedTrap5(void) {
-    
-#if __DEBUG
-    Nop();
-    Nop();
-    Nop();
-#endif
-
-    traplog.trap_flags.SGHT = 1; // Capture flag bit
-    INTCON4bits.SGHT = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_RESERVED_TRAP_5_ERROR); // Call default trap handler
-    
-    return;
 }
 
 void __attribute__((interrupt, no_auto_psv)) _ReservedTrap7(void) {
-    
-#if __DEBUG
-    Nop();
-    Nop();
-    Nop();
-#endif
-
-    traplog.trap_flags.SGHT = 1; // Capture flag bit
-    INTCON4bits.SGHT = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_RESERVED_TRAP_7_ERROR); // Call default trap handler
-    
-    return;
 }
 
 // =================================================================================================
@@ -203,18 +147,7 @@ void __attribute__((interrupt, no_auto_psv)) _ReservedTrap7(void) {
 // =================================================================================================
 
 void __attribute__((interrupt, no_auto_psv)) _HardTrapError(void) {
-
-#if __DEBUG
-    Nop();
-    Nop();
-    Nop();
-#endif
-    
-    traplog.trap_flags.SGHT = 1; // Capture flag bit
-    INTCON4bits.SGHT = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_HARD_TRAP_ERROR); // Call default trap handler
-
-    return;
 }
 
 // =================================================================================================
@@ -222,25 +155,7 @@ void __attribute__((interrupt, no_auto_psv)) _HardTrapError(void) {
 // =================================================================================================
 
 void __attribute__((interrupt, no_auto_psv)) _SoftTrapError(void) {
-    
-#if __DEBUG
-    Nop();
-    Nop();
-    Nop();
-#endif
-    
-    traplog.trap_flags.CAN = INTCON3bits.CAN; // Capture flag bit
-    INTCON3bits.CAN = 0; // Clear the trap flag
-    
-    traplog.trap_flags.NAE = INTCON3bits.NAE; // Capture flag bit
-    INTCON3bits.NAE = 0; // Clear the trap flag
-    traplog.trap_flags.DOOVR = INTCON3bits.DOOVR; // Capture flag bit
-    INTCON3bits.DOOVR = 0; // Clear the trap flag
-    traplog.trap_flags.APLL = INTCON3bits.APLL; // Capture flag bit
-    INTCON3bits.APLL = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_SOFT_TRAP_ERROR);
-
-    return;
 }
 
 // =================================================================================================
@@ -248,18 +163,7 @@ void __attribute__((interrupt, no_auto_psv)) _SoftTrapError(void) {
 // =================================================================================================
 
 void __attribute__((interrupt, no_auto_psv)) _OscillatorFail(void) {
-
-#if __DEBUG
-    Nop();
-    Nop();
-    Nop();
-#endif
-    
-    traplog.trap_flags.OSCFAIL = INTCON1bits.OSCFAIL; // Capture flag bit    
-    INTCON1bits.OSCFAIL = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_OSCILLATOR_FAIL);
-
-    return;
 }
 
 // =================================================================================================
@@ -268,54 +172,21 @@ void __attribute__((interrupt, no_auto_psv)) _OscillatorFail(void) {
 // =================================================================================================
 
 void __attribute__((interrupt, no_auto_psv)) _AddressError(void) {
-
-#if __DEBUG
-        Nop();
-        Nop();
-        Nop();
-#endif
-    
-    traplog.trap_flags.ADDRERR = INTCON1bits.ADDRERR; // Capture flag bit    
-    INTCON1bits.ADDRERR = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_ADDRESS_ERROR);
-
-    return;
 }
 // =================================================================================================
 // Stack Error Trap is captured, when a stack address error occurred
 // =================================================================================================
 
 void __attribute__((interrupt, no_auto_psv)) _StackError(void) {
-
-#if __DEBUG
-    Nop();
-    Nop();
-    Nop();
-#endif
-    
-    traplog.trap_flags.STKERR = INTCON1bits.STKERR; // Capture flag bit    
-    INTCON1bits.STKERR = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_STACK_ERROR);
-
-    return;
 }
 // =================================================================================================
 // Math Error Trap is captured, when a math operation cannot be solved (e.g. division by zero)
 // =================================================================================================
 
 void __attribute__((interrupt, no_auto_psv)) _MathError(void) {
-
-#if __DEBUG
-    Nop();
-    Nop();
-    Nop();
-#endif
-    
-    traplog.trap_flags.MATHERR = INTCON1bits.MATHERR; // Capture flag bit    
-    INTCON1bits.MATHERR = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_MATH_ERROR);
-    
-    return;
 }
 
 #if (TRAP_DMA_SUPPORT == 1)
@@ -325,17 +196,7 @@ void __attribute__((interrupt, no_auto_psv)) _MathError(void) {
 // =================================================================================================
 
 void __attribute__((interrupt, no_auto_psv)) _DMACError(void) {
-
-#if __DEBUG
-    Nop();
-    Nop();
-    Nop();
-#endif
-    
-    INTCON1bits.DMACERR = 0; //Clear the trap flag
     DefaultTrapHandler(TRAP_DMA_ERROR);
-
-    return;
 }
 #endif
 #endif
@@ -352,53 +213,35 @@ void __attribute__((interrupt, no_auto_psv)) _DMACError(void) {
 // Users may modify the basic framework provided here to suit to the needs of their application.
 //
 // =================================================================================================
-#if __XC16_VERSION < 1030
+#if (__XC16_VERSION < 1030)
 
 void __attribute__((interrupt, no_auto_psv)) _AltHardTrapError(void) {
-    traplog.trap_flags.SGHT = 1; // Capture flag bit
-    INTCON4bits.SGHT = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_ALT_HARD_TRAP_ERROR); // Call default trap handler
 }
 
 void __attribute__((interrupt, no_auto_psv)) _AltSoftTrapError(void) {
-    traplog.trap_flags.NAE = INTCON3bits.NAE; // Capture flag bit
-    INTCON3bits.NAE = 0; // Clear the trap flag
-    traplog.trap_flags.DOOVR = INTCON3bits.DOOVR; // Capture flag bit
-    INTCON3bits.DOOVR = 0; // Clear the trap flag
-    traplog.trap_flags.APLL = INTCON3bits.APLL; // Capture flag bit
-    INTCON3bits.APLL = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_ALT_SOFT_TRAP_ERROR);
 }
 
 void __attribute__((interrupt, no_auto_psv)) _AltOscillatorFail(void) {
-    traplog.trap_flags.OSCFAIL = INTCON1bits.OSCFAIL; // Capture flag bit    
-    INTCON1bits.OSCFAIL = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_ALT_OSCILLATOR_FAIL);
 }
 
 void __attribute__((interrupt, no_auto_psv)) _AltAddressError(void) {
-    traplog.trap_flags.ADDRERR = INTCON1bits.ADDRERR; // Capture flag bit    
-    INTCON1bits.ADDRERR = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_ALT_ADDRESS_ERROR);
 }
 
 void __attribute__((interrupt, no_auto_psv)) _AltStackError(void) {
-    traplog.trap_flags.STKERR = INTCON1bits.STKERR; // Capture flag bit    
-    INTCON1bits.STKERR = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_ALT_STACK_ERROR);
 }
 
 void __attribute__((interrupt, no_auto_psv)) _AltMathError(void) {
-    traplog.trap_flags.MATHERR = INTCON1bits.MATHERR; // Capture flag bit    
-    INTCON1bits.MATHERR = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_ALT_MATH_ERROR);
 }
 
 #if (TRAP_DMA_SUPPORT == 1)
 
 void __attribute__((interrupt, no_auto_psv)) _AltDMACError(void) {
-    traplog.trap_flags.DMACERR = INTCON1bits.DMACERR; // Capture flag bit    
-    INTCON1bits.DMACERR = 0; // Clear the trap flag
     DefaultTrapHandler(TRAP_ALT_DMA_ERROR);
 }
 #endif

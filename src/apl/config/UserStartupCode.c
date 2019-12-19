@@ -54,7 +54,8 @@
 #include "hal/hal.h"
 #include "mcal/mcal.h"
 
-volatile uint16_t ExecuteUserStartupCode(void) {
+volatile uint16_t ExecuteUserStartupCode(void) 
+{
 
     /*!ExecuteUserStartupCode() 
      * *********************************************************************************
