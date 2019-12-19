@@ -129,7 +129,7 @@ typedef struct {
     volatile uint16_t feedback_offset; // Feedback offset value for calibration or bidirectional feedback signals
     volatile uint16_t trigger_offset; // ADC trigger offset value for trigger fine-tuning
     volatile uint16_t reference; // Control loop reference variable
-    volatile uint16_t minimum; // output voltage clamping value (minimum)
+    volatile int16_t minimum; // output voltage clamping value (minimum) // Carlo
     volatile uint16_t maximum; // output voltage clamping value (maximum)
     volatile uint16_t control_output; // capture variable for the common control output
 } C4SWBB_LOOP_SETTINGS_t; // User defined settings for control loops; 

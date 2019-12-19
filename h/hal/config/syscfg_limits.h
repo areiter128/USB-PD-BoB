@@ -54,7 +54,7 @@
 #define VOUT_MAXIMUM            22.000      // output voltage maximum (Under-Voltage-Lockout-Level)
 #define VOUT_MAXIMUM_HYST       0.500       // output voltage maximum (Under-Voltage-Lockout Hysteresis Level)
 
-#define IOUT_MINIMUM            0.000       // absolute minimum average output current during normal operation
+#define IOUT_MINIMUM            -0.500       // absolute minimum average output current during normal operation // Carlo
 #define IOUT_MAX_STARTUP        1.000       // absolute minimum average output current during startup (inrush current limit)
 #define IOUT_MAXIMUM            1.200       // absolute maximum average output current during normal operation
 #define IOUT_OVER_CURRENT_LIMIT 1.500       // absolute maximum average output current during normal operation
@@ -109,7 +109,7 @@
 #define VOUT_OVP_RELEASE        (uint16_t)(((float)VOUT_MAXIMUM - (float)VOUT_MAXIMUM_HYST) * (float)VOUT_DIVIDER_RATIO * (float)HSADC_SCALER) // Input voltage sense ADC ticks
 #define VOUT_MAX_DEV            (uint16_t)((float)VOUT_DIVIDER_RATIO * (float)VOUT_MAX_DEVIATION * HSADC_SCALER)   // Maximum allowed output voltage deviation in ADC ticks 
 
-#define IOUT_LCL_CLAMP          (uint16_t)((((float)IOUT_MINIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output current sense ADC ticks
+#define IOUT_LCL_CLAMP          (int16_t)((((float)IOUT_MINIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output current sense ADC ticks // Carlo
 #define IOUT_INRUSH_CLAMP       (uint16_t)((((float)IOUT_MAX_STARTUP * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output current sense ADC ticks
 #define IOUT_OCL_TRIP           (uint16_t)((((float)IOUT_OVER_CURRENT_LIMIT * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output current sense ADC ticks
 #define IOUT_OCL_RELEASE        (uint16_t)((((float)IOUT_MAXIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output current sense ADC ticks
