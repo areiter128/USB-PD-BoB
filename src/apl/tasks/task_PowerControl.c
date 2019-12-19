@@ -6,7 +6,7 @@
  */
 
  //selects which channel RC2 is assigned to for ISR timing
-#define ALL   
+#define CH2   
 
 #include <xc.h>
 #include <stdint.h>
