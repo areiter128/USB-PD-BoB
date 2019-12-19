@@ -668,6 +668,9 @@ LATCbits.LATC2 = 1;
     cha_iloop_Update(&cha_iloop);
     c4swbb_pwm_update(&c4swbb_1.pwm_dist);
       
+    PG5STATbits.UPDREQ = 1;
+    PG7STATbits.UPDREQ = 1;
+    
     // Capture additional analog inputs
     c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
     c4swbb_1.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value 
@@ -799,6 +802,9 @@ LATCbits.LATC2 = 1;
     c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
     c4swbb_2.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
     c4swbb_2.data.temp = FB_TEMP2_ADCBUF;
+    
+    PG1STATbits.UPDREQ = 1;
+    PG2STATbits.UPDREQ = 1;
     
     // Clear the interrupt flag 
     _ADCIF = 0;
