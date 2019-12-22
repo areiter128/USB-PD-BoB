@@ -84,6 +84,7 @@ volatile uint16_t exec_PowerControl(void) {
                 fltobj_UnderVoltageLockOut.status.bits.fltstat | 
                 fltobj_OverVoltageLockOut.status.bits.fltstat |
                 fltobj_OverVoltageProtection_USBPort_1.status.bits.fltstat |
+                fltobj_OverCurrentProtection_USBPort_1.status.bits.fltstat |
                 fltobj_RegulationError_USBPort_1.status.bits.fltstat
             );
 
@@ -91,6 +92,7 @@ volatile uint16_t exec_PowerControl(void) {
                 fltobj_UnderVoltageLockOut.status.bits.fltstat | 
                 fltobj_OverVoltageLockOut.status.bits.fltstat |
                 fltobj_OverVoltageProtection_USBPort_2.status.bits.fltstat |
+                fltobj_OverCurrentProtection_USBPort_2.status.bits.fltstat |
                 fltobj_RegulationError_USBPort_2.status.bits.fltstat
             );
 
