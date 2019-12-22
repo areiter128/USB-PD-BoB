@@ -44,6 +44,7 @@ volatile uint16_t iavg_cnt_2 = 0;
 volatile uint16_t exec_PowerControl(void) {
 
     volatile uint16_t fres = 1;
+
     
     // Both converters are supplied by the same power input and c4swbb_1 is the 
     // instance sampling the input voltage. Once this voltage is within the nominal
@@ -170,6 +171,7 @@ volatile uint16_t exec_PowerControl(void) {
     
     return (fres);
 }
+
 
 /*!init_PowerControl
  * ******************************************************************************************************
@@ -435,8 +437,8 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.buck_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
     c4swbb_1.buck_leg.adtr1_source = BUCKH1_PGxEVT_ADTR1EN; // ADC trigger 1 source is PGxTRIGA/B/C register compare event
     c4swbb_1.buck_leg.adtr2_source = BUCKH1_PGxEVT_ADTR2EN; // ADC trigger 2 source is PGxTRIGA/B/C register compare event
-    c4swbb_1.buck_leg.adtr1_scale = BUCKH1_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection
-    c4swbb_1.buck_leg.adtr1_offset = BUCKH1_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection
+    c4swbb_1.buck_leg.adtr1_scale = BUCKH1_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection (trigger every n-th cycle)
+    c4swbb_1.buck_leg.adtr1_offset = BUCKH1_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection (first trigger after n cycles)
     
     c4swbb_1.boost_leg.pwm_instance = BOOSTH1_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_1.boost_leg.period = SWITCHING_PERIOD; // set switching period 
@@ -451,8 +453,8 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
     c4swbb_1.boost_leg.adtr1_source = BOOSTH1_PGxEVT_ADTR1EN; // ADC trigger 1 source is PGxTRIGA/B/C register compare event
     c4swbb_1.boost_leg.adtr2_source = BOOSTH1_PGxEVT_ADTR2EN; // ADC trigger 2 source is PGxTRIGA/B/C register compare event
-    c4swbb_1.boost_leg.adtr1_scale = BOOSTH1_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection
-    c4swbb_1.boost_leg.adtr1_offset = BOOSTH1_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection
+    c4swbb_1.boost_leg.adtr1_scale = BOOSTH1_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection (trigger every n-th cycle)
+    c4swbb_1.boost_leg.adtr1_offset = BOOSTH1_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection (first trigger after n cycles)
     
     // Load ADC settings from hardware and microcontroller abstraction layers (HAL and MCAL)
     c4swbb_1.feedback.ad_vout.enable = FB_VOUT1_ENABLE;
@@ -613,8 +615,8 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.buck_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
     c4swbb_2.buck_leg.adtr1_source = BUCKH2_PGxEVT_ADTR1EN; // ADC trigger 1 source is PGxTRIGA/B/C register compare event
     c4swbb_2.buck_leg.adtr2_source = BUCKH2_PGxEVT_ADTR2EN; // ADC trigger 2 source is PGxTRIGA/B/C register compare event
-    c4swbb_2.buck_leg.adtr1_scale = BUCKH2_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection
-    c4swbb_2.buck_leg.adtr1_offset = BUCKH2_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection
+    c4swbb_2.buck_leg.adtr1_scale = BUCKH2_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection (trigger every n-th cycle)
+    c4swbb_2.buck_leg.adtr1_offset = BUCKH2_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection (first trigger after n cycles)
 
     c4swbb_2.boost_leg.pwm_instance = BOOSTH2_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_2.boost_leg.period = SWITCHING_PERIOD; // set switching period 
@@ -629,8 +631,8 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
     c4swbb_2.boost_leg.adtr1_source = BOOSTH2_PGxEVT_ADTR1EN; // ADC trigger 1 source is PGxTRIGA/B/C register compare event
     c4swbb_2.boost_leg.adtr2_source = BOOSTH2_PGxEVT_ADTR2EN; // ADC trigger 2 source is PGxTRIGA/B/C register compare event
-    c4swbb_2.boost_leg.adtr1_scale = BOOSTH2_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection
-    c4swbb_2.boost_leg.adtr1_offset = BOOSTH2_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection
+    c4swbb_2.boost_leg.adtr1_scale = BOOSTH2_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection (trigger every n-th cycle)
+    c4swbb_2.boost_leg.adtr1_offset = BOOSTH2_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection (first trigger after n cycles)
     
     // Load ADC settings from hardware and microcontroller abstraction layers (HAL and MCAL)
     c4swbb_2.feedback.ad_vout.enable = FB_VOUT2_ENABLE;
