@@ -325,6 +325,50 @@ volatile uint16_t reset_PowerControl(void) {
     return(fres);
 }
 
+
+/*!reset_USBPort_1
+ * ******************************************************************************************************
+ * 
+ * 
+ * *****************************************************************************************************/
+
+volatile uint16_t reset_USBPort_1(void) {
+    
+    volatile uint16_t fres = 0;
+
+    c4swbb_1.status.bits.fault_active = true; // Set FAULT flag
+    
+    fres &= c4SWBB_shut_down(&c4swbb_1);  // Shut Down 4-Switch Buck/Boost Converter #1 State Machine
+    
+    fltobj_RegulationError_USBPort_1.status.bits.fltactive = false;
+    fltobj_RegulationError_USBPort_1.status.bits.fltstat = false;
+    fltobj_RegulationError_USBPort_1.status.bits.fltchken = false;
+    
+    return(fres);
+}
+
+
+/*!reset_USBPort_2
+ * ******************************************************************************************************
+ * 
+ * 
+ * *****************************************************************************************************/
+
+volatile uint16_t reset_USBPort_2(void) {
+    
+    volatile uint16_t fres = 0;
+
+    c4swbb_2.status.bits.fault_active = true; // Set FAULT flag
+    
+    fres &= c4SWBB_shut_down(&c4swbb_2);  // Shut Down 4-Switch Buck/Boost Converter #1 State Machine
+    
+    fltobj_RegulationError_USBPort_2.status.bits.fltactive = false;
+    fltobj_RegulationError_USBPort_2.status.bits.fltstat = false;
+    fltobj_RegulationError_USBPort_2.status.bits.fltchken = false;
+    
+    return(fres);
+}
+
 /*!init_ISR_USBport_1
  * ******************************************************************************************************
  * 

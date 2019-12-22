@@ -65,6 +65,9 @@ extern "C" {
     extern volatile uint16_t exec_PowerControl(void);
     extern volatile uint16_t reset_PowerControl(void);
 
+    extern volatile uint16_t reset_USBPort_1(void);
+    extern volatile uint16_t reset_USBPort_2(void);
+    
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */
