@@ -283,9 +283,14 @@ volatile uint16_t init_PowerControl(void) {
     c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
     c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
    
-   c4swbb_1.status.bits.autorun = 1;
-   c4swbb_2.status.bits.autorun = 1;  
+    // ----------------------------------------------------
+    // ToDo: This should be controlled by the PD Stack
+
+    c4swbb_1.status.bits.autorun = false; // Start power converter A automatically (without command)
+    c4swbb_2.status.bits.autorun = false; // Start power converter B automatically (without command)
+
     Nop();
+    // ----------------------------------------------------
     
     // return Success/Failure
     return (fres);
