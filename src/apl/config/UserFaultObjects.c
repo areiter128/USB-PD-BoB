@@ -318,7 +318,7 @@ volatile uint16_t flt_OverVoltageProtection_USBPort_1_Initialize(void)
     fltobj_OverVoltageProtection_USBPort_1.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
     fltobj_OverVoltageProtection_USBPort_1.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
-    fltobj_OverVoltageProtection_USBPort_1.user_fault_action = &reset_PowerControl; // Set pointer to user function which should be called when the FAULT is tripped
+    fltobj_OverVoltageProtection_USBPort_1.user_fault_action = &reset_USBPort_1; // Set pointer to user function which should be called when the FAULT is tripped
     fltobj_OverVoltageProtection_USBPort_1.user_fault_reset = 0; // Set pointer to user function which should be called when the FAULT is released
 
     fltobj_OverVoltageProtection_USBPort_1.status.bits.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
@@ -377,7 +377,7 @@ volatile uint16_t flt_OverCurrentProtection_USBPort_1_Initialize(void)
     fltobj_OverCurrentProtection_USBPort_1.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
     fltobj_OverCurrentProtection_USBPort_1.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
-    fltobj_OverCurrentProtection_USBPort_1.user_fault_action = 0; // Set pointer to user function which should be called when the FAULT is tripped
+    fltobj_OverCurrentProtection_USBPort_1.user_fault_action = &reset_USBPort_1; // Set pointer to user function which should be called when the FAULT is tripped
     fltobj_OverCurrentProtection_USBPort_1.user_fault_reset = 0; // Set pointer to user function which should be called when the FAULT is released
 
     fltobj_OverCurrentProtection_USBPort_1.status.bits.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
@@ -434,7 +434,7 @@ volatile uint16_t flt_OverTempWarning_USBPort_1_Initialize(void)
     fltobj_OverTempWarning_USBPort_1.flt_class.bits.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
     fltobj_OverTempWarning_USBPort_1.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
-    fltobj_OverTempWarning_USBPort_1.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
+    fltobj_OverTempWarning_USBPort_1.flt_class.bits.user_class = 0; // Set =1 if this fault object triggers a user-defined fault condition response
     fltobj_OverTempWarning_USBPort_1.user_fault_action = 0; // Set pointer to user function which should be called when the FAULT is tripped
     fltobj_OverTempWarning_USBPort_1.user_fault_reset = 0; // Set pointer to user function which should be called when the FAULT is released
 
@@ -494,7 +494,7 @@ volatile uint16_t flt_OverTempProtection_USBPort_1_Initialize(void)
     fltobj_OverTempProtection_USBPort_1.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
     fltobj_OverTempProtection_USBPort_1.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
-    fltobj_OverTempProtection_USBPort_1.user_fault_action = &reset_PowerControl; // Set pointer to user function which should be called when the FAULT is tripped
+    fltobj_OverTempProtection_USBPort_1.user_fault_action = &reset_USBPort_1; // Set pointer to user function which should be called when the FAULT is tripped
     fltobj_OverTempProtection_USBPort_1.user_fault_reset = 0; // Set pointer to user function which should be called when the FAULT is released
 
     fltobj_OverTempProtection_USBPort_1.status.bits.fltlvlhw = 1; // Set =1 if this fault condition is board-level fault condition
@@ -553,7 +553,7 @@ volatile uint16_t flt_RegulationError_USBPort_1_Initialize(void)
     fltobj_RegulationError_USBPort_1.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
     fltobj_RegulationError_USBPort_1.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
-    fltobj_RegulationError_USBPort_1.user_fault_action = &reset_PowerControl; // Set pointer to user function which should be called when the FAULT is tripped
+    fltobj_RegulationError_USBPort_1.user_fault_action = &reset_USBPort_1; // Set pointer to user function which should be called when the FAULT is tripped
     fltobj_RegulationError_USBPort_1.user_fault_reset = 0; // Set pointer to user function which should be called when the FAULT is released
 
     fltobj_RegulationError_USBPort_1.status.bits.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
@@ -613,7 +613,7 @@ volatile uint16_t flt_OverVoltageProtection_USBPort_2_Initialize(void)
     fltobj_OverVoltageProtection_USBPort_2.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
     fltobj_OverVoltageProtection_USBPort_2.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
-    fltobj_OverVoltageProtection_USBPort_2.user_fault_action = &reset_PowerControl; // Set pointer to user function which should be called when the FAULT is tripped
+    fltobj_OverVoltageProtection_USBPort_2.user_fault_action = &reset_USBPort_2; // Set pointer to user function which should be called when the FAULT is tripped
     fltobj_OverVoltageProtection_USBPort_2.user_fault_reset = 0; // Set pointer to user function which should be called when the FAULT is released
 
     fltobj_OverVoltageProtection_USBPort_2.status.bits.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
@@ -672,7 +672,7 @@ volatile uint16_t flt_OverCurrentProtection_USBPort_2_Initialize(void)
     fltobj_OverCurrentProtection_USBPort_2.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
     fltobj_OverCurrentProtection_USBPort_2.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
-    fltobj_OverCurrentProtection_USBPort_2.user_fault_action = 0; // Set pointer to user function which should be called when the FAULT is tripped
+    fltobj_OverCurrentProtection_USBPort_2.user_fault_action = &reset_USBPort_2; // Set pointer to user function which should be called when the FAULT is tripped
     fltobj_OverCurrentProtection_USBPort_2.user_fault_reset = 0; // Set pointer to user function which should be called when the FAULT is released
 
     fltobj_OverCurrentProtection_USBPort_2.status.bits.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
@@ -729,7 +729,7 @@ volatile uint16_t flt_OverTempWarning_USBPort_2_Initialize(void)
     fltobj_OverTempWarning_USBPort_2.flt_class.bits.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
     fltobj_OverTempWarning_USBPort_2.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
-    fltobj_OverTempWarning_USBPort_2.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
+    fltobj_OverTempWarning_USBPort_2.flt_class.bits.user_class = 0; // Set =1 if this fault object triggers a user-defined fault condition response
     fltobj_OverTempWarning_USBPort_2.user_fault_action = 0; // Set pointer to user function which should be called when the FAULT is tripped
     fltobj_OverTempWarning_USBPort_2.user_fault_reset = 0; // Set pointer to user function which should be called when the FAULT is released
 
@@ -789,7 +789,7 @@ volatile uint16_t flt_OverTempProtection_USBPort_2_Initialize(void)
     fltobj_OverTempProtection_USBPort_2.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
     fltobj_OverTempProtection_USBPort_2.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
-    fltobj_OverTempProtection_USBPort_2.user_fault_action = &reset_PowerControl; // Set pointer to user function which should be called when the FAULT is tripped
+    fltobj_OverTempProtection_USBPort_2.user_fault_action = &reset_USBPort_2; // Set pointer to user function which should be called when the FAULT is tripped
     fltobj_OverTempProtection_USBPort_2.user_fault_reset = 0; // Set pointer to user function which should be called when the FAULT is released
 
     fltobj_OverTempProtection_USBPort_2.status.bits.fltlvlhw = 1; // Set =1 if this fault condition is board-level fault condition
@@ -848,7 +848,7 @@ volatile uint16_t flt_RegulationError_USBPort_2_Initialize(void)
     fltobj_RegulationError_USBPort_2.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
     fltobj_RegulationError_USBPort_2.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
-    fltobj_RegulationError_USBPort_2.user_fault_action = &reset_PowerControl; // Set pointer to user function which should be called when the FAULT is tripped
+    fltobj_RegulationError_USBPort_2.user_fault_action = &reset_USBPort_2; // Set pointer to user function which should be called when the FAULT is tripped
     fltobj_RegulationError_USBPort_2.user_fault_reset = 0; // Set pointer to user function which should be called when the FAULT is released
 
     fltobj_RegulationError_USBPort_2.status.bits.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
