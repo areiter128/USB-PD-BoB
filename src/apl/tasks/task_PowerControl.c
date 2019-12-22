@@ -457,8 +457,8 @@ volatile uint16_t init_USBport_1(void) {
     fres &= cha_vloop_Init(&cha_vloop);
 
     // Hardware-specific voltage loop controller settings
-    c4swbb_1.v_loop.minimum = IOUT_LCL_CLAMP;   // Minimum output value of voltage loop is absolute current limit
-    c4swbb_1.v_loop.maximum = IOUT_OCL_TRIP;    // Maximum output value of voltage loop is absolute current limit
+    c4swbb_1.v_loop.minimum = (IOUT_LCL_CLAMP + C4SWBB_IOUT_FEEDBACK_OFFSET);   // Minimum output value of voltage loop is absolute current limit
+    c4swbb_1.v_loop.maximum = (IOUT_OCL_TRIP + C4SWBB_IOUT_FEEDBACK_OFFSET);    // Maximum output value of voltage loop is absolute current limit
     c4swbb_1.v_loop.feedback_offset = C4SWBB_VOUT_OFFSET;   // Voltage feedback signal offset
     c4swbb_1.v_loop.reference = C4SWBB_VOUT_REF; // Voltage loop reference value
     c4swbb_1.v_loop.trigger_offset = ADC_TRIG_OFFSET_VOUT; // Voltage sample ADC trigger offset (offset from 50% on-time)
@@ -486,7 +486,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.i_loop.minimum = DUTY_RATIO_MIN_BUCK_REG;   // Minimum duty ratio is absolute clamping limit of current loop
     c4swbb_1.i_loop.maximum = (DUTY_RATIO_MAX_BUCK_REG + DUTY_RATIO_MAX_BOOST_REG);   // Maximum duty ratio is absolute clamping limit of current loop
     c4swbb_1.i_loop.feedback_offset = C4SWBB_IOUT_FEEDBACK_OFFSET;   // Current feedback signal offset
-    c4swbb_1.i_loop.reference = IOUT_LCL_CLAMP; // Current loop reference value
+    c4swbb_1.i_loop.reference = (IOUT_LCL_CLAMP + C4SWBB_IOUT_FEEDBACK_OFFSET); // Current loop reference value
     c4swbb_1.i_loop.trigger_offset = ADC_TRIG_OFFSET_IOUT; // Current sample ADC trigger offset (offset from 50% on-time)
 
     c4swbb_1.i_loop.controller = &cha_iloop;   // 4-Switch Buck/Boost converter voltage loop controller
@@ -635,8 +635,8 @@ volatile uint16_t init_USBport_2(void) {
     fres &= chb_vloop_Init(&chb_vloop);
 
     // Hardware-specific voltage loop controller settings
-    c4swbb_2.v_loop.minimum = IOUT_LCL_CLAMP;   // Minimum output value of voltage loop is absolute current limit
-    c4swbb_2.v_loop.maximum = IOUT_OCL_TRIP;    // Maximum output value of voltage loop is absolute current limit
+    c4swbb_2.v_loop.minimum = (IOUT_LCL_CLAMP + C4SWBB_IOUT_FEEDBACK_OFFSET);   // Minimum output value of voltage loop is absolute current limit
+    c4swbb_2.v_loop.maximum = (IOUT_OCL_TRIP + C4SWBB_IOUT_FEEDBACK_OFFSET);    // Maximum output value of voltage loop is absolute current limit
     c4swbb_2.v_loop.feedback_offset = C4SWBB_VOUT_OFFSET;   // Voltage feedback signal offset
     c4swbb_2.v_loop.reference = C4SWBB_VOUT_REF; // Voltage loop reference value
     c4swbb_2.v_loop.trigger_offset = ADC_TRIG_OFFSET_VOUT; // Voltage sample ADC trigger offset (offset from 50% on-time)
@@ -665,7 +665,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.i_loop.minimum = DUTY_RATIO_MIN_BUCK_REG;   // Minimum duty ratio is absolute clamping limit of current loop
     c4swbb_2.i_loop.maximum = (DUTY_RATIO_MAX_BUCK_REG + DUTY_RATIO_MAX_BOOST_REG);   // Maximum duty ratio is absolute clamping limit of current loop
     c4swbb_2.i_loop.feedback_offset = C4SWBB_IOUT_FEEDBACK_OFFSET;   // Current feedback signal offset
-    c4swbb_2.i_loop.reference = IOUT_LCL_CLAMP; // Current loop reference value
+    c4swbb_2.i_loop.reference = (IOUT_LCL_CLAMP + C4SWBB_IOUT_FEEDBACK_OFFSET); // Current loop reference value
     c4swbb_2.i_loop.trigger_offset = ADC_TRIG_OFFSET_IOUT; // Current sample ADC trigger offset (offset from 50% on-time)
     
     c4swbb_2.i_loop.controller = &chb_iloop;   // 4-Switch Buck/Boost converter voltage loop controller
