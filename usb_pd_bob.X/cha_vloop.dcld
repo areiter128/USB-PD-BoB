@@ -1,13 +1,13 @@
 [GUI]
 CreateDate=08/01/19 4:10:00 PM
-SaveDate=11/30/2019 8:33:41 AM
+SaveDate=12/21/2019 4:58:29 PM
 Name=z-Domain Control Loop Designer
-Version=0.9.0.76
-WindoWState=Minimized
-Top=-32000
-Left=-32000
-Height=28
-Width=160
+Version=0.9.0.77
+WindoWState=Maximized
+Top=-8
+Left=-8
+Height=1066
+Width=1936
 TabHeight=284
 AGS Version=1.2.4
 [ControlSetup]
@@ -38,7 +38,7 @@ UserPrefix1=cha_
 UserPrefix2=vloop
 UseUserPrefix=1
 UseUserPrefixVar=1
-ContextSaving=1
+ContextSaving=0
 ContextSavingShadowRegisters=0
 ContextSavingMACRegisters=0
 ContextSavingAccumulatorRegisters=0
@@ -74,6 +74,7 @@ CHeaderPath=..\h\apl\resources\
 CLibPath=..\h\apl\resources\
 IncludeCHeaderPathInCSource=1
 IncludeCLibPathInCHeader=1
+MPLABX_ProjectDirectory=
 [TimingGraph]
 ControlLoopOptimization=0
 CPUClock=70

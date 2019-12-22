@@ -1,5 +1,5 @@
 /* ********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.0.75
+ * z-Domain Control Loop Designer, Version 0.9.0.77
  * ********************************************************************************
  * 2p2z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
@@ -16,7 +16,7 @@
  * CGS Date:            11/08/19
  * *******************************************************************************
  * User:                M91406
- * Date/Time:           11/11/2019 12:52:31 AM
+ * Date/Time:           12/21/2019 10:14:17 PM
  * *******************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_CHA_ILOOP_H__
@@ -85,4 +85,8 @@ extern void cha_iloop_Update( // Calls the 2P2Z controller (Assembly)
 
 
 #endif // end of __SPECIAL_FUNCTION_LAYER_CHA_ILOOP_H__
- 
+
+//**********************************************************************************
+//  https://areiter128.github.io/DCLD
+//**********************************************************************************
+

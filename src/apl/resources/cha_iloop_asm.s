@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.0.75
+;  SDK Version: z-Domain Control Loop Designer v0.9.0.77
 ;  AGS Version: Assembly Generator Script v1.2.4 (11/08/19)
 ;  Author:      M91406
-;  Date/Time:   11/11/2019 12:52:31 AM
+;  Date/Time:   12/21/2019 10:14:17 PM
 ; **********************************************************************************
 ;  2P2Z Control Library File (Dual Bitshift-Scaliing Mode)
 ; **********************************************************************************
@@ -64,9 +64,6 @@
 	
 	.global _cha_iloop_Update
 _cha_iloop_Update:    ; provide global scope to routine
-	
-;------------------------------------------------------------------------------
-; Save working registers
 	push w12    ; save working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------
@@ -74,15 +71,6 @@ _cha_iloop_Update:    ; provide global scope to routine
 	mov [w0 + #offStatus], w12
 	btss w12, #NPMZ16_STATUS_ENABLE
 	bra CHA_ILOOP_BYPASS_LOOP
-	
-;------------------------------------------------------------------------------
-; Save working registers
-	push CORCON    ; save CPU configuration register
-	
-;------------------------------------------------------------------------------
-; Configure DSP for fractional operation with normal saturation (Q1.31 format)
-	mov #0x00E4, w4
-	mov w4, _CORCON
 	
 ;------------------------------------------------------------------------------
 ; Setup pointers to A-Term data arrays
@@ -111,8 +99,6 @@ _cha_iloop_Update:    ; provide global scope to routine
 	mov w1, [w2]    ; copy most recent controller input value to given data buffer target
 	mov [w0 + #offControlReference], w2    ; move pointer to control reference into working register
 	subr w1, [w2], w1    ; calculate error (= reference - input)
-	mov [w0 + #offInputOffset], w2    ; load input offset value into working register
-	add w1, w2, w1    ; add offset to error value
 	mov [w0 + #offPreShift], w2    ; move error input scaler into working register
 	sl w1, w2, w1    ; normalize error result to fractional number format
 	
@@ -191,10 +177,6 @@ _cha_iloop_Update:    ; provide global scope to routine
 	mov w12, [w0 + #offStatus]
 	
 ;------------------------------------------------------------------------------
-; Restore working registers
-	pop CORCON    ; restore CPU configuration registers
-	
-;------------------------------------------------------------------------------
 ; Enable/Disable bypass branch target with dummy read of source buffer
 	goto CHA_ILOOP_EXIT_LOOP    ; when enabled, step over dummy read and go straight to EXIT
 	CHA_ILOOP_BYPASS_LOOP:    ; Enable/Disable bypass branch target to perform dummy read of source to clear the source buffer
@@ -203,9 +185,6 @@ _cha_iloop_Update:    ; provide global scope to routine
 	mov [w0 + #offPtrControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
 	mov w1, [w2]    ; copy most recent controller input value to given data buffer target
 	CHA_ILOOP_EXIT_LOOP:    ; Exit control loop branch target
-	
-;------------------------------------------------------------------------------
-; Restore working registers
 	pop w12    ; restore working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------

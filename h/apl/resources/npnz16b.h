@@ -1,5 +1,5 @@
 /* ********************************************************************************
-* z-Domain Control Loop Designer, Version 0.9.0.75
+* z-Domain Control Loop Designer, Version 0.9.0.77
 * ********************************************************************************
 * Generic library header for z-domain compensation filter assembly functions
 * CGS Version: 1.0.0
@@ -157,4 +157,9 @@ typedef struct {
 
 /* ********************************************************************************/
 #endif	// end of __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__ header file section
+
+
+//**********************************************************************************
+//  https://areiter128.github.io/DCLD
+//**********************************************************************************
 
