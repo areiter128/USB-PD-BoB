@@ -123,10 +123,10 @@
 
 // 4-Switch Buck/Boost operation PWM-leg control
 
-#define IOUT_4SWBB_UTH_CONV1    (uint16_t)((((float)IOUT_4SWBB_TRIP_CONV1 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
-#define IOUT_4SWBB_LTH_CONV1    (uint16_t)((((float)IOUT_4SWBB_RESET_CONV1 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
-#define IOUT_4SWBB_UTH_CONV2    (uint16_t)((((float)IOUT_4SWBB_TRIP_CONV2 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
-#define IOUT_4SWBB_LTH_CONV2    (uint16_t)((((float)IOUT_4SWBB_RESET_CONV2 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
+//#define IOUT_4SWBB_UTH_CONV1    (uint16_t)((((float)IOUT_4SWBB_TRIP_CONV1 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
+//#define IOUT_4SWBB_LTH_CONV1    (uint16_t)((((float)IOUT_4SWBB_RESET_CONV1 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
+//#define IOUT_4SWBB_UTH_CONV2    (uint16_t)((((float)IOUT_4SWBB_TRIP_CONV2 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
+//#define IOUT_4SWBB_LTH_CONV2    (uint16_t)((((float)IOUT_4SWBB_RESET_CONV2 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
 
 #define DUTY_RATIO_INIT_BUCK_REG    (uint16_t)((float)DUTY_RATIO_BUCK_LEG_INIT * (float)SWITCHING_PERIOD)
 #define DUTY_RATIO_MIN_BUCK_REG     (uint16_t)((float)DUTY_RATIO_MIN_BUCK * (float)SWITCHING_PERIOD)
