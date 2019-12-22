@@ -165,6 +165,14 @@ volatile uint16_t c4swbb_pwm_generators_initialize(volatile C4SWBB_PWRCTRL_t* pI
 
     pg_config.PGxEVT.bits.ADTR2EN = (pInstance->buck_leg.adtr2_source & 0x0007); // ADC trigger 2 source is PGxTRIGA/B/C compare event
     
+    // ToDo: Complete CUSTOM PWM CONFIGURATION block
+    /*
+    pg_config.PGxSPCI
+    pg_config.PGxFPCI
+    pg_config.PGxCLPCI
+    pg_config.PGxFFPCI
+    */
+    
     // Write PWM generator configuration to PWM module
     fres &= smpsHSPWM_Channel_Initialize(pInstance->buck_leg.pwm_instance, pg_config);
 

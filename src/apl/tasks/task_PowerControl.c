@@ -200,21 +200,31 @@ volatile uint16_t init_PowerControl(void) {
     // Load PWM configurations for PWM generators for both ports
     fres &= c4swbb_pwm_generators_initialize(&c4swbb_1); // Initialize PWM generators of USB Port A
     fres &= c4swbb_pwm_generators_initialize(&c4swbb_2); // Initialize PWM generators of USB Port B
+
+    // ----------------------------------------------------
+    // ToDo: Move these settings into normal initialization
+    //       NO DEDICATED REGISTER WRITES IN USER CODE !!!
+    
     
     //Custom setup for c4swbb_2 to use PCI to sync c2 buck leg to ch 1 buck leg
-    PG1LEBH = C4SWBB_2_PG1LEBH;      //PG5 available to PCI logic
-    PG1CONH = C4SWBB_2_PGxCONH;      //Trigger is via PCI logic from PG5 
-    PG1SPCIL = 0b1001000000000001;
-    PG1SPCIH = 0x0000;
+    PG1LEBH = C4SWBB_2_PG1LEBH;     // PG5 available to PCI logic
+    PG1CONH = C4SWBB_2_PGxCONH;     // Trigger is via PCI logic from PG5 
+    PG1SPCIL = 0b1001000000000001;  // Termination of latched PCI occurs immediately / Auto-Terminate / 
+                                    // Internally connected to the output of PWMPCI<2:0> MUX
+    PG1SPCIH = 0x0000;              
     
     //Custom setup for c4swbb_2 to use PCI to sync c2 boost leg to ch 1 buck leg
-    PG2LEBH = C4SWBB_2_PG1LEBH;      //PG5 available to PCI logic
-    PG2CONH = C4SWBB_BOOSTLEG_2_PGxCONH;      //Trigger is via PCI logic from PG5 
-    PG2SPCIL = 0b1001000000000001;
+    PG2LEBH = C4SWBB_2_PG1LEBH;             // PG5 available to PCI logic
+    PG2CONH = C4SWBB_BOOSTLEG_2_PGxCONH;    // Trigger is via PCI logic from PG5 
+    PG2SPCIL = 0b1001000000000001;  // Termination of latched PCI occurs immediately / Auto-Terminate / 
+                                    // Internally connected to the output of PWMPCI<2:0> MUX
     PG2SPCIH = 0x0000;
     
-    
-    
+    PG2PHASE = 0;
+    PG7PHASE = 0;
+
+    // ----------------------------------------------------
+    // ----------------------------------------------------
     
     // ADC core configuration
     fres &= c4swbb_adc_module_initialize();
@@ -236,24 +246,28 @@ volatile uint16_t init_PowerControl(void) {
     
     fres &= c4swbb_pwm_enable(&c4swbb_1);
     fres &= c4swbb_pwm_enable(&c4swbb_2);
-    
-    PG2PHASE = 0;
-    PG7PHASE = 0;
+
             
-    c4swbb_1.status.bits.enable = true;
-    c4swbb_2.status.bits.enable = true;
+    c4swbb_1.status.bits.enable = false;
+    c4swbb_2.status.bits.enable = false;
     
     //fres &= c4swbb_pwm_release(&c4swbb_1);
     //fres &= c4swbb_pwm_release(&c4swbb_2);
     
-    TRISCbits.TRISC2 = 0;  //used for debug
+    // ----------------------------------------------------
+    // ToDo: Move these settings into normal initialization
+    //       NO DEDICATED REGISTER WRITES IN USER CODE !!!
+    
+    TRISCbits.TRISC2 = 0;  // used for debug // ToDo: Remove when done
     
     //Max 1428 for 350kHz
-    PG1TRIGA = 200;    
+    // PG1TRIGA = 200; => replaced by following line
+    BUCKH2_PGxTRIGA = 200;
     //PG7TRIGA = 20;
     //PG2TRIGA = 20;
     
-    PG5TRIGA = 200;
+    // PG5TRIGA = 200; => replaced by following line
+    BUCKH1_PGxTRIGA = 200;
     
     //PG7TRIGA = 20;
     Nop();
