@@ -96,9 +96,10 @@ typedef union {
         volatile bool power_source_detected : 1; // Bit <4>:  (read only) Status bit indicating that a valid power source has been detected
         volatile bool pwm_active : 1; // Bit <5>:  (read only) Status bit indicating that the PWM outputs have been enabled
         volatile bool adc_active : 1; // Bit <6>: (read only) Status bit indicating that the ADC has been started and is sampling data
-        volatile bool fault_active : 1; // Bit <7>: (read only) Status bit indicating that a critical fault condition has been detected
-        volatile bool busy : 1; // Bit <9:11>: (read only) Status bit indicating that the state machine is in a ramp or delay phase
-        volatile unsigned : 3; // Bit <9:11>: (reserved)
+        volatile bool cs_calib_complete : 1; // Bit <7>: (read only) Status bit indicating if current feedback calibration is complete
+        volatile bool fault_active : 1; // Bit <8>: (read only) Status bit indicating that a critical fault condition has been detected
+        volatile bool busy : 1; // Bit <9>: (read only) Status bit indicating that the state machine is in a ramp or delay phase
+        volatile unsigned : 2; // Bit <10:11>: (reserved)
         volatile C4SWBB_RAMP_DIRECTION_e tune_dir : 1; // Bit <12>: (read only) Flag indicating the direction of the tune-in ramp when the reference is changed (0=up or 1=down)
         volatile bool GO : 1; // Bit <13>: POWER SUPPLY START bit (will trigger startup procedure when set)
         volatile bool autorun : 1; // Bit <14>: Auto-Start will automatically enable the converter and set the GO bit when ready
@@ -280,7 +281,8 @@ typedef struct {
  * *************************************************************************************************** */
 
 typedef struct {
-    volatile uint16_t i_out; // Power converter output current
+    volatile uint16_t i_out; // Power converter output current (most recent sample)
+    volatile uint16_t i_out_avg; // Power converter average output current
     volatile uint16_t v_in; // Power converter input voltage
     volatile uint16_t v_out; // Power converter output voltage
     volatile uint16_t v_ref; // Power converter output voltage reference (user setting)

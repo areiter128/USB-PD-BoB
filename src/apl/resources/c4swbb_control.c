@@ -177,6 +177,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
                 // active fault condition is pending, enter soft-start process
                 if( (pInstance->status.bits.enable) && 
                     (pInstance->status.bits.GO) && 
+                    (pInstance->status.bits.cs_calib_complete) &&
                     (!pInstance->status.bits.fault_active) ) {
 
                         pInstance->soft_start.counter = 0;  // Reset soft-start counter

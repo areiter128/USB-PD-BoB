@@ -26,6 +26,15 @@ volatile uint16_t init_USBport_2(void);
 volatile uint16_t init_ISR_USBport_1(void);
 volatile uint16_t init_ISR_USBport_2(void);
 
+// Private variables for current sense feedback offset calibration
+#ifdef __00173_USB_PD_BOB_R21__
+volatile uint16_t iavg_buf_1 = 0;
+volatile uint16_t iavg_cnt_1 = 0;
+volatile uint16_t iavg_buf_2 = 0;
+volatile uint16_t iavg_cnt_2 = 0;
+#endif
+
+
 /*!exec_PowerControl
  * ******************************************************************************************************
  * 
@@ -72,6 +81,71 @@ volatile uint16_t exec_PowerControl(void) {
                 fltobj_OverVoltageLockOut.status.bits.fltstat |
                 fltobj_OverVoltageProtection_USBPort_2.status.bits.fltstat
             );
+
+
+    // -----------------------------------------------------
+    // "Quick and Dirty" output current averaging
+    // -----------------------------------------------------
+    // 
+    // ToDo: utilize averaging filter of ADC to generate average values of voltage and current in
+    // hardware. This set is only required for current sense feedback offset calibration during
+    // development and needs to be removed once a better solution is available.
+    
+    #ifdef __00173_USB_PD_BOB_R21__
+    // ONLY VALID FOR HARDWARE VERSION R2.1
+    // ====================================
+    // If board is equipped with INA181A2 current sense amplifiers, 
+    // the current feedback offset can be calibrated at startup...
+    
+    if (c4swbb_1.status.bits.adc_active) {
+        
+        iavg_buf_1 += c4swbb_1.data.i_out;
+        if(!(++iavg_cnt_1 & 0x000F))
+        { 
+            c4swbb_1.data.i_out_avg = (iavg_buf_1 >> 4);
+            iavg_buf_1 = 0;
+            
+            if ( (c4swbb_1.status.bits.op_status == CONVERTER_STATE_STANDBY) && 
+                 (!c4swbb_1.status.bits.cs_calib_complete) )
+            {
+                c4swbb_1.i_loop.feedback_offset = c4swbb_1.data.i_out_avg;
+                c4swbb_1.v_loop.maximum = (IOUT_OC_CLAMP + c4swbb_1.i_loop.feedback_offset);
+                c4swbb_1.status.bits.cs_calib_complete = true;
+            }
+        }
+        
+    }
+
+    if (c4swbb_2.status.bits.adc_active) {
+        
+        iavg_buf_2 += c4swbb_2.data.i_out;
+        if(!(++iavg_cnt_2 & 0x000F))
+        { 
+            c4swbb_2.data.i_out_avg = (iavg_buf_2 >> 4);
+            iavg_buf_2 = 0;
+            
+            if ( (c4swbb_2.status.bits.op_status == CONVERTER_STATE_STANDBY) && 
+                 (!c4swbb_2.status.bits.cs_calib_complete) )
+            {
+                c4swbb_2.i_loop.feedback_offset = c4swbb_2.data.i_out_avg;
+                c4swbb_2.v_loop.maximum = (IOUT_OC_CLAMP + c4swbb_2.i_loop.feedback_offset);
+                c4swbb_2.status.bits.cs_calib_complete = true;
+            }
+        }
+        
+    }
+
+    #else
+    // ONLY VALID FOR HARDWARE VERSION R2.0
+    // ====================================
+
+    // If board is equipped with MCP6C02 current sense amplifiers, 
+    // the current feedback offset is set in syscfg_scaling.h header
+
+    c4swbb_1.status.bits.cs_calib_complete = c4swbb_1.status.bits.adc_active;
+    c4swbb_2.status.bits.cs_calib_complete = c4swbb_2.status.bits.adc_active;
+
+    #endif
 
     
     // Execute the state machines of converter 1 and 2
