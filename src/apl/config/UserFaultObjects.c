@@ -177,6 +177,7 @@ volatile uint16_t flt_UnderVoltageLockOut_Initialize(void)
     volatile uint16_t fres = 1;
 
     // Configuring fltobj_UnderVoltageLockOut
+    fltobj_UnderVoltageLockOut.comp_type = FAULT_COMPARE_CONSTANT;
 
     // specify the target value/register to be monitored
     fltobj_UnderVoltageLockOut.source_object = &c4swbb_1.data.v_in; // Pointer to a global variable or SFR
@@ -235,6 +236,7 @@ volatile uint16_t flt_OverVoltageLockOut_Initialize(void)
     volatile uint16_t fres = 1;
 
     // Configuring fltobj_OverVoltageLockOut
+    fltobj_OverVoltageLockOut.comp_type = FAULT_COMPARE_CONSTANT;
 
     // specify the target value/register to be monitored
     fltobj_OverVoltageLockOut.source_object = &c4swbb_1.data.v_in; // Pointer to a global variable or SFR
@@ -293,6 +295,7 @@ volatile uint16_t flt_OverVoltageProtection_USBPort_1_Initialize(void)
     volatile uint16_t fres = 1;
 
     // Configuring fltobj_OverVoltageProjection
+    fltobj_OverVoltageProtection_USBPort_1.comp_type = FAULT_COMPARE_CONSTANT;
 
     // specify the target value/register to be monitored
     fltobj_OverVoltageProtection_USBPort_1.source_object = &c4swbb_1.data.v_out; // Pointer to a global variable or SFR
@@ -310,8 +313,8 @@ volatile uint16_t flt_OverVoltageProtection_USBPort_1_Initialize(void)
     
     // specifying fault class, fault level and enable/disable status
     fltobj_OverVoltageProtection_USBPort_1.flt_class.bits.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
-    fltobj_OverVoltageProtection_USBPort_1.flt_class.bits.warning = 0;  // Set =1 if this fault object triggers a warning fault condition response
-    fltobj_OverVoltageProtection_USBPort_1.flt_class.bits.critical = 1; // Set =1 if this fault object triggers a critical fault condition response
+    fltobj_OverVoltageProtection_USBPort_1.flt_class.bits.warning = 1;  // Set =1 if this fault object triggers a warning fault condition response
+    fltobj_OverVoltageProtection_USBPort_1.flt_class.bits.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
     fltobj_OverVoltageProtection_USBPort_1.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
     fltobj_OverVoltageProtection_USBPort_1.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
@@ -351,6 +354,7 @@ volatile uint16_t flt_OverCurrentProtection_USBPort_1_Initialize(void)
     volatile uint16_t fres = 1;
 
     // Configuring fltobj_OverVoltageProjection
+    fltobj_OverCurrentProtection_USBPort_1.comp_type = FAULT_COMPARE_CONSTANT;
 
     // specify the target value/register to be monitored
     fltobj_OverCurrentProtection_USBPort_1.source_object = &c4swbb_1.data.i_out; // Pointer to a global variable or SFR
@@ -361,9 +365,9 @@ volatile uint16_t flt_OverCurrentProtection_USBPort_1_Initialize(void)
     // configuring the trip and reset levels as well as trip and reset event filter setting
     fltobj_OverCurrentProtection_USBPort_1.criteria.counter = 0;      // Set/reset fault counter
     fltobj_OverCurrentProtection_USBPort_1.criteria.fault_ratio = FAULT_LEVEL_GREATER_THAN;
-    fltobj_OverCurrentProtection_USBPort_1.criteria.trip_level = IOUT_OCL_TRIP;   // Set/reset trip level value
+    fltobj_OverCurrentProtection_USBPort_1.criteria.trip_level = (IOUT_OCL_TRIP + C4SWBB_IOUT_FEEDBACK_OFFSET);   // Set/reset trip level value
     fltobj_OverCurrentProtection_USBPort_1.criteria.trip_cnt_threshold = 5; // Set/reset number of successive trips before triggering fault event
-    fltobj_OverCurrentProtection_USBPort_1.criteria.reset_level = IOUT_OCL_RELEASE;  // Set/reset fault release level value
+    fltobj_OverCurrentProtection_USBPort_1.criteria.reset_level = (IOUT_OCL_RELEASE + C4SWBB_IOUT_FEEDBACK_OFFSET);  // Set/reset fault release level value
     fltobj_OverCurrentProtection_USBPort_1.criteria.reset_cnt_threshold = 1000; // Set/reset number of successive resets before triggering fault release
     
     // specifying fault class, fault level and enable/disable status
@@ -408,6 +412,7 @@ volatile uint16_t flt_OverTempWarning_USBPort_1_Initialize(void)
     volatile uint16_t fres = 1;
 
     // Configuring fltobj_OverVoltageProjection
+    fltobj_OverTempWarning_USBPort_1.comp_type = FAULT_COMPARE_CONSTANT;
 
     // specify the target value/register to be monitored
     fltobj_OverTempWarning_USBPort_1.source_object = &c4swbb_1.data.temp; // Pointer to a global variable or SFR
@@ -466,6 +471,7 @@ volatile uint16_t flt_OverTempProtection_USBPort_1_Initialize(void)
     volatile uint16_t fres = 1;
 
     // Configuring fltobj_OverVoltageProjection
+    fltobj_OverTempProtection_USBPort_1.comp_type = FAULT_COMPARE_CONSTANT;
 
     // specify the target value/register to be monitored
     fltobj_OverTempProtection_USBPort_1.source_object = &c4swbb_1.data.temp; // Pointer to a global variable or SFR
@@ -484,7 +490,7 @@ volatile uint16_t flt_OverTempProtection_USBPort_1_Initialize(void)
     // specifying fault class, fault level and enable/disable status
     fltobj_OverTempProtection_USBPort_1.flt_class.bits.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
     fltobj_OverTempProtection_USBPort_1.flt_class.bits.warning = 1;  // Set =1 if this fault object triggers a warning fault condition response
-    fltobj_OverTempProtection_USBPort_1.flt_class.bits.critical = 1; // Set =1 if this fault object triggers a critical fault condition response
+    fltobj_OverTempProtection_USBPort_1.flt_class.bits.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
     fltobj_OverTempProtection_USBPort_1.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
     fltobj_OverTempProtection_USBPort_1.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
@@ -584,6 +590,7 @@ volatile uint16_t flt_OverVoltageProtection_USBPort_2_Initialize(void)
     volatile uint16_t fres = 1;
 
     // Configuring fltobj_OverVoltageProjection
+    fltobj_OverVoltageProtection_USBPort_2.comp_type = FAULT_COMPARE_CONSTANT;
 
     // specify the target value/register to be monitored
     fltobj_OverVoltageProtection_USBPort_2.source_object = &c4swbb_2.data.v_out; // Pointer to a global variable or SFR
@@ -601,8 +608,8 @@ volatile uint16_t flt_OverVoltageProtection_USBPort_2_Initialize(void)
     
     // specifying fault class, fault level and enable/disable status
     fltobj_OverVoltageProtection_USBPort_2.flt_class.bits.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
-    fltobj_OverVoltageProtection_USBPort_2.flt_class.bits.warning = 0;  // Set =1 if this fault object triggers a warning fault condition response
-    fltobj_OverVoltageProtection_USBPort_2.flt_class.bits.critical = 1; // Set =1 if this fault object triggers a critical fault condition response
+    fltobj_OverVoltageProtection_USBPort_2.flt_class.bits.warning = 1;  // Set =1 if this fault object triggers a warning fault condition response
+    fltobj_OverVoltageProtection_USBPort_2.flt_class.bits.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
     fltobj_OverVoltageProtection_USBPort_2.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
     fltobj_OverVoltageProtection_USBPort_2.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
@@ -642,6 +649,7 @@ volatile uint16_t flt_OverCurrentProtection_USBPort_2_Initialize(void)
     volatile uint16_t fres = 1;
 
     // Configuring fltobj_OverVoltageProjection
+    fltobj_OverCurrentProtection_USBPort_2.comp_type = FAULT_COMPARE_CONSTANT;
 
     // specify the target value/register to be monitored
     fltobj_OverCurrentProtection_USBPort_2.source_object = &c4swbb_2.data.i_out; // Pointer to a global variable or SFR
@@ -652,9 +660,9 @@ volatile uint16_t flt_OverCurrentProtection_USBPort_2_Initialize(void)
     // configuring the trip and reset levels as well as trip and reset event filter setting
     fltobj_OverCurrentProtection_USBPort_2.criteria.counter = 0;      // Set/reset fault counter
     fltobj_OverCurrentProtection_USBPort_2.criteria.fault_ratio = FAULT_LEVEL_GREATER_THAN;
-    fltobj_OverCurrentProtection_USBPort_2.criteria.trip_level = IOUT_OCL_TRIP;   // Set/reset trip level value
+    fltobj_OverCurrentProtection_USBPort_2.criteria.trip_level = (IOUT_OCL_TRIP + C4SWBB_IOUT_FEEDBACK_OFFSET);   // Set/reset trip level value
     fltobj_OverCurrentProtection_USBPort_2.criteria.trip_cnt_threshold = 5; // Set/reset number of successive trips before triggering fault event
-    fltobj_OverCurrentProtection_USBPort_2.criteria.reset_level = IOUT_OCL_RELEASE;  // Set/reset fault release level value
+    fltobj_OverCurrentProtection_USBPort_2.criteria.reset_level = (IOUT_OCL_RELEASE + C4SWBB_IOUT_FEEDBACK_OFFSET);  // Set/reset fault release level value
     fltobj_OverCurrentProtection_USBPort_2.criteria.reset_cnt_threshold = 1000; // Set/reset number of successive resets before triggering fault release
     
     // specifying fault class, fault level and enable/disable status
@@ -699,6 +707,7 @@ volatile uint16_t flt_OverTempWarning_USBPort_2_Initialize(void)
     volatile uint16_t fres = 1;
 
     // Configuring fltobj_OverVoltageProjection
+    fltobj_OverTempWarning_USBPort_2.comp_type = FAULT_COMPARE_CONSTANT;
 
     // specify the target value/register to be monitored
     fltobj_OverTempWarning_USBPort_2.source_object = &c4swbb_2.data.temp; // Pointer to a global variable or SFR
@@ -757,6 +766,7 @@ volatile uint16_t flt_OverTempProtection_USBPort_2_Initialize(void)
     volatile uint16_t fres = 1;
 
     // Configuring fltobj_OverVoltageProjection
+    fltobj_OverTempProtection_USBPort_2.comp_type = FAULT_COMPARE_CONSTANT;
 
     // specify the target value/register to be monitored
     fltobj_OverTempProtection_USBPort_2.source_object = &c4swbb_2.data.temp; // Pointer to a global variable or SFR
@@ -775,7 +785,7 @@ volatile uint16_t flt_OverTempProtection_USBPort_2_Initialize(void)
     // specifying fault class, fault level and enable/disable status
     fltobj_OverTempProtection_USBPort_2.flt_class.bits.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
     fltobj_OverTempProtection_USBPort_2.flt_class.bits.warning = 1;  // Set =1 if this fault object triggers a warning fault condition response
-    fltobj_OverTempProtection_USBPort_2.flt_class.bits.critical = 1; // Set =1 if this fault object triggers a critical fault condition response
+    fltobj_OverTempProtection_USBPort_2.flt_class.bits.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
     fltobj_OverTempProtection_USBPort_2.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
 
     fltobj_OverTempProtection_USBPort_2.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
