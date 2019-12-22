@@ -65,6 +65,8 @@ volatile FAULT_OBJECT_t fltobj_OverTempWarning_USBPort_1;       // Custom FAULT 
 																// when output voltage goes above maximum
 volatile FAULT_OBJECT_t fltobj_OverTempProtection_USBPort_1;    // Custom FAULT object OTP shutting down the power supply 
 																// when output current goes above maximum
+volatile FAULT_OBJECT_t fltobj_RegulationError_USBPort_1;       // Custom FAULT object CTRLERR shutting down the power supply 
+                                                                // when output voltage is significantly off voltage reference
 volatile FAULT_OBJECT_t fltobj_OverVoltageProtection_USBPort_2; // Custom FAULT object OVP shutting down the power supply 
 																// when output voltage goes above maximum
 volatile FAULT_OBJECT_t fltobj_OverCurrentProtection_USBPort_2; // Custom FAULT object OCP settings a WARNING flag bit
@@ -73,7 +75,8 @@ volatile FAULT_OBJECT_t fltobj_OverTempWarning_USBPort_2;       // Custom FAULT 
                                                                 // when output current goes above warning threshold
 volatile FAULT_OBJECT_t fltobj_OverTempProtection_USBPort_2;    // Custom FAULT object OTP shutting down the power supply 
 																// when output current goes above maximum
-
+volatile FAULT_OBJECT_t fltobj_RegulationError_USBPort_2;       // Custom FAULT object CTRLERR shutting down the power supply 
+                                                                // when output voltage is significantly off voltage reference
 
 /*!user_fault_object_list[]
  * ***********************************************************************************************
@@ -92,11 +95,12 @@ volatile FAULT_OBJECT_t *user_fault_object_list[] = {
     &fltobj_OverCurrentProtection_USBPort_1,    // OCP fault object
     &fltobj_OverTempWarning_USBPort_1,          // OTW fault object
     &fltobj_OverTempProtection_USBPort_1,       // OTP fault object
+    &fltobj_RegulationError_USBPort_1,          // CTRLERR fault object
     &fltobj_OverVoltageProtection_USBPort_2,    // OVP fault object
     &fltobj_OverCurrentProtection_USBPort_2,    // OCP fault object
     &fltobj_OverTempWarning_USBPort_2,          // OTW fault object
-    &fltobj_OverTempProtection_USBPort_2        // OTP fault object
-
+    &fltobj_OverTempProtection_USBPort_2,       // OTP fault object
+    &fltobj_RegulationError_USBPort_2           // CTRLERR fault object
 };
 volatile uint16_t user_fltobj_list_size = (sizeof(user_fault_object_list)/sizeof(user_fault_object_list[0]));
 
@@ -110,14 +114,18 @@ volatile uint16_t user_fltobj_list_size = (sizeof(user_fault_object_list)/sizeof
  * ***********************************************************************************************/
 volatile uint16_t flt_UnderVoltageLockOut_Initialize(void);
 volatile uint16_t flt_OverVoltageLockOut_Initialize(void);
+
 volatile uint16_t flt_OverVoltageProtection_USBPort_1_Initialize(void);
 volatile uint16_t flt_OverCurrentProtection_USBPort_1_Initialize(void);
 volatile uint16_t flt_OverTempWarning_USBPort_1_Initialize(void);
 volatile uint16_t flt_OverTempProtection_USBPort_1_Initialize(void);
+volatile uint16_t flt_RegulationError_USBPort_1_Initialize(void);
+
 volatile uint16_t flt_OverVoltageProtection_USBPort_2_Initialize(void);
 volatile uint16_t flt_OverCurrentProtection_USBPort_2_Initialize(void);
 volatile uint16_t flt_OverTempWarning_USBPort_2_Initialize(void);
 volatile uint16_t flt_OverTempProtection_USBPort_2_Initialize(void);
+volatile uint16_t flt_RegulationError_USBPort_2_Initialize(void);
 
 
 volatile uint16_t (*user_fault_object_init_functions[])(void) = {
@@ -129,6 +137,7 @@ volatile uint16_t (*user_fault_object_init_functions[])(void) = {
     &flt_OverCurrentProtection_USBPort_1_Initialize,   // 'Output Current above Maximum' fault object
     &flt_OverTempWarning_USBPort_1_Initialize,   // 'Temperature above Warning Level' fault object
     &flt_OverTempProtection_USBPort_1_Initialize,   // 'Temperature above Protection Level' fault object
+    &flt_RegulationError_USBPort_1_Initialize, // 'Regulation out of Range' fault object
     &flt_OverVoltageProtection_USBPort_2_Initialize,  // 'Output Voltage above Maximum' fault object 
     &flt_OverCurrentProtection_USBPort_2_Initialize,   // 'Output Current above Maximum' fault object
     &flt_OverTempWarning_USBPort_2_Initialize,   // 'Temperature above Warning Level' fault object
@@ -495,6 +504,66 @@ volatile uint16_t flt_OverTempProtection_USBPort_1_Initialize(void)
     
 }
 
+/*!flt_RegulationError_USBPort_1_Initialize
+ * ***********************************************************************************************
+ * Description:
+ * The fault handler continuously monitors the output current, which gets updated by the control
+ * loop in every control cycle. Its value is compared against the most recent voltage reference
+ * by using a tolerance bit-mask. As soon as the output voltage diverts too much from the reference, 
+ * the fault counter starts incrementing. When this counter exceeds the maximum value defined by 
+ * 'trip_cnt_threshold' in this initialization routine, a warning flag is set.
+ * 
+ * This fault is declared as 'critical' which will automatically swap the operating system
+ * in FAULT mode, switching the most recent task queue from its recent origin to 
+ * 'task_queue_fault'
+ * ***********************************************************************************************/
+
+volatile uint16_t flt_RegulationError_USBPort_1_Initialize(void)
+{
+    volatile uint16_t fres = 1;
+
+    // Configuring fltobj_OverVoltageProjection
+    fltobj_RegulationError_USBPort_1.comp_type = FAULT_COMPARE_DYNAMIC;
+
+    // specify the target value/register to be monitored
+    fltobj_RegulationError_USBPort_1.source_object = &c4swbb_1.data.v_out; // Pointer to global variable or SFR
+    fltobj_RegulationError_USBPort_1.compare_object = &c4swbb_1.data.v_ref; // pointer to global variable or SFR
+    fltobj_RegulationError_USBPort_1.object_bit_mask = FAULT_OBJECT_BIT_MASK_DEFAULT; //
+    fltobj_RegulationError_USBPort_1.error_code = (uint32_t)FLTOBJ_CTRLERR_USB_PORT_1;
+    fltobj_RegulationError_USBPort_1.id = (uint16_t)FLTOBJ_CTRLERR_USB_PORT_1;
+    
+    // configuring the trip and reset levels as well as trip and reset event filter setting
+    fltobj_RegulationError_USBPort_1.criteria.counter = 0;      // Set/reset fault counter
+    fltobj_RegulationError_USBPort_1.criteria.fault_ratio = FAULT_LEVEL_GREATER_THAN;
+    fltobj_RegulationError_USBPort_1.criteria.trip_level = VOUT_MAX_DEV;   // Set/reset trip level value
+    fltobj_RegulationError_USBPort_1.criteria.trip_cnt_threshold = 10000; // Set/reset number of successive trips before triggering fault event
+    fltobj_RegulationError_USBPort_1.criteria.reset_level = VOUT_MAX_DEV;  // Set/reset fault release level value
+    fltobj_RegulationError_USBPort_1.criteria.reset_cnt_threshold = 10; // Set/reset number of successive resets before triggering fault release
+    
+    // specifying fault class, fault level and enable/disable status
+    fltobj_RegulationError_USBPort_1.flt_class.bits.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
+    fltobj_RegulationError_USBPort_1.flt_class.bits.warning = 1;  // Set =1 if this fault object triggers a warning fault condition response
+    fltobj_RegulationError_USBPort_1.flt_class.bits.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
+    fltobj_RegulationError_USBPort_1.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
+
+    fltobj_RegulationError_USBPort_1.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
+    fltobj_RegulationError_USBPort_1.user_fault_action = &reset_PowerControl; // Set pointer to user function which should be called when the FAULT is tripped
+    fltobj_RegulationError_USBPort_1.user_fault_reset = 0; // Set pointer to user function which should be called when the FAULT is released
+
+    fltobj_RegulationError_USBPort_1.status.bits.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
+    fltobj_RegulationError_USBPort_1.status.bits.fltlvlsw = 0; // Set =1 if this fault condition is software-level fault condition
+    fltobj_RegulationError_USBPort_1.status.bits.fltlvlsi = 0; // Set =1 if this fault condition is silicon-level fault condition
+    fltobj_RegulationError_USBPort_1.status.bits.fltlvlsys = 1; // Set =1 if this fault condition is system-level fault condition
+
+    fltobj_RegulationError_USBPort_1.status.bits.fltstat = 1; // Set/reset fault condition as present/active
+    fltobj_RegulationError_USBPort_1.status.bits.fltactive = 1; // Set/reset fault condition as present/active
+    fltobj_RegulationError_USBPort_1.status.bits.fltchken = 0; // Enable/disable fault check
+    
+    return(fres);
+    
+}
+
+
 
 /*!flt_OverVoltageProtection_USBPort_2_Initialize
  * ***********************************************************************************************
@@ -726,6 +795,64 @@ volatile uint16_t flt_OverTempProtection_USBPort_2_Initialize(void)
     
 }
 
+/*!flt_RegulationError_USBPort_2_Initialize
+ * ***********************************************************************************************
+ * Description:
+ * The fault handler continuously monitors the output current, which gets updated by the control
+ * loop in every control cycle. Its value is compared against the most recent voltage reference
+ * by using a tolerance bit-mask. As soon as the output voltage diverts too much from the reference, 
+ * the fault counter starts incrementing. When this counter exceeds the maximum value defined by 
+ * 'trip_cnt_threshold' in this initialization routine, a warning flag is set.
+ * 
+ * This fault is declared as 'critical' which will automatically swap the operating system
+ * in FAULT mode, switching the most recent task queue from its recent origin to 
+ * 'task_queue_fault'
+ * ***********************************************************************************************/
+
+volatile uint16_t flt_RegulationError_USBPort_2_Initialize(void)
+{
+    volatile uint16_t fres = 1;
+
+    // Configuring fltobj_OverVoltageProjection
+    fltobj_RegulationError_USBPort_2.comp_type = FAULT_COMPARE_DYNAMIC;
+
+    // specify the target value/register to be monitored
+    fltobj_RegulationError_USBPort_2.source_object = &c4swbb_2.data.v_out; // Pointer to global variable or SFR
+    fltobj_RegulationError_USBPort_2.compare_object = &c4swbb_2.data.v_ref; // pointer to global variable or SFR
+    fltobj_RegulationError_USBPort_2.object_bit_mask = FAULT_OBJECT_BIT_MASK_DEFAULT; //
+    fltobj_RegulationError_USBPort_2.error_code = (uint32_t)FLTOBJ_CTRLERR_USB_PORT_2;
+    fltobj_RegulationError_USBPort_2.id = (uint16_t)FLTOBJ_CTRLERR_USB_PORT_2;
+    
+    // configuring the trip and reset levels as well as trip and reset event filter setting
+    fltobj_RegulationError_USBPort_2.criteria.counter = 0;      // Set/reset fault counter
+    fltobj_RegulationError_USBPort_2.criteria.fault_ratio = FAULT_LEVEL_GREATER_THAN;
+    fltobj_RegulationError_USBPort_2.criteria.trip_level = VOUT_MAX_DEV;   // Set/reset trip level value
+    fltobj_RegulationError_USBPort_2.criteria.trip_cnt_threshold = 10000; // Set/reset number of successive trips before triggering fault event
+    fltobj_RegulationError_USBPort_2.criteria.reset_level = VOUT_MAX_DEV;  // Set/reset fault release level value
+    fltobj_RegulationError_USBPort_2.criteria.reset_cnt_threshold = 10; // Set/reset number of successive resets before triggering fault release
+    
+    // specifying fault class, fault level and enable/disable status
+    fltobj_RegulationError_USBPort_2.flt_class.bits.notify = 0;   // Set =1 if this fault object triggers a fault condition notification
+    fltobj_RegulationError_USBPort_2.flt_class.bits.warning = 1;  // Set =1 if this fault object triggers a warning fault condition response
+    fltobj_RegulationError_USBPort_2.flt_class.bits.critical = 0; // Set =1 if this fault object triggers a critical fault condition response
+    fltobj_RegulationError_USBPort_2.flt_class.bits.catastrophic = 0; // Set =1 if this fault object triggers a catastrophic fault condition response
+
+    fltobj_RegulationError_USBPort_2.flt_class.bits.user_class = 1; // Set =1 if this fault object triggers a user-defined fault condition response
+    fltobj_RegulationError_USBPort_2.user_fault_action = &reset_PowerControl; // Set pointer to user function which should be called when the FAULT is tripped
+    fltobj_RegulationError_USBPort_2.user_fault_reset = 0; // Set pointer to user function which should be called when the FAULT is released
+
+    fltobj_RegulationError_USBPort_2.status.bits.fltlvlhw = 0; // Set =1 if this fault condition is board-level fault condition
+    fltobj_RegulationError_USBPort_2.status.bits.fltlvlsw = 0; // Set =1 if this fault condition is software-level fault condition
+    fltobj_RegulationError_USBPort_2.status.bits.fltlvlsi = 0; // Set =1 if this fault condition is silicon-level fault condition
+    fltobj_RegulationError_USBPort_2.status.bits.fltlvlsys = 1; // Set =1 if this fault condition is system-level fault condition
+
+    fltobj_RegulationError_USBPort_2.status.bits.fltstat = 1; // Set/reset fault condition as present/active
+    fltobj_RegulationError_USBPort_2.status.bits.fltactive = 1; // Set/reset fault condition as present/active
+    fltobj_RegulationError_USBPort_2.status.bits.fltchken = 0; // Enable/disable fault check
+    
+    return(fres);
+    
+}
 
 
 

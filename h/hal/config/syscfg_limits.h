@@ -49,7 +49,7 @@
 #define VOUT_MINIMUM_HYST       0.500       // input voltage minimum (Under-Voltage-Lockout Hysteresis Level)
 
 #define VOUT_NOMINAL            5.000       // Nominal input voltage in [V]
-#define VOUT_MAX_DEVIATION      0.500       // maximum allowed daviation at output voltage 
+#define VOUT_MAX_DEVIATION      3.000       // maximum allowed daviation at output voltage 
 
 #define VOUT_MAXIMUM            22.000      // output voltage maximum (Under-Voltage-Lockout-Level)
 #define VOUT_MAXIMUM_HYST       0.500       // output voltage maximum (Under-Voltage-Lockout Hysteresis Level)

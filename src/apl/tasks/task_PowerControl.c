@@ -70,16 +70,27 @@ volatile uint16_t exec_PowerControl(void) {
     // of the output current at the defined level. Thus over current conditions will NOT 
     // lead to an automatic shut down of the converter.
     
+    // ToDo: RegulationError is very sensitive to changes to VREF. 
+    //       Further testing is required to enable this feature.
+    
+    fltobj_RegulationError_USBPort_1.status.bits.fltchken = (volatile bool)(c4swbb_1.status.bits.op_status == CONVERTER_STATE_COMPLETE);
+    if (!fltobj_RegulationError_USBPort_1.status.bits.fltchken) fltobj_RegulationError_USBPort_1.status.bits.fltstat = false;
+    
+    fltobj_RegulationError_USBPort_2.status.bits.fltchken = (volatile bool)(c4swbb_2.status.bits.op_status == CONVERTER_STATE_COMPLETE);
+    if (!fltobj_RegulationError_USBPort_2.status.bits.fltchken) fltobj_RegulationError_USBPort_1.status.bits.fltstat = false;
+    
     c4swbb_1.status.bits.fault_active = (volatile bool)(
                 fltobj_UnderVoltageLockOut.status.bits.fltstat | 
                 fltobj_OverVoltageLockOut.status.bits.fltstat |
-                fltobj_OverVoltageProtection_USBPort_1.status.bits.fltstat
+                fltobj_OverVoltageProtection_USBPort_1.status.bits.fltstat |
+                fltobj_RegulationError_USBPort_1.status.bits.fltstat
             );
 
     c4swbb_2.status.bits.fault_active = (volatile bool)(
                 fltobj_UnderVoltageLockOut.status.bits.fltstat | 
                 fltobj_OverVoltageLockOut.status.bits.fltstat |
-                fltobj_OverVoltageProtection_USBPort_2.status.bits.fltstat
+                fltobj_OverVoltageProtection_USBPort_2.status.bits.fltstat |
+                fltobj_RegulationError_USBPort_2.status.bits.fltstat
             );
 
 
@@ -280,6 +291,14 @@ volatile uint16_t reset_PowerControl(void) {
     fres &= c4SWBB_shut_down(&c4swbb_1);  // Shut Down 4-Switch Buck/Boost Converter #1 State Machine
     fres &= c4SWBB_shut_down(&c4swbb_2);  // Shut Down 4-Switch Buck/Boost Converter #2 State Machine
     
+    fltobj_RegulationError_USBPort_1.status.bits.fltactive = false;
+    fltobj_RegulationError_USBPort_1.status.bits.fltstat = false;
+    fltobj_RegulationError_USBPort_1.status.bits.fltchken = false;
+    
+    fltobj_RegulationError_USBPort_2.status.bits.fltactive = false;
+    fltobj_RegulationError_USBPort_2.status.bits.fltstat = false;
+    fltobj_RegulationError_USBPort_2.status.bits.fltchken = false;
+
     return(fres);
 }
 
