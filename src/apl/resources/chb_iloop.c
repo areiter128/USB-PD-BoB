@@ -6,7 +6,7 @@
  * **********************************************************************************
  *
  *  Controller Type:    2P2Z - Basic Current Mode Compensator
- *  Sampling Frequency: 175000 Hz
+ *  Sampling Frequency: 87500 Hz
  *  Fixed Point Format: 15
  *  Scaling Mode:       3 - Dual Bit-Shift Scaling
  *  Input Gain:         1
@@ -16,7 +16,7 @@
  * CGS Date:            11/08/19
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           12/21/2019 10:18:40 PM
+ * Date/Time:           12/23/2019 5:15:40 AM
  * ********************************************************************************/
 
 #include "../h/apl/resources/chb_iloop.h"
@@ -48,30 +48,30 @@ volatile uint16_t chb_iloop_ErrorHistory_size = (sizeof(chb_iloop_histories.Erro
  * 	Pole&Zero Placement:
  * *********************************************************************************
  *
- *    fP0:    400 Hz
- *    fP1:    140000 Hz
- *    fZ1:    4700 Hz
+ *    fP0:    125 Hz
+ *    fP1:    40000 Hz
+ *    fZ1:    3800 Hz
  *
  * *********************************************************************************
  * 	Filter Coefficients and Parameters:
  * ********************************************************************************/
 volatile fractional chb_iloop_ACoefficients [2] =
 {
-    0x48DE, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x3723  // Coefficient A2 will be multiplied with controller output u(n-2)
+    0x6916, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0x16EB  // Coefficient A2 will be multiplied with controller output u(n-2)
 };
 
 volatile fractional chb_iloop_BCoefficients [3] =
 {
-    0x439B, // Coefficient B0 will be multiplied with error input e(n-0)
-    0x0A86, // Coefficient B1 will be multiplied with error input e(n-1)
-    0xC6EB  // Coefficient B2 will be multiplied with error input e(n-2)
+    0x5A45, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x15AD, // Coefficient B1 will be multiplied with error input e(n-1)
+    0xBB69  // Coefficient B2 will be multiplied with error input e(n-2)
 };
 
 // Coefficient normalization factors
 volatile int16_t chb_iloop_pre_scaler = 3;
 volatile int16_t chb_iloop_post_shift_A = 0;
-volatile int16_t chb_iloop_post_shift_B = 3;
+volatile int16_t chb_iloop_post_shift_B = 5;
 volatile fractional chb_iloop_post_scaler = 0x0000;
 
 volatile cNPNZ16b_t chb_iloop; // user-controller data object

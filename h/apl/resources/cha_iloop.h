@@ -6,7 +6,7 @@
  * ********************************************************************************
  *
  *  Controller Type:    2P2Z - Basic Current Mode Compensator
- *  Sampling Frequency: 175000 Hz
+ *  Sampling Frequency: 87500 Hz
  *  Fixed Point Format: 15
  *  Scaling Mode:       3 - Dual Bit-Shift Scaling
  *  Input Gain:         1
@@ -16,7 +16,7 @@
  * CGS Date:            11/08/19
  * *******************************************************************************
  * User:                M91406
- * Date/Time:           12/21/2019 10:14:17 PM
+ * Date/Time:           12/23/2019 5:15:48 AM
  * *******************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_CHA_ILOOP_H__

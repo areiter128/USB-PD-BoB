@@ -3,7 +3,7 @@
 ;  SDK Version: z-Domain Control Loop Designer v0.9.0.77
 ;  AGS Version: Assembly Generator Script v1.2.4 (11/08/19)
 ;  Author:      M91406
-;  Date/Time:   12/21/2019 10:18:40 PM
+;  Date/Time:   12/23/2019 5:15:40 AM
 ; **********************************************************************************
 ;  2P2Z Control Library File (Dual Bitshift-Scaliing Mode)
 ; **********************************************************************************
@@ -138,24 +138,12 @@ _chb_iloop_Update:    ; provide global scope to routine
 ; Check for upper limit violation
 	mov [w0 + #offMaxOutput], w6    ; load upper limit value
 	cpslt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output < upper limit)
-	bra CHB_ILOOP_CLAMP_MAX_OVERRIDE    ; jump to override label if control output > upper limit
-	bclr w12, #NPMZ16_STATUS_USAT    ; clear upper limit saturation flag bit
-	bra CHB_ILOOP_CLAMP_MAX_EXIT    ; jump to exit
-	CHB_ILOOP_CLAMP_MAX_OVERRIDE:
 	mov w6, w4    ; override controller output
-	bset w12, #NPMZ16_STATUS_USAT    ; set upper limit saturation flag bit
-	CHB_ILOOP_CLAMP_MAX_EXIT:
 	
 ; Check for lower limit violation
 	mov [w0 + #offMinOutput], w6    ; load lower limit value
 	cpsgt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output > lower limit)
-	bra CHB_ILOOP_CLAMP_MIN_OVERRIDE    ; jump to override label if control output < lower limit
-	bclr w12, #NPMZ16_STATUS_LSAT    ; clear lower limit saturation flag bit
-	bra CHB_ILOOP_CLAMP_MIN_EXIT    ; jump to exit
-	CHB_ILOOP_CLAMP_MIN_OVERRIDE:
 	mov w6, w4    ; override controller output
-	bset w12, #NPMZ16_STATUS_LSAT    ; set lower limit saturation flag bit
-	CHB_ILOOP_CLAMP_MIN_EXIT:
 	
 ;------------------------------------------------------------------------------
 ; Write control output value to target
@@ -171,10 +159,6 @@ _chb_iloop_Update:    ; provide global scope to routine
 	mov [w10 + #0], w6    ; move entry (n-1) one tick down the delay line
 	mov w6, [w10 + #2]
 	mov w4, [w10]    ; add most recent control output to history
-	
-;------------------------------------------------------------------------------
-; Update status flag bitfield
-	mov w12, [w0 + #offStatus]
 	
 ;------------------------------------------------------------------------------
 ; Enable/Disable bypass branch target with dummy read of source buffer
