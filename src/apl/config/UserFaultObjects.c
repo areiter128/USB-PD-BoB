@@ -141,7 +141,8 @@ volatile uint16_t (*user_fault_object_init_functions[])(void) = {
     &flt_OverVoltageProtection_USBPort_2_Initialize,  // 'Output Voltage above Maximum' fault object 
     &flt_OverCurrentProtection_USBPort_2_Initialize,   // 'Output Current above Maximum' fault object
     &flt_OverTempWarning_USBPort_2_Initialize,   // 'Temperature above Warning Level' fault object
-    &flt_OverTempProtection_USBPort_2_Initialize   // 'Temperature above Protection Level' fault object
+    &flt_OverTempProtection_USBPort_2_Initialize,  // 'Temperature above Protection Level' fault object
+    &flt_RegulationError_USBPort_2_Initialize  // 'Regulation out of Range' fault object
     
 };
 volatile uint16_t user_fault_object_init_functions_size = 
