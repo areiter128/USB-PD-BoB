@@ -534,7 +534,7 @@ volatile uint16_t flt_RegulationError_USBPort_1_Initialize(void)
 
     // specify the target value/register to be monitored
     fltobj_RegulationError_USBPort_1.source_object = &c4swbb_1.data.v_out; // Pointer to global variable or SFR
-    fltobj_RegulationError_USBPort_1.compare_object = &c4swbb_1.data.v_ref; // pointer to global variable or SFR
+    fltobj_RegulationError_USBPort_1.compare_object = &c4swbb_1.v_loop.reference; // pointer to global variable or SFR
     fltobj_RegulationError_USBPort_1.object_bit_mask = FAULT_OBJECT_BIT_MASK_DEFAULT; //
     fltobj_RegulationError_USBPort_1.error_code = (uint32_t)FLTOBJ_CTRLERR_USB_PORT_1;
     fltobj_RegulationError_USBPort_1.id = (uint16_t)FLTOBJ_CTRLERR_USB_PORT_1;
@@ -829,7 +829,7 @@ volatile uint16_t flt_RegulationError_USBPort_2_Initialize(void)
 
     // specify the target value/register to be monitored
     fltobj_RegulationError_USBPort_2.source_object = &c4swbb_2.data.v_out; // Pointer to global variable or SFR
-    fltobj_RegulationError_USBPort_2.compare_object = &c4swbb_2.data.v_ref; // pointer to global variable or SFR
+    fltobj_RegulationError_USBPort_2.compare_object = &c4swbb_2.v_loop.reference; // pointer to global variable or SFR
     fltobj_RegulationError_USBPort_2.object_bit_mask = FAULT_OBJECT_BIT_MASK_DEFAULT; //
     fltobj_RegulationError_USBPort_2.error_code = (uint32_t)FLTOBJ_CTRLERR_USB_PORT_2;
     fltobj_RegulationError_USBPort_2.id = (uint16_t)FLTOBJ_CTRLERR_USB_PORT_2;
