@@ -6,7 +6,7 @@
  */
 
  //selects which channel RC2 is assigned to for ISR timing
-#define ALL   
+#define CH2   
 
 #include <xc.h>
 #include <stdint.h>
@@ -26,6 +26,15 @@ volatile uint16_t init_USBport_2(void);
 volatile uint16_t init_ISR_USBport_1(void);
 volatile uint16_t init_ISR_USBport_2(void);
 
+// Private variables for current sense feedback offset calibration
+#ifdef __00173_USB_PD_BOB_R21__
+volatile uint16_t iavg_buf_1 = 0;
+volatile uint16_t iavg_cnt_1 = 0;
+volatile uint16_t iavg_buf_2 = 0;
+volatile uint16_t iavg_cnt_2 = 0;
+#endif
+
+
 /*!exec_PowerControl
  * ******************************************************************************************************
  * 
@@ -35,15 +44,16 @@ volatile uint16_t init_ISR_USBport_2(void);
 volatile uint16_t exec_PowerControl(void) {
 
     volatile uint16_t fres = 1;
-    
+
+    //------------------------------------------------------
     // Both converters are supplied by the same power input and c4swbb_1 is the 
     // instance sampling the input voltage. Once this voltage is within the nominal
     // operating range, the POWER_SOURCE_DETECTED flag is set
     // 
     // Please note:
     // This test is for startup only. There is no hysteresis and no shut-down event
-    // is triggered. This flag only provides an immediate indication. Power Supply
-    // Over/Under Voltage Lock Out are taken care of by the fault handler.
+    // is triggered. This flag only provides an immediate indication for the state machine.
+    // Board Over/Under Voltage Lock Out are managed by the fault handler.
     
     if((C4SWBB_VIN_UVLO < c4swbb_1.data.v_in) && (c4swbb_1.data.v_in < C4SWBB_VIN_OVLO)) {
         c4swbb_1.status.bits.power_source_detected = true;
@@ -54,24 +64,108 @@ volatile uint16_t exec_PowerControl(void) {
         c4swbb_2.status.bits.power_source_detected = false;
     }
 
+    //------------------------------------------------------
     // The power supply fault flag is only reset if ALL fault objects have been cleared
+    // The fault handler does not consider cross-dependencies of individual faults.
+    // These need to be tied together in this state machine.
     // 
     // Please note:
     // Output Over Current conditions are allowed and will result in a hard limitation
     // of the output current at the defined level. Thus over current conditions will NOT 
-    // lead to an automatic shut down of the converter.
+    // lead to an automatic shut down of the converter. The shut down event is triggered
+    // when output voltage drops due to current limiting conditions. This is detected by
+    // the fltobj_RegulationError_USB_x objects comparing output voltage against output
+    // voltage reference. The fault trigger is defined by VOUT_MAX_DEVIATION in file 
+    // 'syscfg_limits.h'
+    
+    fltobj_RegulationError_USBPort_1.status.bits.fltchken = (volatile bool)(c4swbb_1.status.bits.op_status == CONVERTER_STATE_COMPLETE);
+    if (!fltobj_RegulationError_USBPort_1.status.bits.fltchken) fltobj_RegulationError_USBPort_1.status.bits.fltstat = false;
+    
+    fltobj_RegulationError_USBPort_2.status.bits.fltchken = (volatile bool)(c4swbb_2.status.bits.op_status == CONVERTER_STATE_COMPLETE);
+    if (!fltobj_RegulationError_USBPort_2.status.bits.fltchken) fltobj_RegulationError_USBPort_2.status.bits.fltstat = false;
     
     c4swbb_1.status.bits.fault_active = (volatile bool)(
                 fltobj_UnderVoltageLockOut.status.bits.fltstat | 
                 fltobj_OverVoltageLockOut.status.bits.fltstat |
-                fltobj_OverVoltageProtection_USBPort_1.status.bits.fltstat
+                fltobj_OverVoltageProtection_USBPort_1.status.bits.fltstat |
+                fltobj_OverCurrentProtection_USBPort_1.status.bits.fltstat |
+                fltobj_RegulationError_USBPort_1.status.bits.fltstat
             );
 
     c4swbb_2.status.bits.fault_active = (volatile bool)(
                 fltobj_UnderVoltageLockOut.status.bits.fltstat | 
                 fltobj_OverVoltageLockOut.status.bits.fltstat |
-                fltobj_OverVoltageProtection_USBPort_2.status.bits.fltstat
+                fltobj_OverVoltageProtection_USBPort_2.status.bits.fltstat |
+                fltobj_OverCurrentProtection_USBPort_2.status.bits.fltstat |
+                fltobj_RegulationError_USBPort_2.status.bits.fltstat
             );
+
+
+    // -----------------------------------------------------
+    // "Quick and Dirty" output current averaging
+    // -----------------------------------------------------
+    // 
+    // ToDo: utilize averaging filter of ADC to generate average values of voltage and current in
+    // hardware. This set is only required for current sense feedback offset calibration during
+    // development and needs to be removed once a better solution is available.
+    
+    #ifdef __00173_USB_PD_BOB_R21__
+    // ONLY VALID FOR HARDWARE VERSION R2.1
+    // ====================================
+    // If board is equipped with INA181A2 current sense amplifiers, 
+    // the current feedback offset can be calibrated at startup...
+    
+    if (c4swbb_1.status.bits.adc_active) {
+        
+        iavg_buf_1 += c4swbb_1.data.i_out;
+        if(!(++iavg_cnt_1 & 0x000F))
+        { 
+            c4swbb_1.data.i_out_avg = (iavg_buf_1 >> 4);
+            iavg_buf_1 = 0;
+            
+            if ( (c4swbb_1.status.bits.op_status == CONVERTER_STATE_STANDBY) && 
+                 (!c4swbb_1.status.bits.cs_calib_complete) )
+            {
+                c4swbb_1.i_loop.feedback_offset = c4swbb_1.data.i_out_avg;
+                c4swbb_1.i_loop.controller->InputOffset = c4swbb_1.i_loop.feedback_offset;
+                c4swbb_1.v_loop.maximum = (IOUT_OC_CLAMP + c4swbb_1.i_loop.feedback_offset);
+                c4swbb_1.status.bits.cs_calib_complete = true;
+            }
+        }
+        
+    }
+
+    if (c4swbb_2.status.bits.adc_active) {
+        
+        iavg_buf_2 += c4swbb_2.data.i_out;
+        if(!(++iavg_cnt_2 & 0x000F))
+        { 
+            c4swbb_2.data.i_out_avg = (iavg_buf_2 >> 4);
+            iavg_buf_2 = 0;
+            
+            if ( (c4swbb_2.status.bits.op_status == CONVERTER_STATE_STANDBY) && 
+                 (!c4swbb_2.status.bits.cs_calib_complete) )
+            {
+                c4swbb_2.i_loop.feedback_offset = c4swbb_2.data.i_out_avg;
+                c4swbb_2.i_loop.controller->InputOffset = c4swbb_2.i_loop.feedback_offset;
+                c4swbb_2.v_loop.maximum = (IOUT_OC_CLAMP + c4swbb_2.i_loop.feedback_offset);
+                c4swbb_2.status.bits.cs_calib_complete = true;
+            }
+        }
+        
+    }
+
+    #else
+    // ONLY VALID FOR HARDWARE VERSION R2.0
+    // ====================================
+
+    // If board is equipped with MCP6C02 current sense amplifiers, 
+    // the current feedback offset is set in syscfg_scaling.h header
+
+    c4swbb_1.status.bits.cs_calib_complete = c4swbb_1.status.bits.adc_active;
+    c4swbb_2.status.bits.cs_calib_complete = c4swbb_2.status.bits.adc_active;
+
+    #endif
 
     
     // Execute the state machines of converter 1 and 2
@@ -85,6 +179,7 @@ volatile uint16_t exec_PowerControl(void) {
     
     return (fres);
 }
+
 
 /*!init_PowerControl
  * ******************************************************************************************************
@@ -115,12 +210,32 @@ volatile uint16_t init_PowerControl(void) {
     // Load PWM configurations for PWM generators for both ports
     fres &= c4swbb_pwm_generators_initialize(&c4swbb_1); // Initialize PWM generators of USB Port A
     fres &= c4swbb_pwm_generators_initialize(&c4swbb_2); // Initialize PWM generators of USB Port B
+
+    // ----------------------------------------------------
+    // ToDo: Move these settings into normal initialization
+    //       NO DEDICATED REGISTER WRITES IN USER CODE !!!
+    
     
     //Custom setup for c4swbb_2 to use PCI to sync c2 buck leg to ch 1 buck leg
-    PG1LEBH = C4SWBB_2_PG1LEBH;      //PG5 available to PCI logic
-    PG1CONH = C4SWBB_2_PGxCONH;      //Trigger is via PCI logic from PG5
-    PG1SPCIL = 0b1001000000000001;
-    PG1SPCIH = 0x0000;
+    PG1LEBH = C4SWBB_2_PG1LEBH;     // PG5 available to PCI logic
+    PG1CONH = C4SWBB_2_PGxCONH;     // Trigger is via PCI logic from PG5 
+    PG1SPCIL = 0b1001000000000001;  // Termination of latched PCI occurs immediately / Auto-Terminate / 
+                                    // Internally connected to the output of PWMPCI<2:0> MUX
+    PG1SPCIH = 0x0000;              
+    
+    //Custom setup for c4swbb_2 to use PCI to sync c2 boost leg to ch 1 buck leg
+    PG2LEBH = C4SWBB_2_PG1LEBH;             // PG5 available to PCI logic
+    PG2CONH = C4SWBB_BOOSTLEG_2_PGxCONH;    // Trigger is via PCI logic from PG5 
+    PG2SPCIL = 0b1001000000000001;  // Termination of latched PCI occurs immediately / Auto-Terminate / 
+                                    // Internally connected to the output of PWMPCI<2:0> MUX
+    PG2SPCIH = 0x0000;
+    
+    PG2PHASE = 0;
+    PG7PHASE = 0;
+
+    // ----------------------------------------------------
+    // ----------------------------------------------------
+    
     // ADC core configuration
     fres &= c4swbb_adc_module_initialize();
     
@@ -141,24 +256,28 @@ volatile uint16_t init_PowerControl(void) {
     
     fres &= c4swbb_pwm_enable(&c4swbb_1);
     fres &= c4swbb_pwm_enable(&c4swbb_2);
-    
-    PG2PHASE = 0;
-    PG7PHASE = 0;
+
             
-    c4swbb_1.status.bits.enable = true;
-    c4swbb_2.status.bits.enable = true;
+    c4swbb_1.status.bits.enable = false;
+    c4swbb_2.status.bits.enable = false;
     
     //fres &= c4swbb_pwm_release(&c4swbb_1);
     //fres &= c4swbb_pwm_release(&c4swbb_2);
     
-    TRISCbits.TRISC2 = 0;  //used for debug
+    // ----------------------------------------------------
+    // ToDo: Move these settings into normal initialization
+    //       NO DEDICATED REGISTER WRITES IN USER CODE !!!
+    
+    TRISCbits.TRISC2 = 0;  // used for debug // ToDo: Remove when done
     
     //Max 1428 for 350kHz
-    PG1TRIGA = 200;    
+    // PG1TRIGA = 200; => replaced by following line
+    BUCKH2_PGxTRIGA = 200;
     //PG7TRIGA = 20;
     //PG2TRIGA = 20;
     
-    PG5TRIGA = 200;
+    // PG5TRIGA = 200; => replaced by following line
+    BUCKH1_PGxTRIGA = 200;
     
     //PG7TRIGA = 20;
     Nop();
@@ -167,14 +286,21 @@ volatile uint16_t init_PowerControl(void) {
     PG2STATbits.UPDREQ = 1;
     PG5STATbits.UPDREQ = 1;
     PG7STATbits.UPDREQ = 1;
+    // ----------------------------------------------------
+    // ----------------------------------------------------
    
-    
-   c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_15V ;    // Set reference to 5V
-   c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_15V ;    // Set reference to 5V
+    // Set initial reference voltages
+    c4swbb_1.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
+    c4swbb_2.data.v_ref = C4SWBB_VOUT_REF_5V ;    // Set reference to 5V
    
-   c4swbb_1.status.bits.autorun = 1;
-   c4swbb_2.status.bits.autorun = 1;  
+    // ----------------------------------------------------
+    // ToDo: This should be controlled by the PD Stack
+
+    c4swbb_1.status.bits.autorun = false; // Start power converter A automatically (without command)
+    c4swbb_2.status.bits.autorun = false; // Start power converter B automatically (without command)
+
     Nop();
+    // ----------------------------------------------------
     
     // return Success/Failure
     return (fres);
@@ -195,6 +321,58 @@ volatile uint16_t reset_PowerControl(void) {
     
     fres &= c4SWBB_shut_down(&c4swbb_1);  // Shut Down 4-Switch Buck/Boost Converter #1 State Machine
     fres &= c4SWBB_shut_down(&c4swbb_2);  // Shut Down 4-Switch Buck/Boost Converter #2 State Machine
+    
+    fltobj_RegulationError_USBPort_1.status.bits.fltactive = false;
+    fltobj_RegulationError_USBPort_1.status.bits.fltstat = false;
+    fltobj_RegulationError_USBPort_1.status.bits.fltchken = false;
+    
+    fltobj_RegulationError_USBPort_2.status.bits.fltactive = false;
+    fltobj_RegulationError_USBPort_2.status.bits.fltstat = false;
+    fltobj_RegulationError_USBPort_2.status.bits.fltchken = false;
+
+    return(fres);
+}
+
+
+/*!reset_USBPort_1
+ * ******************************************************************************************************
+ * 
+ * 
+ * *****************************************************************************************************/
+
+volatile uint16_t reset_USBPort_1(void) {
+    
+    volatile uint16_t fres = 0;
+
+    c4swbb_1.status.bits.fault_active = true; // Set FAULT flag
+    
+    fres &= c4SWBB_shut_down(&c4swbb_1);  // Shut Down 4-Switch Buck/Boost Converter #1 State Machine
+    
+    fltobj_RegulationError_USBPort_1.status.bits.fltactive = false;
+    fltobj_RegulationError_USBPort_1.status.bits.fltstat = false;
+    fltobj_RegulationError_USBPort_1.status.bits.fltchken = false;
+    
+    return(fres);
+}
+
+
+/*!reset_USBPort_2
+ * ******************************************************************************************************
+ * 
+ * 
+ * *****************************************************************************************************/
+
+volatile uint16_t reset_USBPort_2(void) {
+    
+    volatile uint16_t fres = 0;
+
+    c4swbb_2.status.bits.fault_active = true; // Set FAULT flag
+    
+    fres &= c4SWBB_shut_down(&c4swbb_2);  // Shut Down 4-Switch Buck/Boost Converter #1 State Machine
+    
+    fltobj_RegulationError_USBPort_2.status.bits.fltactive = false;
+    fltobj_RegulationError_USBPort_2.status.bits.fltstat = false;
+    fltobj_RegulationError_USBPort_2.status.bits.fltchken = false;
     
     return(fres);
 }
@@ -311,8 +489,8 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.buck_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
     c4swbb_1.buck_leg.adtr1_source = BUCKH1_PGxEVT_ADTR1EN; // ADC trigger 1 source is PGxTRIGA/B/C register compare event
     c4swbb_1.buck_leg.adtr2_source = BUCKH1_PGxEVT_ADTR2EN; // ADC trigger 2 source is PGxTRIGA/B/C register compare event
-    c4swbb_1.buck_leg.adtr1_scale = BUCKH1_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection
-    c4swbb_1.buck_leg.adtr1_offset = BUCKH1_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection
+    c4swbb_1.buck_leg.adtr1_scale = BUCKH1_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection (trigger every n-th cycle)
+    c4swbb_1.buck_leg.adtr1_offset = BUCKH1_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection (first trigger after n cycles)
     
     c4swbb_1.boost_leg.pwm_instance = BOOSTH1_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_1.boost_leg.period = SWITCHING_PERIOD; // set switching period 
@@ -327,8 +505,8 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
     c4swbb_1.boost_leg.adtr1_source = BOOSTH1_PGxEVT_ADTR1EN; // ADC trigger 1 source is PGxTRIGA/B/C register compare event
     c4swbb_1.boost_leg.adtr2_source = BOOSTH1_PGxEVT_ADTR2EN; // ADC trigger 2 source is PGxTRIGA/B/C register compare event
-    c4swbb_1.boost_leg.adtr1_scale = BOOSTH1_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection
-    c4swbb_1.boost_leg.adtr1_offset = BOOSTH1_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection
+    c4swbb_1.boost_leg.adtr1_scale = BOOSTH1_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection (trigger every n-th cycle)
+    c4swbb_1.boost_leg.adtr1_offset = BOOSTH1_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection (first trigger after n cycles)
     
     // Load ADC settings from hardware and microcontroller abstraction layers (HAL and MCAL)
     c4swbb_1.feedback.ad_vout.enable = FB_VOUT1_ENABLE;
@@ -373,8 +551,8 @@ volatile uint16_t init_USBport_1(void) {
     fres &= cha_vloop_Init(&cha_vloop);
 
     // Hardware-specific voltage loop controller settings
-    c4swbb_1.v_loop.minimum = IOUT_LCL_CLAMP;   // Minimum output value of voltage loop is absolute current limit
-    c4swbb_1.v_loop.maximum = IOUT_OCL_TRIP;    // Maximum output value of voltage loop is absolute current limit
+    c4swbb_1.v_loop.minimum = (IOUT_LCL_CLAMP + C4SWBB_IOUT_FEEDBACK_OFFSET);   // Minimum output value of voltage loop is absolute current limit
+    c4swbb_1.v_loop.maximum = (IOUT_OCL_TRIP + C4SWBB_IOUT_FEEDBACK_OFFSET);    // Maximum output value of voltage loop is absolute current limit
     c4swbb_1.v_loop.feedback_offset = C4SWBB_VOUT_OFFSET;   // Voltage feedback signal offset
     c4swbb_1.v_loop.reference = C4SWBB_VOUT_REF; // Voltage loop reference value
     c4swbb_1.v_loop.trigger_offset = ADC_TRIG_OFFSET_VOUT; // Voltage sample ADC trigger offset (offset from 50% on-time)
@@ -396,13 +574,14 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.ctrl_Reset = &cha_vloop_Reset;     // Function pointer to CONTROL RESET routine
     
     c4swbb_1.v_loop.ctrl_Reset(&cha_vloop); // Call RESET routine of voltage loop controller
-
+    
+    
     // Initialize converter #1 current loop settings
     fres &= cha_iloop_Init(&cha_iloop);
     c4swbb_1.i_loop.minimum = DUTY_RATIO_MIN_BUCK_REG;   // Minimum duty ratio is absolute clamping limit of current loop
     c4swbb_1.i_loop.maximum = (DUTY_RATIO_MAX_BUCK_REG + DUTY_RATIO_MAX_BOOST_REG);   // Maximum duty ratio is absolute clamping limit of current loop
     c4swbb_1.i_loop.feedback_offset = C4SWBB_IOUT_FEEDBACK_OFFSET;   // Current feedback signal offset
-    c4swbb_1.i_loop.reference = IOUT_LCL_CLAMP; // Current loop reference value
+    c4swbb_1.i_loop.reference = (IOUT_LCL_CLAMP + C4SWBB_IOUT_FEEDBACK_OFFSET); // Current loop reference value
     c4swbb_1.i_loop.trigger_offset = ADC_TRIG_OFFSET_IOUT; // Current sample ADC trigger offset (offset from 50% on-time)
 
     c4swbb_1.i_loop.controller = &cha_iloop;   // 4-Switch Buck/Boost converter voltage loop controller
@@ -449,7 +628,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.soft_start.pwr_good_delay = C4SWBB_PGDLY;  // Power-Good Delay
     c4swbb_1.soft_start.ramp_v_ref_increment = C4SWBB_VREF_STEP; // Voltage reference tick increment to meet ramp period setting
     c4swbb_1.soft_start.ramp_i_ref_increment = C4SWBB_IREF_STEP; // Current reference tick increment to meet ramp period setting
-    c4swbb_1.soft_start.inrush_limit = IOUT_INRUSH_CLAMP; // Set soft-start inrush current limit
+    c4swbb_1.soft_start.inrush_limit = (IOUT_INRUSH_CLAMP + C4SWBB_IOUT_FEEDBACK_OFFSET); // Set soft-start inrush current limit
 
     
     // Reset runtime data output of USB port #1
@@ -489,8 +668,8 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.buck_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
     c4swbb_2.buck_leg.adtr1_source = BUCKH2_PGxEVT_ADTR1EN; // ADC trigger 1 source is PGxTRIGA/B/C register compare event
     c4swbb_2.buck_leg.adtr2_source = BUCKH2_PGxEVT_ADTR2EN; // ADC trigger 2 source is PGxTRIGA/B/C register compare event
-    c4swbb_2.buck_leg.adtr1_scale = BUCKH2_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection
-    c4swbb_2.buck_leg.adtr1_offset = BUCKH2_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection
+    c4swbb_2.buck_leg.adtr1_scale = BUCKH2_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection (trigger every n-th cycle)
+    c4swbb_2.buck_leg.adtr1_offset = BUCKH2_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection (first trigger after n cycles)
 
     c4swbb_2.boost_leg.pwm_instance = BOOSTH2_PGx_CHANNEL; // Instance of the PWM generator used (e.g. 1=PG1, 2=PG2, etc.)
     c4swbb_2.boost_leg.period = SWITCHING_PERIOD; // set switching period 
@@ -505,8 +684,8 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.boost_leg.pwm_ovrdat = 0; // PWMxH and PWMxL pin states in OFF mode are PWMxH=LOW, PWMxL=LOW
     c4swbb_2.boost_leg.adtr1_source = BOOSTH2_PGxEVT_ADTR1EN; // ADC trigger 1 source is PGxTRIGA/B/C register compare event
     c4swbb_2.boost_leg.adtr2_source = BOOSTH2_PGxEVT_ADTR2EN; // ADC trigger 2 source is PGxTRIGA/B/C register compare event
-    c4swbb_2.boost_leg.adtr1_scale = BOOSTH2_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection
-    c4swbb_2.boost_leg.adtr1_offset = BOOSTH2_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection
+    c4swbb_2.boost_leg.adtr1_scale = BOOSTH2_PGxEVT_ADTR1PS;  // ADC Trigger 1 Post-Scaler Selection (trigger every n-th cycle)
+    c4swbb_2.boost_leg.adtr1_offset = BOOSTH2_PGxEVT_ADTR1OFS; // ADC Trigger 1 Offset Selection (first trigger after n cycles)
     
     // Load ADC settings from hardware and microcontroller abstraction layers (HAL and MCAL)
     c4swbb_2.feedback.ad_vout.enable = FB_VOUT2_ENABLE;
@@ -551,8 +730,8 @@ volatile uint16_t init_USBport_2(void) {
     fres &= chb_vloop_Init(&chb_vloop);
 
     // Hardware-specific voltage loop controller settings
-    c4swbb_2.v_loop.minimum = IOUT_LCL_CLAMP;   // Minimum output value of voltage loop is absolute current limit
-    c4swbb_2.v_loop.maximum = IOUT_OCL_TRIP;    // Maximum output value of voltage loop is absolute current limit
+    c4swbb_2.v_loop.minimum = (IOUT_LCL_CLAMP + C4SWBB_IOUT_FEEDBACK_OFFSET);   // Minimum output value of voltage loop is absolute current limit
+    c4swbb_2.v_loop.maximum = (IOUT_OCL_TRIP + C4SWBB_IOUT_FEEDBACK_OFFSET);    // Maximum output value of voltage loop is absolute current limit
     c4swbb_2.v_loop.feedback_offset = C4SWBB_VOUT_OFFSET;   // Voltage feedback signal offset
     c4swbb_2.v_loop.reference = C4SWBB_VOUT_REF; // Voltage loop reference value
     c4swbb_2.v_loop.trigger_offset = ADC_TRIG_OFFSET_VOUT; // Voltage sample ADC trigger offset (offset from 50% on-time)
@@ -575,13 +754,14 @@ volatile uint16_t init_USBport_2(void) {
     
     c4swbb_2.v_loop.ctrl_Reset(&chb_vloop); // Call RESET routine of voltage loop controller
 
+    
     // Initialize converter #2 current loop settings
     fres &= chb_iloop_Init(&chb_iloop);
 
     c4swbb_2.i_loop.minimum = DUTY_RATIO_MIN_BUCK_REG;   // Minimum duty ratio is absolute clamping limit of current loop
     c4swbb_2.i_loop.maximum = (DUTY_RATIO_MAX_BUCK_REG + DUTY_RATIO_MAX_BOOST_REG);   // Maximum duty ratio is absolute clamping limit of current loop
     c4swbb_2.i_loop.feedback_offset = C4SWBB_IOUT_FEEDBACK_OFFSET;   // Current feedback signal offset
-    c4swbb_2.i_loop.reference = IOUT_LCL_CLAMP; // Current loop reference value
+    c4swbb_2.i_loop.reference = (IOUT_LCL_CLAMP + C4SWBB_IOUT_FEEDBACK_OFFSET); // Current loop reference value
     c4swbb_2.i_loop.trigger_offset = ADC_TRIG_OFFSET_IOUT; // Current sample ADC trigger offset (offset from 50% on-time)
     
     c4swbb_2.i_loop.controller = &chb_iloop;   // 4-Switch Buck/Boost converter voltage loop controller
@@ -628,7 +808,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.soft_start.pwr_good_delay = C4SWBB_PGDLY;  // Power-Good Delay
     c4swbb_2.soft_start.ramp_v_ref_increment = C4SWBB_VREF_STEP; // Voltage reference tick increment to meet ramp period setting
     c4swbb_2.soft_start.ramp_i_ref_increment = C4SWBB_IREF_STEP; // Current reference tick increment to meet ramp period setting
-    c4swbb_2.soft_start.inrush_limit = IOUT_INRUSH_CLAMP; // Set soft-start inrush current limit
+    c4swbb_2.soft_start.inrush_limit = (IOUT_INRUSH_CLAMP + C4SWBB_IOUT_FEEDBACK_OFFSET); // Set soft-start inrush current limit
 
     
     // Reset runtime data output of USB port #2
@@ -636,6 +816,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.data.i_out = 0;    // Reset output current value
     c4swbb_2.data.v_out = 0;    // Reset output voltage value
     c4swbb_2.data.temp = 0;     // Reset converter temperature value
+    
     return(fres);   
 }
 
@@ -652,6 +833,7 @@ volatile uint16_t init_USBport_2(void) {
  * 4-switch buck/boost converter #1.
  * 
  * *****************************************************************************************************/
+short buffer[2000],cntbuff=0;
 #if (FB_VOUT1_ENABLE)
 void __attribute__ ((__interrupt__, auto_psv, context)) _FB_VOUT1_ADC_Interrupt(void)
 {
@@ -660,7 +842,7 @@ ECP39_SET;
 #endif
 
 #if defined CH1|| defined ALL
-LATCbits.LATC2 = 1;
+//LATCbits.LATC2 = 1;
 #endif
 
     // Call control loop update
@@ -668,6 +850,9 @@ LATCbits.LATC2 = 1;
     cha_iloop_Update(&cha_iloop);
     c4swbb_pwm_update(&c4swbb_1.pwm_dist);
       
+    //PG5STATbits.UPDREQ = 1;
+    //PG7STATbits.UPDREQ = 1;
+    
     // Capture additional analog inputs
     c4swbb_1.status.bits.adc_active = true; // Set ADC_ACTIVE flag
     c4swbb_1.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value 
@@ -696,7 +881,7 @@ LATCbits.LATC2 = 1;
     ECP39_CLEAR;
 #endif
 #if defined CH1|| defined ALL
-LATCbits.LATC2 = 0;
+//LATCbits.LATC2 = 0;
 #endif
 }
 #else
@@ -799,6 +984,9 @@ LATCbits.LATC2 = 1;
     c4swbb_2.status.bits.adc_active = true; // Set ADC_ACTIVE flag
     c4swbb_2.data.v_in = FB_VBAT_ADCBUF; // Capture most recent input voltage value
     c4swbb_2.data.temp = FB_TEMP2_ADCBUF;
+    
+    //PG1STATbits.UPDREQ = 1;
+    //PG2STATbits.UPDREQ = 1;
     
     // Clear the interrupt flag 
     _ADCIF = 0;

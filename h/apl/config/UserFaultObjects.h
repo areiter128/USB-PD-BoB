@@ -59,10 +59,12 @@ typedef enum {
     FLTOBJ_OCP_USB_PORT_1, // Fault object Over Current Protection of USB port converter #1
     FLTOBJ_OTW_USB_PORT_1, // Fault object Over Temperature Warning of USB port converter #1
     FLTOBJ_OTP_USB_PORT_1, // Fault object Over Temperature Protection of USB port converter #1
+    FLTOBJ_CTRLERR_USB_PORT_1, // Fault object Regulation Error of USB port converter #1
     FLTOBJ_OVP_USB_PORT_2, // Fault object Output Over Voltage Protection of USB port converter #2
     FLTOBJ_OCP_USB_PORT_2, // Fault object Over Current Protection of USB port converter #2
     FLTOBJ_OTW_USB_PORT_2, // Fault object Over Temperature Warning of USB port converter #2
-    FLTOBJ_OTP_USB_PORT_2  // Fault object Over Temperature Protection of USB port converter #2
+    FLTOBJ_OTP_USB_PORT_2, // Fault object Over Temperature Protection of USB port converter #2
+    FLTOBJ_CTRLERR_USB_PORT_2 // Fault object Regulation Error of USB port converter #2
 	
 }fault_object_index_e;
 
@@ -93,10 +95,11 @@ extern volatile FAULT_OBJECT_t fltobj_OverVoltageProtection_USBPort_1;   // Cust
 extern volatile FAULT_OBJECT_t fltobj_OverCurrentProtection_USBPort_1;   // Custom OCP FAULT object USB port #1  
 extern volatile FAULT_OBJECT_t fltobj_OverTempWarning_USBPort_1;   // Custom OVP FAULT object USB port #1
 extern volatile FAULT_OBJECT_t fltobj_OverTempProtection_USBPort_1;   // Custom OCP FAULT object USB port #1  
+extern volatile FAULT_OBJECT_t fltobj_RegulationError_USBPort_1;    // Custom CTRLERR FAULT object USB port #1
 extern volatile FAULT_OBJECT_t fltobj_OverVoltageProtection_USBPort_2;   // Custom OVP FAULT object USB port #2
 extern volatile FAULT_OBJECT_t fltobj_OverCurrentProtection_USBPort_2;   // Custom OCP FAULT object USB port #2
 extern volatile FAULT_OBJECT_t fltobj_OverTempWarning_USBPort_2;   // Custom OVP FAULT object USB port #2
 extern volatile FAULT_OBJECT_t fltobj_OverTempProtection_USBPort_2;   // Custom OCP FAULT object USB port #2
-
+extern volatile FAULT_OBJECT_t fltobj_RegulationError_USBPort_2;    // Custom CTRLERR FAULT object USB port #2
 #endif	/* _APPLICATION_LAYER_FAULT_HANDLER_H_ */
 
