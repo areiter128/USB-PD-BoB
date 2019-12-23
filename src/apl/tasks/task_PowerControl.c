@@ -82,7 +82,7 @@ volatile uint16_t exec_PowerControl(void) {
     if (!fltobj_RegulationError_USBPort_1.status.bits.fltchken) fltobj_RegulationError_USBPort_1.status.bits.fltstat = false;
     
     fltobj_RegulationError_USBPort_2.status.bits.fltchken = (volatile bool)(c4swbb_2.status.bits.op_status == CONVERTER_STATE_COMPLETE);
-    if (!fltobj_RegulationError_USBPort_2.status.bits.fltchken) fltobj_RegulationError_USBPort_1.status.bits.fltstat = false;
+    if (!fltobj_RegulationError_USBPort_2.status.bits.fltchken) fltobj_RegulationError_USBPort_2.status.bits.fltstat = false;
     
     c4swbb_1.status.bits.fault_active = (volatile bool)(
                 fltobj_UnderVoltageLockOut.status.bits.fltstat | 
