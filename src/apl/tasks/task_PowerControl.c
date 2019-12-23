@@ -45,15 +45,15 @@ volatile uint16_t exec_PowerControl(void) {
 
     volatile uint16_t fres = 1;
 
-    
+    //------------------------------------------------------
     // Both converters are supplied by the same power input and c4swbb_1 is the 
     // instance sampling the input voltage. Once this voltage is within the nominal
     // operating range, the POWER_SOURCE_DETECTED flag is set
     // 
     // Please note:
     // This test is for startup only. There is no hysteresis and no shut-down event
-    // is triggered. This flag only provides an immediate indication. Power Supply
-    // Over/Under Voltage Lock Out are taken care of by the fault handler.
+    // is triggered. This flag only provides an immediate indication for the state machine.
+    // Board Over/Under Voltage Lock Out are managed by the fault handler.
     
     if((C4SWBB_VIN_UVLO < c4swbb_1.data.v_in) && (c4swbb_1.data.v_in < C4SWBB_VIN_OVLO)) {
         c4swbb_1.status.bits.power_source_detected = true;
@@ -64,15 +64,19 @@ volatile uint16_t exec_PowerControl(void) {
         c4swbb_2.status.bits.power_source_detected = false;
     }
 
+    //------------------------------------------------------
     // The power supply fault flag is only reset if ALL fault objects have been cleared
+    // The fault handler does not consider cross-dependencies of individual faults.
+    // These need to be tied together in this state machine.
     // 
     // Please note:
     // Output Over Current conditions are allowed and will result in a hard limitation
     // of the output current at the defined level. Thus over current conditions will NOT 
-    // lead to an automatic shut down of the converter.
-    
-    // ToDo: RegulationError is very sensitive to changes to VREF. 
-    //       Further testing is required to enable this feature.
+    // lead to an automatic shut down of the converter. The shut down event is triggered
+    // when output voltage drops due to current limiting conditions. This is detected by
+    // the fltobj_RegulationError_USB_x objects comparing output voltage against output
+    // voltage reference. The fault trigger is defined by VOUT_MAX_DEVIATION in file 
+    // 'syscfg_limits.h'
     
     fltobj_RegulationError_USBPort_1.status.bits.fltchken = (volatile bool)(c4swbb_1.status.bits.op_status == CONVERTER_STATE_COMPLETE);
     if (!fltobj_RegulationError_USBPort_1.status.bits.fltchken) fltobj_RegulationError_USBPort_1.status.bits.fltstat = false;
