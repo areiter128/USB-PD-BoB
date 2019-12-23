@@ -568,7 +568,8 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.v_loop.ctrl_Reset = &cha_vloop_Reset;     // Function pointer to CONTROL RESET routine
     
     c4swbb_1.v_loop.ctrl_Reset(&cha_vloop); // Call RESET routine of voltage loop controller
-
+    
+    
     // Initialize converter #1 current loop settings
     fres &= cha_iloop_Init(&cha_iloop);
     c4swbb_1.i_loop.minimum = DUTY_RATIO_MIN_BUCK_REG;   // Minimum duty ratio is absolute clamping limit of current loop
@@ -747,6 +748,7 @@ volatile uint16_t init_USBport_2(void) {
     
     c4swbb_2.v_loop.ctrl_Reset(&chb_vloop); // Call RESET routine of voltage loop controller
 
+    
     // Initialize converter #2 current loop settings
     fres &= chb_iloop_Init(&chb_iloop);
 
@@ -808,6 +810,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.data.i_out = 0;    // Reset output current value
     c4swbb_2.data.v_out = 0;    // Reset output voltage value
     c4swbb_2.data.temp = 0;     // Reset converter temperature value
+    
     return(fres);   
 }
 
