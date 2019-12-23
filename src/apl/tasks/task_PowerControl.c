@@ -628,7 +628,7 @@ volatile uint16_t init_USBport_1(void) {
     c4swbb_1.soft_start.pwr_good_delay = C4SWBB_PGDLY;  // Power-Good Delay
     c4swbb_1.soft_start.ramp_v_ref_increment = C4SWBB_VREF_STEP; // Voltage reference tick increment to meet ramp period setting
     c4swbb_1.soft_start.ramp_i_ref_increment = C4SWBB_IREF_STEP; // Current reference tick increment to meet ramp period setting
-    c4swbb_1.soft_start.inrush_limit = IOUT_INRUSH_CLAMP; // Set soft-start inrush current limit
+    c4swbb_1.soft_start.inrush_limit = (IOUT_INRUSH_CLAMP + C4SWBB_IOUT_FEEDBACK_OFFSET); // Set soft-start inrush current limit
 
     
     // Reset runtime data output of USB port #1
@@ -808,7 +808,7 @@ volatile uint16_t init_USBport_2(void) {
     c4swbb_2.soft_start.pwr_good_delay = C4SWBB_PGDLY;  // Power-Good Delay
     c4swbb_2.soft_start.ramp_v_ref_increment = C4SWBB_VREF_STEP; // Voltage reference tick increment to meet ramp period setting
     c4swbb_2.soft_start.ramp_i_ref_increment = C4SWBB_IREF_STEP; // Current reference tick increment to meet ramp period setting
-    c4swbb_2.soft_start.inrush_limit = IOUT_INRUSH_CLAMP; // Set soft-start inrush current limit
+    c4swbb_2.soft_start.inrush_limit = (IOUT_INRUSH_CLAMP + C4SWBB_IOUT_FEEDBACK_OFFSET); // Set soft-start inrush current limit
 
     
     // Reset runtime data output of USB port #2
