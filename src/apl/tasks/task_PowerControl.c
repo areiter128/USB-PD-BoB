@@ -127,6 +127,7 @@ volatile uint16_t exec_PowerControl(void) {
                  (!c4swbb_1.status.bits.cs_calib_complete) )
             {
                 c4swbb_1.i_loop.feedback_offset = c4swbb_1.data.i_out_avg;
+                c4swbb_1.i_loop.controller->InputOffset = c4swbb_1.i_loop.feedback_offset;
                 c4swbb_1.v_loop.maximum = (IOUT_OC_CLAMP + c4swbb_1.i_loop.feedback_offset);
                 c4swbb_1.status.bits.cs_calib_complete = true;
             }
@@ -146,6 +147,7 @@ volatile uint16_t exec_PowerControl(void) {
                  (!c4swbb_2.status.bits.cs_calib_complete) )
             {
                 c4swbb_2.i_loop.feedback_offset = c4swbb_2.data.i_out_avg;
+                c4swbb_2.i_loop.controller->InputOffset = c4swbb_2.i_loop.feedback_offset;
                 c4swbb_2.v_loop.maximum = (IOUT_OC_CLAMP + c4swbb_2.i_loop.feedback_offset);
                 c4swbb_2.status.bits.cs_calib_complete = true;
             }
