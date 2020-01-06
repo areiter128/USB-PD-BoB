@@ -46,14 +46,14 @@ void UPD_RegWriteWord (UINT8 u8PortNum, UINT16 u16RegOffset, UINT16 u16WriteValu
 /******************************************************************************************************/
 UINT8 UPD_RegReadByte (UINT8 u8PortNum, UINT16 u16RegOffset)
 {
-	UINT8 u8ReadData = 0;
+	UINT8 u8ReadData;
 	UPD_RegisterRead (u8PortNum, u16RegOffset, &u8ReadData, BYTE_LEN_1);
 	return u8ReadData;
 }
 
 UINT16 UPD_RegReadWord (UINT8 u8PortNum, UINT16 u16RegOffset)
 {
-	UINT16 u16ReadData = 0;
+	UINT16 u16ReadData;
 	UPD_RegisterRead (u8PortNum, u16RegOffset, (UINT8 *)&u16ReadData, BYTE_LEN_2);
 	return u16ReadData;
 }

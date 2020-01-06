@@ -126,8 +126,8 @@ extern "C" {
                                 )   // 0b0100000101000000
 
  #define C4SWBB_2_PGxCONH      ( \
-                                    PGCON_SOCS_TRG_PCISYNC | \
-                                    REG_PGCON_TRGMOD_REPEAT | \
+                                    REG_PGCON_SOCS_TRG_PCISYNC | \
+                                    REG_PGCON_TRGMOD_REPEAT  | \
                                     REG_PGCON_UPDMOD_IMMEDIATE | \
                                     REG_PGCON_MSTEN_MASTER | \
                                     REG_PGCON_MPHSEL_INDEPENDENT | \
@@ -206,7 +206,7 @@ extern "C" {
                                         REG_PGEVT_ADTR1EN3_PGxTRIGC_DISABLED | \
                                         REG_PGEVT_ADTR1EN2_PGxTRIGB_DISABLED | \
                                         REG_PGEVT_ADTR1EN1_PGxTRIGA_ENABLED | \
-                                        REG_PGEVT_UPDTRG_PGxTRIGA | \
+                                        REG_PGEVT_UPDTRG_PGxDC | \
                                         REG_PGEVT_PGTRGSEL_EOC \
                                     )  // 0b0000000000011001
 
@@ -521,7 +521,20 @@ Description:
                                         REG_PGCON_MDCSEL_INDEPENDENT \
                                     )   // 0b0100000101000000
 
-/*!PGxSTAT: PWM GENERATOR x STATUS REGISTER
+#define C4SWBB_BOOSTLEG_2_PGxCONH     ( REG_PGCON_SOCS_TRG_PCISYNC | \
+                                        REG_PGCON_TRGMOD_REPEAT | \
+                                        REG_PGCON_UPDMOD_IMMEDIATE | \
+                                        REG_PGCON_MSTEN_NO_BROADCAST | \
+                                        REG_PGCON_MPHSEL_INDEPENDENT | \
+                                        REG_PGCON_MPERSEL_MASTER | \
+                                        REG_PGCON_MDCSEL_INDEPENDENT \
+                                    )   // 0b0100000101000000
+    
+    
+    
+    
+    
+    /*!PGxSTAT: PWM GENERATOR x STATUS REGISTER
 
     Always clear all status bits
 
@@ -589,7 +602,7 @@ Description:
                                         REG_PGEVT_ADTR1EN3_PGxTRIGC_DISABLED | \
                                         REG_PGEVT_ADTR1EN2_PGxTRIGB_DISABLED | \
                                         REG_PGEVT_ADTR1EN1_PGxTRIGA_ENABLED | \
-                                        REG_PGEVT_UPDTRG_PGxTRIGA | \
+                                        REG_PGEVT_UPDTRG_PGxDC | \
                                         REG_PGEVT_PGTRGSEL_PGxTRIGA \
                                     )  // 0b0000000000011001
 

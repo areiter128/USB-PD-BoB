@@ -31,8 +31,7 @@ RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, THAT YOU
 HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-//#include <psf_stdinc.h>
-#include "psf_stdinc.h"
+#include <psf_stdinc.h>
 
 /*Default values given in the UPD350 datasheet to program the CC threshold registers*/
 const UINT16 au16CCThrVal[] = { TYPEC_CC_THR0_VAL, 

@@ -38,8 +38,6 @@ HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #ifndef _UPD_INTERRUPTS_H_
 #define _UPD_INTERRUPTS_H_
 
-#include "generic_defs.h"
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Constants

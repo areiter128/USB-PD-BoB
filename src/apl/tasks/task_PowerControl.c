@@ -119,9 +119,19 @@ volatile uint16_t init_PowerControl(void) {
     
     //Custom setup for c4swbb_2 to use PCI to sync c2 buck leg to ch 1 buck leg
     PG1LEBH = C4SWBB_2_PG1LEBH;      //PG5 available to PCI logic
-    PG1CONH = C4SWBB_2_PGxCONH;      //Trigger is via PCI logic from PG5
+    PG1CONH = C4SWBB_2_PGxCONH;      //Trigger is via PCI logic from PG5 
     PG1SPCIL = 0b1001000000000001;
     PG1SPCIH = 0x0000;
+    
+    //Custom setup for c4swbb_2 to use PCI to sync c2 boost leg to ch 1 buck leg
+    PG2LEBH = C4SWBB_2_PG1LEBH;      //PG5 available to PCI logic
+    PG2CONH = C4SWBB_BOOSTLEG_2_PGxCONH;      //Trigger is via PCI logic from PG5 
+    PG2SPCIL = 0b1001000000000001;
+    PG2SPCIH = 0x0000;
+    
+    
+    
+    
     // ADC core configuration
     fres &= c4swbb_adc_module_initialize();
     
