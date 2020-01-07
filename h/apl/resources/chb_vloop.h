@@ -1,14 +1,14 @@
 /* ********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.0.75
+ * z-Domain Control Loop Designer, Version 0.9.0.77
  * ********************************************************************************
- * 3p3z controller function declarations and compensation filter coefficients
+ * 2p2z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
  * ********************************************************************************
  *
- *  Controller Type:    3P3Z - Basic Voltage Mode Compensator
- *  Sampling Frequency: 175000 Hz
+ *  Controller Type:    2P2Z - Basic Current Mode Compensator
+ *  Sampling Frequency: 87500 Hz
  *  Fixed Point Format: 15
- *  Scaling Mode:       1 - Single Bit-Shift Scaling
+ *  Scaling Mode:       3 - Dual Bit-Shift Scaling
  *  Input Gain:         0.2
  *
  * *******************************************************************************
@@ -16,7 +16,7 @@
  * CGS Date:            11/08/19
  * *******************************************************************************
  * User:                M91406
- * Date/Time:           11/11/2019 12:53:41 AM
+ * Date/Time:           12/23/2019 5:17:39 AM
  * *******************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_CHB_VLOOP_H__
@@ -44,14 +44,14 @@
  * ******************************************************************************/
 typedef struct
 {
-    volatile fractional ACoefficients[3]; // A-Coefficients
-    volatile fractional BCoefficients[4]; // B-Coefficients
+    volatile fractional ACoefficients[2]; // A-Coefficients
+    volatile fractional BCoefficients[3]; // B-Coefficients
 } __attribute__((packed)) CHB_VLOOP_CONTROL_LOOP_COEFFICIENTS_t;
 
 typedef struct
 {
-    volatile fractional ControlHistory[3];  // Control History Array
-    volatile fractional ErrorHistory[4];  // Error History Array
+    volatile fractional ControlHistory[2];  // Control History Array
+    volatile fractional ErrorHistory[3];  // Error History Array
 } __attribute__((packed)) CHB_VLOOP_CONTROL_LOOP_HISTORIES_t;
 
 
@@ -66,12 +66,12 @@ extern volatile uint16_t chb_vloop_Init( // chb_vloop initialization function ca
         volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
-// Clears the 3P3Z controller output and error histories
+// Clears the 2P2Z controller output and error histories
 extern void chb_vloop_Reset( // chb_vloop reset function call (Assembly)
         volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
-// Loads user-defined values into 3P3Z controller output and error histories
+// Loads user-defined values into 2P2Z controller output and error histories
 extern void chb_vloop_Precharge( // chb_vloop history pre-charge function call (Assembly)
         volatile cNPNZ16b_t* controller, // Pointer to nPnZ data type object
         volatile fractional ctrl_input, // user-defined, constant error history value
@@ -79,10 +79,14 @@ extern void chb_vloop_Precharge( // chb_vloop history pre-charge function call (
     );
 
 // Calls the chb_vloop controller object
-extern void chb_vloop_Update( // Calls the 3P3Z controller (Assembly)
+extern void chb_vloop_Update( // Calls the 2P2Z controller (Assembly)
         volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
 
 #endif // end of __SPECIAL_FUNCTION_LAYER_CHB_VLOOP_H__
- 
+
+//**********************************************************************************
+//  https://areiter128.github.io/DCLD
+//**********************************************************************************
+

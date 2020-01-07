@@ -49,15 +49,15 @@
 #define VOUT_MINIMUM_HYST       0.500       // input voltage minimum (Under-Voltage-Lockout Hysteresis Level)
 
 #define VOUT_NOMINAL            5.000       // Nominal input voltage in [V]
-#define VOUT_MAX_DEVIATION      0.500       // maximum allowed daviation at output voltage 
+#define VOUT_MAX_DEVIATION      3.000       // maximum allowed daviation at output voltage 
 
 #define VOUT_MAXIMUM            22.000      // output voltage maximum (Under-Voltage-Lockout-Level)
 #define VOUT_MAXIMUM_HYST       0.500       // output voltage maximum (Under-Voltage-Lockout Hysteresis Level)
 
-#define IOUT_MINIMUM            -0.500       // absolute minimum average output current during normal operation // Carlo
+#define IOUT_MINIMUM            -0.800      // absolute minimum average output current during normal operation => needs to be negative to give room for regulation
 #define IOUT_MAX_STARTUP        1.000       // absolute minimum average output current during startup (inrush current limit)
-#define IOUT_MAXIMUM            4.000       // absolute maximum average output current during normal operation
-#define IOUT_OVER_CURRENT_LIMIT 4.500       // absolute maximum average output current during normal operation
+#define IOUT_MAXIMUM            3.500       // absolute maximum average output current during normal operation
+#define IOUT_OVER_CURRENT_LIMIT 3.800       // absolute maximum average output current during normal operation
 
 #define IOUT_4SWBB_TRIP_CONV1   1.100       // [A] Upper boost switch threshold for output current - PWM1&PWM2 Buck-Boost leg
 #define IOUT_4SWBB_RESET_CONV1  0.900       // [A] Lower boost switch threshold for output current - PWM1&PWM2 Buck-Boost leg
@@ -111,6 +111,7 @@
 
 #define IOUT_LCL_CLAMP          (int16_t)((((float)IOUT_MINIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output current sense ADC ticks // Carlo
 #define IOUT_INRUSH_CLAMP       (uint16_t)((((float)IOUT_MAX_STARTUP * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output current sense ADC ticks
+#define IOUT_OC_CLAMP           (uint16_t)((((float)IOUT_MAXIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output current sense ADC ticks
 #define IOUT_OCL_TRIP           (uint16_t)((((float)IOUT_OVER_CURRENT_LIMIT * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output current sense ADC ticks
 #define IOUT_OCL_RELEASE        (uint16_t)((((float)IOUT_MAXIMUM * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output current sense ADC ticks
 
@@ -122,10 +123,10 @@
 
 // 4-Switch Buck/Boost operation PWM-leg control
 
-#define IOUT_4SWBB_UTH_CONV1    (uint16_t)((((float)IOUT_4SWBB_TRIP_CONV1 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
-#define IOUT_4SWBB_LTH_CONV1    (uint16_t)((((float)IOUT_4SWBB_RESET_CONV1 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
-#define IOUT_4SWBB_UTH_CONV2    (uint16_t)((((float)IOUT_4SWBB_TRIP_CONV2 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
-#define IOUT_4SWBB_LTH_CONV2    (uint16_t)((((float)IOUT_4SWBB_RESET_CONV2 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
+//#define IOUT_4SWBB_UTH_CONV1    (uint16_t)((((float)IOUT_4SWBB_TRIP_CONV1 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
+//#define IOUT_4SWBB_LTH_CONV1    (uint16_t)((((float)IOUT_4SWBB_RESET_CONV1 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
+//#define IOUT_4SWBB_UTH_CONV2    (uint16_t)((((float)IOUT_4SWBB_TRIP_CONV2 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
+//#define IOUT_4SWBB_LTH_CONV2    (uint16_t)((((float)IOUT_4SWBB_RESET_CONV2 * (float)IOUT_SCALER_RATIO_I2V)) * (float)HSADC_SCALER) // Output voltage sense ADC ticks
 
 #define DUTY_RATIO_INIT_BUCK_REG    (uint16_t)((float)DUTY_RATIO_BUCK_LEG_INIT * (float)SWITCHING_PERIOD)
 #define DUTY_RATIO_MIN_BUCK_REG     (uint16_t)((float)DUTY_RATIO_MIN_BUCK * (float)SWITCHING_PERIOD)
