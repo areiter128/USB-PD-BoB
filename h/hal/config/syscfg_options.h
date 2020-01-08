@@ -28,38 +28,38 @@
 #ifndef _SYSTEM_CONFIGURATION_OPTIONS_H_
 #define	_SYSTEM_CONFIGURATION_OPTIONS_H_
 
-#define DBG_MODE_GPIO       1       // the debug pin is used as GPIO
-#define DBG_MODE_DAC        2       // the debug pin is used as digital-to-analog output
-#define DBG_MODE_PWM        3       // the debug pin is used as pulse-width-modulated output
-
-
-#define USE_I2C             0       // This option enables/disables I2C communication
-#define USE_UART            0       // This option enables/disables UART communication
-
+//#define DBG_MODE_GPIO       1       // the debug pin is used as GPIO
+//#define DBG_MODE_DAC        2       // the debug pin is used as digital-to-analog output
+//#define DBG_MODE_PWM        3       // the debug pin is used as pulse-width-modulated output
+//
+//
+//#define USE_I2C             0       // This option enables/disables I2C communication
+//#define USE_UART            0       // This option enables/disables UART communication
+//
 #define USE_DEBUG_PIN		1       // This option enables/disables the Debug Pin
 #define DEBUG_PIN_MODE      DBG_MODE_GPIO   // This option selects the Debug Mode GPIO, DAC or PWM
 
-#define USE_SPREAD_SPECTRUM_MODULATION 0       // This option will enable/disable spread spectrum modulation
+//#define USE_SPREAD_SPECTRUM_MODULATION 0       // This option will enable/disable spread spectrum modulation
 
 
-#define CURRENT_SENSE_TRANSFORMER  1 // Current sensor is a current sense transformer
-#define CURRENT_SENSE_AMPLIFIER    2 // Current sensor is a shunt amplifier
-
-#define CS_TYPE             CURRENT_SENSE_AMPLIFIER  // Set current sense type used
-#if (CS_TYPE == CURRENT_SENSE_TRANSFORMER)
-  #define __CS_TYPE_CT__
-#elif (CS_TYPE == CURRENT_SENSE_AMPLIFIER)    
-  #define __CS_TYPE_SHUNT_AMP__
-#else
-  #warning === Current Sense Device Type not specified ===
-#endif
+//#define CURRENT_SENSE_TRANSFORMER  1 // Current sensor is a current sense transformer
+//#define CURRENT_SENSE_AMPLIFIER    2 // Current sensor is a shunt amplifier
+//
+//#define CS_TYPE             CURRENT_SENSE_AMPLIFIER  // Set current sense type used
+//#if (CS_TYPE == CURRENT_SENSE_TRANSFORMER)
+//  #define __CS_TYPE_CT__
+//#elif (CS_TYPE == CURRENT_SENSE_AMPLIFIER)    
+//  #define __CS_TYPE_SHUNT_AMP__
+//#else
+//  #warning === Current Sense Device Type not specified ===
+//#endif
     
     
     
-#define TRG_OPTION_ADC      0       // Control loops are executed in ADC interrupt service routine
-#define TRG_OPTION_PWM      1       // Control loops are executed in PWM interrupt service routines
-
-#define TRIGGER_OPTION      TRG_OPTION_ADC     // Set ISR type used to execute control loops
+//#define TRG_OPTION_ADC      0       // Control loops are executed in ADC interrupt service routine
+//#define TRG_OPTION_PWM      1       // Control loops are executed in PWM interrupt service routines
+//
+//#define TRIGGER_OPTION      TRG_OPTION_ADC     // Set ISR type used to execute control loops
 
 /* ***************************************************************************************
  *	DEBUGGING ONLY
