@@ -73,9 +73,11 @@ volatile uint16_t (*Task_Table[])(void) = {
     reset_PowerControl,     // Shuts down both 4-SWBB converters
     exec_PowerControl,      // Executes the power controller state machine
 
-
     init_taskPDStack,
     task_PDStack,
+    
+    task_DebugUART_Initialize,
+    task_DebugUART_Execute,
     
     /* ==================== END OF USER FUNCTIONS ==================== */
 
@@ -152,6 +154,7 @@ volatile uint16_t task_queue_boot_size = (sizeof(task_queue_boot)/sizeof(task_qu
 
 volatile uint16_t task_queue_firmware_init[] = {
     TASK_PWR_CONTROL_INIT,  // Step #0
+    TASK_DEBUG_UART_INIT,  // Step #1
     TASK_IDLE   // empty task used as task list execution time buffer 
 };
 volatile uint16_t task_queue_firmware_init_size = (sizeof(task_queue_firmware_init)/sizeof(task_queue_firmware_init[0]));
@@ -177,6 +180,7 @@ volatile uint16_t task_queue_firmware_init_size = (sizeof(task_queue_firmware_in
 volatile uint16_t task_queue_startup_sequence[] = {
     TASK_PWR_CONTROL_EXECUTE, // Step #0
     TASK_INIT_PDSTACK, // Step #1
+    TASK_DEBUG_UART_EXECUTE, // Step #2
     TASK_IDLE  // empty task used as task list execution time buffer 
 };
 volatile uint16_t task_queue_startup_sequence_size = (sizeof(task_queue_startup_sequence)/sizeof(task_queue_startup_sequence[0]));
@@ -196,6 +200,7 @@ volatile uint16_t task_queue_startup_sequence_size = (sizeof(task_queue_startup_
 volatile uint16_t task_queue_idle[] = {
     TASK_PWR_CONTROL_EXECUTE,  // Step #0
     TASK_PDSTACK, // Step #1
+    TASK_DEBUG_UART_EXECUTE, // Step #2
     TASK_IDLE
 };
 volatile uint16_t task_queue_idle_size = (sizeof(task_queue_idle)/sizeof(task_queue_idle[0]));
@@ -252,6 +257,7 @@ volatile uint16_t task_queue_run_size = (sizeof(task_queue_run)/sizeof(task_queu
 volatile uint16_t task_queue_run[] = {
     TASK_PWR_CONTROL_EXECUTE, // Step #0
     TASK_PDSTACK, // Step #1
+    TASK_DEBUG_UART_EXECUTE, // Step #2
     TASK_IDLE  // empty task used as task list execution time buffer 
 };
 volatile uint16_t task_queue_run_size = (sizeof(task_queue_run)/sizeof(task_queue_run[0]));
@@ -279,6 +285,7 @@ volatile uint16_t task_queue_run_init(void)
 
 volatile uint16_t task_queue_fault[] = {
     TASK_PWR_CONTROL_EXECUTE,  // Step #0
+    TASK_DEBUG_UART_EXECUTE, // Step #1
     TASK_IDLE   // empty task used as task list execution time buffer 
 };
 volatile uint16_t task_queue_fault_size = (sizeof(task_queue_fault)/sizeof(task_queue_fault[0]));
@@ -298,7 +305,7 @@ volatile uint16_t task_queue_fault_init(void)
  * *********************************************************************************************** */
 
 volatile uint16_t task_queue_standby[] = {
-    TASK_IDLE,  // Step #0
+    TASK_DEBUG_UART_EXECUTE, // Step #0
     TASK_IDLE   // empty task used as task list execution time buffer 
 };
 volatile uint16_t task_queue_standby_size = (sizeof(task_queue_standby)/sizeof(task_queue_standby[0]));

@@ -144,6 +144,9 @@ typedef enum {
     TASK_INIT_PDSTACK,          // initialize PD Stack task
     TASK_PDSTACK,               // run PD Stack task
 
+    TASK_DEBUG_UART_INIT,
+    TASK_DEBUG_UART_EXECUTE,
+
     /* ===== END OF USER FUNCTIONS ===== */
 
     // Empty task used as internal task execution timing buffer
