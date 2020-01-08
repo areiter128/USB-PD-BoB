@@ -52,12 +52,12 @@ extern "C" {
   #define DBGUART_RX_BUFFER_SIZE    32U // Number of Bytes of one frame RECEIVE buffer
 #endif
 #ifndef DBGUART_RX_FRAMES
-  #define DBGUART_RX_FRAMES         16U // Number of RECEIVE buffers
-  #define DBGUART_RX_FRAMES_OVRMSK  0x000F // Index Overrun mask
+  #define DBGUART_RX_FRAMES         8U // Number of RECEIVE buffers
+  #define DBGUART_RX_FRAMES_OVRMSK  0x0007 // Index Overrun mask
 #endif
-#ifndef DBGUART_TX_BUFFER_SIZE
-  #define DBGUART_TX_BUFFER_SIZE    64U // Number of Bytes of one frame TRANSMIT buffer
-#endif
+//#ifndef DBGUART_TX_BUFFER_SIZE
+//  #define DBGUART_TX_BUFFER_SIZE    64U // Number of Bytes of one frame TRANSMIT buffer
+//#endif
 
 /* *********************************************************************************
  * Digital Power Debugging UART Communication Timing Definitions
