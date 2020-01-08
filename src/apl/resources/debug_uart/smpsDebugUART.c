@@ -10,17 +10,19 @@
 
 #include "dsPIC33C/p33SMPS_uart.h"
 
-
-volatile uint16_t uart_send_period = UART_SEND_PER;
-volatile uint16_t uart_pre_send_period = 0;
-
-#define UART_CLEAR_PERIOD    (float)2.0     // Clear the UART receive buffer after 2 seconds of inactivity
-#define UART_CLEAR_PER   (uint16_t)((((float)UART_CLEAR_PERIOD / (float)TASK_MGR_PERIOD))-1) // interval of (2999 + 1) x 100usec = 100ms
-volatile uint16_t uart_clear_period = UART_SEND_PER;
-volatile uint16_t uart_pre_clear_period = 0;
-
-// --------------------------------------
-// Set up internal UART data buffers for RECEIVE and TRANSMIT 
+/* *********************************************************************************
+ * UART Communication Data Buffer Definitions
+ * ================================================
+ * Set up internal UART RECEIVE and TRANSMIT data buffers
+ *
+ * Please don't mistake UART buffers and DebugUART buffers!
+ * UART buffers are used to handle incoming and outgoing data
+ * on hardware level. 
+ * 
+ * DebugUART buffers are used to prepare Tx and/or sort data 
+ * into Rx data frames.
+ * 
+ * ********************************************************************************/
 
 #define UART_RX_BUFFER_SIZE   64U  // Size of the internal RECEIVE data buffer of the UART driver
 #define UART_TX_BUFFER_SIZE  256U  // Size of the internal TRANSMIT data buffer of the UART driver
@@ -30,16 +32,24 @@ volatile uint8_t  uart_tx_buffer[UART_TX_BUFFER_SIZE];
 
 volatile UART_t uart; // declare private UART object from p33SMPS_uart library
 
-// --------------------------------------
-// Set up internal DEBUG UART objects 
+/* *********************************************************************************
+ * DebugUART Object Definitions
+ * ================================================
+ * Set up internal DEBUG UART objects
+ *
+ * Please don't mistake UART buffers and DebugUART buffers!
+ * UART buffers are used to handle incoming and outgoing data
+ * on hardware level. 
+ * 
+ * DebugUART buffers are used to prepare Tx and/or sort data 
+ * into Rx data frames.
+ * 
+ * ********************************************************************************/
 
 volatile SMPS_DBGUART_t DebugUART; // Debug UART control data object
 
-#define  DBGUART_RX_FRAMES          8U // Declare 8 data frames
-#define  DBGUART_RX_FRAMES_OVRMSK   0x0007 // Index Overrun mask
-
 volatile SMPS_DGBUART_FRAME_t rx_frame[DBGUART_RX_FRAMES];
-volatile uint8_t rx_data[DBGUART_RX_FRAMES][SMPS_DBGUART_RX_DLEN];
+volatile uint8_t rx_data[DBGUART_RX_FRAMES][DBGUART_RX_BUFFER_SIZE];
 volatile uint16_t rx_data_size = (sizeof(rx_data[0])/sizeof(rx_data[0][0]));
 
 // --------------------------------------
@@ -60,38 +70,119 @@ volatile uint16_t smpsDebugUART_BuildFrame(
 
 volatile uint16_t DebugUART_TimingUpdate(void) {
 
+    // Update SEND_PERIOD
+    DebugUART.send_period = 
+        (volatile uint16_t)((float)DBGUART_SEND_PERIOD / (float)task_mgr.task_queue_ubound + 1);
 
-//    if((DebugUART.send_period == 0) || (DebugUART.clear_period == 0)) {
-        uart_send_period = (volatile uint16_t)((((float)UART_SEND_PERIOD / (float)TASK_MGR_PERIOD))-1);
-        uart_clear_period = (volatile uint16_t)((((float)UART_SEND_PERIOD / (float)TASK_MGR_PERIOD))-1);
-//    }
+    DebugUART.clear_period = 
+        (volatile uint16_t)((float)DBGUART_SEND_PERIOD / (float)task_mgr.task_queue_ubound + 1);
 
-/*
-    if(uart_pre_send_period != DebugUART.send_period)
-    {   
-        DebugUART.send_period = uart_send_period;   // Set updated send period
-        uart_pre_send_period = DebugUART.send_period; // Mark as updated
-    }
-
-    if(uart_pre_clear_period != DebugUART.clear_period)
-    {   
-        DebugUART.clear_period = uart_send_period;   // Set updated send period
-        uart_pre_send_period = DebugUART.send_period; // Mark as updated
-    }
-*/
-    
- /*
- * uncomment this block when user with 5G2 framework 
- * 
-    volatile uint16_t tdiv=0;
-    
-    // get software timer divider
-    tdiv = (task_mgr.task_queue_ubound + 1); 
-    
-    // calculate and set internal software timer thresholds
-    DebugUART.send_period = (volatile uint16_t)(UART_SEND_PER / tdiv);
-*/
     return(1);
+}
+
+
+/*!smpsDebugUART_Execute
+ * ************************************************************************************************
+ * Summary:
+ * Top-Level State Machine Function of the Debug UART Protocol
+ *
+ * Parameters:
+ * (none)
+ * 
+ * Returns:
+ *  uint16_t: 1=success, 0=failure
+ *
+ * Description:
+ * 
+ * ************************************************************************************************/
+
+volatile uint16_t smpsDebugUART_Execute(void) {
+
+    volatile uint16_t fres=1;           // Function return value
+    volatile uint16_t i=0, m=0, p=0;    // Auxiliary variables for command execution
+
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    /* DISABLE-GUARD                                                                      */
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    // When DebugUART is disabled, exit here and do not process any data
+    if (!DebugUART.status.bits.enable)
+    { return(1); }
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    /* TIMING UPDATE ON OS QUEUE-SWITCH                                                                    */
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    if (task_mgr.status.bits.queue_switch)
+    { fres &= DebugUART_TimingUpdate(); }
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    /* PROCESS RECEIVED MESSAGES                                                          */
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    if(DebugUART.status.bits.rx_frame_ready)
+    { 
+        // Capture active frame pointer
+        p = DebugUART.active_rx_frame;
+        
+        // Execute all new frames available
+        for (i=0; i<DBGUART_RX_FRAMES; i++) {
+            
+            // Set pointer to oldest frame and move towards latest ones
+            m = ((p+i) & DBGUART_RX_FRAMES_OVRMSK); 
+            
+            // Only process frames which haven't processed yet
+            if ( rx_frame[m].status.bits.frame_complete ) {
+                fres = smpsDebugUART_ProcessCID(&rx_frame[m]); 
+            }
+            
+        }
+        
+        // Reset Frame
+        DebugUART.status.bits.rx_frame_ready = false; // Reset FRAME_READY flag bit
+        DebugUART.status.bits.rx_frame_error = false; // Reset FRAME_ERROR flag bit 
+
+        // Reset RECEIVE Timeout Counter
+        DebugUART.clear_counter = 0;
+        
+    }
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    /* SEND NEXT MESSAGE IN QUEUE                                                         */
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    else if ((DebugUART.send_counter++ > DebugUART.send_period) || (!uart.tx_buffer.status.msg_complete)) 
+    { // Count OS function calls until UART send period is exceeded
+      // Send message and reset UART send interval counter
+        
+        // Reset send counter
+        if(DebugUART.send_counter > DebugUART.send_period)
+            DebugUART.send_counter = 0; 
+
+        // Write message frame to FIFO buffer
+        fres = smpsUART_WriteFIFO(&uart);
+        
+        Nop(); // for debugging purposes
+    } 
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    /* CLEAR RECEIVE BUFFERS WHICH HAVE NOT BEEN PROCESSED WITHIN DEFINED CLEAR_PERIOD    */
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    if (DebugUART.clear_counter++ > DebugUART.clear_period)
+    { // Clear RECEIVE buffer
+    
+        uart.rx_buffer.pointer = 0; // Clear data array pointer
+        uart.rx_buffer.status.buffer_empty = true;
+        uart.rx_buffer.status.buffer_full = false;
+        uart.rx_buffer.status.buffer_overun = false;
+        
+        DebugUART.clear_counter = 0; // Clear BUFFER RESET counter
+    
+    }
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    
+    return(fres);
+
 }
 
 
@@ -120,17 +211,15 @@ volatile uint16_t smpsDebugUART_Initialize(void) {
         rx_frame[i].frame.data = &rx_data[i][0];
     }
     
-    smpsDebugUART_BuildFrame(&tx_frame_cid22, SMPS_DBGUART_CID22, &tx_data_cid22[0], SMPS_DBGUART_CID22_DLEN);
-    smpsDebugUART_BuildFrame(&tx_frame_cid8A, SMPS_DBGUART_CID8A, &tx_data_cid8A[0], SMPS_DBGUART_CID8A_DLEN);
-    
     // Initialize the user-defined DebugUART object
     DebugUART_TimingUpdate(); // Update send period to adjust to OS task call rate
+    
     DebugUART.active_rx_frame = 0;              // Reset pointer to first RECEIVE buffer
     DebugUART.active_rx_dlen = 0;               // Reset data length of receive frame data buffer
     DebugUART.send_counter = 0;                 // Set send period counter
-    DebugUART.send_period = uart_send_period;   // Set updated send period
+    DebugUART.send_period = DebugUART.send_period;   // Set updated send period
     DebugUART.clear_counter = 0;                // Set clear period counter
-    DebugUART.clear_period = uart_clear_period; // Set updated clear period
+    DebugUART.clear_period = DebugUART.clear_period; // Set updated clear period
 
     // Initialize the user-defined UART object
     uart.instance = UART_INSTANCE;              // UART Instance (e.g. 1=UART1, 2=UART2, etc.)
@@ -162,92 +251,16 @@ volatile uint16_t smpsDebugUART_Initialize(void) {
     _DebugUART_RXIF = 0;    // Clear Interrupt flag bit
     _DebugUART_RXIE = 1;    // Enable RX interrupt
     
-    
-    return(fres);
-}
-
-/*!smpsDebugUART_Execute
- * ************************************************************************************************
- * Summary:
- * Top-Level State Machine Function of the Debug UART Protocol
- *
- * Parameters:
- * (none)
- * 
- * Returns:
- *  uint16_t: 1=success, 0=failure
- *
- * Description:
- * 
- * ************************************************************************************************/
-
-volatile uint16_t smpsDebugUART_Execute(void) {
-
-    volatile uint16_t fres=1;           // Function return value
-    volatile uint16_t i=0, m=0, p=0;    // Auxiliary variables for command execution
-
-    volatile static uint16_t msg_stamp; // local counter of UART messages sent
-
-    // Execute Received messages
-    if(DebugUART.status.bits.rx_frame_ready)
-    { 
-        // Capture active frame pointer
-        p = DebugUART.active_rx_frame;
-        
-        // Execute all new frames available
-        for (i=0; i<DBGUART_RX_FRAMES; i++) {
-            
-            // Set pointer to oldest frame and move towards latest ones
-            m = ((p+i) & DBGUART_RX_FRAMES_OVRMSK); 
-            
-            // Only process frames which haven't processed yet
-            if ( rx_frame[m].status.bits.frame_complete ) {
-                fres = smpsDebugUART_ExecuteCID(&rx_frame[m]); 
-            }
-            
-        }
-        
-        // Reset Frame
-        DebugUART.status.bits.rx_frame_ready = false; // Reset FRAME_READY flag bit
-        DebugUART.status.bits.rx_frame_error = false; // Reset FRAME_ERROR flag bit 
-
+    // If UART interface initialization was successful, enable DebugUART Object
+    if(fres) {
+        DebugUART.status.bits.ready = true;  // Set READY bit
+        DebugUART.status.bits.enable = true; // Set ENABLE bit
     }
-    else if ((DebugUART.send_counter++ > DebugUART.send_period) || (!uart.tx_buffer.status.msg_complete)) 
-    { // Count paced main loops until UART send interval is exceeded
-      // Send message and reset UART send interval counter
-        
-        // Reset send counter
-        DebugUART.send_counter = 0; 
+    else
+    {   smpsUART_Close(&uart);  } // Close UART (disables UART peripheral)
 
-        if(uart.tx_buffer.status.msg_complete) 
-        {   // Build the next ID 0x0022 frame
-            msg_stamp++;                // Increment message counter
-            msg_stamp&=0x000F;          // Overrun message counter when >7
-            tx_data_cid22[0] = (48 + msg_stamp);   // Add message counter to send buffer
-            smpsDebugUART_SendFrame(&tx_frame_cid22); 
-        }
-        
-        // Write message frame to FIFO buffer
-        fres = smpsUART_WriteFIFO(&uart);
-        
-        Nop();
-    } 
-
-    
-    if (DebugUART.clear_counter++ > DebugUART.clear_period)
-    { // Clear RECEIVE buffer
-    
-        uart.rx_buffer.pointer = 0; // Clear data array pointer
-        uart.rx_buffer.status.buffer_empty = true;
-        uart.rx_buffer.status.buffer_full = false;
-        uart.rx_buffer.status.buffer_overun = false;
-        
-        DebugUART.clear_counter = 0; // Clear BUFFER RESET counter
-    
-    }
-    
+    // Return success/failure of function execution
     return(fres);
-
 }
 
 /*!smpsDebugUART_BuildFrame
@@ -272,12 +285,12 @@ volatile uint16_t smpsDebugUART_BuildFrame(
     volatile uint16_t fres=1;
     
     // Build TRANSMIT frame 
-    msg_frame->frame.sof = START_OF_FRAME; // Set START_OF_FRAME
+    msg_frame->frame.sof = DBGUART_START_OF_FRAME; // Set START_OF_FRAME
     msg_frame->frame.cid.value = id; // Set message ID
     msg_frame->frame.dlen.value = data_length; // Set message data length
     msg_frame->frame.data = data; // Set pointer to data array
     msg_frame->frame.crc.value = 0; // Clear frame CRC16
-    msg_frame->frame.eof = END_OF_FRAME; // Set END_OF_FRAME
+    msg_frame->frame.eof = DBGUART_END_OF_FRAME; // Set END_OF_FRAME
 
     msg_frame->status.value = 0; // Clear status bits
     
@@ -386,7 +399,7 @@ void __attribute__((__interrupt__, auto_psv)) _DebugUART_RXInterrupt()
                 uart.rx_buffer.pointer = 0; // Keep RECEIVE buffer pointer at zero
 
                 // Check for START_OF_FRAME
-                if(rx_char == START_OF_FRAME) { 
+                if(rx_char == DBGUART_START_OF_FRAME) { 
                     rx_frame[DebugUART.active_rx_frame].frame.sof = rx_char; // Copy into frame buffer
                     uart.rx_buffer.pointer = DBGUART_SOF_LENGTH; // Set RECEIVE buffer pointer to start of ID
                     DebugUART.rx_status.bits.SOF_detected = true; // Set START_OF_FRAME status flag bit
@@ -396,7 +409,7 @@ void __attribute__((__interrupt__, auto_psv)) _DebugUART_RXInterrupt()
             case FDEC_STAT_GET_ID:
                 // START_OF_FRAME has been detected, waiting for ID
                 
-                if ((uart.rx_buffer.pointer == (DBGUART_INDEX_ID + 1)) && (rx_char == START_OF_FRAME)) {
+                if ((uart.rx_buffer.pointer == (DBGUART_INDEX_ID + 1)) && (rx_char == DBGUART_START_OF_FRAME)) {
                 // If HIGH BYTE of ID is START_OF_FRAME, reset START_OF_FRAME
                     uart.rx_buffer.pointer = DBGUART_SOF_LENGTH; // Set RECEIVE buffer pointer to start of ID
                 }
@@ -454,7 +467,7 @@ void __attribute__((__interrupt__, auto_psv)) _DebugUART_RXInterrupt()
 
                 rx_frame[DebugUART.active_rx_frame].frame.eof = rx_char;
                 
-                if(rx_char == END_OF_FRAME) { 
+                if(rx_char == DBGUART_END_OF_FRAME) { 
                     
                     DebugUART.rx_status.bits.EOF_received = true; // Set EOF_RECEIVED status flag bit
                     

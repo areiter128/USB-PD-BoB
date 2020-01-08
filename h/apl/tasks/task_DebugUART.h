@@ -39,8 +39,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "apl/resources/debug_uart/smpsDebugUART.h"
-#include "dsPIC33C/p33SMPS_uart.h"
+//#include "apl/resources/debug_uart/smpsDebugUART.h"
+//#include "dsPIC33C/p33SMPS_uart.h"
 
 #ifdef	__cplusplus
 extern "C" {
@@ -50,7 +50,7 @@ extern "C" {
  * UART Hardware Definitions
  * ********************************************************************************/
     
-#define UART_INSTANCE    1  // Number of UART peripheral instance (1=UART1, 2=UART2, etc)
+#define UART_INSTANCE       1  // Number of UART peripheral instance (1=UART1, 2=UART2, etc)
     
 #define _DebugUART_RXIP     _U1RXIP // UART1 Receive Interrupt Priority Bits    
 #define _DebugUART_RXIF     _U1RXIF // UART1 Receive Interrupt Flag Bit
@@ -64,6 +64,10 @@ extern "C" {
 #define _DebugUART_ErrorIF  _U1EIF  // UART1 Error Interrupt Flag Bit
 #define _DebugUART_ErrorIE  _U1EIE  // UART1 Error Interrupt Enable Control Bit
     
+#define _DebugUART_ErrorInterrupt   _U1EInterrupt // Interrupt Vector Name of UART1 Error Interrupt
+#define _DebugUART_RXInterrupt      _U1RXInterrupt // Interrupt Vector Name of UART1 Receive Interrupt
+#define _DebugUART_TXInterrupt      _U1TXInterrupt // Interrupt Vector Name of UART1 Transmit Interrupt
+    
 /* *********************************************************************************
  * Transmission Data Frame Definitions
  * ********************************************************************************/
@@ -71,40 +75,29 @@ extern "C" {
 //#define  SMPS_DBGUART_CID11          0x11
 
     
-/*!CID22
+/*!CID100
  *  *********************************************************************************
- * CID22
+ * CID100
  * ********************************************************************************/
 
     
-#define  SMPS_DBGUART_CID22          0x0022
-#define  SMPS_DBGUART_CID22_DLEN     32U
-    
-extern volatile SMPS_DGBUART_FRAME_t tx_frame_cid22;
-extern volatile uint8_t tx_data_cid22[] ;
-extern volatile uint16_t tx_data_cid22_size;
-
-#define  SMPS_DBGUART_CID8A          0x008A
-#define  SMPS_DBGUART_CID8A_DLEN     8U
-
-extern volatile SMPS_DGBUART_FRAME_t tx_frame_cid8A;
-extern volatile uint8_t tx_data_cid8A[];
-extern volatile uint16_t tx_data_cid8A_size;
-    
-#define  SMPS_DBGUART_CID100         0x0100
-#define  SMPS_DBGUART_CID100_DLEN    8U
-
-extern volatile SMPS_DGBUART_FRAME_t tx_frame_cid100;
-extern volatile uint8_t tx_data_cid100[];
-extern volatile uint16_t tx_data_cid100_size;
-
+//#define  SMPS_DBGUART_CID100        0x0100
+//#define  SMPS_DBGUART_CID100_DLEN   32U
+//    
+//extern volatile SMPS_DGBUART_FRAME_t tx_frame_cid100;
+//extern volatile uint8_t tx_data_cid100[];
+//extern volatile uint16_t tx_data_cid100_size;
+//
 
 /* *********************************************************************************
  * Receive Data Frame Definitions
  * ********************************************************************************/
-#define SMPS_DBGUART_CID_LED_RD     0x0030
-#define SMPS_DBGUART_CID_LED_GN     0x0031
 
+/* *********************************************************************************
+ * Global task function prototypes
+ * ********************************************************************************/
+extern volatile uint16_t task_DebugUART_Initialize(void);
+extern volatile uint16_t task_DebugUART_Execute(void);
 
 
 #ifdef	__cplusplus

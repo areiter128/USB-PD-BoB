@@ -45,33 +45,34 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-#ifndef RX_BUFFER_SIZE
-  #define RX_BUFFER_SIZE      32U // Number of Bytes of one RECEIVE buffer
+/* *********************************************************************************
+ * Digital Power Debugging UART Communication Data Buffer Definitions
+ * ********************************************************************************/
+#ifndef DBGUART_RX_BUFFER_SIZE
+  #define DBGUART_RX_BUFFER_SIZE    32U // Number of Bytes of one RECEIVE buffer
 #endif
-#ifndef RX_BUFFER_NO
-  #define RX_BUFFER_NO        16U // Number of RECEIVE buffers
+#ifndef DBGUART_RX_FRAMES
+  #define DBGUART_RX_FRAMES         16U // Number of RECEIVE buffers
+  #define DBGUART_RX_FRAMES_OVRMSK  0x000F // Index Overrun mask
 #endif
-#ifndef TX_BUFFER_SIZE
-  #define TX_BUFFER_SIZE      64U // Number of Bytes of one TRANSMIT buffer
+#ifndef DBGUART_TX_BUFFER_SIZE
+  #define DBGUART_TX_BUFFER_SIZE    64U // Number of Bytes of one TRANSMIT buffer
 #endif
 
-#define SMPS_DBGUART_RX_DLEN  32U // Each frame with 32 bytes of data content
+/* *********************************************************************************
+ * Digital Power Debugging UART Communication Timing Definitions
+ * ********************************************************************************/
+#define DBGUART_SEND_PERIOD    (float)0.250   // Send a UART message every n seconds
+#define DBGUART_CLEAR_PERIOD   (float)2.5     // Clear the UART receive buffer after n seconds of inactivity
+    
+#define DBGUART_SEND_PER   (uint16_t)((((float)DBGUART_SEND_PERIOD / (float)TASK_MGR_TIME_STEP))-1) // LED toggle interval of (2999 + 1) x 100usec = 100ms
+#define DBGUART_CLEAR_PER  (uint16_t)((((float)DBGUART_CLEAR_PERIOD / (float)TASK_MGR_TIME_STEP))-1) // interval of (2999 + 1) x 100usec = 100ms
 
-    
-#define UART_SEND_PERIOD            (float)1.0     // Send a UART message every 1000 ms
-#define UART_SEND_PERIOD_STEP       (float)0.05    // Send a UART message send period changes in 100 ms steps
-#define UART_SEND_PERIOD_MINIMUM    (float)0.05    // Send a UART message every 100 ms
-
-#define UART_SEND_PER      (uint16_t)((((float)UART_SEND_PERIOD / (float)TASK_MGR_PERIOD))-1) // LED toggle interval of (2999 + 1) x 100usec = 100ms
-#define UART_SEND_PER_STEP (uint16_t)(((float)UART_SEND_PERIOD_STEP / (float)TASK_MGR_PERIOD)) // LED toggle interval of (2999 + 1) x 100usec = 100ms
-#define UART_SEND_PER_MIN  (uint16_t)((((float)UART_SEND_PERIOD_MINIMUM / (float)TASK_MGR_PERIOD))-1) // LED toggle interval of (2999 + 1) x 100usec = 100ms
-    
-    
 /* *********************************************************************************
  * Digital Power Debugging UART Communication Frame Definitions
  * ********************************************************************************/
-#define START_OF_FRAME 0x55 // Every frame starts with a 0x55 to support AUTOBAUD (optional)
-#define END_OF_FRAME   0x0D // Every frame ends with a 0x0D as end-marker
+#define DBGUART_START_OF_FRAME  0x55 // Every frame starts with a 0x55 to support AUTOBAUD (optional)
+#define DBGUART_END_OF_FRAME    0x0D // Every frame ends with a 0x0D as end-marker
 
 #define DBGUART_SOF_LENGTH      (uint16_t)1
 #define DBGUART_CID_LENGTH      (uint16_t)2
@@ -89,11 +90,10 @@ extern "C" {
 #define DBGUART_INDEX_DATA      (uint16_t)(DBGUART_SOF_LENGTH + DBGUART_CID_LENGTH + DBGUART_DLEN_LENGTH)
  
 /* *********************************************************************************
- * PROTOCOL STANDARD ID's
+ * PROTOCOL STANDARD CID's
  * *********************************************************************************/
-#define DBGUART_CID_TEST                0x0022 // Test CID used for communication robustness testing
-
 #define DBGUART_CID_ACKNOWLEDGEMENT     0x0100 // Acknowledge-Bit for handshake CIDs
+    
 #define DBGUART_CID_READ_FROM_ADDR      0xE000 // Standard CID for reading from a memory address
 #define DBGUART_CID_WRITE_TO_ADDR       0xE001 // Standard CID for writing to a memory address
 #define DBGUART_CID_AND_BIT_MASK        0xE002 // Standard CID for AND-ing a bit mask with a value at a memory address
@@ -102,15 +102,11 @@ extern "C" {
 #define DBGUART_CID_BIT_SET             0xE005 // Standard CID for setting a bit within a value at a memory address
 #define DBGUART_CID_BIT_CLEAR           0xE006 // Standard CID for clearing a bit within a value at a memory address
     
-#define DBGUART_CID_READ_COEFFICIENTS   0xC000 // Standard CID for reading recent set of coefficients
-#define DBGUART_CID_WRITE_COEFFICIENTS  0xC001 // Standard CID for writing a new set of coefficients
-    
 /* *********************************************************************************
  * Digital Power Debugging UART Communication Frame
  * ================================================
  * 
  * 1) Data Frame Format:
- * 
  * 
  *     SOF   IDH   IDL   DLH   DLL   DAT0  DAT1  ?  DATn  CRCH  CRCL  EOF
  *    [0x55][0xnn][0xmm][0xkk][0xkk][0xkk][0xkk][?][0xkk][0xkk][0xkk][0x0D]
@@ -153,7 +149,7 @@ extern "C" {
  *    - Default Command Set IDs
  *    - Proprietary Command Set IDs
  * 
- *  * ********************************************************************************/
+ * ********************************************************************************/
     
     typedef union {
         struct {
@@ -161,9 +157,11 @@ extern "C" {
             volatile bool rx_frame_error    : 1; // Bit 1: Frame error detected during decoding
             volatile bool tx_frame_ready    : 1; // Bit 2: TRANSMIT_FRAME ready for transmission 
             volatile bool tx_complete       : 1; // Bit 3: TRANSMIT_FRAME data transmission completed
-            volatile unsigned               : 12;// Bit 15-4: (reserved)
+            volatile unsigned               : 10;// Bit 13-4: (reserved)
+            volatile bool ready             : 1; // Bit 14: READY bit indicating that UART interface is initialized and ready
+            volatile bool enable            : 1; // Bit 15: Enable Debug UART communication
         } __attribute__((packed)) bits; // Common debugging UART object status bits
-        volatile uint16_t value; // Common debugging UART object status word
+        volatile uint16_t value;        // Common debugging UART object status word
     } SMPS_DBGUART_STATUS_t;  // Common debugging UART object status
         
     #define FDEC_STAT_SOF_SYNC  0b0000000000000000
@@ -184,7 +182,7 @@ extern "C" {
             volatile unsigned EOF_received      : 1; // Bit 5:  END_OF_FRAME found flag bit
             volatile unsigned                   : 1; // Bit 6:  (reserved)
             volatile unsigned                   : 1; // Bit 7:  (reserved)
-            
+            //
             volatile unsigned                   : 1; // Bit 8:  (reserved)
             volatile unsigned                   : 1; // Bit 9:  (reserved)
             volatile unsigned                   : 1; // Bit 10: (reserved)
@@ -195,34 +193,34 @@ extern "C" {
             volatile unsigned frame_complete    : 1; // Bit 15: FRAME_COMPLETE flag bit
         } __attribute__((packed)) bits; // RECEIVE frame decoding status bits
         volatile uint16_t value;        // RECEIVE frame decoding status word
-    } SMPS_DBGUART_FRAME_STATUS_t; // SMPS Debug UART data frame encoding/decoding status object
+    } SMPS_DBGUART_FRAME_STATUS_t;      // SMPS Debug UART data frame encoding/decoding status object
     
     typedef struct {
-        volatile uint8_t sof;       // START_OF_FRAME byte
+        volatile uint8_t sof;           // START_OF_FRAME byte
         union {
             struct {
                 volatile uint8_t idl;   // ID High-Byte
                 volatile uint8_t idh;   // ID LOW-Byte
-            } bytes;
-            volatile uint16_t value;
-        } cid;                       // 16-bit wide command ID
+            } __attribute__((packed)) bytes; // 2x 8-bit wide data length access
+            volatile uint16_t value;    // 16-bit wide data length value
+        } cid;                          // 16-bit wide command ID
         union {
             struct {
                 volatile uint8_t dll;   // ID High-Byte
                 volatile uint8_t dlh;   // ID LOW-Byte
-            } bytes;                    // 2x 8-bit wide data length access
+            } __attribute__((packed)) bytes; // 2x 8-bit wide data length access
             volatile uint16_t value;    // 16-bit wide data length value
         }dlen;
-        volatile uint8_t* data;     // Data buffer
+        volatile uint8_t* data;         // Data buffer
         union{
             struct {
                 volatile uint8_t crcl;  // CRC16 High-Byte
                 volatile uint8_t crch;  // CRC16 LOW-Byte
-            } bytes;
+            } __attribute__((packed)) bytes; // 2x 8-bit wide data length access
             volatile uint16_t value;    // 16-bit wide CRC16 value
-        } crc;                      // 16-bit wide Cyclic Redundancy Checksum (CRC)
-        volatile uint8_t eof;       // END_OF_FRAME byte
-    } SMPS_DBGUART_DATA_FRAME_t;    // SMPS Debug UART Protocol Communication Data Frame
+        } crc;                          // 16-bit wide Cyclic Redundancy Checksum (CRC)
+        volatile uint8_t eof;           // END_OF_FRAME byte
+    } SMPS_DBGUART_DATA_FRAME_t;        // SMPS Debug UART Protocol Communication Data Frame
     
     typedef struct {
         volatile SMPS_DBGUART_DATA_FRAME_t frame;    // Data frame object
@@ -255,8 +253,8 @@ extern volatile SMPS_DBGUART_t DebugUART;
 extern volatile uint16_t smpsDebugUART_Initialize(void);
 extern volatile uint16_t smpsDebugUART_Execute(void);
 
-extern volatile uint16_t smpsDebugUART_ExecuteCID(volatile SMPS_DGBUART_FRAME_t* msg_frame);
-extern volatile uint16_t smpsDebugUART_SendFrame(volatile SMPS_DGBUART_FRAME_t* msg_frame);
+extern volatile uint16_t smpsDebugUART_ProcessCID(volatile SMPS_DGBUART_FRAME_t* rx_frame);
+extern volatile uint16_t smpsDebugUART_SendFrame(volatile SMPS_DGBUART_FRAME_t* tx_frame);
 
 
 
