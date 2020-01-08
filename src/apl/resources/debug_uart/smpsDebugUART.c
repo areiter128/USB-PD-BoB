@@ -24,7 +24,7 @@
  * 
  * ********************************************************************************/
 
-#define UART_RX_BUFFER_SIZE   64U  // Size of the internal RECEIVE data buffer of the UART driver
+#define UART_RX_BUFFER_SIZE  256U  // Size of the internal RECEIVE data buffer of the UART driver
 #define UART_TX_BUFFER_SIZE  256U  // Size of the internal TRANSMIT data buffer of the UART driver
 #define UART_TX_PACKAGE_SIZE  16U  // Size of one data package transmitted at a time
 volatile uint8_t  uart_rx_buffer[UART_RX_BUFFER_SIZE];
@@ -39,7 +39,9 @@ volatile UART_t uart; // declare private UART object from p33SMPS_uart library
  *
  * Please don't mistake UART buffers and DebugUART buffers!
  * UART buffers are used to handle incoming and outgoing data
- * on hardware level. 
+ * on hardware level. The UART driver provides a wide data space
+ * used as Tx/Rx pipelines of multiple incoming or outgoing data
+ * frames.
  * 
  * DebugUART buffers are used to prepare Tx and/or sort data 
  * into Rx data frames.
@@ -246,7 +248,7 @@ volatile uint16_t smpsDebugUART_Initialize(void) {
     fres &= smpsUART_OpenPort(&uart);
 
     // Initialize RECEIVE interrupt
-    _DebugUART_RXIP = 2;    // Set RECEIVE interrupt priority
+    _DebugUART_RXIP = DBGUART_RX_ISR_PRIORITY;    // Set RECEIVE interrupt priority
     _DebugUART_RXIF = 0;    // Clear Interrupt flag bit
     _DebugUART_RXIE = 1;    // Enable RX interrupt
     
@@ -323,11 +325,11 @@ volatile uint16_t smpsDebugUART_SendFrame(volatile SMPS_DGBUART_FRAME_t* msg_fra
     ubound = (volatile uint8_t)uart.tx_buffer.data_size;
     
     // Build UART transmission frame
-    uart_tx_buffer[ubound+0] = msg_frame->frame.sof;             // Set START_OF_FRAME
-    uart_tx_buffer[ubound+1] = msg_frame->frame.cid.bytes.idh;    // Set ID High Byte
-    uart_tx_buffer[ubound+2] = msg_frame->frame.cid.bytes.idl;    // Set ID Low Byte
-    uart_tx_buffer[ubound+3] = msg_frame->frame.dlen.bytes.dlh;  // Set Data Length High Byte
-    uart_tx_buffer[ubound+4] = msg_frame->frame.dlen.bytes.dll;  // Set Data Length Low Byte
+    uart_tx_buffer[ubound+0] = msg_frame->frame.sof;            // Set START_OF_FRAME
+    uart_tx_buffer[ubound+1] = msg_frame->frame.cid.bytes.idh;  // Set ID High Byte
+    uart_tx_buffer[ubound+2] = msg_frame->frame.cid.bytes.idl;  // Set ID Low Byte
+    uart_tx_buffer[ubound+3] = msg_frame->frame.dlen.bytes.dlh; // Set Data Length High Byte
+    uart_tx_buffer[ubound+4] = msg_frame->frame.dlen.bytes.dll; // Set Data Length Low Byte
 
     // Copy data buffer
     for (i=0; i<msg_frame->frame.dlen.value; i++)
@@ -338,13 +340,13 @@ volatile uint16_t smpsDebugUART_SendFrame(volatile SMPS_DGBUART_FRAME_t* msg_fra
     msg_frame->frame.crc.value = smpsCRC_GetStandard_Data8CRC16(&uart_tx_buffer[0], ubound, i);
 
     // Add CRC to data frame
-    i += ubound;                                              // Add buffer pointer offset
-    uart_tx_buffer[i++] = msg_frame->frame.crc.bytes.crch;    // Set CRC16 High Byte
-    uart_tx_buffer[i++] = msg_frame->frame.crc.bytes.crcl;    // Set CRC16 Low Byte
+    i += ubound;                                            // Add buffer pointer offset
+    uart_tx_buffer[i++] = msg_frame->frame.crc.bytes.crch;  // Set CRC16 High Byte
+    uart_tx_buffer[i++] = msg_frame->frame.crc.bytes.crcl;  // Set CRC16 Low Byte
 
     uart_tx_buffer[i++] = msg_frame->frame.eof;             // Set END_OF_FRAME
 
-    uart.tx_buffer.buffer = &uart_tx_buffer[0];   // Set pointer to internal FIFO data buffer
+    uart.tx_buffer.buffer = &uart_tx_buffer[0];    // Set pointer to internal FIFO data buffer
     uart.tx_buffer.data_size = (uint8_t)(i);       // Set size of data to be sent
 
     

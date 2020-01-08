@@ -49,14 +49,14 @@ extern "C" {
  * Digital Power Debugging UART Communication Data Buffer Definitions
  * ********************************************************************************/
 #ifndef DBGUART_RX_BUFFER_SIZE
-  #define DBGUART_RX_BUFFER_SIZE    32U // Number of Bytes of one RECEIVE buffer
+  #define DBGUART_RX_BUFFER_SIZE    32U // Number of Bytes of one frame RECEIVE buffer
 #endif
 #ifndef DBGUART_RX_FRAMES
   #define DBGUART_RX_FRAMES         16U // Number of RECEIVE buffers
   #define DBGUART_RX_FRAMES_OVRMSK  0x000F // Index Overrun mask
 #endif
 #ifndef DBGUART_TX_BUFFER_SIZE
-  #define DBGUART_TX_BUFFER_SIZE    64U // Number of Bytes of one TRANSMIT buffer
+  #define DBGUART_TX_BUFFER_SIZE    64U // Number of Bytes of one frame TRANSMIT buffer
 #endif
 
 /* *********************************************************************************
