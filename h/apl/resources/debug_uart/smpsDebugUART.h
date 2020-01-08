@@ -63,7 +63,7 @@ extern "C" {
  * Digital Power Debugging UART Communication Timing Definitions
  * ********************************************************************************/
 #define DBGUART_SEND_PERIOD    (float)0.250   // Send a UART message every n seconds
-#define DBGUART_CLEAR_PERIOD   (float)2.5     // Clear the UART receive buffer after n seconds of inactivity
+#define DBGUART_CLEAR_PERIOD   (float)2.500   // Clear the UART receive buffer after n seconds of inactivity
     
 #define DBGUART_SEND_PER   (uint16_t)((((float)DBGUART_SEND_PERIOD / (float)TASK_MGR_TIME_STEP))-1) // LED toggle interval of (2999 + 1) x 100usec = 100ms
 #define DBGUART_CLEAR_PER  (uint16_t)((((float)DBGUART_CLEAR_PERIOD / (float)TASK_MGR_TIME_STEP))-1) // interval of (2999 + 1) x 100usec = 100ms
