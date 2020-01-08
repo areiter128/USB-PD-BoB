@@ -321,6 +321,12 @@ volatile uint16_t smpsDebugUART_SendFrame(volatile SMPS_DGBUART_FRAME_t* msg_fra
     volatile uint8_t ubound=0;
     
     
+    // Protect against buffer overrun
+    if((msg_frame->frame.dlen.value + DBGUART_FRAME_OVHD_LEN) >= UART_TX_BUFFER_SIZE)
+    { uart.tx_buffer.status.buffer_overun = true; return(0); }
+    else
+    { uart.tx_buffer.status.buffer_overun = false; }
+    
     // Capture the recent buffer status
     ubound = (volatile uint8_t)uart.tx_buffer.data_size;
     
