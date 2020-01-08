@@ -25,8 +25,8 @@
  * 07/29/2016   initial release
  * **************************************************************************************/
 
-#ifndef _HARDWARE_ABSTRACTION_LAYER_SYSTEM_SCALING_H_
-#define	_HARDWARE_ABSTRACTION_LAYER_SYSTEM_SCALING_H_
+#ifndef _SYSTEM_CONFIGURATION_SCALING_H_
+#define	_SYSTEM_CONFIGURATION_SCALING_H_
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
@@ -214,5 +214,5 @@
 #define TEMP_OFFSET_TICKS           (uint16_t)((float)TEMP_SENSE_OFFSET * (float)HSADC_SCALER)
 #define TEMP_SLOPE_TICKS            (uint16_t)((float)TEMP_SENSE_SLOPE * (float)HSADC_SCALER)
 
-#endif	/* _HARDWARE_ABSTRACTION_LAYER_SYSTEM_SCALING_H_ */
+#endif	/* _SYSTEM_CONFIGURATION_SCALING_H_ */
 

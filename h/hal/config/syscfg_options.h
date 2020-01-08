@@ -25,8 +25,8 @@
  * 08/19/2016   initial release
  * **************************************************************************************/
 
-#ifndef _APPLICATION_LAYER_SYSTEM_OPTIONS_H_
-#define	_APPLICATION_LAYER_SYSTEM_OPTIONS_H_
+#ifndef _SYSTEM_CONFIGURATION_OPTIONS_H_
+#define	_SYSTEM_CONFIGURATION_OPTIONS_H_
 
 #define DBG_MODE_GPIO       1       // the debug pin is used as GPIO
 #define DBG_MODE_DAC        2       // the debug pin is used as digital-to-analog output
@@ -71,5 +71,5 @@
 
 #endif
 
-#endif	/* SYSTEM_OPTIONS_H */
+#endif	/* _SYSTEM_CONFIGURATION_OPTIONS_H_ */
 
