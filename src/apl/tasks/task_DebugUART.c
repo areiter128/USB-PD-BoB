@@ -49,11 +49,16 @@ volatile uint16_t task_DebugUART_Execute(void) {
     // If UART interface has already been successfully initialized, 
     // Execute DebugUART state machine
     if(DebugUART.status.bits.ready) {
+        
+ //       tx_frame_cid100.frame
+        
+        
         fres = smpsDebugUART_Execute();
     }
     // If UART initialization has not been performed yet, 
     // do so now.
     else {
+
         fres = smpsDebugUART_Initialize();
     }
 
@@ -66,11 +71,11 @@ volatile uint16_t task_DebugUART_Initialize(void) {
     
     volatile uint16_t fres=1;
 
-//    fres &= smpsDebugUART_BuildFrame(
-//                    &tx_frame_cid100, SMPS_DBGUART_CID100, 
-//                    &tx_data_cid100[0], 
-//                    SMPS_DBGUART_CID100_DLEN
-//            );
+    fres &= smpsDebugUART_BuildFrame(
+                &tx_frame_cid100, SMPS_DBGUART_CID100, 
+                &tx_data_cid100[0], 
+                SMPS_DBGUART_CID100_DLEN
+        );
 
     fres &= smpsDebugUART_Initialize();
     
