@@ -56,7 +56,7 @@ volatile uint16_t rx_data_size = (sizeof(rx_data[0])/sizeof(rx_data[0][0]));
 // Declare private function prototypes
 volatile uint16_t DebugUART_TimingUpdate(void);
 
-volatile uint16_t smpsDebugUART_BuildFrame(
+volatile uint16_t smpsDebugUART_InitializeFrame(
     volatile SMPS_DGBUART_FRAME_t* msg_frame, 
     volatile uint16_t id, volatile uint8_t* data, volatile uint16_t data_length);
 
@@ -185,7 +185,6 @@ volatile uint16_t smpsDebugUART_Execute(void) {
 
 }
 
-
 /*!smpsDebugUART_Initialize
  * ************************************************************************************************
  * Summary:
@@ -263,10 +262,10 @@ volatile uint16_t smpsDebugUART_Initialize(void) {
     return(fres);
 }
 
-/*!smpsDebugUART_BuildFrame
+/*!smpsDebugUART_InitializeFrame
  * ************************************************************************************************
  * Summary:
- * Packs up user data in a SMPS Debug UART data frame
+ * Packs up user data in a SMPS Debug UART data frame by adding SOF, CID, DLEN, EOF and CRC
  *
  * Parameters:
  * (none)
@@ -278,7 +277,7 @@ volatile uint16_t smpsDebugUART_Initialize(void) {
  * 
  * ************************************************************************************************/
 
-volatile uint16_t smpsDebugUART_BuildFrame(
+volatile uint16_t smpsDebugUART_InitializeFrame(
             volatile SMPS_DGBUART_FRAME_t* msg_frame, 
             volatile uint16_t id, volatile uint8_t* data, volatile uint16_t data_length) {
     

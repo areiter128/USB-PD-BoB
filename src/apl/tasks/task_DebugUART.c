@@ -71,7 +71,7 @@ volatile uint16_t task_DebugUART_Initialize(void) {
     
     volatile uint16_t fres=1;
 
-    fres &= smpsDebugUART_BuildFrame(
+    fres &= smpsDebugUART_InitializeFrame(
                 &tx_frame_cid100, SMPS_DBGUART_CID100, 
                 &tx_data_cid100[0], 
                 SMPS_DBGUART_CID100_DLEN

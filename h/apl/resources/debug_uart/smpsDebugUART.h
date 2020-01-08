@@ -255,7 +255,7 @@ extern volatile uint16_t smpsDebugUART_Execute(void);
 
 extern volatile uint16_t smpsDebugUART_ProcessCID(volatile SMPS_DGBUART_FRAME_t* rx_frame);
 extern volatile uint16_t smpsDebugUART_SendFrame(volatile SMPS_DGBUART_FRAME_t* tx_frame);
-extern volatile uint16_t smpsDebugUART_BuildFrame(volatile SMPS_DGBUART_FRAME_t* msg_frame, 
+extern volatile uint16_t smpsDebugUART_InitializeFrame(volatile SMPS_DGBUART_FRAME_t* msg_frame, 
             volatile uint16_t id, volatile uint8_t* data, volatile uint16_t data_length);
 
 
