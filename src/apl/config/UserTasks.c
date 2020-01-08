@@ -69,6 +69,7 @@ volatile uint16_t (*Task_Table[])(void) = {
     APPLICATION_Initialize, // initialize system-wide application data structure
     
     /* ==================== USER FUNCTIONS LIST ==================== */
+    
     init_PowerControl,      // Initializes the power controller of both 4-SWBB converters
     reset_PowerControl,     // Shuts down both 4-SWBB converters
     exec_PowerControl,      // Executes the power controller state machine
