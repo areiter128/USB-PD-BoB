@@ -44,7 +44,8 @@
 /* User Tasks */
 #include "apl/tasks/task_Idle.h"
 #include "apl/tasks/task_PowerControl.h"
-#include "../h/apl/tasks/task_PDStack.h"
+#include "apl/tasks/task_PDStack.h"
+#include "apl/tasks/task_DebugUART.h"
 
 /* ***********************************************************************************************
  * GLOBAL APPLICATION LAYER USER OPTIONS

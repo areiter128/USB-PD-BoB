@@ -32,7 +32,8 @@
 #include "hal/hal.h"
 #include "mcal/mcal.h"
 
+#include "apl/tasks/task_DebugUART.h"
 #include "apl/tasks/task_Idle.h"
 #include "apl/tasks/task_PowerControl.h"
-#include "apl/tasks/task_UART.h"
+#include "apl/tasks/task_PDStack.h"
 
