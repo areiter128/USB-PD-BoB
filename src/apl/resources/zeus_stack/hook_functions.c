@@ -146,7 +146,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.bits.GO = 0;
             /* Clear the enable pin for the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_CLEAR);
-
+            port_led_off(u8PortNum);
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 0V\r\n");
             break;
 
@@ -158,7 +158,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
-            
+            port_led_on(u8PortNum);
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 5V\r\n");
             break;
 
@@ -170,7 +170,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
-
+            port_led_on(u8PortNum);
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 9V\r\n");
             break;
 
@@ -182,7 +182,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
-
+            port_led_on(u8PortNum);
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 15V\r\n");
             break;
 
@@ -194,11 +194,12 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
-
+            port_led_on(u8PortNum);
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 20V\r\n");
             break;
 
         default:
+            port_led_off(u8PortNum);
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: Invalid Voltage Selection\r\n");
             break;
 
