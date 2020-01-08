@@ -16,7 +16,7 @@
  * CGS Date:            11/08/19
  * *******************************************************************************
  * User:                M91406
- * Date/Time:           12/23/2019 5:15:40 AM
+ * Date/Time:           01/08/2020 11:42:18 AM
  * *******************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_CHB_ILOOP_H__
@@ -27,7 +27,7 @@
 #include <stdint.h> // include standard integer number data types
 #include <stdbool.h> // include standard boolean data types (true/false)
 
-#include "../h/apl/resources/npnz16b.h" // include NPNZ library header file
+#include "../h/apl/resources/power_control/npnz16b.h" // include NPNZ library header file
 
 /* *******************************************************************************
  * Data Arrays:
