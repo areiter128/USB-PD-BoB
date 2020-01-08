@@ -216,10 +216,9 @@ section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
 .ndata                      0x1000                   0            0x5c  (92)
 .nbss                       0x105c                   0             0xa  (10)
-_063459005e16653a           0x1066                   0             0xa  (10)
-_062B29005e16653b           0x1070                   0             0xa  (10)
-_0625A9005e16653b           0x107a                   0             0xa  (10)
-_063029005e16653c           0x1084                   0             0xa  (10)
+_063029005e166804           0x1066                   0            0x14  (20)
+_063229005e166805           0x107a                   0             0xa  (10)
+_063459005e166806           0x1084                   0             0xa  (10)
 .nbss                       0x108e                   0             0xa  (10)
 .ndata                      0x1098                   0             0x4  (4)
 .nbss                       0x109c                   0             0x4  (4)
@@ -5910,27 +5909,24 @@ __c30_signature
                     0x105c                  _thermal_shutdown_active
                     0x105e                  _port_max_power
 
-_063459005e16653a
-                    0x1066          0xa
- _063459005e16653a
+_063029005e166804
+                    0x1066         0x14
+ _063029005e166804
                     0x1066          0xa build/00173_USB_PD_BOB_R21/production/_ext/2106459847/cha_iloop.o
                     0x1066                  _cha_iloop_coefficients
-
-_062B29005e16653b
-                    0x1070          0xa
- _062B29005e16653b
+ _063029005e166804
                     0x1070          0xa build/00173_USB_PD_BOB_R21/production/_ext/2106459847/cha_vloop.o
                     0x1070                  _cha_vloop_coefficients
 
-_0625A9005e16653b
+_063229005e166805
                     0x107a          0xa
- _0625A9005e16653b
+ _063229005e166805
                     0x107a          0xa build/00173_USB_PD_BOB_R21/production/_ext/2106459847/chb_iloop.o
                     0x107a                  _chb_iloop_coefficients
 
-_063029005e16653c
+_063459005e166806
                     0x1084          0xa
- _063029005e16653c
+ _063459005e166806
                     0x1084          0xa build/00173_USB_PD_BOB_R21/production/_ext/2106459847/chb_vloop.o
                     0x1084                  _chb_vloop_coefficients
 
