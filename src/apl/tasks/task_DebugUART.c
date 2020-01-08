@@ -26,6 +26,7 @@ volatile uint8_t tx_data_cid100[SMPS_DBGUART_CID100_DLEN] = {
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
         };
 volatile uint16_t tx_data_cid100_size = (sizeof(tx_data_cid100)/sizeof(tx_data_cid100[0]));
+volatile uint16_t cid100_update_counter = 0;
 
 /*!task_DebugUART_Execute
  * ************************************************************************************************
@@ -50,8 +51,16 @@ volatile uint16_t task_DebugUART_Execute(void) {
     // Execute DebugUART state machine
     if(DebugUART.status.bits.ready) {
         
- //       tx_frame_cid100.frame
-        
+        if(cid100_update_counter++ > DebugUART.send_period) {
+
+            tx_data_cid100[0] = (volatile uint8_t)((c4swbb_1.data.v_out & 0xFF00) >> 8);
+            tx_data_cid100[1] = (volatile uint8_t)(c4swbb_1.data.v_out & 0x00FF);
+            tx_frame_cid100.frame.dlen.value = 2;
+
+            smpsDebugUART_SendFrame(&tx_frame_cid100);
+            
+            cid100_update_counter = 0;
+        }
         
         fres = smpsDebugUART_Execute();
     }
