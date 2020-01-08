@@ -74,10 +74,10 @@ volatile uint16_t DebugUART_TimingUpdate(void) {
 
     // Update SEND_PERIOD
     DebugUART.send_period = 
-        (volatile uint16_t)((float)DBGUART_SEND_PERIOD / (float)task_mgr.task_queue_ubound + 1);
+        (volatile uint16_t)(DBGUART_SEND_PER / task_mgr.task_queue_ubound + 1);
 
     DebugUART.clear_period = 
-        (volatile uint16_t)((float)DBGUART_SEND_PERIOD / (float)task_mgr.task_queue_ubound + 1);
+        (volatile uint16_t)(DBGUART_SEND_PER / task_mgr.task_queue_ubound + 1);
 
     return(1);
 }
