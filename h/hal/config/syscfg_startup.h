@@ -54,7 +54,7 @@
  * 
  * *************************************************************************************************/
 
-#define C4SWBB_POWER_ON_DELAY    (float)(10.0e-3)      // power on delay in [sec]
+#define C4SWBB_POWER_ON_DELAY    (float)(10.0e-3)       // power on delay in [sec]
 #define C4SWBB_RAMP_PERIOD       (float)(10.0e-3)       // ramp period in [sec]
 #define C4SWBB_POWER_GOOD_DELAY  (float)(100.0e-3)      // power good in [sec]
 
