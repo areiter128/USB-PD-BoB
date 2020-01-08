@@ -81,19 +81,19 @@ volatile uint16_t task_DebugUART_Initialize(void) {
     volatile uint16_t fres=1;
 
     // Initialize DebugUART Rx/Tx device pins to communicate via UART adapter
-    HUB_PRTPWR2_INIT_OUTPUT; // Tx Channel
-    HUB_PRTPWR1_INIT_INPUT;  // Rx Channel
+    HUB_PRTPWR1_INIT_OUTPUT; // Tx Channel
+    HUB_PRTPWR2_INIT_INPUT;  // Rx Channel
     
     fres &= smpsPPS_UnlockIO();
     #if (UART_INSTANCE == 1)
-    smpsPPS_RemapInput(HUB_PRTPWR1_RP, PPSIN_U1RX);
-    smpsPPS_RemapOutput(HUB_PRTPWR2_RP, PPSOUT_U1TX);
+    smpsPPS_RemapInput(HUB_PRTPWR2_RP, PPSIN_U1RX);
+    smpsPPS_RemapOutput(HUB_PRTPWR1_RP, PPSOUT_U1TX);
     #elif (UART_INSTANCE == 2)
-    fres &= smpsPPS_RemapInput(HUB_PRTPWR1_RP, PPSIN_U2RX);
-    fres &= smpsPPS_RemapOutput(HUB_PRTPWR2_RP, PPSOUT_U2TX);
+    fres &= smpsPPS_RemapInput(HUB_PRTPWR2_RP, PPSIN_U2RX);
+    fres &= smpsPPS_RemapOutput(HUB_PRTPWR1_RP, PPSOUT_U2TX);
     #elif (UART_INSTANCE == 3)
-    smpsPPS_RemapInput(HUB_PRTPWR1_RP, PPSIN_U3RX);
-    smpsPPS_RemapOutput(HUB_PRTPWR2_RP, PPSOUT_U3TX);
+    smpsPPS_RemapInput(HUB_PRTPWR2_RP, PPSIN_U3RX);
+    smpsPPS_RemapOutput(HUB_PRTPWR1_RP, PPSOUT_U3TX);
     #endif
     fres &= smpsPPS_LockIO();
     
