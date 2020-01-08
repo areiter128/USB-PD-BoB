@@ -50,7 +50,7 @@ extern "C" {
  * UART Hardware Definitions
  * ********************************************************************************/
     
-#define UART_INSTANCE       1  // Number of UART peripheral instance (1=UART1, 2=UART2, etc)
+#define UART_INSTANCE       3  // Number of UART peripheral instance (1=UART1, 2=UART2, etc)
 #define DBGUART_RX_ISR_PRIORITY 2   // UART1 Receive Interrupt Priority
     
 #define _DebugUART_RXIP     _U1RXIP // UART1 Receive Interrupt Priority Bits    
