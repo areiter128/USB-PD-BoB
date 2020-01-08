@@ -109,7 +109,8 @@ void DefaultTrapHandler(TRAP_ID_e trap_id) {
  
     // -------------------------------------------------
     #ifdef __DEBUG
-    while(1) {
+    while(1) 
+    {
         Nop();  // Use these NOPs to place breakpoint
         Nop();
         Nop();
