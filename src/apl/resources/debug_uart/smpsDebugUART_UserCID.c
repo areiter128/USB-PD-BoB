@@ -34,6 +34,7 @@ volatile uint16_t smpsDebugUART_ProcessUserCID(volatile SMPS_DGBUART_FRAME_t* ms
 
     // Function return value
     volatile uint16_t fres=1;
+    volatile uint16_t config,temperature_simulation;
 
     /*!Processing Proprietary Protocol Command IDs
      * *********************************************************************
@@ -46,10 +47,18 @@ volatile uint16_t smpsDebugUART_ProcessUserCID(volatile SMPS_DGBUART_FRAME_t* ms
         case DBGUART_CID_DSMPS_GUI:
             // Carlo Add code to mange buffer from GUI here
             
-            Nop();
-            Nop();
-            Nop();
-            Nop();
+            config=(uint16_t)msg_frame->frame.data[CID0100_RX_CONFIG_BITS_INDEX+1]+(((uint16_t)msg_frame->frame.data[CID0100_RX_CONFIG_BITS_INDEX])<<8);
+            temperature_simulation=((uint16_t)msg_frame->frame.data[CID0100_RX_TEMPERATURE_INDEX+1]+(((uint16_t)msg_frame->frame.data[CID0100_RX_TEMPERATURE_INDEX])<<8))/10; // GUI send T*10
+            if((config&CID0100_RX_PWM_FREQ_JITTERING)!=0)
+            {
+                c4swbb_1.pwm_dist.status.bits.ssm_enable=1;
+                c4swbb_2.pwm_dist.status.bits.ssm_enable=1;
+            }
+            else
+            {
+                c4swbb_1.pwm_dist.status.bits.ssm_enable=0;
+                c4swbb_2.pwm_dist.status.bits.ssm_enable=0;
+            }    
             
             break;
             
