@@ -27,7 +27,6 @@
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
           <logicalFolder name="debug_uart" displayName="debug_uart" projectFiles="true">
             <itemPath>../h/apl/resources/debug_uart/smpsDebugUART.h</itemPath>
-            <itemPath>../h/apl/resources/debug_uart/smpsDebugUART_UserCID.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="pd_debug_uart" projectFiles="true">
             <itemPath>../src/apl/resources/pd_debug_uart/debug_uart.h</itemPath>
@@ -142,7 +141,7 @@
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
           <logicalFolder name="debug_uart" displayName="debug_uart" projectFiles="true">
             <itemPath>../src/apl/resources/debug_uart/smpsDebugUART.c</itemPath>
-            <itemPath>../src/apl/resources/debug_uart/smpsDebugUART_UserCID.c</itemPath>
+            <itemPath>../src/apl/resources/debug_uart/smpsDebugUART_User.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="pd_debug_uart" projectFiles="true">
             <itemPath>../src/apl/resources/pd_debug_uart/debug_uart.c</itemPath>
@@ -442,7 +441,7 @@
         <property key="legacy-libc" value="true"/>
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros"
-                  value="__00173_USB_PD_BOB_R21__;__CODE_OPT_LEVEL_3__"/>
+                  value="__00173_USB_PD_BOB_R21__;__00173_USB_PD_BOB_R20__;__CODE_OPT_LEVEL_3__"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>

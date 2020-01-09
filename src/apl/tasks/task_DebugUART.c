@@ -62,7 +62,7 @@ volatile uint16_t task_DebugUART_Execute(void) {
             tx_data_cid100[CID0100_TX_VOUT_CH1_INDEX] = (volatile uint8_t)((c4swbb_1.data.v_out & 0xFF00) >> 8);
             tx_data_cid100[CID0100_TX_VOUT_CH1_INDEX+1] = (volatile uint8_t)(c4swbb_1.data.v_out & 0x00FF);
 
-#ifdef __00173_USB_PD_BOB_R20__  
+#if defined (__00173_USB_PD_BOB_R20__) 
             if((int16_t)(c4swbb_1.data.i_out-1940)>0 && (c4swbb_1.status.bits.enable==1))
             {
                 tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX] = (volatile uint8_t)(((c4swbb_1.data.i_out-1940) & 0xFF00) >> 8);
@@ -73,16 +73,20 @@ volatile uint16_t task_DebugUART_Execute(void) {
                 tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX] = 0; 
                 tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX+1] = 0;   
             }
-#endif
-            
-#ifdef __00173_USB_PD_BOB_R21__            
+
+#elif defined() __00173_USB_PD_BOB_R21__)          
             tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX] = (volatile uint8_t)(((c4swbb_1.data.i_out) & 0xFF00) >> 8);
             tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX+1] = (volatile uint8_t)((c4swbb_1.data.i_out) & 0x00FF);
+
+#else
+            tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX] = 0; 
+            tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX+1] = 0; 
 #endif              
+            
             tx_data_cid100[CID0100_TX_VOUT_CH2_INDEX] = (volatile uint8_t)((c4swbb_2.data.v_out & 0xFF00) >> 8);
             tx_data_cid100[CID0100_TX_VOUT_CH2_INDEX+1] = (volatile uint8_t)(c4swbb_2.data.v_out & 0x00FF);
 
-#ifdef __00173_USB_PD_BOB_R20__
+#if defined (__00173_USB_PD_BOB_R20__)
             if((int16_t)(c4swbb_2.data.i_out-1940)>0 && (c4swbb_2.status.bits.enable==1))
             {
                 tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX] = (volatile uint8_t)(((c4swbb_2.data.i_out-1940) & 0xFF00) >> 8);
@@ -94,10 +98,13 @@ volatile uint16_t task_DebugUART_Execute(void) {
                 tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX+1] = 0;   
             }
 
-#endif
-            #ifdef __00173_USB_PD_BOB_R21__
+#elif defined (__00173_USB_PD_BOB_R21__)
             tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX] = (volatile uint8_t)((c4swbb_2.data.i_out & 0xFF00) >> 8);
             tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX+1] = (volatile uint8_t)(c4swbb_2.data.i_out & 0x00FF);
+
+#else
+            tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX] = 0; 
+            tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX+1] = 0;  
 #endif
             
             tempx100=(uint16_t)(100.0*(float)c4swbb_1.data.temp-(float)TEMP_OFFSET_TICKS)/(float)TEMP_SLOPE_TICKS;
