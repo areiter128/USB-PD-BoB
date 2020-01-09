@@ -49,77 +49,66 @@ volatile uint16_t cid100_update_counter = 0;
 
 volatile uint16_t task_DebugUART_Execute(void) {
 
-    volatile uint16_t fres=1,tempx100=0;
-
+    volatile uint16_t fres=1;
+    volatile int16_t scale_val=0;
+    
     // If UART interface has already been successfully initialized, 
     // Execute DebugUART state machine
     if(DebugUART.status.bits.ready) {
         
         if(++cid100_update_counter > DebugUART.send_period) {
 
-            tx_data_cid100[CID0100_TX_VIN_INDEX] = (volatile uint8_t)((c4swbb_1.data.v_in & 0xFF00) >> 8);
-            tx_data_cid100[CID0100_TX_VIN_INDEX+1] = (volatile uint8_t)(c4swbb_1.data.v_in & 0x00FF);
-            tx_data_cid100[CID0100_TX_VOUT_CH1_INDEX] = (volatile uint8_t)((c4swbb_1.data.v_out & 0xFF00) >> 8);
-            tx_data_cid100[CID0100_TX_VOUT_CH1_INDEX+1] = (volatile uint8_t)(c4swbb_1.data.v_out & 0x00FF);
+            // Input voltage
+            scale_val = (int16_t)(((int32_t)(c4swbb_1.data.v_in - VIN_FB_OFFSET) * VIN_ADC2VAL) >> 15);
+            tx_data_cid100[CID0100_TX_VIN_INDEX] = (volatile uint8_t)((scale_val & 0xFF00) >> 8);
+            tx_data_cid100[CID0100_TX_VIN_INDEX+1] = (volatile uint8_t)(scale_val & 0x00FF);
+            
+            // Output voltage channel #1
+            scale_val = (int16_t)(((int32_t)(c4swbb_1.data.v_out - VOUT_FB_OFFSET) * VOUT_ADC2VAL) >> 15);
+            tx_data_cid100[CID0100_TX_VOUT_CH1_INDEX] = (volatile uint8_t)((scale_val & 0xFF00) >> 8);
+            tx_data_cid100[CID0100_TX_VOUT_CH1_INDEX+1] = (volatile uint8_t)(scale_val & 0x00FF);
 
-#if defined (__00173_USB_PD_BOB_R20__) 
-            if((int16_t)(c4swbb_1.data.i_out-1940)>0 && (c4swbb_1.status.bits.enable==1))
-            {
-                tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX] = (volatile uint8_t)(((c4swbb_1.data.i_out-1940) & 0xFF00) >> 8);
-                tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX+1] = (volatile uint8_t)((c4swbb_1.data.i_out-1940) & 0x00FF);
-            }
+            // Output current channel #1
+            if(c4swbb_1.data.i_out > c4swbb_1.i_loop.feedback_offset)
+                scale_val = (int16_t)(((int32_t)(c4swbb_1.data.i_out - c4swbb_1.i_loop.feedback_offset) * IOUT_ADC2VAL) >> 15);
             else
-            {
-                tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX] = 0; 
-                tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX+1] = 0;   
-            }
-
-#elif defined(__00173_USB_PD_BOB_R21__)          
-            tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX] = (volatile uint8_t)(((c4swbb_1.data.i_out) & 0xFF00) >> 8);
-            tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX+1] = (volatile uint8_t)((c4swbb_1.data.i_out) & 0x00FF);
-
-#else
-            tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX] = 0; 
-            tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX+1] = 0; 
-#endif              
+                scale_val = 0;
+            tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX] = (volatile uint8_t)((scale_val & 0xFF00) >> 8);
+            tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX+1] = (volatile uint8_t)(scale_val & 0x00FF);
             
-            tx_data_cid100[CID0100_TX_VOUT_CH2_INDEX] = (volatile uint8_t)((c4swbb_2.data.v_out & 0xFF00) >> 8);
-            tx_data_cid100[CID0100_TX_VOUT_CH2_INDEX+1] = (volatile uint8_t)(c4swbb_2.data.v_out & 0x00FF);
+            // Temperature channel #1 (ToDo: second temp sensor not supported by GUI yet. Add when available)
+            scale_val = (int16_t)(((int32_t)(c4swbb_1.data.temp - TEMP_OFFSET_TICKS) * TEMP_ADC2VAL) >> 15);
+            tx_data_cid100[CID0100_TX_TEMPERATURE_INDEX] = (volatile uint8_t)((scale_val & 0xFF00) >> 8);
+            tx_data_cid100[CID0100_TX_TEMPERATURE_INDEX+1] = (volatile uint8_t)(scale_val & 0x00FF);
+            
 
-#if defined (__00173_USB_PD_BOB_R20__)
-            if((int16_t)(c4swbb_2.data.i_out-1940)>0 && (c4swbb_2.status.bits.enable==1))
-            {
-                tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX] = (volatile uint8_t)(((c4swbb_2.data.i_out-1940) & 0xFF00) >> 8);
-                tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX+1] = (volatile uint8_t)((c4swbb_2.data.i_out-1940) & 0x00FF);
-            }
+            // Output voltage channel #2
+            scale_val = (int16_t)(((int32_t)(c4swbb_2.data.v_out - VOUT_FB_OFFSET) * VOUT_ADC2VAL) >> 15);
+            tx_data_cid100[CID0100_TX_VOUT_CH2_INDEX] = (volatile uint8_t)((scale_val & 0xFF00) >> 8);
+            tx_data_cid100[CID0100_TX_VOUT_CH2_INDEX+1] = (volatile uint8_t)(scale_val & 0x00FF);
+
+            // Output current channel #2
+            if(c4swbb_2.data.i_out > c4swbb_2.i_loop.feedback_offset)
+                scale_val = (int16_t)(((int32_t)(c4swbb_2.data.i_out - c4swbb_2.i_loop.feedback_offset) * IOUT_ADC2VAL) >> 15);
             else
-            {
-                tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX] = 0; 
-                tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX+1] = 0;   
-            }
+                scale_val = 0;
+            tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX] = (volatile uint8_t)((scale_val & 0xFF00) >> 8);
+            tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX+1] = (volatile uint8_t)(scale_val & 0x00FF);
 
-#elif defined (__00173_USB_PD_BOB_R21__)
-            tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX] = (volatile uint8_t)((c4swbb_2.data.i_out & 0xFF00) >> 8);
-            tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX+1] = (volatile uint8_t)(c4swbb_2.data.i_out & 0x00FF);
-
-#else
-            tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX] = 0; 
-            tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX+1] = 0;  
-#endif
             
-            tempx100=(uint16_t)(100.0*(float)c4swbb_1.data.temp-(float)TEMP_OFFSET_TICKS)/(float)TEMP_SLOPE_TICKS;
-            
-            tx_data_cid100[CID0100_TX_TEMPERATURE_INDEX] = (volatile uint8_t)((tempx100 & 0xFF00) >> 8);
-            tx_data_cid100[CID0100_TX_TEMPERATURE_INDEX+1] = (volatile uint8_t)(tempx100 & 0x00FF);
-            
+            // Set data length
             tx_frame_cid100.frame.dlen.value = 64;
 
+            // Pack up frame and put it in Tx queue buffer
             smpsDebugUART_SendFrame(&tx_frame_cid100); // Carlo
             
+            // Reset update counter
             cid100_update_counter = 0;
         }
         
+        // Execute Debug UART State Machine
         fres = smpsDebugUART_Execute();
+        
     }
     // If UART initialization has not been performed yet, 
     // do so now.
