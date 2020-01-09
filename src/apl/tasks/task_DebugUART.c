@@ -57,53 +57,53 @@ volatile uint16_t task_DebugUART_Execute(void) {
         
         if(++cid100_update_counter > DebugUART.send_period) {
 
-            tx_data_cid100[0] = (volatile uint8_t)((c4swbb_1.data.v_in & 0xFF00) >> 8);
-            tx_data_cid100[1] = (volatile uint8_t)(c4swbb_1.data.v_in & 0x00FF);
-            tx_data_cid100[2] = (volatile uint8_t)((c4swbb_1.data.v_out & 0xFF00) >> 8);
-            tx_data_cid100[3] = (volatile uint8_t)(c4swbb_1.data.v_out & 0x00FF);
+            tx_data_cid100[CID0100_TX_VIN_INDEX] = (volatile uint8_t)((c4swbb_1.data.v_in & 0xFF00) >> 8);
+            tx_data_cid100[CID0100_TX_VIN_INDEX+1] = (volatile uint8_t)(c4swbb_1.data.v_in & 0x00FF);
+            tx_data_cid100[CID0100_TX_VOUT_CH1_INDEX] = (volatile uint8_t)((c4swbb_1.data.v_out & 0xFF00) >> 8);
+            tx_data_cid100[CID0100_TX_VOUT_CH1_INDEX+1] = (volatile uint8_t)(c4swbb_1.data.v_out & 0x00FF);
 
 #ifdef __00173_USB_PD_BOB_R20__  
             if((int16_t)(c4swbb_1.data.i_out-1940)>0 && (c4swbb_1.status.bits.enable==1))
             {
-                tx_data_cid100[4] = (volatile uint8_t)(((c4swbb_1.data.i_out-1940) & 0xFF00) >> 8);
-                tx_data_cid100[5] = (volatile uint8_t)((c4swbb_1.data.i_out-1940) & 0x00FF);
+                tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX] = (volatile uint8_t)(((c4swbb_1.data.i_out-1940) & 0xFF00) >> 8);
+                tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX+1] = (volatile uint8_t)((c4swbb_1.data.i_out-1940) & 0x00FF);
             }
             else
             {
-                tx_data_cid100[4] = 0; 
-                tx_data_cid100[5] = 0;   
+                tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX] = 0; 
+                tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX+1] = 0;   
             }
 #endif
             
 #ifdef __00173_USB_PD_BOB_R21__            
-            tx_data_cid100[4] = (volatile uint8_t)(((c4swbb_1.data.i_out) & 0xFF00) >> 8);
-            tx_data_cid100[5] = (volatile uint8_t)((c4swbb_1.data.i_out) & 0x00FF);
+            tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX] = (volatile uint8_t)(((c4swbb_1.data.i_out) & 0xFF00) >> 8);
+            tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX+1] = (volatile uint8_t)((c4swbb_1.data.i_out) & 0x00FF);
 #endif              
-            tx_data_cid100[10] = (volatile uint8_t)((c4swbb_2.data.v_out & 0xFF00) >> 8);
-            tx_data_cid100[11] = (volatile uint8_t)(c4swbb_2.data.v_out & 0x00FF);
+            tx_data_cid100[CID0100_TX_VOUT_CH2_INDEX] = (volatile uint8_t)((c4swbb_2.data.v_out & 0xFF00) >> 8);
+            tx_data_cid100[CID0100_TX_VOUT_CH2_INDEX+1] = (volatile uint8_t)(c4swbb_2.data.v_out & 0x00FF);
 
 #ifdef __00173_USB_PD_BOB_R20__
             if((int16_t)(c4swbb_2.data.i_out-1940)>0 && (c4swbb_2.status.bits.enable==1))
             {
-                tx_data_cid100[12] = (volatile uint8_t)(((c4swbb_2.data.i_out-1940) & 0xFF00) >> 8);
-                tx_data_cid100[13] = (volatile uint8_t)((c4swbb_2.data.i_out-1940) & 0x00FF);
+                tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX] = (volatile uint8_t)(((c4swbb_2.data.i_out-1940) & 0xFF00) >> 8);
+                tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX+1] = (volatile uint8_t)((c4swbb_2.data.i_out-1940) & 0x00FF);
             }
             else
             {
-                tx_data_cid100[12] = 0; 
-                tx_data_cid100[13] = 0;   
+                tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX] = 0; 
+                tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX+1] = 0;   
             }
 
 #endif
             #ifdef __00173_USB_PD_BOB_R21__
-            tx_data_cid100[12] = (volatile uint8_t)((c4swbb_2.data.i_out & 0xFF00) >> 8);
-            tx_data_cid100[13] = (volatile uint8_t)(c4swbb_2.data.i_out & 0x00FF);
+            tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX] = (volatile uint8_t)((c4swbb_2.data.i_out & 0xFF00) >> 8);
+            tx_data_cid100[CID0100_TX_IOUT_CH2_INDEX+1] = (volatile uint8_t)(c4swbb_2.data.i_out & 0x00FF);
 #endif
             
             tempx100=(uint16_t)(100.0*(float)c4swbb_1.data.temp-(float)TEMP_OFFSET_TICKS)/(float)TEMP_SLOPE_TICKS;
             
-            tx_data_cid100[14] = (volatile uint8_t)((tempx100 & 0xFF00) >> 8);
-            tx_data_cid100[15] = (volatile uint8_t)(tempx100 & 0x00FF);
+            tx_data_cid100[CID0100_TX_TEMPERATURE_INDEX] = (volatile uint8_t)((tempx100 & 0xFF00) >> 8);
+            tx_data_cid100[CID0100_TX_TEMPERATURE_INDEX+1] = (volatile uint8_t)(tempx100 & 0x00FF);
             
             tx_frame_cid100.frame.dlen.value = 64;
 
