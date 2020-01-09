@@ -33,7 +33,7 @@
 #include <libpic30.h>
 
 #include "thermal_power_management.h"
-#include "apl/resources/c4swbb_control.h"
+#include "apl/resources/power_control/c4swbb_control.h"
 #include "apl/tasks/task_PowerControl.h"
 
 // TODO: JMS - Need to get these included from task_PowerControl.h (resolve compile errors)
@@ -249,7 +249,7 @@ void CRITICAL_SECTION_EXIT(void)
 
 void updalert_init(uint8_t *p_port_disable)
 {
-    __builtin_write_OSCCONL(OSCCON & 0xbf); // unlock PPS
+    //__builtin_write_OSCCONL(OSCCON & 0xbf); // unlock PPS
     
     if (p_port_disable[0] == PORT_STATUS_ENABLED)
     {

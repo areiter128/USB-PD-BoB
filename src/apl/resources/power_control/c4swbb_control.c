@@ -11,7 +11,7 @@
 #include "mcal/mcal.h"                      // Microcontroller Abstraction Layer Header
 
 #include "_root/generic/os_Globals.h"       // Include OS header definitions
-#include "apl/resources/c4swbb_control.h"   // 4-Switch Buck/Boost Converter State Machine Header
+#include "apl/resources/power_control/c4swbb_control.h"   // 4-Switch Buck/Boost Converter State Machine Header
 
 /* === private state machine counter variables ===================================================== */
 // (none)
@@ -106,7 +106,7 @@ volatile uint16_t exec_4SWBB_PowerController(volatile C4SWBB_PWRCTRL_t* pInstanc
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-    /* TIMING UPDATE ON QUEUE-SWITCH                                                                    */
+    /* TIMING UPDATE ON OS QUEUE-SWITCH                                                                    */
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     if (task_mgr.status.bits.queue_switch)
     { fres &= c4SWBB_TimingUpdate(pInstance); }

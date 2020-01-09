@@ -25,11 +25,25 @@
           <itemPath>../h/apl/config/UserTasks.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
+          <logicalFolder name="debug_uart" displayName="debug_uart" projectFiles="true">
+            <itemPath>../h/apl/resources/debug_uart/smpsDebugUART.h</itemPath>
+          </logicalFolder>
           <logicalFolder name="f4" displayName="pd_debug_uart" projectFiles="true">
             <itemPath>../src/apl/resources/pd_debug_uart/debug_uart.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f3" displayName="pd_timer" projectFiles="true">
             <itemPath>../src/apl/resources/pd_timer/upd_timer.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="power_control"
+                         displayName="power_control"
+                         projectFiles="true">
+            <itemPath>../h/apl/resources/power_control/c4swbb_control.h</itemPath>
+            <itemPath>../h/apl/resources/power_control/c4swbb_pconfig.h</itemPath>
+            <itemPath>../h/apl/resources/power_control/cha_iloop.h</itemPath>
+            <itemPath>../h/apl/resources/power_control/cha_vloop.h</itemPath>
+            <itemPath>../h/apl/resources/power_control/chb_iloop.h</itemPath>
+            <itemPath>../h/apl/resources/power_control/chb_vloop.h</itemPath>
+            <itemPath>../h/apl/resources/power_control/npnz16b.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="spi2" projectFiles="true">
             <itemPath>../src/apl/resources/spi2/spi2.h</itemPath>
@@ -62,18 +76,12 @@
             <itemPath>../src/apl/resources/zeus_stack/thermal_power_management.h</itemPath>
           </logicalFolder>
           <itemPath>../h/apl/resources/fdrv_FunctionPDStack.h</itemPath>
-          <itemPath>../h/apl/resources/npnz16b.h</itemPath>
-          <itemPath>../h/apl/resources/c4swbb_control.h</itemPath>
-          <itemPath>../h/apl/resources/cha_iloop.h</itemPath>
-          <itemPath>../h/apl/resources/cha_vloop.h</itemPath>
-          <itemPath>../h/apl/resources/chb_iloop.h</itemPath>
-          <itemPath>../h/apl/resources/chb_vloop.h</itemPath>
-          <itemPath>../h/apl/resources/c4swbb_pconfig.h</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../h/apl/tasks/task_Idle.h</itemPath>
           <itemPath>../h/apl/tasks/task_PDStack.h</itemPath>
           <itemPath>../h/apl/tasks/task_PowerControl.h</itemPath>
+          <itemPath>../h/apl/tasks/task_DebugUART.h</itemPath>
         </logicalFolder>
         <itemPath>../h/apl/apl.h</itemPath>
       </logicalFolder>
@@ -131,11 +139,30 @@
           <itemPath>../src/apl/config/UserTasks.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
+          <logicalFolder name="debug_uart" displayName="debug_uart" projectFiles="true">
+            <itemPath>../src/apl/resources/debug_uart/smpsDebugUART.c</itemPath>
+            <itemPath>../src/apl/resources/debug_uart/smpsDebugUART_UserCID.c</itemPath>
+          </logicalFolder>
           <logicalFolder name="f4" displayName="pd_debug_uart" projectFiles="true">
             <itemPath>../src/apl/resources/pd_debug_uart/debug_uart.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="pd_timer" projectFiles="true">
             <itemPath>../src/apl/resources/pd_timer/upd_timer.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="power_control"
+                         displayName="power_control"
+                         projectFiles="true">
+            <itemPath>../src/apl/resources/power_control/c4swbb_control.c</itemPath>
+            <itemPath>../src/apl/resources/power_control/c4swbb_pconfig.c</itemPath>
+            <itemPath>../src/apl/resources/power_control/cha_iloop.c</itemPath>
+            <itemPath>../src/apl/resources/power_control/cha_vloop.c</itemPath>
+            <itemPath>../src/apl/resources/power_control/chb_iloop.c</itemPath>
+            <itemPath>../src/apl/resources/power_control/chb_vloop.c</itemPath>
+            <itemPath>../src/apl/resources/power_control/c4swbb_write_pwm.s</itemPath>
+            <itemPath>../src/apl/resources/power_control/cha_iloop_asm.s</itemPath>
+            <itemPath>../src/apl/resources/power_control/cha_vloop_asm.s</itemPath>
+            <itemPath>../src/apl/resources/power_control/chb_iloop_asm.s</itemPath>
+            <itemPath>../src/apl/resources/power_control/chb_vloop_asm.s</itemPath>
           </logicalFolder>
           <logicalFolder name="f3" displayName="spi2" projectFiles="true">
             <itemPath>../src/apl/resources/spi2/spi2.c</itemPath>
@@ -166,22 +193,12 @@
             <itemPath>../src/apl/resources/zeus_stack/hook_functions.c</itemPath>
             <itemPath>../src/apl/resources/zeus_stack/thermal_power_management.c</itemPath>
           </logicalFolder>
-          <itemPath>../src/apl/resources/c4swbb_control.c</itemPath>
-          <itemPath>../src/apl/resources/cha_iloop.c</itemPath>
-          <itemPath>../src/apl/resources/cha_iloop_asm.s</itemPath>
-          <itemPath>../src/apl/resources/cha_vloop.c</itemPath>
-          <itemPath>../src/apl/resources/cha_vloop_asm.s</itemPath>
-          <itemPath>../src/apl/resources/chb_iloop.c</itemPath>
-          <itemPath>../src/apl/resources/chb_iloop_asm.s</itemPath>
-          <itemPath>../src/apl/resources/chb_vloop.c</itemPath>
-          <itemPath>../src/apl/resources/chb_vloop_asm.s</itemPath>
-          <itemPath>../src/apl/resources/c4swbb_pconfig.c</itemPath>
-          <itemPath>../src/apl/resources/c4swbb_write_pwm.s</itemPath>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
           <itemPath>../src/apl/tasks/task_Idle.c</itemPath>
           <itemPath>../src/apl/tasks/task_PDStack.c</itemPath>
           <itemPath>../src/apl/tasks/task_PowerControl.c</itemPath>
+          <itemPath>../src/apl/tasks/task_DebugUART.c</itemPath>
         </logicalFolder>
         <itemPath>../src/apl/apl.c</itemPath>
       </logicalFolder>
@@ -303,9 +320,9 @@
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
       <C30>
-        <property key="code-model" value="default"/>
+        <property key="code-model" value="large-code"/>
         <property key="const-model" value="default"/>
-        <property key="data-model" value="default"/>
+        <property key="data-model" value="large-data"/>
         <property key="disable-instruction-scheduling" value="false"/>
         <property key="enable-all-warnings" value="true"/>
         <property key="enable-ansi-std" value="false"/>
@@ -424,7 +441,7 @@
         <property key="legacy-libc" value="true"/>
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros"
-                  value="__00173_USB_PD_BOB_R21__;__00173_USB_PD_BOB_R20__;__CODE_OPT_LEVEL_3__"/>
+                  value="__00173_USB_PD_BOB_R21__;__CODE_OPT_LEVEL_3__"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>
@@ -499,8 +516,6 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-ffffffffffffffff"/>
         <property key="poweroptions.powerenable" value="false"/>
-        <property key="programmerToGoFilePath"
-                  value="D:/Firmware/00173_USB_PD_BoB/firmware/project/usb_pd_bob.X/debug/00173_USB_PD_BOB_R21/usb_pd_bob_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
@@ -1283,9 +1298,9 @@
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
       <C30>
-        <property key="code-model" value="default"/>
+        <property key="code-model" value="large-code"/>
         <property key="const-model" value="default"/>
-        <property key="data-model" value="default"/>
+        <property key="data-model" value="large-data"/>
         <property key="disable-instruction-scheduling" value="false"/>
         <property key="enable-all-warnings" value="true"/>
         <property key="enable-ansi-std" value="false"/>
@@ -1479,8 +1494,6 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-ffffffffffffffff"/>
         <property key="poweroptions.powerenable" value="false"/>
-        <property key="programmerToGoFilePath"
-                  value="D:/Firmware/00173_USB_PD_BoB/firmware/project/usb_pd_bob.X/debug/00173_USB_PD_BOB_R20/usb_pd_bob_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
@@ -2460,8 +2473,6 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-2beff"/>
         <property key="poweroptions.powerenable" value="false"/>
-        <property key="programmerToGoFilePath"
-                  value="D:/Firmware/00173_USB_PD_BoB/firmware/project/usb_pd_bob.X/debug/MA330048_P33CK_R30/usb_pd_bob_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
