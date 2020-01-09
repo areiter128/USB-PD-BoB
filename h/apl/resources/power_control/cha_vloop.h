@@ -16,75 +16,75 @@
  * CGS Date:            11/08/19
  * *******************************************************************************
  * User:                M91406
- * Date/Time:           12/23/2019 5:17:39 AM
+ * Date/Time:           01/08/2020 11:41:33 AM
  * *******************************************************************************/
 
-#ifndef __SPECIAL_FUNCTION_LAYER_CHB_VLOOP_H__
-#define __SPECIAL_FUNCTION_LAYER_CHB_VLOOP_H__
+#ifndef __SPECIAL_FUNCTION_LAYER_CHA_VLOOP_H__
+#define __SPECIAL_FUNCTION_LAYER_CHA_VLOOP_H__
 
 #include <xc.h> // include processor files - each processor file is guarded
 #include <dsp.h> // include DSP data types (e.g. fractional)
 #include <stdint.h> // include standard integer number data types
 #include <stdbool.h> // include standard boolean data types (true/false)
 
-#include "../h/apl/resources/npnz16b.h" // include NPNZ library header file
+#include "../h/apl/resources/power_control/npnz16b.h" // include NPNZ library header file
 
 /* *******************************************************************************
  * Data Arrays:
  * The cNPNZ_t data structure contains pointers to coefficient, control and error
  * history arrays. The pointer target objects (variables and arrays) are defined
- * in controller source file chb_vloop.c
+ * in controller source file cha_vloop.c
  *
  * Type definitions for A- and B- coefficient arrays as well as error- and control
  * history arrays are aligned in memory using the 'packed' attribute for optimized
  * addressing during DSP computations. These aligned data structures need to be
  * placed in specific memory locations to allow direct X/Y-access from the DSP.
  * This X/Y-memory placement is covered by the declarations used in controller
- * source file chb_vloop.c
+ * source file cha_vloop.c
  * ******************************************************************************/
 typedef struct
 {
     volatile fractional ACoefficients[2]; // A-Coefficients
     volatile fractional BCoefficients[3]; // B-Coefficients
-} __attribute__((packed)) CHB_VLOOP_CONTROL_LOOP_COEFFICIENTS_t;
+} __attribute__((packed)) CHA_VLOOP_CONTROL_LOOP_COEFFICIENTS_t;
 
 typedef struct
 {
     volatile fractional ControlHistory[2];  // Control History Array
     volatile fractional ErrorHistory[3];  // Error History Array
-} __attribute__((packed)) CHB_VLOOP_CONTROL_LOOP_HISTORIES_t;
+} __attribute__((packed)) CHA_VLOOP_CONTROL_LOOP_HISTORIES_t;
 
 
-extern volatile cNPNZ16b_t chb_vloop; // user-controller data object
+extern volatile cNPNZ16b_t cha_vloop; // user-controller data object
 
 /* *******************************************************************************
  * Function call prototypes for initialization routines and control loops
  * ******************************************************************************/
 
-// Initialization of chb_vloop controller object
-extern volatile uint16_t chb_vloop_Init( // chb_vloop initialization function call
+// Initialization of cha_vloop controller object
+extern volatile uint16_t cha_vloop_Init( // cha_vloop initialization function call
         volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
 // Clears the 2P2Z controller output and error histories
-extern void chb_vloop_Reset( // chb_vloop reset function call (Assembly)
+extern void cha_vloop_Reset( // cha_vloop reset function call (Assembly)
         volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
 // Loads user-defined values into 2P2Z controller output and error histories
-extern void chb_vloop_Precharge( // chb_vloop history pre-charge function call (Assembly)
+extern void cha_vloop_Precharge( // cha_vloop history pre-charge function call (Assembly)
         volatile cNPNZ16b_t* controller, // Pointer to nPnZ data type object
         volatile fractional ctrl_input, // user-defined, constant error history value
         volatile fractional ctrl_output // user-defined, constant control output history value
     );
 
-// Calls the chb_vloop controller object
-extern void chb_vloop_Update( // Calls the 2P2Z controller (Assembly)
+// Calls the cha_vloop controller object
+extern void cha_vloop_Update( // Calls the 2P2Z controller (Assembly)
         volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
 
-#endif // end of __SPECIAL_FUNCTION_LAYER_CHB_VLOOP_H__
+#endif // end of __SPECIAL_FUNCTION_LAYER_CHA_VLOOP_H__
 
 //**********************************************************************************
 //  https://areiter128.github.io/DCLD

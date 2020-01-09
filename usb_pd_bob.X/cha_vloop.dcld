@@ -1,6 +1,6 @@
 [GUI]
 CreateDate=08/01/19 4:10:00 PM
-SaveDate=12/23/2019 5:17:58 AM
+SaveDate=01/08/2020 11:41:38 AM
 Name=z-Domain Control Loop Designer
 Version=0.9.0.77
 WindoWState=Maximized
@@ -68,13 +68,13 @@ ExportCSource=1
 ExportCHeader=1
 ExportCLib=1
 EnableOneClickExport=1
-ASMSourcePath=..\src\apl\resources\
-CSourcePath=..\src\apl\resources\
-CHeaderPath=..\h\apl\resources\
-CLibPath=..\h\apl\resources\
+ASMSourcePath=..\src\apl\resources\power_control\
+CSourcePath=..\src\apl\resources\power_control\
+CHeaderPath=..\h\apl\resources\power_control\
+CLibPath=..\h\apl\resources\power_control\
 IncludeCHeaderPathInCSource=1
 IncludeCLibPathInCHeader=1
-MPLABX_ProjectDirectory=
+MPLABX_ProjectDirectory=.\
 [TimingGraph]
 ControlLoopOptimization=0
 CPUClock=70
@@ -83,11 +83,12 @@ PWMFrequency=250
 PWMDutyCycle=30
 ControlLoopLatency=175
 [generator_history]
-count=42
+count=43
 1=2019-10-22 22:49:56||M91406||Update of control loop code after introducting DCLD v0.9.0.70||2; 0; 12; 0.20; 1; 0; 0; 300k; 50; 110k; 150k; 125000; 125000; 125000; 2.1k; 4.0k; 40000; 50000; 50000
-active_item=42
+active_item=43
 3=2019-10-24 12:58:18||M91406||Removed trigger placement||2; 0; 12; 0.20; 1; 0; 0; 300k; 50; 110k; 150k; 125000; 125000; 125000; 2.1k; 4.0k; 40000; 50000; 50000
 15=2019-11-11 00:51:58||M91406||Set sampling frequency to 175 kHz||2; 0; 12; 0.20; 1; 0; 0; 175k; 50; 110k; 150k; 125000; 125000; 125000; 2.1k; 4.0k; 40000; 50000; 50000
 40=2019-12-22 18:25:14||M91406||Most stable across load, Nyquist limit set < 43.75kHz||1; 2; 12; 0.20; 1; 0; 0; 87.5k; 40; 40k; 87.5k; 125000; 125000; 125000; 450; 4.0k; 40000; 50000; 50000
 41=2019-12-23 05:06:18||M91406||(Autosafe)||1; 2; 12; 0.20; 1; 0; 0; 87.5k; 40; 40k; 87.5k; 125000; 125000; 125000; 450; 4.0k; 40000; 50000; 50000
 42=2019-12-23 05:17:47||M91406||(Autosafe)||1; 2; 12; 0.20; 1; 0; 0; 87.5k; 40; 40k; 87.5k; 125000; 125000; 125000; 450; 4.0k; 40000; 50000; 50000
+43=2020-01-08 11:41:34||M91406||(Autosafe)||1; 2; 12; 0.20; 1; 0; 0; 87.5k; 40; 40k; 87.5k; 125000; 125000; 125000; 450; 4.0k; 40000; 50000; 50000

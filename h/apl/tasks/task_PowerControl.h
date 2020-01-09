@@ -43,12 +43,12 @@
 #ifndef APL_TASK_POWER_CONTROL_H
 #define	APL_TASK_POWER_CONTROL_H
 
-#include "apl/resources/c4swbb_control.h"   // 4-Switch Buck/Boost Power Control State Machine Header
+#include "apl/resources/power_control/c4swbb_control.h"   // 4-Switch Buck/Boost Power Control State Machine Header
 
-#include "apl/resources/cha_iloop.h"        // Current Control Loop library header of USB Port 1
-#include "apl/resources/cha_vloop.h"        // Voltage Control Loop library header of USB Port 1
-#include "apl/resources/chb_iloop.h"        // Current Control Loop library header of USB Port 2
-#include "apl/resources/chb_vloop.h"        // Voltage Control Loop library header of USB Port 2
+#include "apl/resources/power_control/cha_iloop.h"        // Current Control Loop library header of USB Port 1
+#include "apl/resources/power_control/cha_vloop.h"        // Voltage Control Loop library header of USB Port 1
+#include "apl/resources/power_control/chb_iloop.h"        // Current Control Loop library header of USB Port 2
+#include "apl/resources/power_control/chb_vloop.h"        // Voltage Control Loop library header of USB Port 2
 
 
 #ifdef	__cplusplus

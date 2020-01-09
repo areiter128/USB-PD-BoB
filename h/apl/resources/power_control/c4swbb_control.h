@@ -35,8 +35,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "apl/resources/c4swbb_pconfig.h"   // 4-Switch Buck/Boost Power Control Peripheral Configuration Header
-#include "apl/resources/npnz16b.h"          // Generic nPnZ control loop header file
+#include "apl/resources/power_control/c4swbb_pconfig.h"   // 4-Switch Buck/Boost Power Control Peripheral Configuration Header
+#include "apl/resources/power_control/npnz16b.h"          // Generic nPnZ control loop header file
 
 /* Controller Settings */
 

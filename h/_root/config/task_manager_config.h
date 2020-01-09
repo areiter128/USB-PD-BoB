@@ -230,7 +230,7 @@
 #if (USE_TASK_EXECUTION_CLOCKOUT_PIN == 1)
     #define TS_CLOCKOUT_PIN_WR              TESTPOINT_WR   // Specify Clock Output Pin port latch register
     #define TS_CLOCKOUT_PIN_INIT_OUTPUT     TESTPOINT_INIT_OUTPUT;    // Specify Clock Output Pin configuration
-    #define USE_DETAILED_CLOCKOUT_PATTERN   1           // Enable/Disable detailed clock pattern
+    #define USE_DETAILED_CLOCKOUT_PATTERN   0           // Enable/Disable detailed clock pattern
 #endif
 
 /*!USE_TASK_MANAGER_TIMING_DEBUG_ARRAYS
