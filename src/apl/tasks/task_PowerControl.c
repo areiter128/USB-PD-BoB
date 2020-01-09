@@ -553,7 +553,7 @@ volatile uint16_t init_USBport_1(void) {
     // Hardware-specific voltage loop controller settings
     c4swbb_1.v_loop.minimum = (IOUT_LCL_CLAMP + C4SWBB_IOUT_FEEDBACK_OFFSET);   // Minimum output value of voltage loop is absolute current limit
     c4swbb_1.v_loop.maximum = (IOUT_OCL_TRIP + C4SWBB_IOUT_FEEDBACK_OFFSET);    // Maximum output value of voltage loop is absolute current limit
-    c4swbb_1.v_loop.feedback_offset = C4SWBB_VOUT_OFFSET;   // Voltage feedback signal offset
+    c4swbb_1.v_loop.feedback_offset = C4SWBB_VOUT_FB_OFFSET;   // Voltage feedback signal offset
     c4swbb_1.v_loop.reference = C4SWBB_VOUT_REF; // Voltage loop reference value
     c4swbb_1.v_loop.trigger_offset = ADC_TRIG_OFFSET_VOUT; // Voltage sample ADC trigger offset (offset from 50% on-time)
 
@@ -732,7 +732,7 @@ volatile uint16_t init_USBport_2(void) {
     // Hardware-specific voltage loop controller settings
     c4swbb_2.v_loop.minimum = (IOUT_LCL_CLAMP + C4SWBB_IOUT_FEEDBACK_OFFSET);   // Minimum output value of voltage loop is absolute current limit
     c4swbb_2.v_loop.maximum = (IOUT_OCL_TRIP + C4SWBB_IOUT_FEEDBACK_OFFSET);    // Maximum output value of voltage loop is absolute current limit
-    c4swbb_2.v_loop.feedback_offset = C4SWBB_VOUT_OFFSET;   // Voltage feedback signal offset
+    c4swbb_2.v_loop.feedback_offset = C4SWBB_VOUT_FB_OFFSET;   // Voltage feedback signal offset
     c4swbb_2.v_loop.reference = C4SWBB_VOUT_REF; // Voltage loop reference value
     c4swbb_2.v_loop.trigger_offset = ADC_TRIG_OFFSET_VOUT; // Voltage sample ADC trigger offset (offset from 50% on-time)
     
