@@ -274,7 +274,7 @@ void CRITICAL_SECTION_EXIT(void)
 
 void updalert_init(uint8_t u8PortNum)
 {
-    __builtin_write_OSCCONL(OSCCON & 0xbf); // unlock PPS
+    smpsPPS_UnlockIO();
     
     if (u8PortNum == 0)
     {
@@ -309,6 +309,9 @@ void updalert_init(uint8_t u8PortNum)
         //IEC1bits.INT2IE = 1;    // Ext interrupt enable
     }
 #endif // CONFIG_PD_PORT_COUNT > 1    
+    
+    smpsPPS_LockIO();
+    
 }
 
 uint8_t upd_irq_asserted(uint8_t port_num)
