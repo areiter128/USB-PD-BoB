@@ -22,7 +22,7 @@ void DEBUG_init(void)
     PD_DEBUG_UART_TX_TRIS = 0;
     
     //Set PPS to put the UART TX pin on the configured pin
-    PD_DEBUG_UART_PPS_OUTPUT_REG = PD_DEBUG_UART_PPS_OUTPUT_SELECT;  
+    PD_DEBUG_UART_PPS_OUTPUT_REG = PD_DEBUG_UART_PPS_OUTPUT_SELECT; 
 
 #ifdef INCLUDE_DEBUG_UART_RX
     // Set up RX Pin as an input

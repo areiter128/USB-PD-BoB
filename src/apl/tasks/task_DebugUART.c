@@ -79,6 +79,8 @@ volatile uint16_t task_DebugUART_Execute(void) {
 volatile uint16_t task_DebugUART_Initialize(void) {
     
     volatile uint16_t fres=1;
+    
+    //return(0); // Carlo
 
     // Initialize DebugUART Rx/Tx device pins to communicate via UART adapter
     HUB_PRTPWR1_INIT_OUTPUT; // Tx Channel
@@ -95,7 +97,7 @@ volatile uint16_t task_DebugUART_Initialize(void) {
     smpsPPS_RemapInput(HUB_PRTPWR2_RP, PPSIN_U3RX);
     smpsPPS_RemapOutput(HUB_PRTPWR1_RP, PPSOUT_U3TX);
     #endif
-    fres &= smpsPPS_LockIO();
+    //fres &= smpsPPS_LockIO(); // Carlo it prevent PD stack to work. To be verified
     
     
     // Initialize default data frame for power supply runtime data
