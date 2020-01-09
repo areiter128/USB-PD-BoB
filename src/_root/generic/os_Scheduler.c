@@ -98,15 +98,24 @@ void __attribute__((user_init)) OS_Execute(void) {
             // the timer interrupt bit (oscillator, timer or interrupt controller is corrupted)
             // => Immediate reconfiguration and firmware initialization is required
 
-            task_mgr.op_mode.value = OP_MODE_BOOT;                               // Boot mode will force re-config
-            task_mgr.task_queue_tick_index = (task_mgr.task_queue_ubound + 1);    // setting index to maximum will trip op_mode switch
+            task_mgr.op_mode.value = OP_MODE_BOOT;                             // Boot mode will force reconfiguration
+            task_mgr.task_queue_tick_index = (task_mgr.task_queue_ubound + 1); // setting index to maximum will trip op_mode switch
 
         }
-        else    // Task scheduling is running as expected => Continue with next task
+        else // Task scheduling is running as expected => Continue with next task
         {   
+            // CPU load is determined by comparing the software counter value 
+            // 'task_mgr.cpu_load.ticks' with the synchronously running hardware 
+            // timer period value. The software counter is incremented while the OS 
+            // is polling on the timer interrupt flag bit. The counter value therefore
+            // is multiplied with the cycle count of the polling loop to determine the
+            // real number of available, free CPU cycles.
+            // The 'task_mgr.cpu_load.load_factor' will transform the most recent
+            // measurement result into a percentage with one digit accuracy (e.g. 986 = 98.6%)
+            
             task_mgr.cpu_load.ticks *= task_mgr.cpu_load.loop_nomblk;    // Calculate the accumulated CPU cycles
             task_mgr.cpu_load.load  = (uint16_t)((task_mgr.cpu_load.ticks * task_mgr.cpu_load.load_factor)>>16);
-            task_mgr.cpu_load.load_max_buffer |= task_mgr.cpu_load.load;
+            task_mgr.cpu_load.load_max_buffer |= task_mgr.cpu_load.load; // Log CPU peak load
             task_mgr.cpu_load.ticks = 0; // Reset CPU tick counter
 
         }
@@ -153,7 +162,7 @@ void __attribute__((user_init)) OS_Execute(void) {
 
     
         // Reset Watchdog Timer
-        // ToDo: Move swdt_reset(); out to taks queues
+        // ToDo: Move swdt_reset(); out to task queues
         // ToDo: Add windowed WDT option to library
         // ToDo: Add compile switch for option __DEBUG to disable watchdog in debug sessions
         //Remove: fres &= swdt_reset();
