@@ -159,6 +159,8 @@ extern "C" {
 #define DBGUART_CID_BIT_SET             0xE005 // Standard CID for setting a bit within a value at a memory address
 #define DBGUART_CID_BIT_CLEAR           0xE006 // Standard CID for clearing a bit within a value at a memory address
     
+#define DBGUART_CID_PROPRIETARY         0x0003 // Return value for 
+    
 /* *********************************************************************************
  * Digital Power Debugging UART Communication Frame
  * ================================================
