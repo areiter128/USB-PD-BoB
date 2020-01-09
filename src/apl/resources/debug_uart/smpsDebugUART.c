@@ -6,6 +6,7 @@
  */
 
 #include "apl/resources/debug_uart/smpsDebugUART.h"
+//#include "apl/resources/debug_uart/smpsDebugUART_UserCID.h"
 #include "apl/tasks/task_DebugUART.h"
 
 #include "dsPIC33C/p33SMPS_uart.h"
@@ -56,7 +57,10 @@ volatile uint16_t rx_data_size = (sizeof(rx_data[0])/sizeof(rx_data[0][0]));
 
 // --------------------------------------
 // Declare private function prototypes
+// --------------------------------------
 volatile uint16_t DebugUART_TimingUpdate(void);
+
+volatile uint16_t smpsDebugUART_ProcessDefaultCID(volatile SMPS_DGBUART_FRAME_t* msg_frame);
 
 volatile uint16_t smpsDebugUART_InitializeFrame(
     volatile SMPS_DGBUART_FRAME_t* msg_frame, 
@@ -100,7 +104,8 @@ volatile uint16_t DebugUART_TimingUpdate(void) {
 
 volatile uint16_t smpsDebugUART_Execute(void) {
 
-    volatile uint16_t fres=1;           // Function return value
+    volatile uint16_t fres=1;           // Function return value buffer variable
+    volatile uint16_t retval=0;         // Auxiliary function return value buffer variable
     volatile uint16_t i=0, m=0, p=0;    // Auxiliary variables for command execution
 
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -134,7 +139,16 @@ volatile uint16_t smpsDebugUART_Execute(void) {
             
             // Only process frames which haven't processed yet
             if ( rx_frame[m].status.bits.frame_complete ) {
-                fres = smpsDebugUART_ProcessCID(&rx_frame[m]); 
+                
+                // Call Default Command ID Processing
+                retval = smpsDebugUART_ProcessDefaultCID(&rx_frame[m]); 
+                
+                // If CID has been recognized as proprietary user command ID,
+                // call User Command ID Processing
+                if (retval == DBGUART_CID_PROPRIETARY)
+                { fres &= smpsDebugUART_ProcessUserCID(&rx_frame[m]); }
+                else
+                { fres &= retval; }
             }
             
         }
@@ -358,6 +372,403 @@ volatile uint16_t smpsDebugUART_SendFrame(volatile SMPS_DGBUART_FRAME_t* msg_fra
     
     return(fres);
     
+}
+
+/*!smpsDebugUART_ProcessDefaultCID
+ * ************************************************************************************************
+ * Summary:
+ * Processes received default protocol message frames
+ *
+ * Parameters:
+ * (none)
+ * 
+ * Returns:
+ *  uint16_t: 0=failure, 1=success, 3=unsupported/proprietary CID
+ *
+ * Description:
+ * The Debug UART protocol defines a certain set of default CIDs used for standard operations
+ * such as read from/write to memory addresses, get, set or clear bits and more. When a message
+ * frame is received, the debug UART driver will first check for default functions. If the 
+ * given CID is not a default command ID, this function returns the value DBGUART_CID_PROPRIETARY 
+ * (=0b11) indicating that the frame has been received correctly (CRC verification passed successfully)
+ * but the CID has not been recognized. 
+ * 
+ * Unrecognized CIDs are considered to be proprietary user commands and are therefor passed on
+ * to be handled in user code.
+ * 
+ * ************************************************************************************************/
+
+volatile uint16_t smpsDebugUART_ProcessDefaultCID(volatile SMPS_DGBUART_FRAME_t* msg_frame) {
+
+    // Function return value
+    volatile uint16_t fres=1;
+
+    // Frame-Validation variables
+    volatile uint16_t crc=0;
+    
+    // Command execution buffer variables
+    volatile uint16_t val_buf=0;
+    volatile uint16_t* addr_ptr;
+    
+    // Run Cyclic Redundancy Check if ID and data contents are valid
+    // for all IDs greater than 0x000F. CIDs from 0 to 15 (0x0000-0x000F)
+    // are used to bypass CRC calculation
+    if (msg_frame->frame.cid.value > 0x000F) {
+    
+        // Run Cyclic Redundancy Check 
+        crc = smpsCRC_GetStandard_Data8CRC16((uint8_t*)msg_frame, 0, (msg_frame->frame.dlen.value + DBGUART_FRAME_HEAD_LEN));
+    
+        // if there is a CRC mismatch, stop and exit here
+        if (crc == msg_frame->frame.crc.value) {
+            msg_frame->status.value = FDEC_STAT_SOF_SYNC; // Reset frame object and RX FIFO data buffer pointer
+            return(0);  // Exit and return FALSE
+        }
+    }
+
+    // Select CID response action
+    switch (msg_frame->frame.cid.value) {
+
+        /*!DBGUART_CID_READ_FROM_ADDR
+         * *********************************************************************
+         * Returns the value [VALUE] found at address [ADDR]. 
+         * The address is given by data bytes DATA[0] and DATA[1] where 
+         *   - DATA[0] = ADDR high byte
+         *   - DATA[1] = ADDR low byte
+         * 
+         * The value is returned by data bytes DATA[2] and DATA[3] where
+         *   - DATA[2] = VALUE high byte
+         *   - DATA[3] = VALUE low byte
+         * 
+         * PLEASE NOTE:
+         * This message needs to be acknowledged by setting bit #0 of CID high
+         * byte = 1
+         * ********************************************************************/
+        case DBGUART_CID_READ_FROM_ADDR:
+
+            // Read memory address
+            val_buf = msg_frame->frame.data[0]; // Load address high-byte
+            val_buf <<= 8;
+            val_buf |= msg_frame->frame.data[1]; // Load address low-byte
+
+             // Convert to pointer
+            addr_ptr = (volatile uint16_t*)val_buf;
+
+            // Build response
+            msg_frame->frame.cid.value |= DBGUART_CID_ACKNOWLEDGEMENT;   // ID acknowledge
+            msg_frame->frame.data[2] = ((*addr_ptr & 0xFF00) >> 8); // Load value high byte in DATA[0] of frame
+            msg_frame->frame.data[3] = (*addr_ptr & 0x00FF); // Load value low byte in DATA[1] of frame
+
+            msg_frame->frame.dlen.value = 4; // Set data length
+
+            // Send response
+            fres = smpsDebugUART_SendFrame (msg_frame); // Built frame and put it in transmission queue
+
+            break;
+
+        /*!DBGUART_CID_WRITE_TO_ADDR
+         * *********************************************************************
+         * Writes a new value [VALUE] to address [ADDR]. 
+         * The address is given by data bytes DATA[0] and DATA[1] where 
+         *   - DATA[0] = ADDR high byte
+         *   - DATA[1] = ADDR low byte
+         * 
+         * The value is given by data bytes DATA[2] and DATA[3] where
+         *   - DATA[2] = VALUE high byte
+         *   - DATA[3] = VALUE low byte
+         * 
+         * The value is written to the given address, read back and returned
+         * to the sender for verification, where
+         *   - DATA[4] = RETURN_VALUE high byte
+         *   - DATA[5] = RETURN_VALUE low byte
+         * 
+         * PLEASE NOTE:
+         * This message needs to be acknowledged by setting bit #0 of CID high
+         * byte = 1
+         * ********************************************************************/
+        case DBGUART_CID_WRITE_TO_ADDR:
+
+            // Read memory address
+            val_buf = msg_frame->frame.data[0]; // Load address high-byte
+            val_buf <<= 8;
+            val_buf |= msg_frame->frame.data[1]; // Load address low-byte
+
+             // Convert to pointer
+            addr_ptr = (volatile uint16_t*)val_buf;
+
+            // Read new value to be written to memory address
+            val_buf = msg_frame->frame.data[2]; // Load value high-byte
+            val_buf <<= 8;
+            val_buf |= msg_frame->frame.data[3]; // Load value low-byte
+
+            // Write value to memory address
+            *addr_ptr = (volatile uint16_t)val_buf;
+
+            // Build response
+            msg_frame->frame.cid.value |= DBGUART_CID_ACKNOWLEDGEMENT;   // ID acknowledge
+            msg_frame->frame.data[4] = ((*addr_ptr & 0xFF00) >> 8); // Load value high byte in DATA[2] of frame
+            msg_frame->frame.data[5] = (*addr_ptr & 0x00FF); // Load value low byte in DATA[3] of frame
+
+            msg_frame->frame.dlen.value = 6; // Set data length
+
+            // Send response
+            fres = smpsDebugUART_SendFrame (msg_frame); // Built frame and put it in transmission queue
+
+            break;
+
+        /*!DBGUART_CID_OR_BIT_MASK
+         * *********************************************************************
+         * OR's a bit mask [BITMSK] with a 16-bit wide value [VALUE] at memory 
+         * address [ADDR] and writes the result as new value to this memory 
+         * address.
+         * The address is given by data bytes DATA[0] and DATA[1] where 
+         *   - DATA[0] = ADDR high byte
+         *   - DATA[1] = ADDR low byte
+         * 
+         * The bit mask is given by data bytes DATA[2] and DATA[3] where
+         *   - DATA[2] = BITMSK high byte
+         *   - DATA[3] = BITMSK low byte
+         * 
+         * The value is written to the given address, read back and returned
+         * to the sender for verification, where
+         *   - DATA[4] = RETURN_VALUE high byte
+         *   - DATA[5] = RETURN_VALUE low byte
+         * 
+         * PLEASE NOTE:
+         * This message needs to be acknowledged by setting bit #0 of CID high
+         * byte = 1
+         * ********************************************************************/
+        case DBGUART_CID_OR_BIT_MASK:
+
+            // Read memory address
+            val_buf = msg_frame->frame.data[0]; // Load address high-byte
+            val_buf <<= 8;
+            val_buf |= msg_frame->frame.data[1]; // Load address low-byte
+
+             // Convert to pointer
+            addr_ptr = (volatile uint16_t*)val_buf;
+
+            // Read bit mask from message frame
+            val_buf = msg_frame->frame.data[2]; // Load bit mask high-byte
+            val_buf <<= 8;
+            val_buf |= msg_frame->frame.data[3]; // Load bit mask low-byte
+
+            // Write [value | bit mask] to memory address
+            *addr_ptr = (volatile uint16_t)(*addr_ptr | (volatile uint16_t)val_buf);
+
+            // Build response
+            msg_frame->frame.cid.value |= DBGUART_CID_ACKNOWLEDGEMENT;   // ID acknowledge
+            msg_frame->frame.data[4] = ((*addr_ptr & 0xFF00) >> 8); // Load value high byte in DATA[2] of frame
+            msg_frame->frame.data[5] = (*addr_ptr & 0x00FF); // Load value low byte in DATA[3] of frame
+
+            msg_frame->frame.dlen.value = 6; // Set data length
+
+            // Send response
+            fres = smpsDebugUART_SendFrame (msg_frame); // Built frame and put it in transmission queue
+
+            break;
+
+        /*!DBGUART_CID_AND_BIT_MASK
+         * *********************************************************************
+         * AND's a bit mask [BITMSK] with a 16-bit wide value [VALUE] at memory 
+         * address [ADDR] and writes the result as new value to this memory 
+         * address.
+         * The address is given by data bytes DATA[0] and DATA[1] where 
+         *   - DATA[0] = ADDR high byte
+         *   - DATA[1] = ADDR low byte
+         * 
+         * The bit mask is given by data bytes DATA[2] and DATA[3] where
+         *   - DATA[2] = BITMSK high byte
+         *   - DATA[3] = BITMSK low byte
+         * 
+         * The value is written to the given address, read back and returned
+         * to the sender for verification, where
+         *   - DATA[4] = RETURN_VALUE high byte
+         *   - DATA[5] = RETURN_VALUE low byte
+         * 
+         * PLEASE NOTE:
+         * This message needs to be acknowledged by setting bit #0 of CID high
+         * byte = 1
+         * ********************************************************************/
+        case DBGUART_CID_AND_BIT_MASK:
+
+            // Read memory address
+            val_buf = msg_frame->frame.data[0]; // Load address high-byte
+            val_buf <<= 8;
+            val_buf |= msg_frame->frame.data[1]; // Load address low-byte
+
+             // Convert to pointer
+            addr_ptr = (volatile uint16_t*)val_buf;
+
+            // Read bit mask from message frame
+            val_buf = msg_frame->frame.data[2]; // Load bit mask high-byte
+            val_buf <<= 8;
+            val_buf |= msg_frame->frame.data[3]; // Load bit mask low-byte
+
+            // Write [value & bit mask] to memory address
+            *addr_ptr = (volatile uint16_t)(*addr_ptr & (volatile uint16_t)val_buf);
+
+            // Build response
+            msg_frame->frame.cid.value |= DBGUART_CID_ACKNOWLEDGEMENT;   // ID acknowledge
+            msg_frame->frame.data[4] = ((*addr_ptr & 0xFF00) >> 8); // Load value high byte in DATA[2] of frame
+            msg_frame->frame.data[5] = (*addr_ptr & 0x00FF); // Load value low byte in DATA[3] of frame
+
+            msg_frame->frame.dlen.value = 6; // Set data length
+
+            // Send response
+            fres = smpsDebugUART_SendFrame (msg_frame); // Built frame and put it in transmission queue
+
+            break;
+
+        /*!DBGUART_CID_BIT_GET
+         * *********************************************************************
+         * Gets a bit [BIT] within a 16-bit wide value [VALUE] at memory 
+         * address [ADDR] and returns its value to sender
+         * The address is given by data bytes DATA[0] and DATA[1] where 
+         *   - DATA[0] = ADDR high byte
+         *   - DATA[1] = ADDR low byte
+         * 
+         * The bit position is given by data byte DATA[2] ranging from 0 to 15
+         * where 0 = LSB and 15 = MSB
+         * 
+         * The bit is extracted from the value found at the given address
+         *  and returned to the sender, where
+         *   - DATA[3] = RETURN_VALUE (0=cleared, 1=set)
+         * 
+         * PLEASE NOTE:
+         * This message needs to be acknowledged by setting bit #0 of CID high
+         * byte = 1
+         * ********************************************************************/
+        case DBGUART_CID_BIT_GET:
+
+            // Read memory address
+            val_buf = msg_frame->frame.data[0]; // Load address high-byte
+            val_buf <<= 8;
+            val_buf |= msg_frame->frame.data[1]; // Load address low-byte
+
+            // Convert to pointer
+            addr_ptr = (volatile uint16_t*)val_buf; 
+
+            // Build response
+            msg_frame->frame.cid.value |= DBGUART_CID_ACKNOWLEDGEMENT;   // ID acknowledge
+            msg_frame->frame.data[3] = (uint16_t)(bool)(*addr_ptr & (0x0001 << msg_frame->frame.data[2])); // Load value high byte in DATA[2] of frame
+
+            msg_frame->frame.dlen.value = 4; // Set data length
+
+            // Send response
+            fres = smpsDebugUART_SendFrame (msg_frame); // Built frame and put it in transmission queue
+
+            break;
+
+        /*!DBGUART_CID_BIT_SET
+         * *********************************************************************
+         * Sets a bit [BIT] within a 16-bit wide value [VALUE] at memory 
+         * address [ADDR] and writes the result as new value to the given
+         * memory address.
+         * The address is given by data bytes DATA[0] and DATA[1] where 
+         *   - DATA[0] = ADDR high byte
+         *   - DATA[1] = ADDR low byte
+         * 
+         * The bit position is given by data byte DATA[2] ranging from 0 to 15
+         * where 0 = LSB and 15 = MSB
+         * 
+         * The bit is set within the value found at the given address. The
+         * value is read back, the bit is extracted and returned to the sender 
+         * for verification, where
+         *   - DATA[3] = RETURN_VALUE (0=cleared, 1=set)
+         * 
+         * PLEASE NOTE:
+         * This message needs to be acknowledged by setting bit #0 of CID high
+         * byte = 1
+         * ********************************************************************/
+        case DBGUART_CID_BIT_SET:
+
+            // Read memory address
+            val_buf = msg_frame->frame.data[0]; // Load address high-byte
+            val_buf <<= 8;
+            val_buf |= msg_frame->frame.data[1]; // Load address low-byte
+
+            // Convert to pointer
+            addr_ptr = (volatile uint16_t*)val_buf; 
+
+            // Write [value | bit] to memory address
+            *addr_ptr = (volatile uint16_t)(*addr_ptr | (0x0001 << msg_frame->frame.data[2]));
+
+            // Build response
+            msg_frame->frame.cid.value |= DBGUART_CID_ACKNOWLEDGEMENT;   // ID acknowledge
+            msg_frame->frame.data[3] = (uint16_t)(bool)(*addr_ptr & (0x0001 << msg_frame->frame.data[2])); // Load value high byte in DATA[2] of frame
+
+            msg_frame->frame.dlen.value = 4; // Set data length
+
+            // Send response
+            fres = smpsDebugUART_SendFrame (msg_frame); // Built frame and put it in transmission queue
+
+            break;
+
+        /*!DBGUART_CID_BIT_CLEAR
+         * *********************************************************************
+         * Clears a bit [BIT] within a 16-bit wide value [VALUE] at memory 
+         * address [ADDR] and writes the result as new value to the given
+         * memory address.
+         * The address is given by data bytes DATA[0] and DATA[1] where 
+         *   - DATA[0] = ADDR high byte
+         *   - DATA[1] = ADDR low byte
+         * 
+         * The bit position is given by data byte DATA[2] ranging from 0 to 15
+         * where 0 = LSB and 15 = MSB
+         * 
+         * The bit is cleared within the value found at the given address. The
+         * value is read back, the bit is extracted and returned to the sender 
+         * for verification, where
+         *   - DATA[3] = RETURN_VALUE (0=cleared, 1=set)
+         * 
+         * PLEASE NOTE:
+         * This message needs to be acknowledged by setting bit #0 of CID high
+         * byte = 1
+         * ********************************************************************/
+        case DBGUART_CID_BIT_CLEAR:
+
+            // Read memory address
+            val_buf = msg_frame->frame.data[0]; // Load address high-byte
+            val_buf <<= 8;
+            val_buf |= msg_frame->frame.data[1]; // Load address low-byte
+
+            // Convert to pointer
+            addr_ptr = (volatile uint16_t*)val_buf; 
+
+            // Write [value | bit] to memory address
+            *addr_ptr = (volatile uint16_t)(*addr_ptr & (~(0x0001 << msg_frame->frame.data[2])));
+
+            // Build response
+            msg_frame->frame.cid.value |= DBGUART_CID_ACKNOWLEDGEMENT;   // ID acknowledge
+            msg_frame->frame.data[3] = (uint16_t)(bool)(*addr_ptr & (0x0001 << msg_frame->frame.data[2])); // Load value high byte in DATA[2] of frame
+
+            msg_frame->frame.dlen.value = 4; // Set data length
+
+            // Send response
+            fres = smpsDebugUART_SendFrame (msg_frame); // Built frame and put it in transmission queue
+
+            break;
+
+        /*!Proprietary Protocol Commands
+         * *********************************************************************
+         * If the received CID is not recognized as Default Command ID, 
+         * return DBGUART_CID_PROPRIETARY.
+         * ********************************************************************/    
+        default:
+            // The received CID has not been recognized and is considered to be a 
+            // proprietary Command ID which needs to be processed in user code.
+            // Thus the Rx Frame is kept alive by not resetting its status
+            // and is handed back to the calling function.
+            return(DBGUART_CID_PROPRIETARY);
+            break;
+    }
+    
+    
+    // Reset frame object and RX FIFO data buffer pointer
+    msg_frame->status.value = FDEC_STAT_SOF_SYNC;
+    
+    return(fres);
+
 }
 
 
