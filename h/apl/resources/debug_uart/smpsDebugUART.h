@@ -32,12 +32,12 @@
 #define	MCAL_P33SMPS_DEBUG_UART_PROTOCOL_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
+#include <stddef.h> // include standard definition data types
+#include <stdint.h> // include standard integer number data types
+#include <stdbool.h> // include standard boolean data types (true/false)
 
-#include "mcal/mcal.h"
-#include "hal/hal.h"
+#include "mcal/mcal.h" // include Microcontroller Abstraction Layer
+#include "hal/hal.h" // include Hardware Abstraction Layer
 
 
 #ifdef	__cplusplus
@@ -159,8 +159,6 @@ extern "C" {
 #define DBGUART_CID_BIT_SET             0xE005 // Standard CID for setting a bit within a value at a memory address
 #define DBGUART_CID_BIT_CLEAR           0xE006 // Standard CID for clearing a bit within a value at a memory address
 
-#define DBGUART_CID_DSMPS_GUI           0x0100 // Standard CID for ASCALB GUI (DSMPS)
-    
 #define DBGUART_CID_PROPRIETARY         0x0003 // Return value for 
     
 // Index definition for CID 0x0100 (Ascalab GUI) 
@@ -348,7 +346,6 @@ extern volatile SMPS_DBGUART_t DebugUART;
 extern volatile uint16_t smpsDebugUART_Initialize(void);
 extern volatile uint16_t smpsDebugUART_Execute(void);
 
-extern volatile uint16_t smpsDebugUART_ProcessCID(volatile SMPS_DGBUART_FRAME_t* rx_frame);
 extern volatile uint16_t smpsDebugUART_SendFrame(volatile SMPS_DGBUART_FRAME_t* tx_frame);
 extern volatile uint16_t smpsDebugUART_InitializeFrame(volatile SMPS_DGBUART_FRAME_t* msg_frame, 
             volatile uint16_t id, volatile uint8_t* data, volatile uint16_t data_length);
