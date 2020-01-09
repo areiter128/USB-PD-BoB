@@ -74,10 +74,10 @@ volatile uint16_t DebugUART_TimingUpdate(void) {
 
     // Update SEND_PERIOD
     DebugUART.send_period = 
-        (volatile uint16_t)(DBGUART_SEND_PER / task_mgr.task_queue_ubound + 1);
+        (volatile uint16_t)(DBGUART_SEND_PER / (task_mgr.task_queue_ubound + 1));
 
     DebugUART.clear_period = 
-        (volatile uint16_t)(DBGUART_SEND_PER / task_mgr.task_queue_ubound + 1);
+        (volatile uint16_t)(DBGUART_CLEAR_PER / (task_mgr.task_queue_ubound + 1));
 
     return(1);
 }
@@ -152,7 +152,7 @@ volatile uint16_t smpsDebugUART_Execute(void) {
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     /* SEND NEXT MESSAGE IN QUEUE                                                         */
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-    else if ((DebugUART.send_counter++ > DebugUART.send_period) || (!uart.tx_buffer.status.msg_complete)) 
+    else if ((++DebugUART.send_counter > DebugUART.send_period) || (!uart.tx_buffer.status.msg_complete)) 
     { // Count OS function calls until UART send period is exceeded
       // Send message and reset UART send interval counter
         
