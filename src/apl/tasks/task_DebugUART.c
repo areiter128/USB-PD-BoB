@@ -62,7 +62,7 @@ volatile uint16_t task_DebugUART_Execute(void) {
             tx_data_cid100[2] = (volatile uint8_t)((c4swbb_1.data.v_out & 0xFF00) >> 8);
             tx_data_cid100[3] = (volatile uint8_t)(c4swbb_1.data.v_out & 0x00FF);
 
-#ifdef __00173_USB_PD_BOB_R20__  
+            #if defined (__00173_USB_PD_BOB_R20__)
             if((int16_t)(c4swbb_1.data.i_out-1940)>0 && (c4swbb_1.status.bits.enable==1))
             {
                 tx_data_cid100[4] = (volatile uint8_t)(((c4swbb_1.data.i_out-1940) & 0xFF00) >> 8);
@@ -73,16 +73,20 @@ volatile uint16_t task_DebugUART_Execute(void) {
                 tx_data_cid100[4] = 0; 
                 tx_data_cid100[5] = 0;   
             }
-#endif
-            
-#ifdef __00173_USB_PD_BOB_R21__            
+            #elif defined (__00173_USB_PD_BOB_R21__)
             tx_data_cid100[4] = (volatile uint8_t)(((c4swbb_1.data.i_out) & 0xFF00) >> 8);
             tx_data_cid100[5] = (volatile uint8_t)((c4swbb_1.data.i_out) & 0x00FF);
-#endif              
+            
+            #else
+            tx_data_cid100[4] = 0x00;
+            tx_data_cid100[5] = 0x00;
+            
+            #endif              
+            
             tx_data_cid100[10] = (volatile uint8_t)((c4swbb_2.data.v_out & 0xFF00) >> 8);
             tx_data_cid100[11] = (volatile uint8_t)(c4swbb_2.data.v_out & 0x00FF);
 
-#ifdef __00173_USB_PD_BOB_R20__
+            #if defined (__00173_USB_PD_BOB_R20__)
             if((int16_t)(c4swbb_2.data.i_out-1940)>0 && (c4swbb_2.status.bits.enable==1))
             {
                 tx_data_cid100[12] = (volatile uint8_t)(((c4swbb_2.data.i_out-1940) & 0xFF00) >> 8);
@@ -94,11 +98,15 @@ volatile uint16_t task_DebugUART_Execute(void) {
                 tx_data_cid100[13] = 0;   
             }
 
-#endif
-            #ifdef __00173_USB_PD_BOB_R21__
+            #elif defined (__00173_USB_PD_BOB_R21__)
             tx_data_cid100[12] = (volatile uint8_t)((c4swbb_2.data.i_out & 0xFF00) >> 8);
             tx_data_cid100[13] = (volatile uint8_t)(c4swbb_2.data.i_out & 0x00FF);
-#endif
+            
+            #else
+            tx_data_cid100[12] = 0; 
+            tx_data_cid100[13] = 0;   
+            
+            #endif
             
             tempx100=(uint16_t)(100.0*(float)c4swbb_1.data.temp-(float)TEMP_OFFSET_TICKS)/(float)TEMP_SLOPE_TICKS;
             
@@ -147,7 +155,7 @@ volatile uint16_t task_DebugUART_Initialize(void) {
     smpsPPS_RemapInput(HUB_PRTPWR2_RP, PPSIN_U3RX);
     smpsPPS_RemapOutput(HUB_PRTPWR1_RP, PPSOUT_U3TX);
     #endif
-    //fres &= smpsPPS_LockIO(); // Carlo it prevent PD stack to work. To be verified
+    fres &= smpsPPS_LockIO(); // Carlo it prevent PD stack to work. To be verified
     
     
     // Initialize default data frame for power supply runtime data

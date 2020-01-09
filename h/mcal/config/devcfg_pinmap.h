@@ -39,11 +39,12 @@
 extern "C" {
 #endif /* __cplusplus */
 
-    #ifdef __00173_USB_PD_BOB_R20__
+    #if defined (__00173_USB_PD_BOB_R20__) || defined (__00173_USB_PD_BOB_R21__)
         #include "00173_USB_PD_BoB_R20_pinmap.h"
-    #endif
-    #ifdef __MA330048_P33CK_R30_USB_PD_BOB__
+    #elif defined (__MA330048_P33CK_R30_USB_PD_BOB__)
         #include "MA330048_P33CK_R30_USB_PD_BOB_pinmap.h"
+    #else
+        #pragma message "=== pin-mapping information of selected device/hardware not declared ==="
     #endif
     
 #ifdef	__cplusplus

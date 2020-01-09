@@ -36,7 +36,8 @@
 
 #include "hal/hal.h"
 
-#if defined (__00173_USB_PD_BOB_R20__) || defined (__MA330048_P33CK_R30_USB_PD_BOB__)
+#if defined (__00173_USB_PD_BOB_R20__) || defined (__00173_USB_PD_BOB_R21__) || \
+    defined (__MA330048_P33CK_R30_USB_PD_BOB__)
 
 
 /*!ADC Settings
