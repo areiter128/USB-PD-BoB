@@ -49,15 +49,13 @@ volatile uint16_t smpsDebugUART_ProcessCID(volatile SMPS_DGBUART_FRAME_t* msg_fr
         // Run Cyclic Redundancy Check 
         crc = smpsCRC_GetStandard_Data8CRC16((uint8_t*)msg_frame, 0, (msg_frame->frame.dlen.value + DBGUART_FRAME_HEAD_LEN));
     
-    // Only execute commands which are fully validated
-    if (crc != msg_frame->frame.crc.value) {
-    // CRC Error
-        Nop();  // Place breakpoint here during debugging
-        Nop();
-        Nop();
-        return(0);  // Exit and return FALSE
+        // if there is a CRC mismatch, stop and exit here
+        if (crc == msg_frame->frame.crc.value) {
+            msg_frame->status.value = FDEC_STAT_SOF_SYNC; // Reset frame object and RX FIFO data buffer pointer
+            return(0);  // Exit and return FALSE
+        }
     }
-    
+
     // Select CID response action
     switch (msg_frame->frame.cid.value) {
 
@@ -388,6 +386,7 @@ volatile uint16_t smpsDebugUART_ProcessCID(volatile SMPS_DGBUART_FRAME_t* msg_fr
          * and not covered by standard definitions.
          * ********************************************************************/    
 
+            
             
         default:
             break;
