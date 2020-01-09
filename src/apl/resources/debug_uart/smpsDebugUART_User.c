@@ -393,7 +393,13 @@ volatile uint16_t smpsDebugUART_ProcessCID(volatile SMPS_DGBUART_FRAME_t* msg_fr
          * The following commands are hardware and/or application specific
          * and not covered by standard definitions.
          * ********************************************************************/    
-
+        case DBGUART_CID_DSMPS_GUI:
+            Nop();
+            Nop();
+            Nop();
+            Nop();
+            
+            break;
             
         default:
             break;

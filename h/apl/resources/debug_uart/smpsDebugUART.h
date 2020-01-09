@@ -49,7 +49,7 @@ extern "C" {
  * Digital Power Debugging UART Communication Data Buffer Definitions
  * ********************************************************************************/
 #ifndef DBGUART_RX_BUFFER_SIZE
-  #define DBGUART_RX_BUFFER_SIZE    32U // Number of Bytes of one frame RECEIVE buffer
+  #define DBGUART_RX_BUFFER_SIZE    64U // Number of Bytes of one frame RECEIVE buffer
 #endif
 #ifndef DBGUART_RX_FRAMES
   #define DBGUART_RX_FRAMES         8U // Number of RECEIVE buffers
@@ -101,6 +101,8 @@ extern "C" {
 #define DBGUART_CID_BIT_GET             0xE004 // Standard CID for reading a bit within a value at a memory address
 #define DBGUART_CID_BIT_SET             0xE005 // Standard CID for setting a bit within a value at a memory address
 #define DBGUART_CID_BIT_CLEAR           0xE006 // Standard CID for clearing a bit within a value at a memory address
+
+#define DBGUART_CID_DSMPS_GUI           0x0100 // Standard CID for ASCALB GUI (DSMPS)
     
 /* *********************************************************************************
  * Digital Power Debugging UART Communication Frame
