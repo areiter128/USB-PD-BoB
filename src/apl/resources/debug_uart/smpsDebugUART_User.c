@@ -35,25 +35,19 @@ volatile uint16_t smpsDebugUART_ProcessCID(volatile SMPS_DGBUART_FRAME_t* msg_fr
     volatile uint16_t fres=1;
 
     // Frame-Validation variables
-    volatile uint16_t i=0;
-    volatile uint8_t dbuf[DBGUART_RX_BUFFER_SIZE + DBGUART_FRAME_OVHD_LEN]; // Dummy buffer for CRC calculation
     volatile uint16_t crc=0;
     
     // Command execution buffer variables
     volatile uint16_t val_buf=0;
     volatile uint16_t* addr_ptr;
     
-    // ToDo: Perform CRC calculation directly on RX FRAME data (do not use 'dbuf' buffer array)
     // Run Cyclic Redundancy Check if ID and data contents are valid
-    dbuf[0] = msg_frame->frame.sof;
-    dbuf[1] = msg_frame->frame.cid.bytes.idh;
-    dbuf[2] = msg_frame->frame.cid.bytes.idl;
-    dbuf[3] = msg_frame->frame.dlen.bytes.dlh;
-    dbuf[4] = msg_frame->frame.dlen.bytes.dll;
-    for (i=0; i<msg_frame->frame.dlen.value; i++)
-    { dbuf[5+i] = msg_frame->frame.data[i]; }
+    // for all IDs greater than 0x000F. CIDs from 0 to 15 (0x0000-0x000F)
+    // are used to bypass CRC calculation
+    if (msg_frame->frame.cid.value > 0x000F) {
     
-    crc = smpsCRC_GetStandard_Data8CRC16(&dbuf[0], 0, (i+5));
+        // Run Cyclic Redundancy Check 
+        crc = smpsCRC_GetStandard_Data8CRC16((uint8_t*)msg_frame, 0, (msg_frame->frame.dlen.value + DBGUART_FRAME_HEAD_LEN));
     
     // Only execute commands which are fully validated
     if (crc != msg_frame->frame.crc.value) {
