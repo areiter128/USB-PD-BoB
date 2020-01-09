@@ -58,6 +58,63 @@ extern "C" {
 //#ifndef DBGUART_TX_BUFFER_SIZE
 //  #define DBGUART_TX_BUFFER_SIZE    64U // Number of Bytes of one frame TRANSMIT buffer
 //#endif
+#if (UART_INSTANCE == 1)
+    
+    #define _DebugUART_RXIP     _U1RXIP // UART1 Receive Interrupt Priority Bits    
+    #define _DebugUART_RXIF     _U1RXIF // UART1 Receive Interrupt Flag Bit
+    #define _DebugUART_RXIE     _U1RXIE // UART1 Receive Interrupt Enable Control Bit
+
+    #define _DebugUART_TXIP     _U1TXIP // UART1 Transmit Interrupt Priority Bits    
+    #define _DebugUART_TXIF     _U1TXIF // UART1 Transmit Interrupt Flag Bit
+    #define _DebugUART_TXIE     _U1TXIE // UART1 Transmit Interrupt Enable Control Bit
+
+    #define _DebugUART_ErrorIP  _U1EIP  // UART1 Error Interrupt Priority Bit
+    #define _DebugUART_ErrorIF  _U1EIF  // UART1 Error Interrupt Flag Bit
+    #define _DebugUART_ErrorIE  _U1EIE  // UART1 Error Interrupt Enable Control Bit
+
+    #define _DebugUART_ErrorInterrupt   _U1EInterrupt // Interrupt Vector Name of UART1 Error Interrupt
+    #define _DebugUART_RXInterrupt      _U1RXInterrupt // Interrupt Vector Name of UART1 Receive Interrupt
+    #define _DebugUART_TXInterrupt      _U1TXInterrupt // Interrupt Vector Name of UART1 Transmit Interrupt
+
+#elif (UART_INSTANCE == 2)
+
+    #define _DebugUART_RXIP     _U2RXIP // UART1 Receive Interrupt Priority Bits    
+    #define _DebugUART_RXIF     _U2RXIF // UART1 Receive Interrupt Flag Bit
+    #define _DebugUART_RXIE     _U2RXIE // UART1 Receive Interrupt Enable Control Bit
+
+    #define _DebugUART_TXIP     _U2TXIP // UART1 Transmit Interrupt Priority Bits    
+    #define _DebugUART_TXIF     _U2TXIF // UART1 Transmit Interrupt Flag Bit
+    #define _DebugUART_TXIE     _U2TXIE // UART1 Transmit Interrupt Enable Control Bit
+
+    #define _DebugUART_ErrorIP  _U2EIP  // UART1 Error Interrupt Priority Bit
+    #define _DebugUART_ErrorIF  _U2EIF  // UART1 Error Interrupt Flag Bit
+    #define _DebugUART_ErrorIE  _U2EIE  // UART1 Error Interrupt Enable Control Bit
+
+    #define _DebugUART_ErrorInterrupt   _U2EInterrupt // Interrupt Vector Name of UART1 Error Interrupt
+    #define _DebugUART_RXInterrupt      _U2RXInterrupt // Interrupt Vector Name of UART1 Receive Interrupt
+    #define _DebugUART_TXInterrupt      _U2TXInterrupt // Interrupt Vector Name of UART1 Transmit Interrupt
+
+#elif (UART_INSTANCE == 3)
+
+    #define _DebugUART_RXIP     _U3RXIP // UART1 Receive Interrupt Priority Bits    
+    #define _DebugUART_RXIF     _U3RXIF // UART1 Receive Interrupt Flag Bit
+    #define _DebugUART_RXIE     _U3RXIE // UART1 Receive Interrupt Enable Control Bit
+
+    #define _DebugUART_TXIP     _U3TXIP // UART1 Transmit Interrupt Priority Bits    
+    #define _DebugUART_TXIF     _U3TXIF // UART1 Transmit Interrupt Flag Bit
+    #define _DebugUART_TXIE     _U3TXIE // UART1 Transmit Interrupt Enable Control Bit
+
+    #define _DebugUART_ErrorIP  _U3EIP  // UART1 Error Interrupt Priority Bit
+    #define _DebugUART_ErrorIF  _U3EIF  // UART1 Error Interrupt Flag Bit
+    #define _DebugUART_ErrorIE  _U3EIE  // UART1 Error Interrupt Enable Control Bit
+    
+    #define _DebugUART_ErrorInterrupt   _U3EInterrupt // Interrupt Vector Name of UART1 Error Interrupt
+    #define _DebugUART_RXInterrupt      _U3RXInterrupt // Interrupt Vector Name of UART1 Receive Interrupt
+    #define _DebugUART_TXInterrupt      _U3TXInterrupt // Interrupt Vector Name of UART1 Transmit Interrupt
+
+#else
+    #pragma message "=== selected UART instance is not available on this device ==="
+#endif    
 
 /* *********************************************************************************
  * Digital Power Debugging UART Communication Timing Definitions

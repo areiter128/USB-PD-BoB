@@ -39,9 +39,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-//#include "apl/resources/debug_uart/smpsDebugUART.h"
-//#include "dsPIC33C/p33SMPS_uart.h"
-
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
@@ -50,49 +47,9 @@ extern "C" {
  * UART Hardware Definitions
  * ********************************************************************************/
     
-#define UART_INSTANCE       3  // Number of UART peripheral instance (1=UART1, 2=UART2, etc)
-#define DBGUART_RX_ISR_PRIORITY 2   // UART1 Receive Interrupt Priority
-    
-#define _DebugUART_RXIP     _U3RXIP // UART3 Receive Interrupt Priority Bits    
-#define _DebugUART_RXIF     _U3RXIF // UART3 Receive Interrupt Flag Bit
-#define _DebugUART_RXIE     _U3RXIE // UART3 Receive Interrupt Enable Control Bit
+#define UART_INSTANCE       3       // Number of UART peripheral instance (1=UART1, 2=UART2, etc)
+#define DBGUART_RX_ISR_PRIORITY 2   // UARTx Receive Interrupt Priority
 
-#define _DebugUART_TXIP     _U3TXIP // UART3 Transmit Interrupt Priority Bits    
-#define _DebugUART_TXIF     _U3TXIF // UART3 Transmit Interrupt Flag Bit
-#define _DebugUART_TXIE     _U3TXIE // UART3 Transmit Interrupt Enable Control Bit
-    
-#define _DebugUART_ErrorIP  _U3EIP  // UART3 Error Interrupt Priority Bit
-#define _DebugUART_ErrorIF  _U3EIF  // UART3 Error Interrupt Flag Bit
-#define _DebugUART_ErrorIE  _U3EIE  // UART3 Error Interrupt Enable Control Bit
-    
-#define _DebugUART_ErrorInterrupt   _U3EInterrupt // Interrupt Vector Name of UART3 Error Interrupt
-#define _DebugUART_RXInterrupt      _U3RXInterrupt // Interrupt Vector Name of UART3 Receive Interrupt
-#define _DebugUART_TXInterrupt      _U3TXInterrupt // Interrupt Vector Name of UART3 Transmit Interrupt
-    
-/* *********************************************************************************
- * Transmission Data Frame Definitions
- * ********************************************************************************/
-
-//#define  SMPS_DBGUART_CID11          0x11
-
-    
-/*!CID100
- *  *********************************************************************************
- * CID100
- * ********************************************************************************/
-
-    
-//#define  SMPS_DBGUART_CID100        0x0100
-//#define  SMPS_DBGUART_CID100_DLEN   32U
-//    
-//extern volatile SMPS_DGBUART_FRAME_t tx_frame_cid100;
-//extern volatile uint8_t tx_data_cid100[];
-//extern volatile uint16_t tx_data_cid100_size;
-//
-
-/* *********************************************************************************
- * Receive Data Frame Definitions
- * ********************************************************************************/
 
 /* *********************************************************************************
  * Global task function prototypes

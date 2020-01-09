@@ -19,9 +19,9 @@
  * MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE 
  * TERMS. 
  * ***************************************************************************/
-/*!tasks.c
+/*!UserTasks.c
  *****************************************************************************
- * File:   tasks.c
+ * File:   UserTasks.c
  *
  * Summary:
  * Defines lists of tasks which will be called by the scheduler

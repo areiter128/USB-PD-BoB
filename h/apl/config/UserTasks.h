@@ -19,9 +19,9 @@
  * MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE 
  * TERMS. 
  * ***************************************************************************/
-/*!tasks.h
+/*!UserTasks.h
  *****************************************************************************
- * File:   tasks.h
+ * File:   UserTasks.h
  *
  * Summary:
  * Globally defines the task table ID flags and operating modes task queues
@@ -33,8 +33,8 @@
  * -
  *
  * See also:
- * task_manager.c
- * task_manager.h
+ * os_TaskManager.c
+ * os_TaskManager.h
  * 
  * Revision history: 
  * 07/27/16     Initial version
