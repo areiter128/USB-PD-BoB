@@ -57,8 +57,18 @@ volatile uint16_t task_DebugUART_Execute(void) {
         
         if(++cid100_update_counter > DebugUART.send_period) {
 
-            tx_data_cid100[0] = (volatile uint8_t)((c4swbb_1.data.v_out & 0xFF00) >> 8);
-            tx_data_cid100[1] = (volatile uint8_t)(c4swbb_1.data.v_out & 0x00FF);
+            tx_data_cid100[0] = (volatile uint8_t)((c4swbb_1.data.v_in & 0xFF00) >> 8);
+            tx_data_cid100[1] = (volatile uint8_t)(c4swbb_1.data.v_in & 0x00FF);
+            tx_data_cid100[2] = (volatile uint8_t)((c4swbb_1.data.v_out & 0xFF00) >> 8);
+            tx_data_cid100[3] = (volatile uint8_t)(c4swbb_1.data.v_out & 0x00FF);
+            
+            tx_data_cid100[4] = (volatile uint8_t)((c4swbb_1.data.i_out & 0xFF00) >> 8);
+            tx_data_cid100[5] = (volatile uint8_t)(c4swbb_1.data.i_out & 0x00FF);
+            
+            tx_data_cid100[10] = (volatile uint8_t)((c4swbb_2.data.v_out & 0xFF00) >> 8);
+            tx_data_cid100[11] = (volatile uint8_t)(c4swbb_2.data.v_out & 0x00FF);
+            tx_data_cid100[12] = (volatile uint8_t)((c4swbb_2.data.i_out & 0xFF00) >> 8);
+            tx_data_cid100[13] = (volatile uint8_t)(c4swbb_2.data.i_out & 0x00FF);
             tx_frame_cid100.frame.dlen.value = 64;
 
             smpsDebugUART_SendFrame(&tx_frame_cid100); // Carlo
