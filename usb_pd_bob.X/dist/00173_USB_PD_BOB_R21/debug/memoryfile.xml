@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project>
-  <executable name="dist/00173_USB_PD_BOB_R20/production/usb_pd_bob.X.production.elf">
+  <executable name="dist/00173_USB_PD_BOB_R21/debug/usb_pd_bob.X.debug.elf">
     <memory name="data">
       <units>bytes</units>
       <length>16384</length>
-      <used>9226</used>
-      <free>7158</free>
+      <used>9826</used>
+      <free>6558</free>
     </memory>
     <memory name="program">
       <units>bytes</units>
       <length>134016</length>
-      <used>108798</used>
-      <free>25218</free>
+      <used>109089</used>
+      <free>24927</free>
     </memory>
   </executable>
 </project>
