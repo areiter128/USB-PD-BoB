@@ -59,9 +59,9 @@ volatile uint16_t task_DebugUART_Execute(void) {
 
             tx_data_cid100[0] = (volatile uint8_t)((c4swbb_1.data.v_out & 0xFF00) >> 8);
             tx_data_cid100[1] = (volatile uint8_t)(c4swbb_1.data.v_out & 0x00FF);
-            tx_frame_cid100.frame.dlen.value = 2;
+            tx_frame_cid100.frame.dlen.value = 64;
 
-            smpsDebugUART_SendFrame(&tx_frame_cid100);
+            smpsDebugUART_SendFrame(&tx_frame_cid100); // Carlo
             
             cid100_update_counter = 0;
         }

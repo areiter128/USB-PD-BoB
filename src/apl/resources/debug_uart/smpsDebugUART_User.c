@@ -394,6 +394,8 @@ volatile uint16_t smpsDebugUART_ProcessCID(volatile SMPS_DGBUART_FRAME_t* msg_fr
          * and not covered by standard definitions.
          * ********************************************************************/    
         case DBGUART_CID_DSMPS_GUI:
+            // Carlo Add code to mange buffer from GUI here
+            
             Nop();
             Nop();
             Nop();
