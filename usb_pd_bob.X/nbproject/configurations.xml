@@ -441,7 +441,7 @@
         <property key="legacy-libc" value="true"/>
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros"
-                  value="__00173_USB_PD_BOB_R21__;__00173_USB_PD_BOB_R20__;__CODE_OPT_LEVEL_3__"/>
+                  value="__00173_USB_PD_BOB_R21__;__CODE_OPT_LEVEL_3__"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>
