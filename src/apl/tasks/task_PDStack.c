@@ -94,22 +94,25 @@ volatile uint16_t task_PDStack(void)
 
 volatile uint16_t init_taskPDStack(void)
 {
-    uint16_t reg_data_16;
     //char debug_string[20];
     
+#if (PD_DEBUG_UART_ENABLE  == 1)  
+    uint16_t reg_data_16;
     // Set up the secondary UART for use by the PD stack
     DEBUG_init();
-    
+#endif   
     // Set RC2 as output for debugging
     TRISCbits.TRISC2 = 0;
     LATCbits.LATC2 = 0;
     
     PD_Init();
+#if (PD_DEBUG_UART_ENABLE  == 1) 
     LOG_PRINT(LOG_INFO, "Init TASK PD Stack done\r\n");
+#endif
 
     // Configure UPD350 gpio pins for functions used outside of the stack
     configure_upd350_gpio();
-    
+#if (PD_DEBUG_UART_ENABLE  == 1)    
     UPD_RegisterRead(0, 0x0004, (uint8_t *)&reg_data_16, 2);
     LOG_PRINT1(LOG_DEBUG, "VID 1: %04X\r\n", reg_data_16);
     UPD_RegisterRead(0, 0x0006, (uint8_t *)&reg_data_16, 2);
@@ -118,12 +121,12 @@ volatile uint16_t init_taskPDStack(void)
     LOG_PRINT1(LOG_DEBUG, "VID 2: %04X\r\n", reg_data_16);
     UPD_RegisterRead(1, 0x0006, (uint8_t *)&reg_data_16, 2);
     LOG_PRINT1(LOG_DEBUG, "PID 2: %04X\r\n", reg_data_16);
+    debug_uart_tx_flush();
+#endif
     
     // Set the flag in the structure to indicate that the stack has been initialized.
     taskPDStack_config.status.flags.enable = PDSTACK_ENABLED;
-    
-    debug_uart_tx_flush();
-    
+ 
     return(true);
 }
 

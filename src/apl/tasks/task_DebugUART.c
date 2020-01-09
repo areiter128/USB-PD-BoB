@@ -16,10 +16,14 @@
 
 
 #define  SMPS_DBGUART_CID100        0x0100
-#define  SMPS_DBGUART_CID100_DLEN   32U
+#define  SMPS_DBGUART_CID100_DLEN   64U
 
 volatile SMPS_DGBUART_FRAME_t tx_frame_cid100;
 volatile uint8_t tx_data_cid100[SMPS_DBGUART_CID100_DLEN] = {
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -45,7 +49,7 @@ volatile uint16_t cid100_update_counter = 0;
 
 volatile uint16_t task_DebugUART_Execute(void) {
 
-    volatile uint16_t fres=1;
+    volatile uint16_t fres=1,tempx100=0;
 
     // If UART interface has already been successfully initialized, 
     // Execute DebugUART state machine
@@ -53,11 +57,57 @@ volatile uint16_t task_DebugUART_Execute(void) {
         
         if(++cid100_update_counter > DebugUART.send_period) {
 
-            tx_data_cid100[0] = (volatile uint8_t)((c4swbb_1.data.v_out & 0xFF00) >> 8);
-            tx_data_cid100[1] = (volatile uint8_t)(c4swbb_1.data.v_out & 0x00FF);
-            tx_frame_cid100.frame.dlen.value = 2;
+            tx_data_cid100[0] = (volatile uint8_t)((c4swbb_1.data.v_in & 0xFF00) >> 8);
+            tx_data_cid100[1] = (volatile uint8_t)(c4swbb_1.data.v_in & 0x00FF);
+            tx_data_cid100[2] = (volatile uint8_t)((c4swbb_1.data.v_out & 0xFF00) >> 8);
+            tx_data_cid100[3] = (volatile uint8_t)(c4swbb_1.data.v_out & 0x00FF);
 
-            smpsDebugUART_SendFrame(&tx_frame_cid100);
+#ifdef __00173_USB_PD_BOB_R20__  
+            if((int16_t)(c4swbb_1.data.i_out-1940)>0 && (c4swbb_1.status.bits.enable==1))
+            {
+                tx_data_cid100[4] = (volatile uint8_t)(((c4swbb_1.data.i_out-1940) & 0xFF00) >> 8);
+                tx_data_cid100[5] = (volatile uint8_t)((c4swbb_1.data.i_out-1940) & 0x00FF);
+            }
+            else
+            {
+                tx_data_cid100[4] = 0; 
+                tx_data_cid100[5] = 0;   
+            }
+#endif
+            
+#ifdef __00173_USB_PD_BOB_R21__            
+            tx_data_cid100[4] = (volatile uint8_t)(((c4swbb_1.data.i_out) & 0xFF00) >> 8);
+            tx_data_cid100[5] = (volatile uint8_t)((c4swbb_1.data.i_out) & 0x00FF);
+#endif              
+            tx_data_cid100[10] = (volatile uint8_t)((c4swbb_2.data.v_out & 0xFF00) >> 8);
+            tx_data_cid100[11] = (volatile uint8_t)(c4swbb_2.data.v_out & 0x00FF);
+
+#ifdef __00173_USB_PD_BOB_R20__
+            if((int16_t)(c4swbb_2.data.i_out-1940)>0 && (c4swbb_2.status.bits.enable==1))
+            {
+                tx_data_cid100[12] = (volatile uint8_t)(((c4swbb_2.data.i_out-1940) & 0xFF00) >> 8);
+                tx_data_cid100[13] = (volatile uint8_t)((c4swbb_2.data.i_out-1940) & 0x00FF);
+            }
+            else
+            {
+                tx_data_cid100[12] = 0; 
+                tx_data_cid100[13] = 0;   
+            }
+
+#endif
+            #ifdef __00173_USB_PD_BOB_R21__
+            tx_data_cid100[12] = (volatile uint8_t)((c4swbb_2.data.i_out & 0xFF00) >> 8);
+            tx_data_cid100[13] = (volatile uint8_t)(c4swbb_2.data.i_out & 0x00FF);
+#endif
+            
+            tempx100=(uint16_t)(100.0*(float)c4swbb_1.data.temp-(float)TEMP_OFFSET_TICKS)/(float)TEMP_SLOPE_TICKS;
+            
+            tx_data_cid100[14] = (volatile uint8_t)((tempx100 & 0xFF00) >> 8);
+            tx_data_cid100[15] = (volatile uint8_t)(tempx100 & 0x00FF);
+            
+            tx_frame_cid100.frame.dlen.value = 64;
+
+            smpsDebugUART_SendFrame(&tx_frame_cid100); // Carlo
             
             cid100_update_counter = 0;
         }
@@ -79,6 +129,8 @@ volatile uint16_t task_DebugUART_Execute(void) {
 volatile uint16_t task_DebugUART_Initialize(void) {
     
     volatile uint16_t fres=1;
+    
+    //return(0); // Carlo
 
     // Initialize DebugUART Rx/Tx device pins to communicate via UART adapter
     HUB_PRTPWR1_INIT_OUTPUT; // Tx Channel
@@ -95,7 +147,7 @@ volatile uint16_t task_DebugUART_Initialize(void) {
     smpsPPS_RemapInput(HUB_PRTPWR2_RP, PPSIN_U3RX);
     smpsPPS_RemapOutput(HUB_PRTPWR1_RP, PPSOUT_U3TX);
     #endif
-    fres &= smpsPPS_LockIO();
+    //fres &= smpsPPS_LockIO(); // Carlo it prevent PD stack to work. To be verified
     
     
     // Initialize default data frame for power supply runtime data

@@ -14,23 +14,18 @@
 #include "apl/resources/debug_uart/smpsDebugUART.h"
 
 
-/*!smpsDebugUART_ProcessCID
+/*!smpsDebugUART_ExecuteCID
  * ************************************************************************************************
  * Summary:
- * Processes received default message frames
+ * Processes received messages
  *
  * Parameters:
  * (none)
  * 
  * Returns:
- *  uint16_t: 0=failure, 1=success, 3=unsupported CID
+ *  uint16_t: 1=success, 0=failure
  *
  * Description:
- * The Debug UART protocol defines standard CIDs for certain functions/actions such as 
- * reading from or writing to defined memory addresses to monitor and control SFRs. These
- * CID frames are processed here. 
- * If the CID is not a recognized default CID, the function returns the value 0b11 (=3)
- * which indicates that this particular frame needs to be processed in user code.
  * 
  * ************************************************************************************************/
 
@@ -390,9 +385,18 @@ volatile uint16_t smpsDebugUART_ProcessCID(volatile SMPS_DGBUART_FRAME_t* msg_fr
          * The following commands are hardware and/or application specific
          * and not covered by standard definitions.
          * ********************************************************************/    
-
+        case DBGUART_CID_DSMPS_GUI:
+            // Carlo Add code to mange buffer from GUI here
+            
+            Nop();
+            Nop();
+            Nop();
+            Nop();
+            
+            break;
+            
+            
         default:
-            return(3);
             break;
     }
     
