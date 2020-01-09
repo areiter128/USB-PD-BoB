@@ -74,7 +74,7 @@ volatile uint16_t task_DebugUART_Execute(void) {
                 tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX+1] = 0;   
             }
 
-#elif defined() __00173_USB_PD_BOB_R21__)          
+#elif defined(__00173_USB_PD_BOB_R21__)          
             tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX] = (volatile uint8_t)(((c4swbb_1.data.i_out) & 0xFF00) >> 8);
             tx_data_cid100[CID0100_TX_IOUT_CH1_INDEX+1] = (volatile uint8_t)((c4swbb_1.data.i_out) & 0x00FF);
 

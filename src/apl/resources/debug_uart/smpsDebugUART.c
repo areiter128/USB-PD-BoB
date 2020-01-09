@@ -6,7 +6,7 @@
  */
 
 #include "apl/resources/debug_uart/smpsDebugUART.h"
-//#include "apl/resources/debug_uart/smpsDebugUART_UserCID.h"
+#include "apl/resources/debug_uart/smpsDebugUART_UserCID.h"
 #include "apl/tasks/task_DebugUART.h"
 
 #include "dsPIC33C/p33SMPS_uart.h"
