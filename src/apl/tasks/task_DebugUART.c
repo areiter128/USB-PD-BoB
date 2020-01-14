@@ -13,6 +13,7 @@
 
 #include "apl/tasks/task_DebugUART.h"
 #include "apl/resources/debug_uart/smpsDebugUART.h"
+#include "apl/resources//debug_uart/smpsDebugUART_UserCID.h"
 
 
 #define  SMPS_DBGUART_CID100        0x0100
