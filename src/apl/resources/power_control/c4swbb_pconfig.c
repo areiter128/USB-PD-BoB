@@ -10,8 +10,8 @@
 #include <stdbool.h>
 
 #include "mcal/mcal.h"
-#include "apl/resources/c4swbb_control.h" 
-#include "apl/resources/c4swbb_pconfig.h"   // 4-Switch Buck/Boost Power Control State Machine Header
+#include "apl/resources/power_control/c4swbb_control.h" 
+#include "apl/resources/power_control/c4swbb_pconfig.h"   // 4-Switch Buck/Boost Power Control State Machine Header
 
 
 /*!c4swbb_pwm_module_initialize()

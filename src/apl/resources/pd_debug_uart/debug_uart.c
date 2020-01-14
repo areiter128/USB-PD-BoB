@@ -25,6 +25,10 @@ void DEBUG_init(void)
     PD_DEBUG_UART_TX_TRIS = 0;
     
     //Set PPS to put the UART TX pin on the configured pin
+
+	__builtin_write_RPCON(0x0000); // unlock PPS on dsPIC33C    
+    //__builtin_write_OSCCONL(OSCCON & 0xbf); // unlock PPS on dsPIC33FJ and EP
+
     PD_DEBUG_UART_PPS_OUTPUT_REG = PD_DEBUG_UART_PPS_OUTPUT_SELECT;  
 
     smpsPPS_LockIO();
@@ -36,6 +40,9 @@ void DEBUG_init(void)
     PD_DEBUG_UART_PPS_INPUT_REG = PD_DEBUG_UART_PPS_INPUT_SELECT;
 #endif // INCLUDE_DEBUG_UART_RX    
 
+	__builtin_write_RPCON(0x0800); // lock PPS on dsPIC33C    
+//    __builtin_write_OSCCONL(OSCCON | 0x40); // lock   PPS
+    
 /**    
      Set the UART1 module to the options selected in the user interface.
      Make sure to set LAT bit corresponding to TxPin as high before UART initialization

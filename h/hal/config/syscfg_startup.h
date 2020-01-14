@@ -28,8 +28,8 @@
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef _HARDWARE_ABSTRACTION_LAYER_SYSTEM_STARTUP_H_
-#define	_HARDWARE_ABSTRACTION_LAYER_SYSTEM_STARTUP_H_
+#ifndef _SYSTEM_CONFIGURATION_STARTUP_H_
+#define	_SYSTEM_CONFIGURATION_STARTUP_H_
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
@@ -54,7 +54,7 @@
  * 
  * *************************************************************************************************/
 
-#define C4SWBB_POWER_ON_DELAY    (float)(10.0e-3)      // power on delay in [sec]
+#define C4SWBB_POWER_ON_DELAY    (float)(10.0e-3)       // power on delay in [sec]
 #define C4SWBB_RAMP_PERIOD       (float)(10.0e-3)       // ramp period in [sec]
 #define C4SWBB_POWER_GOOD_DELAY  (float)(100.0e-3)      // power good in [sec]
 
@@ -69,5 +69,5 @@
 #define C4SWBB_IREF_STEP (uint16_t)((C4SWBB_VOUT_REF / (C4SWBB_RPER + 1.0)))
 
 
-#endif	/* _HARDWARE_ABSTRACTION_LAYER_SYSTEM_STARTUP_H_ */
+#endif	/* _SYSTEM_CONFIGURATION_STARTUP_H_ */
 

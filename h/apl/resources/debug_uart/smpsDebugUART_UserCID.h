@@ -20,36 +20,46 @@
  */
 
 /* 
- * File:   devcfg_pinmap.h
- * Author: M91406
- * Comments: Triage of hardware descriptor files
+ * File:   
+ * Author: 
+ * Comments:
  * Revision history: 
- *      05/17/2019  v1.0 initial release
  */
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef MCAL_DEVICE_CONFIG_PINMAP_H
-#define	MCAL_DEVICE_CONFIG_PINMAP_H
+#ifndef APL_P33SMPS_DEBUG_UART_PROTOCOL_USER_CID_HANDLER_H
+#define	APL_P33SMPS_DEBUG_UART_PROTOCOL_USER_CID_HANDLER_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
-#include "mcal/mcal.h"
+#include <stddef.h> // include standard definition data types
+#include <stdint.h> // include standard integer number data types
+#include <stdbool.h> // include standard boolean data types (true/false)
+
+#include "mcal/mcal.h" // include Microcontroller Abstraction Layer
+#include "hal/hal.h" // include Hardware Abstraction Layer
+
 
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-    #if defined (__00173_USB_PD_BOB_R20__) || defined (__00173_USB_PD_BOB_R21__)
-        #include "00173_USB_PD_BoB_R20_pinmap.h"
-    #elif defined (__MA330048_P33CK_R30_USB_PD_BOB__)
-        #include "MA330048_P33CK_R30_USB_PD_BOB_pinmap.h"
-    #else
-        #pragma message "=== pin-mapping information of selected device/hardware not declared ==="
-    #endif
+/* *********************************************************************************
+ * Digital Power Debugging UART Protocol Global Defines
+ * ********************************************************************************/
+    
+#define DBGUART_CID_DSMPS_GUI           0x0100 // Standard CID for ASCALB GUI (DSMPS)
+
+/* *********************************************************************************
+ * Digital Power Debugging UART Protocol Function Prototypes
+ * ********************************************************************************/
+
+extern volatile uint16_t smpsDebugUART_ProcessUserCID(volatile SMPS_DGBUART_FRAME_t* rx_frame);
+    
     
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */
 
-#endif	/* MCAL_DEVICE_CONFIG_PINMAP_H */
+#endif	/* APL_P33SMPS_DEBUG_UART_PROTOCOL_USER_CID_HANDLER_H */
 

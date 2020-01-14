@@ -25,8 +25,8 @@
  * 07/29/2016   initial release
  * **************************************************************************************/
 
-#ifndef __SYSTEM_DESIGN_LIMITS_H__
-#define	__SYSTEM_DESIGN_LIMITS_H__
+#ifndef _SYSTEM_CONFIGURATION_LIMITS_H_
+#define	_SYSTEM_CONFIGURATION_LIMITS_H_
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
@@ -138,5 +138,5 @@
 #define SSM_MOD_RANGE_MASK      (uint16_t)(SPREAD_SPECTRUM_MODULATION_RANGE)
 
 
-#endif	/* __SYSTEM_DESIGN_LIMITS_H__ */
+#endif	/* _SYSTEM_CONFIGURATION_LIMITS_H_ */
 

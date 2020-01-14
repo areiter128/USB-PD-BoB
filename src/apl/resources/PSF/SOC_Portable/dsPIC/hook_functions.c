@@ -33,7 +33,7 @@
 #include "debug_uart.h"
 #include <libpic30.h>
 
-#include "apl/resources/c4swbb_control.h"
+//#include "apl/resources/c4swbb_control.h"
 #include "apl/tasks/task_PowerControl.h"
 
 // TODO: JMS - Need to get these included from task_PowerControl.h (resolve compile errors)

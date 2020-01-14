@@ -15,14 +15,18 @@
 
 #endif
         
-#define LOG_PRINT(x,y) DEBUG_print(y); /* define away LOG_PRINTs */
-#define LOG_PRINT1(_log_level, _string, _param) \
-    sprintf(pd_debug_string, _string, _param ); \
-	LOG_PRINT(_log_level, pd_debug_string)
+#define PD_DEBUG_UART_ENABLE            0 // Set to 1 to enable PD stack DEBUG UART
+        
+#if (PD_DEBUG_UART_ENABLE  == 1)         
+    #define LOG_PRINT(x,y) DEBUG_print(y); /* define away LOG_PRINTs */
+    #define LOG_PRINT1(_log_level, _string, _param) \
+        sprintf(pd_debug_string, _string, _param ); \
+        LOG_PRINT(_log_level, pd_debug_string)
 
-#define LOG_PRINT2(_log_level, _string, _param1, _param2) \
-    sprintf(pd_debug_string, _string, _param1, _param2 ); \
-	LOG_PRINT(_log_level, pd_debug_string)
+    #define LOG_PRINT2(_log_level, _string, _param1, _param2) \
+        sprintf(pd_debug_string, _string, _param1, _param2 ); \
+        LOG_PRINT(_log_level, pd_debug_string)
+#endif
 
 //#define INCLUDE_DEBUG_UART_RX        
         
@@ -49,7 +53,7 @@
         
         
 // Define the debug UART registers
-#define PD_DEBUG_UART               U1
+#define PD_DEBUG_UART                   U1
 
 #define PD_DEBUG_UART_MODE             U1MODE
 #define PD_DEBUG_UART_MODEH            U1MODEH

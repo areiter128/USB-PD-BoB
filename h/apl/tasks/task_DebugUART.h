@@ -1,5 +1,4 @@
-/*LICENSE ********************************************************************
- * Microchip Technology Inc. and its subsidiaries.  You may use this software 
+/* Microchip Technology Inc. and its subsidiaries.  You may use this software 
  * and any derivatives exclusively with Microchip products. 
  * 
  * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS".  NO WARRANTIES, WHETHER 
@@ -18,40 +17,50 @@
  *
  * MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE 
  * TERMS. 
- * ***************************************************************************/
-/*!apl.h
- * ****************************************************************************
- * File:   apl.h
+ */
+
+/* 
+ * File:   smpsDebugUART_User.h
  * Author: M91406
- * Comments:
+ * Comments:    
+ *      Header file used for user-declarations of settings and communication frames
+ *      used by smpsDebugUART.c/h
  * Revision history: 
- * ****************************************************************************/
+ *      1.0     (initial version)
+ */
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef APPLICATION_LAYER_H
-#define	APPLICATION_LAYER_H
+#ifndef SMPS_DBG_PROTOCOL_USER_DECLARATIONS_H
+#define	SMPS_DBG_PROTOCOL_USER_DECLARATIONS_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-/* User Configuration Files */
-#include "apl/config/UserAppManager.h"
-#include "apl/config/UserFaultObjects.h"
-#include "_root/generic/os_Globals.h"
+#ifdef	__cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
-/* User Tasks */
-#include "apl/tasks/task_Idle.h"
-#include "apl/tasks/task_PowerControl.h"
-#include "apl/tasks/task_PDStack.h"
-#include "apl/tasks/task_DebugUART.h"
-
-/* ***********************************************************************************************
- * GLOBAL APPLICATION LAYER USER OPTIONS
- * ***********************************************************************************************/
+/* *********************************************************************************
+ * UART Hardware Definitions
+ * ********************************************************************************/
+    
+#define UART_INSTANCE       3       // Number of UART peripheral instance (1=UART1, 2=UART2, etc)
+#define DBGUART_RX_ISR_PRIORITY 2   // UARTx Receive Interrupt Priority
 
 
+/* *********************************************************************************
+ * Global task function prototypes
+ * ********************************************************************************/
+extern volatile uint16_t task_DebugUART_Initialize(void);
+extern volatile uint16_t task_DebugUART_Execute(void);
 
-#endif	/* APPLICATION_LAYER_H */
+
+#ifdef	__cplusplus
+}
+#endif /* __cplusplus */
+
+#endif	/* SMPS_DBG_PROTOCOL_USER_DECLARATIONS_H */
 
