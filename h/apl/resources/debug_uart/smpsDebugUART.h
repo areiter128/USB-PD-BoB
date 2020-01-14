@@ -161,40 +161,7 @@ extern "C" {
 
 #define DBGUART_CID_PROPRIETARY         0x0003 // Return value for 
     
-// Index definition for CID 0x0100 (Ascalab GUI) 
-    
-#define CID0100_RX_VOUT_CH1_INDEX      0
-#define CID0100_RX_IOUT_CH1_INDEX      2
-#define CID0100_RX_VOUT_CH2_INDEX      4
-#define CID0100_RX_IOUT_CH2_INDEX      6
-#define CID0100_RX_TEMPERATURE_INDEX   8
-#define CID0100_RX_CONFIG_BITS_INDEX   10
 
-
-// Bit masks 
-#define CID0100_RX_ON_OFF_CH1_BIT      (1<<0)
-#define CID0100_RX_ON_OFF_CH2_BIT      (1<<1)
-#define CID0100_RX_USB_CH1_ENABLED     (1<<2)
-#define CID0100_RX_USB_CH2_ENABLED     (1<<3)
-#define CID0100_RX_TEMP_SIMULATION     (1<<4)
-#define CID0100_RX_PWM_FREQ_JITTERING  (1<<5)
-
-
-// From dsPIC to GUI
-
-#define CID0100_TX_VIN_INDEX            0
-#define CID0100_TX_VOUT_CH1_INDEX       2
-#define CID0100_TX_IOUT_CH1_INDEX       4
-#define CID0100_TX_CONVERTER_STATUS     6
-#define CID0100_TX_CONVERTER_FAULT      8
-#define CID0100_TX_VOUT_CH2_INDEX       10
-#define CID0100_TX_IOUT_CH2_INDEX       12
-#define CID0100_TX_TEMPERATURE_INDEX    14
-#define CID0100_TX_UPD1_DEVICE_VID      16
-#define CID0100_TX_UPD1_DEVICE_PID      18
-#define CID0100_TX_UPD2_DEVICE_VID      20
-#define CID0100_TX_UPD2_DEVICE_PID      22
-    
 /* *********************************************************************************
  * Digital Power Debugging UART Communication Frame
  * ================================================
