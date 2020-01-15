@@ -144,7 +144,7 @@ volatile uint16_t task_DebugUART_Initialize(void) {
     smpsPPS_RemapInput(HUB_PRTPWR2_RP, PPSIN_U3RX);
     smpsPPS_RemapOutput(HUB_PRTPWR1_RP, PPSOUT_U3TX);
     #endif
-    //fres &= smpsPPS_LockIO(); // Carlo it prevent PD stack to work. To be verified
+    fres &= smpsPPS_LockIO(); // Carlo it prevent PD stack to work. To be verified
     
     
     // Initialize default data frame for power supply runtime data
