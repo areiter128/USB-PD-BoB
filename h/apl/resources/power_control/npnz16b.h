@@ -1,9 +1,9 @@
 /* ********************************************************************************
-* z-Domain Control Loop Designer, Version 0.9.0.77
+* z-Domain Control Loop Designer, Version 0.9.1.80
 * ********************************************************************************
 * Generic library header for z-domain compensation filter assembly functions
-* CGS Version: 1.0.0
-* CGS Date:    11/08/19
+* CGS Version: 1.1.5
+* CGS Date:    01/13/2020
 * ********************************************************************************/
 #ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
 #define __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
@@ -18,6 +18,10 @@
 #define NPNZ16_STATUS_LSAT_CLEAR           0
 #define NPNZ16_STATUS_USAT_SET             1
 #define NPNZ16_STATUS_USAT_CLEAR           0
+#define NPNZ16_STATUS_TARGET_SWAPPED       1
+#define NPNZ16_STATUS_TARGET_NOT_SWAPPED   0
+#define NPNZ16_STATUS_SOURCE_SWAPPED       1
+#define NPNZ16_STATUS_SOURCE_NOT_SWAPPED   0
 #define NPNZ16_STATUS_INPUT_INVERTED       1
 #define NPNZ16_STATUS_INPUT_NOT_INVERTED   0
 #define NPNZ16_STATUS_ENABLED              1
@@ -25,16 +29,20 @@
 
 /* Status flags (bit-field) */
 typedef enum {
-    CONTROLLER_STATUS_CLEAR = 0b0000000000000000,
-    CONTROLLER_STATUS_SATUATION_MSK = 0b0000000000000011,
-    CONTROLLER_STATUS_LSAT_ACTIVE = 0b0000000000000001,
-    CONTROLLER_STATUS_LSAT_CLEAR = 0b0000000000000000,
-    CONTROLLER_STATUS_USAT_ACTIVE = 0b0000000000000010,
-    CONTROLLER_STATUS_USAT_CLEAR = 0b0000000000000000,
-    CONTROLLER_STATUS_INV_INPUT_OFF = 0b0000000000000000,
-    CONTROLLER_STATUS_INV_INPUT_ON = 0b0100000000000000,
-    CONTROLLER_STATUS_ENABLE_OFF = 0b0000000000000000,
-    CONTROLLER_STATUS_ENABLE_ON = 0b1000000000000000
+    CONTROLLER_STATUS_CLEAR           = 0b0000000000000000,
+    CONTROLLER_STATUS_SATUATION_MSK   = 0b0000000000000011,
+    CONTROLLER_STATUS_LSAT_ACTIVE     = 0b0000000000000001,
+    CONTROLLER_STATUS_LSAT_CLEAR      = 0b0000000000000000,
+    CONTROLLER_STATUS_USAT_ACTIVE     = 0b0000000000000010,
+    CONTROLLER_STATUS_USAT_CLEAR      = 0b0000000000000000,
+    CONTROLLER_STATUS_TARGET_DEFAULT  = 0b0000000000000000,
+    CONTROLLER_STATUS_TARGET_SWAPED   = 0b0001000000000000,
+    CONTROLLER_STATUS_SOURCE_DEFAULT  = 0b0000000000000000,
+    CONTROLLER_STATUS_SOURCE_SWAPED   = 0b0010000000000000,
+    CONTROLLER_STATUS_INV_INPUT_OFF   = 0b0000000000000000,
+    CONTROLLER_STATUS_INV_INPUT_ON    = 0b0100000000000000,
+    CONTROLLER_STATUS_ENABLE_OFF      = 0b0000000000000011,
+    CONTROLLER_STATUS_ENABLE_ON       = 0b1000000000000000
 } CONTROLLER_STATUS_FLAGS_t;
 
 typedef union {
@@ -51,8 +59,8 @@ typedef union {
         volatile unsigned : 1; // Bit 9: reserved
         volatile unsigned : 1; // Bit 11: reserved
         volatile unsigned : 1; // Bit 11: reserved
-        volatile unsigned : 1; // Bit 12: reserved
-        volatile unsigned : 1; // Bit 13: reserved
+        volatile unsigned swap_target: 1; // Bit 12: when set, AltTarget is used as data output of controller
+        volatile unsigned swap_source: 1; // Bit 13: when set, AltSource is used as data input to controller
         volatile unsigned invert_input: 1; // Bit 14: when set, most recent error input value to controller is inverted
         volatile unsigned enable : 1; // Bit 15: enables/disables control loop execution
     } __attribute__((packed))bits;    // Controller status bit-field for direct bit access
@@ -64,8 +72,10 @@ typedef struct {
     volatile CONTROLLER_STATUS_t status; // Control Loop Status flags
 
     // Input/Output to controller
-    volatile uint16_t* ptrSource; // Pointer to source register or variable where the input value is read from (e.g. ADCBUF0)
-    volatile uint16_t* ptrTarget; // Pointer to target register or variable where the control output is written to (e.g. PCD1)
+    volatile uint16_t* ptrSource; // Pointer to source register or variable where the input value is read from (e.g. ADCBUFx)
+    volatile uint16_t* ptrAltSource; // Pointer to alternate source register or variable where the alternate input value is read from (e.g. ADCBUFy)
+    volatile uint16_t* ptrTarget; // Pointer to target register or variable where the control output is written to (e.g. PCDx)
+    volatile uint16_t* ptrAltTarget; // Pointer to alternate target register or variable where the alternate control output is written to (e.g. PCDy)
     volatile uint16_t* ptrControlReference; // Pointer to global variable of input register holding the controller reference value (e.g. uint16_t my_ref)
 
     // Filter coefficients and input/output histories
@@ -104,6 +114,9 @@ typedef struct {
     volatile uint16_t* ptrDataProviderControlError; // Pointer to external data buffer of most recent control error
     volatile uint16_t* ptrDataProviderControlOutput; // Pointer to external data buffer of most recent control output
 
+    volatile uint16_t CascadedFunction; // Pointer to Function which should be called at the end of the control loop
+    volatile uint16_t CascadedFunParam; // Parameter of function called (can be a pointer to a data structure)
+
 } __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object with 16-bit fixed point coefficients, data input and data output
 
 
@@ -113,7 +126,9 @@ typedef struct {
 
     // Input/Output to controller
     volatile uint16_t* ptrSource; // Pointer to source register or variable where the input value is read from (e.g. ADCBUF0)
+    volatile uint16_t* ptrAltSource; // Pointer to alternate source register or variable where the alternate input value is read from (e.g. ADCBUF0)
     volatile uint16_t* ptrTarget; // Pointer to target register or variable where the control output is written to (e.g. PCD1)
+    volatile uint16_t* ptrAltTarget; // Pointer to alternate target register or variable where the alternate control output is written to (e.g. PCD1)
     volatile uint16_t* ptrControlReference; // Pointer to global variable of input register holding the controller reference value (e.g. uint16_t my_ref)
 
     // Filter coefficients and input/output histories
@@ -152,14 +167,17 @@ typedef struct {
     volatile uint16_t* ptrDataProviderControlError; // Pointer to external data buffer of most recent control error
     volatile uint16_t* ptrDataProviderControlOutput; // Pointer to external data buffer of most recent control output
 
+    volatile uint16_t CascadedFunction; // Pointer to Function which should be called at the end of the control loop
+    volatile uint16_t CascadedFunParam; // Parameter of function called (can be a pointer to a data structure)
+
 } __attribute__((packed))cNPNZ3216b_t; // Generic nPnZ Controller Object with 32-bit fast floating point coefficients, 16-bit data input and data output
 
 
 /* ********************************************************************************/
-#endif	// end of __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__ header file section
+#endif  // end of __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__ header file section
 
 
 //**********************************************************************************
-//  https://areiter128.github.io/DCLD
+// Download latest version of this tool here: https://areiter128.github.io/DCLD
 //**********************************************************************************
 

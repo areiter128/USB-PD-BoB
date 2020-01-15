@@ -1,5 +1,5 @@
 /* **********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.0.77
+ * z-Domain Control Loop Designer, Version 0.9.1.80
  * **********************************************************************************
  * 2p2z compensation filter coefficients derived for following operating
  * conditions:
@@ -12,11 +12,11 @@
  *  Input Gain:         0.2
  *
  * *********************************************************************************
- * CGS Version:         1.0.0
- * CGS Date:            11/08/19
+ * CGS Version:         1.1.5
+ * CGS Date:            01/13/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           01/08/2020 11:41:33 AM
+ * Date/Time:           01/15/2020 1:46:00 PM
  * ********************************************************************************/
 
 #include "../h/apl/resources/power_control/cha_vloop.h"
@@ -45,7 +45,7 @@ volatile uint16_t cha_vloop_ControlHistory_size = (sizeof(cha_vloop_histories.Co
 volatile uint16_t cha_vloop_ErrorHistory_size = (sizeof(cha_vloop_histories.ErrorHistory)/sizeof(cha_vloop_histories.ErrorHistory[0])); // Error history array size
 
 /* *********************************************************************************
- * 	Pole&Zero Placement:
+ * Pole&Zero Placement:
  * *********************************************************************************
  *
  *    fP0:    40 Hz
@@ -53,7 +53,7 @@ volatile uint16_t cha_vloop_ErrorHistory_size = (sizeof(cha_vloop_histories.Erro
  *    fZ1:    450 Hz
  *
  * *********************************************************************************
- * 	Filter Coefficients and Parameters:
+ * Filter Coefficients and Parameters:
  * ********************************************************************************/
 volatile fractional cha_vloop_ACoefficients [2] =
 {
@@ -86,8 +86,9 @@ volatile cNPNZ16b_t cha_vloop; // user-controller data object
  *     - cNPNZ16b_t* controller
  *
  * Returns:
- *     - uint16_t:  0=failure, 1=success
- *
+ *     - uint16_t:  0->failure
+ *                  1->success
+
  * Description:
  * This function needs to be called from user code once to initialize coefficient
  * arrays and number normalization settings of the cha_vloop controller
@@ -101,7 +102,7 @@ volatile cNPNZ16b_t cha_vloop; // user-controller data object
  * ********************************************************************************/
 volatile uint16_t cha_vloop_Init(volatile cNPNZ16b_t* controller)
 {
-    volatile uint16_t i = 0;
+    volatile uint16_t i=0;
 
     // Initialize controller data structure at runtime with pre-defined default values
     controller->status.value = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))
@@ -138,4 +139,8 @@ volatile uint16_t cha_vloop_Init(volatile cNPNZ16b_t* controller)
     
     return(1);
 }
+ 
+//**********************************************************************************
+// Download latest version of this tool here: https://areiter128.github.io/DCLD
+//**********************************************************************************
  
