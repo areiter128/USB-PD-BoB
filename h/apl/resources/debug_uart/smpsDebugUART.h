@@ -151,6 +151,8 @@ extern "C" {
  * *********************************************************************************/
 #define DBGUART_CID_ACKNOWLEDGEMENT     0x0100 // Acknowledge-Bit for handshake CIDs
     
+#define DBGUART_CID_STRING_OUTPUT       0x0001 // Standard CID for sending strings to a terminal window (no CRC check)
+
 #define DBGUART_CID_READ_FROM_ADDR      0xE000 // Standard CID for reading from a memory address
 #define DBGUART_CID_WRITE_TO_ADDR       0xE001 // Standard CID for writing to a memory address
 #define DBGUART_CID_AND_BIT_MASK        0xE002 // Standard CID for AND-ing a bit mask with a value at a memory address
