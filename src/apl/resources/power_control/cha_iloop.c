@@ -1,5 +1,5 @@
 /* **********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.1.80
+ * z-Domain Control Loop Designer, Version 0.9.1.81
  * **********************************************************************************
  * 2p2z compensation filter coefficients derived for following operating
  * conditions:
@@ -16,7 +16,7 @@
  * CGS Date:            01/13/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           01/15/2020 1:45:45 PM
+ * Date/Time:           01/17/2020 10:30:40 PM
  * ********************************************************************************/
 
 #include "../h/apl/resources/power_control/cha_iloop.h"

@@ -1,11 +1,11 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.1.80
-;  AGS Version: Assembly Generator Script v1.3.2 (01/13/2020)
+;  SDK Version: z-Domain Control Loop Designer v0.9.1.81
+;  AGS Version: Assembly Generator Script v1.3.1 (01/17/2020)
 ;  Author:      M91406
-;  Date/Time:   01/15/2020 1:46:01 PM
+;  Date/Time:   01/17/2020 10:28:37 PM
 ; **********************************************************************************
-;  2P2Z Control Library File (Dual Bitshift-Scaliing Mode)
+;  2P2Z Control Library File (Dual Bitshift-Scaling Mode)
 ; **********************************************************************************
 	
 ;------------------------------------------------------------------------------
@@ -167,12 +167,6 @@ _cha_vloop_Update:    ; provide global scope to routine
 	mov w4, [w10]    ; add most recent control output to history
 	
 ;------------------------------------------------------------------------------
-; Call next function of cascade
-	mov [w0 + #offPtrCascadedFunction], w1    ; load functoin pointer
-	mov [w0 + #offPtrCascadedFunParam], w0    ; load single parameter or pointer to parameter data structure
-	call w1    ; call function
-	
-;------------------------------------------------------------------------------
 ; Enable/Disable bypass branch target with dummy read of source buffer
 	goto CHA_VLOOP_EXIT_LOOP    ; when enabled, step over dummy read and go straight to EXIT
 	CHA_VLOOP_BYPASS_LOOP:    ; Enable/Disable bypass branch target to perform dummy read of source to clear the source buffer
@@ -181,6 +175,12 @@ _cha_vloop_Update:    ; provide global scope to routine
 	mov [w0 + #offPtrControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
 	mov w1, [w2]    ; copy most recent controller input value to given data buffer target
 	CHA_VLOOP_EXIT_LOOP:    ; Exit control loop branch target
+	
+;------------------------------------------------------------------------------
+; Call next function of cascade
+	mov [w0 + #offPtrCascadedFunction], w1    ; load functoin pointer
+	mov [w0 + #offPtrCascadedFunParam], w0    ; load single parameter or pointer to parameter data structure
+	call w1    ; call function
 	pop w12    ; restore working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------
