@@ -33,6 +33,21 @@ volatile uint8_t tx_data_cid100[SMPS_DBGUART_CID100_DLEN] = {
 volatile uint16_t tx_data_cid100_size = (sizeof(tx_data_cid100)/sizeof(tx_data_cid100[0]));
 volatile uint16_t cid100_update_counter = 0;
 
+// ToDo: REMOVE CID0002 TEST FRAME
+// ====  ===========
+#define  SMPS_DBGUART_CID002        0x0002
+#define  SMPS_DBGUART_CID002_DLEN   16U
+
+volatile SMPS_DGBUART_FRAME_t tx_frame_cid002;
+volatile uint8_t tx_data_cid002[SMPS_DBGUART_CID002_DLEN] = {
+            0x30, 0x3A, 0x20, 0x48, 0x45, 0x4C, 0x4C, 0x4F,
+            0x20, 0x4A, 0x41, 0x4D, 0x45, 0x53, 0x0D, 0x0A
+        };
+volatile uint16_t tx_data_cid002_size = (sizeof(tx_data_cid002)/sizeof(tx_data_cid002[0]));
+volatile uint16_t cid002_update_counter = 0;
+// ====  ===========
+
+
 /*!task_DebugUART_Execute
  * ************************************************************************************************
  * Summary:
@@ -107,6 +122,20 @@ volatile uint16_t task_DebugUART_Execute(void) {
             cid100_update_counter = 0;
         }
         
+// ToDo: REMOVE CID0002 TEST FRAME
+// ====  ===========
+        if(++cid002_update_counter > (DebugUART.send_period+1)) {
+
+            // Pack up frame and put it in Tx queue buffer
+            smpsDebugUART_SendFrame(&tx_frame_cid002); // Andy for James (String Test Only)
+            // Reset update counter
+            cid002_update_counter = 0;
+            // Increment test counter
+            if (tx_data_cid002[0]++ > 0x38)
+                tx_data_cid002[0] = 0x30;
+        }
+// ====  ===========
+        
         // Execute Debug UART State Machine
         fres = smpsDebugUART_Execute();
         
@@ -152,6 +181,12 @@ volatile uint16_t task_DebugUART_Initialize(void) {
                 &tx_frame_cid100, SMPS_DBGUART_CID100, 
                 &tx_data_cid100[0], 
                 SMPS_DBGUART_CID100_DLEN
+        );
+
+    fres &= smpsDebugUART_InitializeFrame(
+                &tx_frame_cid002, SMPS_DBGUART_CID002, 
+                &tx_data_cid002[0], 
+                SMPS_DBGUART_CID002_DLEN
         );
 
     // Initialize UART interface and DebugUART data objects
