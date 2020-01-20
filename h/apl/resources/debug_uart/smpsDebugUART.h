@@ -150,6 +150,7 @@ extern "C" {
  * PROTOCOL STANDARD CID's
  * *********************************************************************************/
 #define DBGUART_CID_ACKNOWLEDGEMENT     0x0100 // Acknowledge-Bit for handshake CIDs
+#define DBGUART_CID_CRC_BYPASS          0x000F // All CIDs less than 15 do get CRC=0
     
 #define DBGUART_CID_STRING_OUTPUT       0x0001 // Standard CID for sending strings to a terminal window (no CRC check)
 

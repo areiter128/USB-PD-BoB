@@ -357,7 +357,10 @@ volatile uint16_t smpsDebugUART_SendFrame(volatile SMPS_DGBUART_FRAME_t* msg_fra
     i += DBGUART_FRAME_HEAD_LEN;
     
     // Calculate and set CRC16
-    msg_frame->frame.crc.value = smpsCRC_GetStandard_Data8CRC16(&uart_tx_buffer[0], ubound, i);
+    if (msg_frame->frame.cid.value > DBGUART_CID_CRC_BYPASS)
+        msg_frame->frame.crc.value = smpsCRC_GetStandard_Data8CRC16(&uart_tx_buffer[0], ubound, i);
+    else
+        msg_frame->frame.crc.value = 0;
 
     // Add CRC to data frame
     i += ubound;                                            // Add buffer pointer offset
