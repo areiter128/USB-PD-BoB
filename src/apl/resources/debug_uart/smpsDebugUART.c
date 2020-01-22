@@ -327,7 +327,6 @@ volatile uint16_t smpsDebugUART_InitializeFrame(
  * Description:
  * 
  * ************************************************************************************************/
-volatile uint8_t dummy = 0;
 
 volatile uint16_t smpsDebugUART_SendFrame(volatile SMPS_DGBUART_FRAME_t* msg_frame) {
     
@@ -374,16 +373,8 @@ volatile uint16_t smpsDebugUART_SendFrame(volatile SMPS_DGBUART_FRAME_t* msg_fra
     uart_tx_buffer[i++] = msg_frame->frame.eof;             // Set END_OF_FRAME
 
     uart.tx_buffer.buffer = &uart_tx_buffer[0];    // Set pointer to internal FIFO data buffer
-    uart.tx_buffer.data_size = /*(uint8_t)*/(i);       // Set size of data to be sent
+    uart.tx_buffer.data_size = (i);       // Set size of data to be sent
     
-    if (uart.tx_buffer.data_size > UART_TX_BUFFER_SIZE)
-    {
-        while(1)
-        {
-            dummy++;
-        }
-    }
-
     
     return(fres);
     
