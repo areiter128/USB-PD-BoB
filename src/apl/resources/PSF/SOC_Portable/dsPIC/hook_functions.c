@@ -36,6 +36,9 @@
 //#include "apl/resources/c4swbb_control.h"
 #include "apl/tasks/task_PowerControl.h"
 
+#include "apl/tasks/task_PDStack.h"
+#include "apl/resources/debug_uart/smpsDebugUART.h"
+
 // TODO: JMS - Need to get these included from task_PowerControl.h (resolve compile errors)
 extern volatile C4SWBB_PWRCTRL_t c4swbb_1;
 extern volatile C4SWBB_PWRCTRL_t c4swbb_2;
@@ -555,32 +558,38 @@ uint16_t hook_function_get_temperature_in_c(void)
 
 void hook_debug_print_string (char *str)
 {
-    DEBUG_print((char *)str);
+//    DEBUG_print((char *)str);
+    pd_stack_debug_string((char *)str);
+    
 }
 
 void hook_debug_u8(uint8_t u8val)
 {
     char temp_str[8];
     sprintf(temp_str, " 0x%02X ", u8val);
-    DEBUG_print(temp_str);
+    //DEBUG_print(temp_str);
+    hook_debug_print_string(temp_str);
 }
 void hook_debug_u16(uint16_t u16val)
 {
     char temp_str[10];
     sprintf(temp_str, " 0x%04X ", u16val);
-    DEBUG_print(temp_str);
+    //DEBUG_print(temp_str);
+    hook_debug_print_string(temp_str);
 }
 void hook_debug_u32(uint32_t u32val)
 {
     char temp_str[14];
     sprintf(temp_str, " 0x%08lX ", (uint32_t)u32val);
-    DEBUG_print(temp_str);
+    //DEBUG_print(temp_str);
+    hook_debug_print_string(temp_str);
 }
 void hook_debug_i32(int32_t i32val)
 {
     char temp_str[15];
     sprintf(temp_str, " %ld ", i32val);
-    DEBUG_print(temp_str);
+    //DEBUG_print(temp_str);
+    hook_debug_print_string(temp_str);
 }
 
 

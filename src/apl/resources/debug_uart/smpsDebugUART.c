@@ -26,7 +26,7 @@
  * ********************************************************************************/
 
 #define UART_RX_BUFFER_SIZE  256U  // Size of the internal RECEIVE data buffer of the UART driver
-#define UART_TX_BUFFER_SIZE  256U  // Size of the internal TRANSMIT data buffer of the UART driver
+#define UART_TX_BUFFER_SIZE  4096U  // Size of the internal TRANSMIT data buffer of the UART driver
 #define UART_TX_PACKAGE_SIZE  16U  // Size of one data package transmitted at a time
 volatile uint8_t  uart_rx_buffer[UART_RX_BUFFER_SIZE];
 volatile uint8_t  uart_tx_buffer[UART_TX_BUFFER_SIZE];
@@ -327,22 +327,26 @@ volatile uint16_t smpsDebugUART_InitializeFrame(
  * Description:
  * 
  * ************************************************************************************************/
+volatile uint8_t dummy = 0;
 
 volatile uint16_t smpsDebugUART_SendFrame(volatile SMPS_DGBUART_FRAME_t* msg_frame) {
     
     volatile uint16_t fres=1;
     volatile uint16_t i=0;
-    volatile uint8_t ubound=0;
+    volatile uint16_t ubound=0;
     
     
     // Protect against buffer overrun
-    if((msg_frame->frame.dlen.value + DBGUART_FRAME_OVHD_LEN) >= UART_TX_BUFFER_SIZE)
-    { uart.tx_buffer.status.buffer_overun = true; return(0); }
+    if(((msg_frame->frame.dlen.value + DBGUART_FRAME_OVHD_LEN) + uart.tx_buffer.data_size) >= UART_TX_BUFFER_SIZE)
+    { 
+        uart.tx_buffer.status.buffer_overun = true; 
+        return(0); 
+    }
     else
     { uart.tx_buffer.status.buffer_overun = false; }
     
     // Capture the recent buffer status
-    ubound = (volatile uint8_t)uart.tx_buffer.data_size;
+    ubound = (volatile uint16_t)uart.tx_buffer.data_size;
     
     // Build UART transmission frame
     uart_tx_buffer[ubound+0] = msg_frame->frame.sof;            // Set START_OF_FRAME
@@ -357,7 +361,10 @@ volatile uint16_t smpsDebugUART_SendFrame(volatile SMPS_DGBUART_FRAME_t* msg_fra
     i += DBGUART_FRAME_HEAD_LEN;
     
     // Calculate and set CRC16
-    msg_frame->frame.crc.value = smpsCRC_GetStandard_Data8CRC16(&uart_tx_buffer[0], ubound, i);
+    if (msg_frame->frame.cid.value > DBGUART_CID_CRC_BYPASS)
+        msg_frame->frame.crc.value = smpsCRC_GetStandard_Data8CRC16(&uart_tx_buffer[0], ubound, i);
+    else
+        msg_frame->frame.crc.value = 0;
 
     // Add CRC to data frame
     i += ubound;                                            // Add buffer pointer offset
@@ -367,7 +374,15 @@ volatile uint16_t smpsDebugUART_SendFrame(volatile SMPS_DGBUART_FRAME_t* msg_fra
     uart_tx_buffer[i++] = msg_frame->frame.eof;             // Set END_OF_FRAME
 
     uart.tx_buffer.buffer = &uart_tx_buffer[0];    // Set pointer to internal FIFO data buffer
-    uart.tx_buffer.data_size = (uint8_t)(i);       // Set size of data to be sent
+    uart.tx_buffer.data_size = /*(uint8_t)*/(i);       // Set size of data to be sent
+    
+    if (uart.tx_buffer.data_size > UART_TX_BUFFER_SIZE)
+    {
+        while(1)
+        {
+            dummy++;
+        }
+    }
 
     
     return(fres);

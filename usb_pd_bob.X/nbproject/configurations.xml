@@ -1210,8 +1210,6 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-aeff"/>
         <property key="poweroptions.powerenable" value="false"/>
-        <property key="programmerToGoFilePath"
-                  value="C:/Users/m91169/To_backup/programmi1/UPD_bob2/Usb_PD_bob/usb_pd_bob.X/debug/00173_USB_PD_BOB_R20/usb_pd_bob_ptg"/>
         <property key="programmerToGoImageName" value="usb_pd_bob_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
@@ -1298,6 +1296,10 @@
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
+      <item path="../src/apl/resources/pd_debug_uart/debug_uart.c"
+            ex="true"
+            overriding="false">
+      </item>
       <C30>
         <property key="code-model" value="large-code"/>
         <property key="const-model" value="default"/>
@@ -2188,8 +2190,6 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-aeff"/>
         <property key="poweroptions.powerenable" value="false"/>
-        <property key="programmerToGoFilePath"
-                  value="C:/Users/m91169/To_backup/programmi1/UPD_bob2/Usb_PD_bob/usb_pd_bob.X/debug/00173_USB_PD_BOB_R20/usb_pd_bob_ptg"/>
         <property key="programmerToGoImageName" value="usb_pd_bob_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>

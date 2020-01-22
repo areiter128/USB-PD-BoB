@@ -39,14 +39,30 @@
 
 #include <xc.h>
 #include <stdio.h>
+#include <string.h>
 #include "apl/resources/fdrv_FunctionPDStack.h"
 #include "apl/tasks/task_PDStack.h"
 #include "debug_uart.h"
+#include "apl/resources/debug_uart/smpsDebugUART.h"
 
 volatile FUNCTION_PD_STACK_CONFIG_t taskPDStack_config;
 
+volatile SMPS_DGBUART_FRAME_t pd_stack_msg_frame;
+char pd_debug_string[64];
 // Private prototypes
 
+
+void pd_stack_debug_string(char *output_str)
+{
+    pd_stack_msg_frame.frame.sof = DBGUART_START_OF_FRAME;
+    pd_stack_msg_frame.frame.cid.value = DBGUART_CID_STRING_OUTPUT; // Set standard CID for STRING OUTPUT
+    pd_stack_msg_frame.frame.dlen.value = strlen(output_str); // Specify data length (length of byte-array or number of bytes to send)
+    pd_stack_msg_frame.frame.data = (uint8_t *)&output_str[0]; // Set data buffer pointer
+    pd_stack_msg_frame.frame.crc.value = 0; // Frame will not be CRC checked but CRC needs to be ZERO;
+    pd_stack_msg_frame.frame.eof = DBGUART_END_OF_FRAME; // Set default END_OF_FRAME
+        
+    smpsDebugUART_SendFrame(&pd_stack_msg_frame);
+}
 
 volatile uint16_t task_PDStack(void)
 {
@@ -68,18 +84,18 @@ volatile uint16_t task_PDStack(void)
         MchpPSF_RUN();
     }
     
-    debug_uart_tx();
+    //debug_uart_tx();
    
     return(taskPDStack_config.status.value);
 }
 
 volatile uint16_t init_taskPDStack(void)
 {
-#if (PD_DEBUG_UART_ENABLE  == 1)  
+//#if (PD_DEBUG_UART_ENABLE  == 1)  
     uint16_t reg_data_16;
-#endif    
+//#endif    
     // Set up the secondary UART for use by the PD stack
-    DEBUG_init();
+    //DEBUG_init();
     
     // Set RC2 as output for debugging
     TRISCbits.TRISC2 = 0;
@@ -88,26 +104,26 @@ volatile uint16_t init_taskPDStack(void)
     // Initialize the PSF stack.
     MchpPSF_Init();
     
-#if (PD_DEBUG_UART_ENABLE  == 1)  
-    LOG_PRINT(LOG_INFO, "Init TASK PSF Stack initialization done\r\n");
-#endif
+//#if (PD_DEBUG_UART_ENABLE  == 1)  
+    LOG_PRINT("Init TASK PSF Stack initialization done\r\n");
+//#endif
     // Configure UPD350 gpio pins for functions used outside of the stack
     configure_upd350_gpio();
 
-#if (PD_DEBUG_UART_ENABLE  == 1)  
+//#if (PD_DEBUG_UART_ENABLE  == 1)  
     UPD_RegisterRead(0, 0x0004, (uint8_t *)&reg_data_16, 2);
-    LOG_PRINT1(LOG_DEBUG, "VID 1: %04X\r\n", reg_data_16);
+    LOG_PRINT1("VID 1: %04X\r\n", reg_data_16);
     UPD_RegisterRead(0, 0x0006, (uint8_t *)&reg_data_16, 2);
-    LOG_PRINT1(LOG_DEBUG, "PID 1: %04X\r\n", reg_data_16);
+    LOG_PRINT1("PID 1: %04X\r\n", reg_data_16);
     UPD_RegisterRead(1, 0x0004, (uint8_t *)&reg_data_16, 2);
-    LOG_PRINT1(LOG_DEBUG, "VID 2: %04X\r\n", reg_data_16);
+    LOG_PRINT1("VID 2: %04X\r\n", reg_data_16);
     UPD_RegisterRead(1, 0x0006, (uint8_t *)&reg_data_16, 2);
-    LOG_PRINT1(LOG_DEBUG, "PID 2: %04X\r\n", reg_data_16);
-#endif    
+    LOG_PRINT1("PID 2: %04X\r\n", reg_data_16);
+//#endif    
     // Set the flag in the structure to indicate that the stack has been initialized.
     taskPDStack_config.status.flags.enable = PDSTACK_ENABLED;
     
-    debug_uart_tx_flush();
+    //debug_uart_tx_flush();
     
     return(true);
 }
