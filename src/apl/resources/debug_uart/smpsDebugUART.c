@@ -26,7 +26,7 @@
  * ********************************************************************************/
 
 #define UART_RX_BUFFER_SIZE  256U  // Size of the internal RECEIVE data buffer of the UART driver
-#define UART_TX_BUFFER_SIZE  4096U  // Size of the internal TRANSMIT data buffer of the UART driver
+#define UART_TX_BUFFER_SIZE  2048U  // Size of the internal TRANSMIT data buffer of the UART driver
 #define UART_TX_PACKAGE_SIZE  16U  // Size of one data package transmitted at a time
 volatile uint8_t  uart_rx_buffer[UART_RX_BUFFER_SIZE];
 volatile uint8_t  uart_tx_buffer[UART_TX_BUFFER_SIZE];
