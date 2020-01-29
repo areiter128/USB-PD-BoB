@@ -26,6 +26,7 @@
         </logicalFolder>
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
           <logicalFolder name="debug_uart" displayName="debug_uart" projectFiles="true">
+            <itemPath>../h/apl/resources/debug_uart/smpsDebugUART_UserCID.h</itemPath>
             <itemPath>../h/apl/resources/debug_uart/smpsDebugUART.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="pd_debug_uart" projectFiles="true">
