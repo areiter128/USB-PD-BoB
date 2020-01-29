@@ -119,7 +119,7 @@ extern "C" {
 /* *********************************************************************************
  * Digital Power Debugging UART Communication Timing Definitions
  * ********************************************************************************/
-#define DBGUART_SEND_PERIOD    (float)0.250   // Send a UART message every n seconds
+#define DBGUART_SEND_PERIOD    (float)0.050   // Send a UART message every n seconds
 #define DBGUART_CLEAR_PERIOD   (float)2.500   // Clear the UART receive buffer after n seconds of inactivity
     
 #define DBGUART_SEND_PER   (uint16_t)((((float)DBGUART_SEND_PERIOD / (float)TASK_MGR_TIME_STEP))-1) // LED toggle interval of (2999 + 1) x 100usec = 100ms
@@ -286,9 +286,16 @@ extern "C" {
     } SMPS_DBGUART_DATA_FRAME_t;        // SMPS Debug UART Protocol Communication Data Frame
     
     typedef struct {
+        volatile uint16_t counter;  // built-in software timer TX period counter
+        volatile uint16_t period;   // built-in software timer TX period compare to send next message
+        volatile uint16_t interval; // built-in software timer TX period compare to send next message
+    }SMPS_DGBUART_TX_TIMING_t;
+    
+    typedef struct {
         volatile SMPS_DBGUART_DATA_FRAME_t frame;    // Data frame object
         volatile SMPS_DBGUART_FRAME_STATUS_t status; // Parsing status of the data frame object
         volatile uint16_t pointer;                   // Pointer to recent frame buffer byte position
+        volatile SMPS_DGBUART_TX_TIMING_t tx_tmr;    // Built-in transmission software timer settings
     } SMPS_DGBUART_FRAME_t;
     
     typedef struct {
@@ -297,7 +304,7 @@ extern "C" {
         volatile uint16_t active_rx_dlen;       // Most recent RECEIVE buffer data frame length
         volatile uint16_t active_rx_frame;      // Most recent RECEIVE buffer index
         volatile uint16_t send_counter;         // internal software timer period counter
-        volatile uint16_t send_period;          // internal software timer period to send next message
+        volatile uint16_t send_period;          // internal software timer period compare to send next message
         volatile uint16_t clear_counter;        // internal software timer period counter
         volatile uint16_t clear_period;         // internal software timer period to clear RECEIVE buffer
     } SMPS_DBGUART_t;

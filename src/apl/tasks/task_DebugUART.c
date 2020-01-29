@@ -177,6 +177,7 @@ volatile uint16_t task_DebugUART_Initialize(void) {
     
     
     // Initialize default data frame for power supply runtime data
+	tx_frame_cid0100.tx_tmr.period = (uint16_t)(SMPS_DBGUART_CID0100_PERIOD/TASK_MGR_TIME_STEP);
     fres &= smpsDebugUART_InitializeFrame(
                 &tx_frame_cid100, SMPS_DBGUART_CID100, 
                 &tx_data_cid100[0], 
@@ -193,4 +194,36 @@ volatile uint16_t task_DebugUART_Initialize(void) {
     fres &= smpsDebugUART_Initialize();
     
     return(fres);
+}}
+
+/*!task_DebugUART_UpdateTimebase
+ * ***********************************************************************************************
+ * Private function determining the divider of the task tick rate of the operating system
+ * to the desired user task execution tick.
+ * 
+ * Example:
+ * The OS is running on a 100 us time base. Every 100 us ONE task of the most recently
+ * selected task queue is executed. Thus, the effective call rate for an individual task
+ * within a task queue is n x 100 us.
+ * 
+ * Let's assume this task should be executed every 300 ms. In this case a counter is used counting 
+ * the task manager calls determining when this task should be executed to meet the desired period. 
+ * The counter maximum therefore is dependent on the OS tick rate and the number of tasks in the
+ * recent task queue. 
+ *
+ * As the OS tick rate is constant, the following function is only called at task initialization 
+ * and as soon as a change of task queues has been detected, calculating the required counter
+ * maximum.
+ * 
+ * *********************************************************************************************** */
+
+volatile uint16_t task_DebugUART_UpdateTimebase(void) {
+// By counting the function calls, the scheduler time base tick 
+// period can be scaled down to individual task execution period
+
+    // Calculate the delay intervals to meet the user-defined timing
+    tx_frame_cid0100.tx_tmr.period = (volatile uint16_t)(tx_frame_cid0100.tx_tmr.interval / (task_mgr.task_queue_ubound+1));
+
+    return(1);
 }
+
