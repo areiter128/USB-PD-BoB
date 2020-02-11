@@ -50,16 +50,29 @@
 #include "apl/resources/fdrv_FunctionPDStack.h"
 #include "hal/hal.h"
 #include "mcal/mcal.h"
+#include "task_DebugUART.h"
+
+#define LOG_PRINT(_string) pd_stack_debug_string(_string)
+#define LOG_PRINT1(_string, _param) \
+        sprintf(pd_debug_string, _string, _param ); \
+        pd_stack_debug_string(pd_debug_string)
+#define LOG_PRINT2(_string, _param1, _param2) \
+        sprintf(pd_debug_string, _string, _param1, _param2 ); \
+        pd_stack_debug_string(pd_debug_string)
 
 /* ***********************************************************************************************
  * DECLARATIONS
  * ***********************************************************************************************/
 
 extern volatile FUNCTION_PD_STACK_CONFIG_t taskPDStack_config;
+extern char pd_debug_string[];
+
 
 /* ***********************************************************************************************
  * PROTOTYPES
  * ***********************************************************************************************/
+extern void pd_stack_debug_string(char *output_str);
+
 extern volatile uint16_t init_taskPDStack(void);
 extern volatile uint16_t task_PDStack(void);
 
