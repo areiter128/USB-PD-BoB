@@ -20,8 +20,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "apl/config/UserFaultObjects.h"
-
 /*!FAULT_OBJECT_STATUS_t
  * ***********************************************************************************************
  * Description:

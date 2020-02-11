@@ -6,6 +6,7 @@
  */
 
 #include "_root/generic/os_Globals.h"
+#include "apl/config/UserFaultObjects.h"
 
 /*!Operating System Fault Object Declaration
  * ***********************************************************************************************

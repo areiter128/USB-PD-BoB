@@ -512,7 +512,7 @@ Description:
     bit 3-0 SOCS[3:0]: Start-of-Cycle Selection bits(1,2,3): 0000 = Local EOC ? PWM Generator is self-triggered
  */
 
-#define C4SWBB_BOOSTLEG_PGxCONH     (   PGCON_SOCS_PWM1_5 | \
+#define C4SWBB_BOOSTLEG_PGxCONH     (   REG_PGCON_SOCS_PWM1_5 | \
                                         REG_PGCON_TRGMOD_REPEAT | \
                                         REG_PGCON_UPDMOD_IMMEDIATE | \
                                         REG_PGCON_MSTEN_NO_BROADCAST | \
