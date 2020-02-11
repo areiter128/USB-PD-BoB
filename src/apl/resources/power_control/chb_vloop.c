@@ -1,25 +1,25 @@
 /* **********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.0.76
+ * z-Domain Control Loop Designer, Version 0.9.1.81
  * **********************************************************************************
- * 3p3z compensation filter coefficients derived for following operating
+ * 2p2z compensation filter coefficients derived for following operating
  * conditions:
  * **********************************************************************************
  *
- *  Controller Type:    3P3Z - Basic Voltage Mode Compensator
+ *  Controller Type:    2P2Z - Basic Current Mode Compensator
  *  Sampling Frequency: 87500 Hz
  *  Fixed Point Format: 15
- *  Scaling Mode:       1 - Single Bit-Shift Scaling
+ *  Scaling Mode:       3 - Dual Bit-Shift Scaling
  *  Input Gain:         0.2
  *
  * *********************************************************************************
- * CGS Version:         1.0.0
- * CGS Date:            11/08/19
+ * CGS Version:         1.1.5
+ * CGS Date:            01/13/2020
  * *********************************************************************************
- * User:                C14220
- * Date/Time:           11/12/2019 10:10:51 AM
+ * User:                M91406
+ * Date/Time:           01/17/2020 10:30:04 PM
  * ********************************************************************************/
 
-#include "../h/apl/resources/chb_vloop.h"
+#include "../h/apl/resources/power_control/chb_vloop.h"
 
 /* *********************************************************************************
  * Data Arrays:
@@ -45,37 +45,33 @@ volatile uint16_t chb_vloop_ControlHistory_size = (sizeof(chb_vloop_histories.Co
 volatile uint16_t chb_vloop_ErrorHistory_size = (sizeof(chb_vloop_histories.ErrorHistory)/sizeof(chb_vloop_histories.ErrorHistory[0])); // Error history array size
 
 /* *********************************************************************************
- * 	Pole&Zero Placement:
+ * Pole&Zero Placement:
  * *********************************************************************************
  *
- *    fP0:    50 Hz
- *    fP1:    110000 Hz
- *    fP2:    150000 Hz
- *    fZ1:    2100 Hz
- *    fZ2:    4000 Hz
+ *    fP0:    40 Hz
+ *    fP1:    40000 Hz
+ *    fZ1:    450 Hz
  *
  * *********************************************************************************
- * 	Filter Coefficients and Parameters:
+ * Filter Coefficients and Parameters:
  * ********************************************************************************/
-volatile fractional chb_vloop_ACoefficients [3] =
+volatile fractional chb_vloop_ACoefficients [2] =
 {
-    0xDBD1, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x6FCD, // Coefficient A2 will be multiplied with controller output u(n-2)
-    0x3463  // Coefficient A3 will be multiplied with controller output u(n-3)
+    0x6916, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0x16EB  // Coefficient A2 will be multiplied with controller output u(n-2)
 };
 
-volatile fractional chb_vloop_BCoefficients [4] =
+volatile fractional chb_vloop_BCoefficients [3] =
 {
-    0x57D2, // Coefficient B0 will be multiplied with error input e(n-0)
-    0xCA8E, // Coefficient B1 will be multiplied with error input e(n-1)
-    0xAB47, // Coefficient B2 will be multiplied with error input e(n-2)
-    0x388B  // Coefficient B3 will be multiplied with error input e(n-3)
+    0x4429, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x022B, // Coefficient B1 will be multiplied with error input e(n-1)
+    0xBE03  // Coefficient B2 will be multiplied with error input e(n-2)
 };
 
 // Coefficient normalization factors
 volatile int16_t chb_vloop_pre_scaler = 3;
 volatile int16_t chb_vloop_post_shift_A = 0;
-volatile int16_t chb_vloop_post_shift_B = 0;
+volatile int16_t chb_vloop_post_shift_B = 1;
 volatile fractional chb_vloop_post_scaler = 0x0000;
 
 volatile cNPNZ16b_t chb_vloop; // user-controller data object
@@ -90,8 +86,9 @@ volatile cNPNZ16b_t chb_vloop; // user-controller data object
  *     - cNPNZ16b_t* controller
  *
  * Returns:
- *     - uint16_t:  0=failure, 1=success
- *
+ *     - uint16_t:  0->failure
+ *                  1->success
+
  * Description:
  * This function needs to be called from user code once to initialize coefficient
  * arrays and number normalization settings of the chb_vloop controller
@@ -105,7 +102,7 @@ volatile cNPNZ16b_t chb_vloop; // user-controller data object
  * ********************************************************************************/
 volatile uint16_t chb_vloop_Init(volatile cNPNZ16b_t* controller)
 {
-    volatile uint16_t i = 0;
+    volatile uint16_t i=0;
 
     // Initialize controller data structure at runtime with pre-defined default values
     controller->status.value = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))
@@ -142,4 +139,8 @@ volatile uint16_t chb_vloop_Init(volatile cNPNZ16b_t* controller)
     
     return(1);
 }
+ 
+//**********************************************************************************
+// Download latest version of this tool here: https://areiter128.github.io/DCLD
+//**********************************************************************************
  

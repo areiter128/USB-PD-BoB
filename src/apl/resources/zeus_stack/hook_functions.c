@@ -33,7 +33,7 @@
 #include <libpic30.h>
 
 #include "thermal_power_management.h"
-#include "apl/resources/c4swbb_control.h"
+#include "apl/resources/power_control/c4swbb_control.h"
 #include "apl/tasks/task_PowerControl.h"
 
 // TODO: JMS - Need to get these included from task_PowerControl.h (resolve compile errors)
@@ -144,9 +144,9 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.bits.autorun = false;
             p_port_instance->status.bits.enable = false;
             p_port_instance->status.bits.GO = 0;
-
+            /* Clear the enable pin for the port power switch */
+            UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_CLEAR);
             port_led_off(u8PortNum);
-
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 0V\r\n");
             break;
 
@@ -158,9 +158,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
-            
             port_led_on(u8PortNum);
-
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 5V\r\n");
             break;
 
@@ -172,9 +170,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
-
             port_led_on(u8PortNum);
-
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 9V\r\n");
             break;
 
@@ -186,9 +182,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
-
             port_led_on(u8PortNum);
-
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 15V\r\n");
             break;
 
@@ -200,15 +194,13 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_SET);
-
             port_led_on(u8PortNum);
-
             HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: 20V\r\n");
             break;
 
         default:
-            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: Invalid Voltage Selection\r\n");
             port_led_off(u8PortNum);
+            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: Invalid Voltage Selection\r\n");
             break;
 
     }
@@ -217,25 +209,6 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage)
 
 void hw_portpower_enab_dis_VBUSDischarge(uint8_t u8PortNum, uint8_t u8EnableDisable)
 {
-   volatile C4SWBB_PWRCTRL_t *p_port_instance;
-    
-    switch (u8PortNum)
-    {
-        case 0:
-            // Port 0
-            p_port_instance = &c4swbb_1;
-            break;
-            
-        case 1:
-            // Port 1
-            p_port_instance = &c4swbb_2;
-            break;
-            
-        default:
-            HOOK_DEBUG_PORT_STR (u8PortNum,"Drive VBUS: Invalid Port Number\r\n");
-            return;
-    }
-
     // Implement VBUS Discharge enable/disable hook function
     switch(u8EnableDisable)
     {
@@ -244,7 +217,6 @@ void hw_portpower_enab_dis_VBUSDischarge(uint8_t u8PortNum, uint8_t u8EnableDisa
             // Enable the VBUS Discharge for "u8PortNum" Port
             // Set the discharge enable high
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO2, UPD_GPIO_SET);
-            HOOK_DEBUG_PORT_STR (u8PortNum,"ENABLE Discharge\r\n");
             break;
 
         }
@@ -253,15 +225,6 @@ void hw_portpower_enab_dis_VBUSDischarge(uint8_t u8PortNum, uint8_t u8EnableDisa
             // Disable the VBUS Discharge for "u8PortNum" Port
             // Set the discharge enable low
             UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO2, UPD_GPIO_CLEAR);
-            
-            /* Clear the enable pin for the port power switch only if the supply is disabled */
-            if (p_port_instance->status.bits.enable == false)
-            {
-                UPD_GPIOSetClearOutput(u8PortNum, UPD_PIO7, UPD_GPIO_CLEAR);
-                HOOK_DEBUG_PORT_STR (u8PortNum,"DISABLE Port Power Switch\r\n");
-            }
-
-            HOOK_DEBUG_PORT_STR (u8PortNum,"DISABLE Discharge\r\n");
             break;
 
         }
@@ -286,7 +249,7 @@ void CRITICAL_SECTION_EXIT(void)
 
 void updalert_init(uint8_t *p_port_disable)
 {
-    __builtin_write_OSCCONL(OSCCON & 0xbf); // unlock PPS
+    //__builtin_write_OSCCONL(OSCCON & 0xbf); // unlock PPS
     
     if (p_port_disable[0] == PORT_STATUS_ENABLED)
     {

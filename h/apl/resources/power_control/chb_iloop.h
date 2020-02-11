@@ -1,5 +1,5 @@
 /* ********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.0.76
+ * z-Domain Control Loop Designer, Version 0.9.1.81
  * ********************************************************************************
  * 2p2z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
@@ -12,11 +12,11 @@
  *  Input Gain:         1
  *
  * *******************************************************************************
- * CGS Version:         1.0.0
- * CGS Date:            11/08/19
+ * CGS Version:         1.1.5
+ * CGS Date:            01/13/2020
  * *******************************************************************************
- * User:                C14220
- * Date/Time:           11/12/2019 10:10:40 AM
+ * User:                M91406
+ * Date/Time:           01/17/2020 10:31:59 PM
  * *******************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_CHB_ILOOP_H__
@@ -27,7 +27,7 @@
 #include <stdint.h> // include standard integer number data types
 #include <stdbool.h> // include standard boolean data types (true/false)
 
-#include "../h/apl/resources/npnz16b.h" // include NPNZ library header file
+#include "../h/apl/resources/power_control/npnz16b.h" // include NPNZ library header file
 
 /* *******************************************************************************
  * Data Arrays:
@@ -85,4 +85,8 @@ extern void chb_iloop_Update( // Calls the 2P2Z controller (Assembly)
 
 
 #endif // end of __SPECIAL_FUNCTION_LAYER_CHB_ILOOP_H__
- 
+
+//**********************************************************************************
+// Download latest version of this tool here: https://areiter128.github.io/DCLD
+//**********************************************************************************
+

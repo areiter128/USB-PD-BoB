@@ -126,8 +126,8 @@ extern "C" {
                                 )   // 0b0100000101000000
 
  #define C4SWBB_2_PGxCONH      ( \
-                                    PGCON_SOCS_TRG_PCISYNC | \
-                                    REG_PGCON_TRGMOD_REPEAT | \
+                                    REG_PGCON_SOCS_TRG_PCISYNC | \
+                                    REG_PGCON_TRGMOD_REPEAT  | \
                                     REG_PGCON_UPDMOD_IMMEDIATE | \
                                     REG_PGCON_MSTEN_MASTER | \
                                     REG_PGCON_MPHSEL_INDEPENDENT | \
@@ -521,7 +521,20 @@ Description:
                                         REG_PGCON_MDCSEL_INDEPENDENT \
                                     )   // 0b0100000101000000
 
-/*!PGxSTAT: PWM GENERATOR x STATUS REGISTER
+#define C4SWBB_BOOSTLEG_2_PGxCONH     ( REG_PGCON_SOCS_TRG_PCISYNC | \
+                                        REG_PGCON_TRGMOD_REPEAT | \
+                                        REG_PGCON_UPDMOD_IMMEDIATE | \
+                                        REG_PGCON_MSTEN_NO_BROADCAST | \
+                                        REG_PGCON_MPHSEL_INDEPENDENT | \
+                                        REG_PGCON_MPERSEL_MASTER | \
+                                        REG_PGCON_MDCSEL_INDEPENDENT \
+                                    )   // 0b0100000101000000
+    
+    
+    
+    
+    
+    /*!PGxSTAT: PWM GENERATOR x STATUS REGISTER
 
     Always clear all status bits
 

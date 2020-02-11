@@ -89,7 +89,8 @@ typedef struct {
     volatile uint16_t load; // CPU load result
     volatile uint16_t load_max_buffer; // CPU load maximum is tracked and logged
     volatile uint16_t loop_nomblk; // Number of cycles required for one CPU load counter tick
-    volatile uint32_t load_factor; // CPU_TICKS result has to be multiplied with this number to get CPU_LOAD in [10x %] => percentage with 1 digit accuracy, e.g. 124 = 12.4%
+    volatile uint32_t load_factor; // CPU_TICKS result has to be multiplied with this number to get CPU_LOAD in [10x %] 
+                                   // => percentage with 1 digit accuracy, e.g. 124 = 12.4%
 } CPU_LOAD_SETTINGS_t;
 
 typedef union {

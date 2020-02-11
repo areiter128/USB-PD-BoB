@@ -71,15 +71,18 @@ uint8_t check_power_budget(uint8_t port_num, uint16_t max_current_requested, uin
     
     requested_port_power_mw = ((uint32_t)DPM_GET_VOLTAGE_FROM_PDO_MILLI_V(gasPortConfigurationData[port_num].u32PDO[pdo_requested-1]) *
                            (uint32_t) max_current_requested) / 100;
+#if (PD_DEBUG_UART_ENABLE  == 1) 
     LOG_PRINT2(LOG_DEBUG, "CHECK_POWER: Port %d requested %ld mW\r\n", port_num, requested_port_power_mw);
-            
+#endif            
     if ((used_power_mw + requested_port_power_mw) > (power_budget_watts * 1000))
     {
         /* This will put us over the power budget.  Update the PDOs for this port and 
          * mark the request invalid
          */
         remaining_power_mw = (power_budget_watts * 1000) - used_power_mw;
+#if (PD_DEBUG_UART_ENABLE  == 1) 
         LOG_PRINT2(LOG_DEBUG, "CHECK_POWER: Port %d Remaining %ld mW\r\n", port_num, remaining_power_mw);
+#endif
         for (index = 0; index < gasPortConfigurationData[port_num].u8PDOCnt; index++)
         {
             if ((((uint32_t)DPM_GET_VOLTAGE_FROM_PDO_MILLI_V(gasPortConfigurationData[port_num].u32PDO[index])) * 
@@ -89,22 +92,28 @@ uint8_t check_power_budget(uint8_t port_num, uint16_t max_current_requested, uin
                 /* The power for this PDO is greater than the remaining power in the budget.  Reduce the 
                  * current to the level required to fit in the budget 
                  */
+#if (PD_DEBUG_UART_ENABLE  == 1)                 
                 LOG_PRINT1(LOG_DEBUG, "CHECK_POWER: V %ld mV\r\n", ((uint32_t)DPM_GET_VOLTAGE_FROM_PDO_MILLI_V(gasPortConfigurationData[port_num].u32PDO[index])));
-        
+#endif        
                 pdo_calculated_current = (remaining_power_mw * 1000) / ((uint32_t)DPM_GET_VOLTAGE_FROM_PDO_MILLI_V(gasPortConfigurationData[port_num].u32PDO[index]));
+#if (PD_DEBUG_UART_ENABLE  == 1) 
                 LOG_PRINT2(LOG_DEBUG, "CHECK_POWER: Port %d new current is %ld mA\r\n", port_num, pdo_calculated_current);
-               
+#endif               
                 gasPortConfigurationData[port_num].u32PDO[index] = 
                         (gasPortConfigurationData[port_num].u32PDO[index] & ~(DPM_PDO_CURRENT_MASK << DPM_PDO_CURRENT_POS)) |
                         (((pdo_calculated_current / DPM_PDO_CURRENT_UNIT) & DPM_PDO_CURRENT_MASK) << DPM_PDO_CURRENT_POS);
+#if (PD_DEBUG_UART_ENABLE  == 1) 
                 LOG_PRINT1(LOG_DEBUG, "CHECK_POWER: new A %ld mA\r\n", ((uint32_t)DPM_GET_CURRENT_FROM_PDO_MILLI_A(gasPortConfigurationData[port_num].u32PDO[index])));
+#endif
             }
         }
     }
     else
     {
         /* The power budget has been met */
+#if (PD_DEBUG_UART_ENABLE  == 1) 
         LOG_PRINT1(LOG_DEBUG, "CHECK_POWER: Port %d within budget\r\n", port_num);
+#endif
         power_budget_met = 1;
         port_max_power[port_num] = requested_port_power_mw;
     }
@@ -233,7 +242,9 @@ void power_management_state_machine(void)
     {
         case THERM_ST_INIT:
             /* Initialization of State machine Variables */
+#if (PD_DEBUG_UART_ENABLE  == 1)             
             LOG_PRINT(LOG_DEBUG, "INIT: Initialize Thermal state machine vars\r\n");
+#endif
             thermal_mgmt_state = THERM_ST_NORMAL;
             thermal_mgmt_substate = SUBSTATE_IDLE;
             for (port_index = 0; port_index < CONFIG_PD_PORT_COUNT; port_index++)
@@ -248,7 +259,9 @@ void power_management_state_machine(void)
             {
                 case SUBSTATE_ENTRY:
                     /* Set up the system for normal mode */
+#if (PD_DEBUG_UART_ENABLE  == 1) 
                     LOG_PRINT(LOG_DEBUG, "Entering NORMAL Thermal State\r\n");
+#endif
                     update_all_port_pdos();
                     thermal_mgmt_substate = SUBSTATE_IDLE;
                 break;
@@ -259,7 +272,9 @@ void power_management_state_machine(void)
                         /* Temperature has exceeded the normal operating range.
                          * go to the ROLLBACK state.
                          */
+#if (PD_DEBUG_UART_ENABLE  == 1) 
                         LOG_PRINT(LOG_DEBUG, "NORMAL: Temp > normal hi level\r\n");
+#endif
                         thermal_mgmt_state = THERM_ST_ROLLBACK;
                         thermal_mgmt_substate = SUBSTATE_ENTRY;
                     }
@@ -273,7 +288,9 @@ void power_management_state_machine(void)
             {
                 case SUBSTATE_ENTRY:
                     /* Set up the system for rollback mode */
+#if (PD_DEBUG_UART_ENABLE  == 1) 
                     LOG_PRINT(LOG_DEBUG, "ROLLBACK: Enter Rollback mode\r\n");
+#endif
                     update_all_port_pdos();
                     thermal_mgmt_substate = SUBSTATE_IDLE;
                 break;
@@ -284,7 +301,9 @@ void power_management_state_machine(void)
                         /* Temperature has exceeded the rollback operating range.
                          * go to the 5V ONLY state.
                          */
+#if (PD_DEBUG_UART_ENABLE  == 1) 
                         LOG_PRINT(LOG_DEBUG, "ROLLBACK: Temp > Rollback hi level\r\n");
+#endif
                         thermal_mgmt_state = THERM_ST_5V_ONLY;
                         thermal_mgmt_substate = SUBSTATE_ENTRY;
                     }
@@ -293,7 +312,9 @@ void power_management_state_machine(void)
                         /* Temperature has returned to the normal operating range.
                          * go to the NORMAL state.
                          */
+#if (PD_DEBUG_UART_ENABLE  == 1) 
                         LOG_PRINT(LOG_DEBUG, "ROLLBACK: Temp < rollback low level\r\n");
+#endif
                         thermal_mgmt_state = THERM_ST_NORMAL;
                         thermal_mgmt_substate = SUBSTATE_ENTRY;
                     }
@@ -307,7 +328,9 @@ void power_management_state_machine(void)
             {
                 case SUBSTATE_ENTRY:
                     /* Set up the system for 5V ONLY mode */
+#if (PD_DEBUG_UART_ENABLE  == 1) 
                     LOG_PRINT(LOG_DEBUG, "5V_ONLY: Enter 5V Only mode\r\n");
+#endif
                     update_all_port_pdos();
                     thermal_mgmt_substate = SUBSTATE_IDLE;
                     break;
@@ -318,7 +341,9 @@ void power_management_state_machine(void)
                         /* Temperature has exceeded the 5V ONLY operating range.
                          * go to the SHUTDOWN state.
                          */
+#if (PD_DEBUG_UART_ENABLE  == 1) 
                         LOG_PRINT(LOG_DEBUG, "5V_ONLY: Temp > 5V Only Hi level\r\n");
+#endif
                         thermal_mgmt_state = THERM_ST_SHUTDOWN;
                         thermal_mgmt_substate = SUBSTATE_ENTRY;
                     }
@@ -327,7 +352,9 @@ void power_management_state_machine(void)
                         /* Temperature has returned to the ROLLBACK operating range.
                          * go to the ROLLBACK state.
                          */
+#if (PD_DEBUG_UART_ENABLE  == 1) 
                         LOG_PRINT(LOG_DEBUG, "5V_ONLY: Temp < 5V Only Lo Level\r\n");
+#endif
                         thermal_mgmt_state = THERM_ST_ROLLBACK;
                         thermal_mgmt_substate = SUBSTATE_ENTRY;
                     }
@@ -341,7 +368,9 @@ void power_management_state_machine(void)
             {
                 case SUBSTATE_ENTRY:
                     /* Set up the system for shutdown mode */
+#if (PD_DEBUG_UART_ENABLE  == 1) 
                     LOG_PRINT(LOG_DEBUG, "SHUTDOWN: Enter Thermal Shutdown mode\r\n");
+#endif
                     update_all_port_pdos();
                     // DEMO_BOARD_TEST
                     //buck_status.overtemp = 1;
@@ -359,7 +388,9 @@ void power_management_state_machine(void)
                         /* Temperature has returned to the 5V ONLY operating range.
                          * go to the 5V ONLY state.
                          */
+#if (PD_DEBUG_UART_ENABLE  == 1) 
                         LOG_PRINT(LOG_DEBUG, "SHUTDOWN: Temp < Shutdown Lo Level\r\n");
+#endif
                         asm("RESET");
                     }
                     break;

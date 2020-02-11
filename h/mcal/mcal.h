@@ -71,43 +71,13 @@ extern "C" {
 #include "mcal/initialization/init_fosc.h"
 
 /* generic peripheral drives */    
-#include "dsPIC33C/p33SMPS_irq.h"
-#include "dsPIC33C/p33SMPS_dsp.h"
-#include "dsPIC33C/p33SMPS_hsadc.h"
-#include "dsPIC33C/p33SMPS_hspwm_c.h"
-#include "dsPIC33C/p33SMPS_gpio.h"
-#include "dsPIC33C/p33SMPS_oscillator.h"
-#include "dsPIC33C/p33SMPS_pmd.h"
-#include "dsPIC33C/p33SMPS_timer.h"
-#include "dsPIC33C/p33SMPS_pps.h"
-#include "dsPIC33C/p33SMPS_pmd.h"
-#include "dsPIC33C/p33SMPS_mailboxes.h"
+#include "../p33SMPS_plib.h"
 
 
 /* ***********************************************************************************************
  * GENERIC DEFINES
  * ***********************************************************************************************/
  
- 
-/* ***********************************************************************************************
- * MACRO DEFINITIONS
- * ***********************************************************************************************/
-    
-#ifndef WDT_RESET
-#define WDT_RESET		asm volatile ("CLRWDT\n")
-#endif
-#ifndef PWRSAV_IDLE
-#define PWRSAV_IDLE		asm volatile ("PWRSAV #1\n")
-#endif
-#ifndef PWRSAV_SLEEP
-#define PWRSAV_SLEEP	asm volatile ("PWRSAV #0\n")
-#endif
-#ifndef CPU_RESET
-#define CPU_RESET		asm volatile ("RESET\n")
-#endif
-//#ifndef ALTWREG_SWAP
-//#define ALTWREG_SWAP(x)    asm volatile ( "PUSH.W W0 \n CTXTSWP #" + x + "POP.W W0 \n")
-//#endif
     
 /* ***********************************************************************************************
  * PROTOTYPES

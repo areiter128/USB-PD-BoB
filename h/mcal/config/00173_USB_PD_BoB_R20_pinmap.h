@@ -65,7 +65,7 @@
 #include <stdbool.h> // Include standard boolean types                      
 #include "mcal/mcal.h" // Include local mcal layer header file        
 
-/* @@PINMAP_VERSION
+/*!PINMAP_VERSION
  * ***********************************************************************************************
  * Description:
  * This flag is a user defined flag helping to provide version information about the

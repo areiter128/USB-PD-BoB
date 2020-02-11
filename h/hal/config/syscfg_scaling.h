@@ -25,8 +25,8 @@
  * 07/29/2016   initial release
  * **************************************************************************************/
 
-#ifndef _HARDWARE_ABSTRACTION_LAYER_SYSTEM_SCALING_H_
-#define	_HARDWARE_ABSTRACTION_LAYER_SYSTEM_SCALING_H_
+#ifndef _SYSTEM_CONFIGURATION_SCALING_H_
+#define	_SYSTEM_CONFIGURATION_SCALING_H_
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
@@ -36,7 +36,8 @@
 
 #include "hal/hal.h"
 
-#if defined (__00173_USB_PD_BOB_R20__) || defined (__MA330048_P33CK_R30_USB_PD_BOB__)
+#if defined (__00173_USB_PD_BOB_R20__) || defined (__00173_USB_PD_BOB_R21__) || \
+    defined (__MA330048_P33CK_R30_USB_PD_BOB__)
 
 
 /*!ADC Settings
@@ -98,7 +99,7 @@
 
     //~~~~~~~~~~~~~~~~~ conversion macros ~~~~~~~~~~~~~~~~~~
     #define C4SWBB_VOUT_FB_GAIN      (float)(C4SWBB_VOUT_AMP_GAIN * (((float)C4SWBB_VOUT_DIV_R2) / (((float)C4SWBB_VOUT_DIV_R1) + ((float)C4SWBB_VOUT_DIV_R2))))
-    #define C4SWBB_VOUT_OFFSET       (uint16_t)(C4SWBB_VOUT_SENSE_OFFSET * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VOUT_FB_OFFSET    (uint16_t)(C4SWBB_VOUT_SENSE_OFFSET * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
     #define C4SWBB_VOUT_REF          (uint16_t)(C4SWBB_VOUT_NOMINAL * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
     #define C4SWBB_VOUT_OVP          (uint16_t)(C4SWBB_VOUT_MAXIMUM * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
     #define C4SWBB_VOUT_HYST         (uint16_t)(C4SWBB_VOUT_HYSTERESIS * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
@@ -110,6 +111,7 @@
     #define C4SWBB_VOUT_REF_12V      (uint16_t)(C4SWBB_VOUT_LEVEL_12V * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
     #define C4SWBB_VOUT_REF_15V      (uint16_t)(C4SWBB_VOUT_LEVEL_15V * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
     #define C4SWBB_VOUT_REF_20V      (uint16_t)(C4SWBB_VOUT_LEVEL_20V * C4SWBB_VOUT_FB_GAIN / ADC_GRANULARITY)
+
     //~~~~~~~~~~~~~~~~~
 
     // Input Voltage Feedback Scaling
@@ -123,13 +125,11 @@
     #define C4SWBB_VIN_HYSTERESIS   1.0         // Input voltage protection hysteresis in [V]
 
     //~~~~~~~~~~~~~~~~~ conversion macros ~~~~~~~~~~~~~~~~~~
-    #define C4SWBB_VIN_FB_GAIN       (float)((C4SWBB_VIN_DIV_R2) / (C4SWBB_VIN_DIV_R1 + C4SWBB_VIN_DIV_R2))
-    #define C4SWBB_VIN_UVLO          (uint16_t)(C4SWBB_VIN_MINIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
-    #define C4SWBB_VIN_OVLO          (uint16_t)(C4SWBB_VIN_MAXIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
-    #define C4SWBB_VIN_HYST          (uint16_t)(C4SWBB_VIN_HYSTERESIS * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
-
-    #define VIN2VOUT_NORMALIZATION  0x7fff  // (int16_t)(ceiling(log(VOUT_DIVIDER_RATIO/VIN_DIVIDER_RATIO)))
-    #define VIN2VOUT_NORM_BSFT      1       // Fixed-Point Bit-Shift of normalization factor
+    #define C4SWBB_VIN_FB_GAIN      (float)(C4SWBB_VIN_AMP_GAIN * (C4SWBB_VIN_DIV_R2 / (C4SWBB_VIN_DIV_R1 + C4SWBB_VIN_DIV_R2)))
+    #define C4SWBB_VIN_FB_OFFSET    (uint16_t)(C4SWBB_VIN_FEEDBACK_OFFSET * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VIN_UVLO         (uint16_t)(C4SWBB_VIN_MINIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VIN_OVLO         (uint16_t)(C4SWBB_VIN_MAXIMUM * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
+    #define C4SWBB_VIN_HYST         (uint16_t)(C4SWBB_VIN_HYSTERESIS * C4SWBB_VIN_FB_GAIN / ADC_GRANULARITY)
     //~~~~~~~~~~~~~~~~~
 
     #define C4SWBB_CS_AMP_GAIN          50.000      // Current sense amplifier gain in [V/V]
@@ -138,7 +138,7 @@
     #define C4SWBB_CS_COMMON_MODE_V_MIN 0.0       // Common mode minimum voltage at which the amplifier starts to provide an output signal
 
     #define C4SWBB_IOUT_IS_BI_DIRECTIONAL   false       // Current sens is (0=uni-directional, 1=bi-directional)
-    #define C4SWBB_IOUT_FEEDBACK_OFFSET     1900       // Current sense zero offset, 2048 ideal value but need to regulate at no load
+    #define C4SWBB_IOUT_FEEDBACK_OFFSET     2048       // Current sense zero offset, 2048 ideal value but need to regulate at no load // Carlo
                                                        // so 2020 offset allows current loop to integrate down to correct duty cycle for no load
 
     // Temperature sensor is MCP9700A
@@ -198,10 +198,17 @@
 #define VIN_DIVIDER_RATIO           (float)((float)C4SWBB_VIN_AMP_GAIN * ((float)C4SWBB_VIN_DIV_R2) / ((float)(C4SWBB_VIN_DIV_R1 + C4SWBB_VIN_DIV_R2)))
 #define VIN_DIVIDER_RATIO_INV       (float)( 1.0 / VIN_DIVIDER_RATIO )
 #define VIN_FB_OFFSET               (uint16_t)(C4SWBB_VIN_FEEDBACK_OFFSET * HSADC_SCALER)    // Input voltage sense offset ADC ticks
+#define VIN_DEC_SCALER              (float)10.0
+#define VIN_ADC2VAL                 (uint16_t)(float)(((ADC_GRANULARITY / VIN_DIVIDER_RATIO) * VIN_DEC_SCALER) * 32767.0)
 
 #define VOUT_DIVIDER_RATIO          (float)((float)C4SWBB_VOUT_AMP_GAIN * ((float)C4SWBB_VOUT_DIV_R2) / ((float)(C4SWBB_VOUT_DIV_R1 + C4SWBB_VOUT_DIV_R2)))
 #define VOUT_DIVIDER_RATIO_INV      (float)( 1.0 / VOUT_DIVIDER_RATIO )
 #define VOUT_FB_OFFSET              (int16_t)(C4SWBB_VOUT_SENSE_OFFSET * HSADC_SCALER)   // Output voltage sense offset ADC ticks
+#define VOUT_DEC_SCALER             (float)100.0
+#define VOUT_ADC2VAL                (uint16_t)(float)(((ADC_GRANULARITY / VOUT_DIVIDER_RATIO) * VOUT_DEC_SCALER) * 32767.0)
+
+#define VIN2VOUT_NORMALIZATION      0x7fff  // (int16_t)(ceiling(log(VOUT_DIVIDER_RATIO/VIN_DIVIDER_RATIO)))
+#define VIN2VOUT_NORM_BSFT          1       // Fixed-Point Bit-Shift of normalization factor
 
 #define IOUT_SCALER_RATIO_I2V       (float)((float)C4SWBB_CS_SHUNT_RESISTANCE * (float)C4SWBB_CS_AMP_GAIN) // Current feeback ratio in [V/A] => used to convert current into feedback voltage
 #define IOUT_SCALER_RATIO_V2I       (float)(1.0/((float)IOUT_SCALER_RATIO_I2V))  // Current feeback ratio in [A/V] => used to convert feedback voltage into current
@@ -211,8 +218,13 @@
 #define IOUT_PROPAGATION_DELAY      (uint16_t)((float)C4SWBB_CS_PROPAGATION_DELAY /(float)T_ACLK) // current feedback signal phase shift
 #define IOUT_COMMON_MODE_V_MIN      (uint16_t)((float)C4SWBB_CS_COMMON_MODE_V_MIN * (float)VOUT_DIVIDER_RATIO * (float)HSADC_SCALER) // Current sense minimum common mode voltage ADC ticks
 
+#define IOUT_DEC_SCALER             (float)100.0
+#define IOUT_ADC2VAL                (uint16_t)(float)(((ADC_GRANULARITY / IOUT_SCALER_RATIO_I2V) * IOUT_DEC_SCALER) * 32767.0)
+
 #define TEMP_OFFSET_TICKS           (uint16_t)((float)TEMP_SENSE_OFFSET * (float)HSADC_SCALER)
 #define TEMP_SLOPE_TICKS            (uint16_t)((float)TEMP_SENSE_SLOPE * (float)HSADC_SCALER)
+#define TEMP_DEC_SCALER             (float)10.0
+#define TEMP_ADC2VAL                (uint16_t)(float)(((ADC_GRANULARITY / TEMP_SENSE_SLOPE) * TEMP_DEC_SCALER) * 32767.0)
 
-#endif	/* _HARDWARE_ABSTRACTION_LAYER_SYSTEM_SCALING_H_ */
+#endif	/* _SYSTEM_CONFIGURATION_SCALING_H_ */
 
