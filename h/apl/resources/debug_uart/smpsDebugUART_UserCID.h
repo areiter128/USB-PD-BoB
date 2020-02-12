@@ -81,18 +81,19 @@ extern volatile uint16_t rx_data_cid0100_size;
 
 // From dsPIC to GUI
 typedef struct {
-    volatile uint16_t vin;      // DBYTE[1:0]   Most recent input voltage
-    volatile uint16_t ch1_vout; // DBYTE[3:2]   Most recent output voltage of channel #1
-    volatile uint16_t ch1_iout; // DBYTE[5:4]   Most recent output current of channel #1
-    volatile uint16_t status;   // DBYTE[7:6]   Most recent value of the system status flags
-    volatile uint16_t fault;    // DBYTE[9:8]   Most recent value of the system fault flags
-    volatile uint16_t ch2_vout; // DBYTE[11:10] Most recent output voltage of channel #2
-    volatile uint16_t ch2_iout; // DBYTE[13:12] Most recent output current of channel #2
-    volatile uint16_t temp;     // DBYTE[15:14] Most recent board temperature
-    volatile uint16_t upd1_vid; // DBYTE[17:16] UPD350 #1: connected device VID
-    volatile uint16_t upd1_pid; // DBYTE[19:18] UPD350 #1: connected device PID
-    volatile uint16_t upd2_vid; // DBYTE[21:20] UPD350 #2: connected device VID
-    volatile uint16_t upd2_pid; // DBYTE[23:22] UPD350 #2: connected device PID
+    volatile uint16_t vin;          // DBYTE[1:0]   Most recent input voltage
+    volatile uint16_t ch1_vout;     // DBYTE[3:2]   Most recent output voltage of channel #1
+    volatile uint16_t ch1_iout;     // DBYTE[5:4]   Most recent output current of channel #1
+    volatile uint16_t ch1_temp;     // DBYTE[7:6]   Most recent board temperature near channel #1
+    volatile uint16_t ch1_status;   // DBYTE[9:8]   Most recent value of the system status flags
+    volatile uint16_t ch2_vout;     // DBYTE[11:10] Most recent output voltage of channel #2
+    volatile uint16_t ch2_iout;     // DBYTE[13:12] Most recent output current of channel #2
+    volatile uint16_t ch2_temp;     // DBYTE[15:14] Most recent board temperature near channel #2
+    volatile uint16_t ch2_status;   // DBYTE[17:16] Most recent value of the system status flags
+    volatile uint16_t upd1_vid;     // DBYTE[19:18] UPD350 #1: connected device VID
+    volatile uint16_t upd1_pid;     // DBYTE[21:20] UPD350 #1: connected device PID
+    volatile uint16_t upd2_vid;     // DBYTE[23:22] UPD350 #2: connected device VID
+    volatile uint16_t upd2_pid;     // DBYTE[25:24] UPD350 #2: connected device PID
 } __attribute__((packed)) CID0100_TX_t;      
 
 // From GUI to dsPIC
@@ -113,7 +114,7 @@ typedef union {
         volatile unsigned            : 10; // Bit [15:6]: (not used)
     } __attribute__((packed)) bits; // Configuration Bits bit-field
     volatile uint16_t value; // Configuration Bits value
-}CID0100_CONFIG_t;
+} CID0100_CONFIG_t;
     
 typedef struct {
     volatile uint16_t ref_ch1_vout;     // DBYTE[1:0] Output voltage reference for channel #1
@@ -123,46 +124,7 @@ typedef struct {
     volatile uint16_t ref_temp;         // DBYTE[9:8] Simulation value for board temperature
     volatile CID0100_CONFIG_t config_bits;  // DBYTE[11:10] System Control Bits
 } __attribute__((packed)) CID0100_RX_t;      
-
-//
-//    
-//    
-//#define DBGUART_CID_DSMPS_GUI           0x0100 // Standard CID for ASCALB GUI (DSMPS)
-//
-//// Index definition for CID 0x0100 (Ascalab GUI) 
-//    
-//#define CID0100_RX_VOUT_CH1_INDEX      0
-//#define CID0100_RX_IOUT_CH1_INDEX      2
-//#define CID0100_RX_VOUT_CH2_INDEX      4
-//#define CID0100_RX_IOUT_CH2_INDEX      6
-//#define CID0100_RX_TEMPERATURE_INDEX   8
-//#define CID0100_RX_CONFIG_BITS_INDEX   10
-//
-//
-//// Bit masks 
-//#define CID0100_RX_ON_OFF_CH1_BIT      (1<<0)
-//#define CID0100_RX_ON_OFF_CH2_BIT      (1<<1)
-//#define CID0100_RX_USB_CH1_ENABLED     (1<<2)
-//#define CID0100_RX_USB_CH2_ENABLED     (1<<3)
-//#define CID0100_RX_TEMP_SIMULATION     (1<<4)
-//#define CID0100_RX_PWM_FREQ_JITTERING  (1<<5)
-//
-//
-//// From dsPIC to GUI
-//
-//#define CID0100_TX_VIN_INDEX            0
-//#define CID0100_TX_VOUT_CH1_INDEX       2
-//#define CID0100_TX_IOUT_CH1_INDEX       4
-//#define CID0100_TX_CONVERTER_STATUS     6
-//#define CID0100_TX_CONVERTER_FAULT      8
-//#define CID0100_TX_VOUT_CH2_INDEX       10
-//#define CID0100_TX_IOUT_CH2_INDEX       12
-//#define CID0100_TX_TEMPERATURE_INDEX    14
-//#define CID0100_TX_UPD1_DEVICE_VID      16
-//#define CID0100_TX_UPD1_DEVICE_PID      18
-//#define CID0100_TX_UPD2_DEVICE_VID      20
-//#define CID0100_TX_UPD2_DEVICE_PID      22
-//        
+      
     
 /* *********************************************************************************
  * Digital Power Debugging UART Protocol Function Prototypes
