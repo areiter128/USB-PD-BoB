@@ -13,8 +13,8 @@
 
 #include "apl/tasks/task_DebugUART.h"
 #include "apl/resources/debug_uart/smpsDebugUART.h"
-#include "apl/resources//debug_uart/smpsDebugUART_UserCID.h"
-
+#include "apl/resources/debug_uart/smpsDebugUART_UserCID.h"
+#include "apl/tasks/task_PowerControl.h"
 
 volatile uint16_t task_DebugUART_UpdateTimebase(void);
 
@@ -36,6 +36,7 @@ volatile uint16_t task_DebugUART_UpdateTimebase(void);
 volatile uint16_t task_DebugUART_Execute(void) {
 
     volatile uint16_t fres=1;
+    volatile int16_t scale_val=0;
     volatile CID0100_TX_t* tx_buf_cid0100;
     
     // Check if task manager call-rate has changed
@@ -57,28 +58,59 @@ volatile uint16_t task_DebugUART_Execute(void) {
             
             tx_buf_cid0100 = (CID0100_TX_t*)(uint8_t*)&tx_data_cid0100[0];
 
-            tx_buf_cid0100->vin = SwapWordBytes((uint16_t)132); 
-            tx_buf_cid0100->ch1_vout = SwapWordBytes((uint16_t)500); 
-            tx_buf_cid0100->ch1_iout = SwapWordBytes((uint16_t)125); 
-            tx_buf_cid0100->ch2_vout = SwapWordBytes((uint16_t)150); 
-            tx_buf_cid0100->ch2_iout = SwapWordBytes((uint16_t)536); 
-            tx_buf_cid0100->temp = SwapWordBytes((uint16_t)442); 
+			// Input voltage
+			scale_val = (int16_t)(((int32_t)(c4swbb_1.data.v_in - VIN_FB_OFFSET) * VIN_ADC2VAL) >> 15);
+            tx_buf_cid0100->vin = SwapWordBytes((uint16_t)scale_val); 
+			
+			// Output voltage channel #1
+			scale_val = (int16_t)(((int32_t)(c4swbb_1.data.v_out - VOUT_FB_OFFSET) * VOUT_ADC2VAL) >> 15);
+            tx_buf_cid0100->ch1_vout = SwapWordBytes((uint16_t)scale_val); 
+			
+			// Output current channel #1
+			if(c4swbb_1.data.i_out > c4swbb_1.i_loop.feedback_offset)
+                scale_val = (int16_t)(((int32_t)(c4swbb_1.data.i_out - c4swbb_1.i_loop.feedback_offset) * IOUT_ADC2VAL) >> 15);
+            else
+                scale_val = 0;
+            tx_buf_cid0100->ch1_iout = SwapWordBytes((uint16_t)scale_val); 
 
-            tx_buf_cid0100->fault = (uint16_t)0; 
-            tx_buf_cid0100->status = (uint16_t)0; 
+			// Temperature channel #1 
+			scale_val = (int16_t)(((int32_t)(c4swbb_1.data.temp - TEMP_OFFSET_TICKS) * TEMP_ADC2VAL) >> 15);
+            tx_buf_cid0100->ch1_temp = SwapWordBytes((uint16_t)scale_val); 
+			
+            // Converter status #1
+            tx_buf_cid0100->ch1_status = (uint16_t)SwapWordBytes((uint16_t)c4swbb_1.status.value);; 
+            
+            
+            // Output voltage channel #2
+			scale_val = (int16_t)(((int32_t)(c4swbb_2.data.v_out - VOUT_FB_OFFSET) * VOUT_ADC2VAL) >> 15);
+			tx_buf_cid0100->ch2_vout = SwapWordBytes((uint16_t)scale_val); 
 
-            tx_buf_cid0100->upd1_pid = SwapWordBytes((uint16_t)task_mgr.cpu_load.load); 
+			// Output current channel #2
+			if(c4swbb_2.data.i_out > c4swbb_2.i_loop.feedback_offset)
+                scale_val = (int16_t)(((int32_t)(c4swbb_2.data.i_out - c4swbb_2.i_loop.feedback_offset) * IOUT_ADC2VAL) >> 15);
+            else
+                scale_val = 0;
+            tx_buf_cid0100->ch2_iout = SwapWordBytes((uint16_t)scale_val); 
+			
+			// Temperature channel #2
+			scale_val = (int16_t)(((int32_t)(c4swbb_2.data.temp - TEMP_OFFSET_TICKS) * TEMP_ADC2VAL) >> 15);
+            tx_buf_cid0100->ch2_temp = SwapWordBytes((uint16_t)scale_val); 
+
+            // Converter status #2
+            tx_buf_cid0100->ch2_status = (uint16_t)SwapWordBytes((uint16_t)c4swbb_2.status.value);; 
+
+            // Dummy data filling up VID and PID place holders
+            tx_buf_cid0100->upd1_pid = SwapWordBytes((uint16_t)0x0402); 
             tx_buf_cid0100->upd1_vid = SwapWordBytes((uint16_t)task_mgr.task_time_ctrl.quota); 
             tx_buf_cid0100->upd2_pid = SwapWordBytes((uint16_t)task_mgr.task_time_ctrl.maximum); 
-            tx_buf_cid0100->upd2_vid = SwapWordBytes((uint16_t)task_mgr.op_mode.value); 
+            tx_buf_cid0100->upd2_vid = SwapWordBytes((uint16_t)(task_mgr.op_mode.value & SYSTEM_OPERATION_MODE_MASK)); 
 
             // Set data length
-            tx_frame_cid0100.frame.dlen.value = 64;
+            tx_frame_cid0100.frame.dlen.value = tx_data_cid0100_size;
 
             // Pack up frame and put it in Tx queue buffer
             smpsDebugUART_SendFrame(&tx_frame_cid0100); // Andy for James (String Test Only)
             // Reset update counter
-
             tx_frame_cid0100.tx_tmr.counter = 0;
 
         }
