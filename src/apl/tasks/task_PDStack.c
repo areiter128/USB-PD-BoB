@@ -41,7 +41,7 @@
 #include <string.h>
 #include "apl/resources/fdrv_FunctionPDStack.h"
 #include "apl/tasks/task_PDStack.h"
-#include "debug_uart.h"
+//Remove: #include "debug_uart.h"
 #include "apl/resources/debug_uart/smpsDebugUART.h"
 
 volatile FUNCTION_PD_STACK_CONFIG_t taskPDStack_config;

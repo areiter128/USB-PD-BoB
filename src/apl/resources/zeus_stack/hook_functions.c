@@ -29,7 +29,7 @@
 #include "portable/dsPIC/ZeusStackConfig.h"
 #include "include/stdinc.h"
 
-#include "debug_uart.h"
+// Remove: #include "debug_uart.h"
 #include <libpic30.h>
 
 #include "thermal_power_management.h"
