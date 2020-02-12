@@ -100,10 +100,10 @@ volatile uint16_t task_DebugUART_Execute(void) {
             tx_buf_cid0100->ch2_status = (uint16_t)SwapWordBytes((uint16_t)c4swbb_2.status.value);; 
 
             // Dummy data filling up VID and PID place holders
-            tx_buf_cid0100->upd1_pid = SwapWordBytes((uint16_t)0x0402); 
-            tx_buf_cid0100->upd1_vid = SwapWordBytes((uint16_t)task_mgr.task_time_ctrl.quota); 
+            tx_buf_cid0100->upd1_vid = SwapWordBytes((uint16_t)(task_mgr.op_mode.value & SYSTEM_OPERATION_MODE_MASK)); 
+            tx_buf_cid0100->upd1_pid = SwapWordBytes((uint16_t)task_mgr.cpu_load.load); 
+            tx_buf_cid0100->upd2_vid = SwapWordBytes((uint16_t)task_mgr.task_time_ctrl.quota); 
             tx_buf_cid0100->upd2_pid = SwapWordBytes((uint16_t)task_mgr.task_time_ctrl.maximum); 
-            tx_buf_cid0100->upd2_vid = SwapWordBytes((uint16_t)(task_mgr.op_mode.value & SYSTEM_OPERATION_MODE_MASK)); 
 
             // Set data length
             tx_frame_cid0100.frame.dlen.value = tx_data_cid0100_size;
