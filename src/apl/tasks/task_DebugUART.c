@@ -46,55 +46,7 @@ volatile uint16_t task_DebugUART_Execute(void) {
     // Execute DebugUART state machine
     if(DebugUART.status.bits.ready) {
         
-//        if(++tx_frame_cid0100.tx_tmr.counter > tx_frame_cid0100.tx_tmr.period) {
-//
-//            // Input voltage
-//            scale_val = (int16_t)(((int32_t)(c4swbb_1.data.v_in - VIN_FB_OFFSET) * VIN_ADC2VAL) >> 15);
-//            tx_data_cid0100[CID00100_TX_VIN_INDEX] = (volatile uint8_t)((scale_val & 0xFF00) >> 8);
-//            tx_data_cid0100[CID00100_TX_VIN_INDEX+1] = (volatile uint8_t)(scale_val & 0x00FF);
-//            
-//            // Output voltage channel #1
-//            scale_val = (int16_t)(((int32_t)(c4swbb_1.data.v_out - VOUT_FB_OFFSET) * VOUT_ADC2VAL) >> 15);
-//            tx_data_cid0100[CID00100_TX_VOUT_CH1_INDEX] = (volatile uint8_t)((scale_val & 0xFF00) >> 8);
-//            tx_data_cid0100[CID00100_TX_VOUT_CH1_INDEX+1] = (volatile uint8_t)(scale_val & 0x00FF);
-//
-//            // Output current channel #1
-//            if(c4swbb_1.data.i_out > c4swbb_1.i_loop.feedback_offset)
-//                scale_val = (int16_t)(((int32_t)(c4swbb_1.data.i_out - c4swbb_1.i_loop.feedback_offset) * IOUT_ADC2VAL) >> 15);
-//            else
-//                scale_val = 0;
-//            tx_data_cid0100[CID00100_TX_IOUT_CH1_INDEX] = (volatile uint8_t)((scale_val & 0xFF00) >> 8);
-//            tx_data_cid0100[CID00100_TX_IOUT_CH1_INDEX+1] = (volatile uint8_t)(scale_val & 0x00FF);
-//            
-//            // Temperature channel #1 (ToDo: second temp sensor not supported by GUI yet. Add when available)
-//            scale_val = (int16_t)(((int32_t)(c4swbb_1.data.temp - TEMP_OFFSET_TICKS) * TEMP_ADC2VAL) >> 15);
-//            tx_data_cid0100[CID00100_TX_TEMPERATURE_INDEX] = (volatile uint8_t)((scale_val & 0xFF00) >> 8);
-//            tx_data_cid0100[CID00100_TX_TEMPERATURE_INDEX+1] = (volatile uint8_t)(scale_val & 0x00FF);
-//            
-//
-//            // Output voltage channel #2
-//            scale_val = (int16_t)(((int32_t)(c4swbb_2.data.v_out - VOUT_FB_OFFSET) * VOUT_ADC2VAL) >> 15);
-//            tx_data_cid0100[CID00100_TX_VOUT_CH2_INDEX] = (volatile uint8_t)((scale_val & 0xFF00) >> 8);
-//            tx_data_cid0100[CID00100_TX_VOUT_CH2_INDEX+1] = (volatile uint8_t)(scale_val & 0x00FF);
-//
-//            // Output current channel #2
-//            if(c4swbb_2.data.i_out > c4swbb_2.i_loop.feedback_offset)
-//                scale_val = (int16_t)(((int32_t)(c4swbb_2.data.i_out - c4swbb_2.i_loop.feedback_offset) * IOUT_ADC2VAL) >> 15);
-//            else
-//                scale_val = 0;
-//            tx_data_cid0100[CID00100_TX_IOUT_CH2_INDEX] = (volatile uint8_t)((scale_val & 0xFF00) >> 8);
-//            tx_data_cid0100[CID00100_TX_IOUT_CH2_INDEX+1] = (volatile uint8_t)(scale_val & 0x00FF);
-//
-//            // Set data length
-//            tx_frame_cid0100.frame.dlen.value = 64;
-//
-//            // Pack up frame and put it in Tx queue buffer
-//            smpsDebugUART_SendFrame(&tx_frame_cid0100); // Carlo
-//            
-//            // Reset update counter
-//            tx_frame_cid0100.tx_tmr.counter = 0;
-//        }
-
+        
         if(++tx_frame_cid0100.tx_tmr.counter > (tx_frame_cid0100.tx_tmr.period+1)) 
         {
             // When building a data frame, the order of the data packages is reversed
