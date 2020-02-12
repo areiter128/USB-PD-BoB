@@ -156,7 +156,7 @@ volatile uint16_t task_DebugUART_Initialize(void) {
     
     
     // Initialize default data frame for power supply runtime data
-	tx_frame_cid0100.tx_tmr.period = (uint16_t)(SMPS_DBGUART_CID0100_PERIOD/TASK_MGR_TIME_STEP);
+	tx_frame_cid0100.tx_tmr.interval = (uint16_t)(SMPS_DBGUART_CID0100_PERIOD/TASK_MGR_TIME_STEP);
     fres &= smpsDebugUART_InitializeFrame(
                 &tx_frame_cid0100, SMPS_DBGUART_CID0100, 
                 &tx_data_cid0100[0], 
