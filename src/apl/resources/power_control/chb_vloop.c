@@ -12,11 +12,11 @@
  *  Input Gain:         0.2
  *
  * *********************************************************************************
- * CGS Version:         1.1.5
+ * CGS Version:         1.1.1
  * CGS Date:            01/13/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           01/17/2020 10:30:04 PM
+ * Date/Time:           02/21/2020 1:09:39 AM
  * ********************************************************************************/
 
 #include "../h/apl/resources/power_control/chb_vloop.h"
@@ -48,8 +48,8 @@ volatile uint16_t chb_vloop_ErrorHistory_size = (sizeof(chb_vloop_histories.Erro
  * Pole&Zero Placement:
  * *********************************************************************************
  *
- *    fP0:    40 Hz
- *    fP1:    40000 Hz
+ *    fP0:    24 Hz
+ *    fP1:    7300 Hz
  *    fZ1:    450 Hz
  *
  * *********************************************************************************
@@ -57,21 +57,21 @@ volatile uint16_t chb_vloop_ErrorHistory_size = (sizeof(chb_vloop_histories.Erro
  * ********************************************************************************/
 volatile fractional chb_vloop_ACoefficients [2] =
 {
-    0x6916, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x16EB  // Coefficient A2 will be multiplied with controller output u(n-2)
+    0x656C, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0xDA95  // Coefficient A2 will be multiplied with controller output u(n-2)
 };
 
 volatile fractional chb_vloop_BCoefficients [3] =
 {
-    0x4429, // Coefficient B0 will be multiplied with error input e(n-0)
-    0x022B, // Coefficient B1 will be multiplied with error input e(n-1)
-    0xBE03  // Coefficient B2 will be multiplied with error input e(n-2)
+    0x7340, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x03AB, // Coefficient B1 will be multiplied with error input e(n-1)
+    0x906B  // Coefficient B2 will be multiplied with error input e(n-2)
 };
 
 // Coefficient normalization factors
 volatile int16_t chb_vloop_pre_scaler = 3;
-volatile int16_t chb_vloop_post_shift_A = 0;
-volatile int16_t chb_vloop_post_shift_B = 1;
+volatile int16_t chb_vloop_post_shift_A = -1;
+volatile int16_t chb_vloop_post_shift_B = 4;
 volatile fractional chb_vloop_post_scaler = 0x0000;
 
 volatile cNPNZ16b_t chb_vloop; // user-controller data object

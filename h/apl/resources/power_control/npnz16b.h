@@ -2,7 +2,7 @@
 * z-Domain Control Loop Designer, Version 0.9.1.81
 * ********************************************************************************
 * Generic library header for z-domain compensation filter assembly functions
-* CGS Version: 1.1.5
+* CGS Version: 1.1.1
 * CGS Date:    01/13/2020
 * ********************************************************************************/
 #ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
