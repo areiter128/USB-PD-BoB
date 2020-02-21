@@ -150,7 +150,10 @@ extern "C" {
  * PROTOCOL STANDARD CID's
  * *********************************************************************************/
 #define DBGUART_CID_ACKNOWLEDGEMENT     0x0100 // Acknowledge-Bit for handshake CIDs
+#define DBGUART_CID_CRC_BYPASS          0x000F // All CIDs less than 15 do get CRC=0
     
+#define DBGUART_CID_STRING_OUTPUT       0x0001 // Standard CID for sending strings to a terminal window (no CRC check)
+
 #define DBGUART_CID_READ_FROM_ADDR      0xE000 // Standard CID for reading from a memory address
 #define DBGUART_CID_WRITE_TO_ADDR       0xE001 // Standard CID for writing to a memory address
 #define DBGUART_CID_AND_BIT_MASK        0xE002 // Standard CID for AND-ing a bit mask with a value at a memory address
@@ -161,40 +164,7 @@ extern "C" {
 
 #define DBGUART_CID_PROPRIETARY         0x0003 // Return value for 
     
-// Index definition for CID 0x0100 (Ascalab GUI) 
-    
-#define CID0100_RX_VOUT_CH1_INDEX      0
-#define CID0100_RX_IOUT_CH1_INDEX      2
-#define CID0100_RX_VOUT_CH2_INDEX      4
-#define CID0100_RX_IOUT_CH2_INDEX      6
-#define CID0100_RX_TEMPERATURE_INDEX   8
-#define CID0100_RX_CONFIG_BITS_INDEX   10
 
-
-// Bit masks 
-#define CID0100_RX_ON_OFF_CH1_BIT      (1<<0)
-#define CID0100_RX_ON_OFF_CH2_BIT      (1<<1)
-#define CID0100_RX_USB_CH1_ENABLED     (1<<2)
-#define CID0100_RX_USB_CH2_ENABLED     (1<<3)
-#define CID0100_RX_TEMP_SIMULATION     (1<<4)
-#define CID0100_RX_PWM_FREQ_JITTERING  (1<<5)
-
-
-// From dsPIC to GUI
-
-#define CID0100_TX_VIN_INDEX            0
-#define CID0100_TX_VOUT_CH1_INDEX       2
-#define CID0100_TX_IOUT_CH1_INDEX       4
-#define CID0100_TX_CONVERTER_STATUS     6
-#define CID0100_TX_CONVERTER_FAULT      8
-#define CID0100_TX_VOUT_CH2_INDEX       10
-#define CID0100_TX_IOUT_CH2_INDEX       12
-#define CID0100_TX_TEMPERATURE_INDEX    14
-#define CID0100_TX_UPD1_DEVICE_VID      16
-#define CID0100_TX_UPD1_DEVICE_PID      18
-#define CID0100_TX_UPD2_DEVICE_VID      20
-#define CID0100_TX_UPD2_DEVICE_PID      22
-    
 /* *********************************************************************************
  * Digital Power Debugging UART Communication Frame
  * ================================================
@@ -303,7 +273,7 @@ extern "C" {
                 volatile uint8_t dlh;   // ID LOW-Byte
             } __attribute__((packed)) bytes; // 2x 8-bit wide data length access
             volatile uint16_t value;    // 16-bit wide data length value
-        }dlen;
+        }dlen;                          // Data length of the data buffer
         volatile uint8_t* data;         // Data buffer
         union{
             struct {
@@ -316,10 +286,17 @@ extern "C" {
     } SMPS_DBGUART_DATA_FRAME_t;        // SMPS Debug UART Protocol Communication Data Frame
     
     typedef struct {
+        volatile uint16_t counter;  // built-in software timer TX period counter
+        volatile uint16_t period;   // built-in software timer TX period compare to send next message
+        volatile uint16_t interval; // built-in software timer TX period compare to send next message
+    }SMPS_DGBUART_TX_TIMER_t;       // SMPS Debug UART Protocol software timer settings
+    
+    typedef struct {
         volatile SMPS_DBGUART_DATA_FRAME_t frame;    // Data frame object
         volatile SMPS_DBGUART_FRAME_STATUS_t status; // Parsing status of the data frame object
         volatile uint16_t pointer;                   // Pointer to recent frame buffer byte position
-    } SMPS_DGBUART_FRAME_t;
+        volatile SMPS_DGBUART_TX_TIMER_t tx_tmr;    // Built-in transmission software timer settings
+    } SMPS_DGBUART_FRAME_t;             // SMPS Debug UART Protocol frame handler data buffer
     
     typedef struct {
         volatile SMPS_DBGUART_STATUS_t status;  // Common debugging UART object status
@@ -327,7 +304,7 @@ extern "C" {
         volatile uint16_t active_rx_dlen;       // Most recent RECEIVE buffer data frame length
         volatile uint16_t active_rx_frame;      // Most recent RECEIVE buffer index
         volatile uint16_t send_counter;         // internal software timer period counter
-        volatile uint16_t send_period;          // internal software timer period to send next message
+        volatile uint16_t send_period;          // internal software timer period compare to send next message
         volatile uint16_t clear_counter;        // internal software timer period counter
         volatile uint16_t clear_period;         // internal software timer period to clear RECEIVE buffer
     } SMPS_DBGUART_t;

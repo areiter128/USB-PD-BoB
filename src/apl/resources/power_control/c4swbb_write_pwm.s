@@ -54,7 +54,8 @@
 
 	.global _c4swbb_pwm_update
 _c4swbb_pwm_update:    ; provide global scope to routine
-	
+	push w12    ; save working register used for status flag tracking
+
 ;------------------------------------------------------------------------------
 ; Save working registers
 ;	push.s    ; save shadowed working registers (w0...w3)
@@ -159,7 +160,7 @@ _c4swbb_pwm_update:    ; provide global scope to routine
 ;	pop w7
 ;	pop w8
 ;	pop w9
-;	pop w12  ; restore working register used for status flag tracking
+	pop w12  ; restore working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------
 ; End of routine

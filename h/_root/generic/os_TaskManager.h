@@ -61,6 +61,8 @@ typedef enum {
     OP_MODE_STANDBY          = 0b1000000000000000  // Standby mode, all sub-modules are disabled and CPU is in low-power mode
 } SYSTEM_OPERATION_MODE_e;
 
+#define SYSTEM_OPERATION_MODE_MASK  0b1100000000011111
+
 typedef union {
     struct {
         volatile bool boot:1;           // Bit #0: Operation mode during device start-up and system boot configuration

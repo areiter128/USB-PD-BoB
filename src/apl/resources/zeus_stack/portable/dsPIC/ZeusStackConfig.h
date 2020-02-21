@@ -1293,8 +1293,7 @@ Example:
 #define CONFIG_TYPEC_VBUS_ON_TIMER_MS			        MILLISECONDS_TO_TICKS(275)
 </code>
 **************************************************************************************************/
-//#define CONFIG_TYPEC_VBUS_ON_TIMER_MS			        MILLISECONDS_TO_TICKS(275)
-#define CONFIG_TYPEC_VBUS_ON_TIMER_MS			        MILLISECONDS_TO_TICKS(500)
+#define CONFIG_TYPEC_VBUS_ON_TIMER_MS			        MILLISECONDS_TO_TICKS(275)
 
 /**************************************************************************************************
 Description:
