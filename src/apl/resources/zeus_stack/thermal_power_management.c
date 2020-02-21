@@ -32,7 +32,7 @@
 #include "thermal_power_management.h"
 //#include "buck.h"
 
-#include "debug_uart.h"
+//Remove: #include "debug_uart.h"
 //#include "system_log.h"
 #include "cfg_globals.h"
 #include "int_globals.h"

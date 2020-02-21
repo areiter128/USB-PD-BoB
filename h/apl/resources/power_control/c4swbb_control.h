@@ -286,6 +286,7 @@ typedef struct {
     volatile uint16_t v_in; // Power converter input voltage
     volatile uint16_t v_out; // Power converter output voltage
     volatile uint16_t v_ref; // Power converter output voltage reference (user setting)
+    volatile uint16_t i_ref; // Power converter output current reference (user setting)
     volatile uint16_t temp; // Power converter board temperature
 } C4SWBB_DATA_t; // Power converter runtime data
 

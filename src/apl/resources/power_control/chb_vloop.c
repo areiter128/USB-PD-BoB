@@ -1,5 +1,5 @@
 /* **********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.0.77
+ * z-Domain Control Loop Designer, Version 0.9.1.81
  * **********************************************************************************
  * 2p2z compensation filter coefficients derived for following operating
  * conditions:
@@ -12,11 +12,11 @@
  *  Input Gain:         0.2
  *
  * *********************************************************************************
- * CGS Version:         1.0.0
- * CGS Date:            11/08/19
+ * CGS Version:         1.1.1
+ * CGS Date:            01/13/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           01/08/2020 11:42:53 AM
+ * Date/Time:           02/21/2020 1:09:39 AM
  * ********************************************************************************/
 
 #include "../h/apl/resources/power_control/chb_vloop.h"
@@ -45,33 +45,33 @@ volatile uint16_t chb_vloop_ControlHistory_size = (sizeof(chb_vloop_histories.Co
 volatile uint16_t chb_vloop_ErrorHistory_size = (sizeof(chb_vloop_histories.ErrorHistory)/sizeof(chb_vloop_histories.ErrorHistory[0])); // Error history array size
 
 /* *********************************************************************************
- * 	Pole&Zero Placement:
+ * Pole&Zero Placement:
  * *********************************************************************************
  *
- *    fP0:    40 Hz
- *    fP1:    40000 Hz
+ *    fP0:    24 Hz
+ *    fP1:    7300 Hz
  *    fZ1:    450 Hz
  *
  * *********************************************************************************
- * 	Filter Coefficients and Parameters:
+ * Filter Coefficients and Parameters:
  * ********************************************************************************/
 volatile fractional chb_vloop_ACoefficients [2] =
 {
-    0x6916, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x16EB  // Coefficient A2 will be multiplied with controller output u(n-2)
+    0x656C, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0xDA95  // Coefficient A2 will be multiplied with controller output u(n-2)
 };
 
 volatile fractional chb_vloop_BCoefficients [3] =
 {
-    0x4429, // Coefficient B0 will be multiplied with error input e(n-0)
-    0x022B, // Coefficient B1 will be multiplied with error input e(n-1)
-    0xBE03  // Coefficient B2 will be multiplied with error input e(n-2)
+    0x7340, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x03AB, // Coefficient B1 will be multiplied with error input e(n-1)
+    0x906B  // Coefficient B2 will be multiplied with error input e(n-2)
 };
 
 // Coefficient normalization factors
 volatile int16_t chb_vloop_pre_scaler = 3;
-volatile int16_t chb_vloop_post_shift_A = 0;
-volatile int16_t chb_vloop_post_shift_B = 1;
+volatile int16_t chb_vloop_post_shift_A = -1;
+volatile int16_t chb_vloop_post_shift_B = 4;
 volatile fractional chb_vloop_post_scaler = 0x0000;
 
 volatile cNPNZ16b_t chb_vloop; // user-controller data object
@@ -86,8 +86,9 @@ volatile cNPNZ16b_t chb_vloop; // user-controller data object
  *     - cNPNZ16b_t* controller
  *
  * Returns:
- *     - uint16_t:  0=failure, 1=success
- *
+ *     - uint16_t:  0->failure
+ *                  1->success
+
  * Description:
  * This function needs to be called from user code once to initialize coefficient
  * arrays and number normalization settings of the chb_vloop controller
@@ -101,7 +102,7 @@ volatile cNPNZ16b_t chb_vloop; // user-controller data object
  * ********************************************************************************/
 volatile uint16_t chb_vloop_Init(volatile cNPNZ16b_t* controller)
 {
-    volatile uint16_t i = 0;
+    volatile uint16_t i=0;
 
     // Initialize controller data structure at runtime with pre-defined default values
     controller->status.value = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))
@@ -138,4 +139,8 @@ volatile uint16_t chb_vloop_Init(volatile cNPNZ16b_t* controller)
     
     return(1);
 }
+ 
+//**********************************************************************************
+// Download latest version of this tool here: https://areiter128.github.io/DCLD
+//**********************************************************************************
  
