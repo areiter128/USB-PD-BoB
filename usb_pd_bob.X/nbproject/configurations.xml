@@ -28,9 +28,6 @@
           <logicalFolder name="debug_uart" displayName="debug_uart" projectFiles="true">
             <itemPath>../h/apl/resources/debug_uart/smpsDebugUART.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="pd_debug_uart" projectFiles="true">
-            <itemPath>../src/apl/resources/pd_debug_uart/debug_uart.h</itemPath>
-          </logicalFolder>
           <logicalFolder name="f3" displayName="pd_timer" projectFiles="true">
             <itemPath>../src/apl/resources/pd_timer/upd_timer.h</itemPath>
           </logicalFolder>
@@ -143,9 +140,6 @@
           <logicalFolder name="debug_uart" displayName="debug_uart" projectFiles="true">
             <itemPath>../src/apl/resources/debug_uart/smpsDebugUART.c</itemPath>
             <itemPath>../src/apl/resources/debug_uart/smpsDebugUART_UserCID.c</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f4" displayName="pd_debug_uart" projectFiles="true">
-            <itemPath>../src/apl/resources/pd_debug_uart/debug_uart.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="pd_timer" projectFiles="true">
             <itemPath>../src/apl/resources/pd_timer/upd_timer.c</itemPath>
@@ -1296,22 +1290,6 @@
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
-      <item path="../src/apl/resources/pd_debug_uart/debug_uart.c"
-            ex="true"
-            overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-CO>
-        </C30-CO>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
       <C30>
         <property key="code-model" value="large-code"/>
         <property key="const-model" value="default"/>
