@@ -566,6 +566,6 @@ void DEBUG_print(char *message);
 void debug_uart_tx(void);
 void debug_uart_tx_flush(void);
 
-//extern char pd_debug_string[];
+extern char pd_debug_string[];
 
 #endif // DEBUG_UART_H

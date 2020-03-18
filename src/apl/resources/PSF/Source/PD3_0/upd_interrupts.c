@@ -11,7 +11,7 @@
     This file contains functions to handle UPD interrupts.
  *******************************************************************************/
 /*******************************************************************************
-Copyright ©  [2019] Microchip Technology Inc. and its subsidiaries.
+Copyright ©  [2019-2020] Microchip Technology Inc. and its subsidiaries.
 
 Subject to your compliance with these terms, you may use Microchip software and
 any derivatives exclusively with Microchip products. It is your responsibility
@@ -94,10 +94,10 @@ void UPDIntr_AlertHandler (UINT8 u8PortNum)
         }
 		
 		/* Checking for UPD GPIO interrupt */
-		if (u16InterruptStatus & UPDINTR_PIO_INT)
-		{
-			UPD_PIOHandleISR (u8PortNum);
-		}
+        if (u16InterruptStatus & UPDINTR_PIO_INT)
+        {
+            UPD_PIOHandleISR (u8PortNum);
+        }
 
 #if INCLUDE_POWER_MANAGEMENT_CTRL
         

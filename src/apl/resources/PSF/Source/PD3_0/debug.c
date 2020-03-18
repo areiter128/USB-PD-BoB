@@ -11,7 +11,7 @@
     This file contains functions to print debug messages from PSF stack. 
  *******************************************************************************/
 /*******************************************************************************
-Copyright ©  [2019] Microchip Technology Inc. and its subsidiaries.
+Copyright ©  [2019-2020] Microchip Technology Inc. and its subsidiaries.
 
 Subject to your compliance with these terms, you may use Microchip software and
 any derivatives exclusively with Microchip products. It is your responsibility
@@ -32,7 +32,7 @@ HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include <psf_stdinc.h>
 
-#if CONFIG_HOOK_DEBUG_MSG
+#ifdef CONFIG_HOOK_DEBUG_MSG
 
 void Debug_PrintInt32Buffer (INT32 const *pi32Buffer, UINT32 u32TotalCount)
 {

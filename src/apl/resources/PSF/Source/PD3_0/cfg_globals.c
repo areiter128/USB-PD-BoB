@@ -89,7 +89,7 @@ HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 /***************************************************************************************************/
 /* Type C configuration data generation */
-#define TYPEC_CONFIG_DATA(n) (((UINT32)CONFIG_PORT_##n##_ENDIS << TYPEC_PORT_ENDIS_POS)| \
+#define TYPEC_CONFIG_DATA(n) (((UINT32)CONFIG_PORT_##n##_ENABLE << TYPEC_PORT_ENDIS_POS)| \
                              (((UINT32)CONFIG_PORT_##n##_RP_CURRENT_VALUE) << TYPEC_PORT_RPVAL_POS)|\
                                     ((UINT32)CONFIG_PORT_##n##_POWER_ROLE))
 

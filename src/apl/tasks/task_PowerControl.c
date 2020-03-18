@@ -621,6 +621,11 @@ volatile uint16_t init_USBport_1(void) {
     //Added this to enable PWM distribution routine
     c4swbb_1.pwm_dist.status.bits.enable = true;
     
+    // Cascading control loops
+    c4swbb_1.v_loop.controller->CascadedFunction = (uint16_t)&cha_iloop_Update; // Voltage loop calls current loop
+    c4swbb_1.v_loop.controller->CascadedFunParam = (uint16_t)&cha_iloop;
+    c4swbb_1.i_loop.controller->CascadedFunction = (uint16_t)&c4swbb_pwm_update; // Current loop calls PWM distribution
+    c4swbb_1.i_loop.controller->CascadedFunParam = (uint16_t)&c4swbb_1.pwm_dist;
     
     // Initialize USB Port #1 Soft Start Settings
     c4swbb_1.soft_start.pwr_on_delay = C4SWBB_PODLY;    // Power-On Delay
@@ -801,6 +806,11 @@ volatile uint16_t init_USBport_2(void) {
     // Added this to enable PWM distribution routine
     c4swbb_2.pwm_dist.status.bits.enable = true;        // Enable PWM distribution for buck and boost leg
     
+    // Cascading control loops
+    c4swbb_2.v_loop.controller->CascadedFunction = (uint16_t)&chb_iloop_Update; // Voltage loop calls current loop
+    c4swbb_2.v_loop.controller->CascadedFunParam = (uint16_t)&chb_iloop;
+    c4swbb_2.i_loop.controller->CascadedFunction = (uint16_t)&c4swbb_pwm_update; // Current loop calls PWM distribution
+    c4swbb_2.i_loop.controller->CascadedFunParam = (uint16_t)&c4swbb_2.pwm_dist;
     
     // Initialize USB Port #2 Soft Start Settings
     c4swbb_2.soft_start.pwr_on_delay = C4SWBB_PODLY;    // Power-On Delay
@@ -847,8 +857,8 @@ ECP39_SET;
 
     // Call control loop update
     cha_vloop_Update(&cha_vloop);
-    cha_iloop_Update(&cha_iloop);
-    c4swbb_pwm_update(&c4swbb_1.pwm_dist);
+//    cha_iloop_Update(&cha_iloop);          // will be called from voltage loop directly
+//    c4swbb_pwm_update(&c4swbb_1.pwm_dist); // will be called from current loop directly
       
     //PG5STATbits.UPDREQ = 1;
     //PG7STATbits.UPDREQ = 1;
@@ -976,8 +986,8 @@ LATCbits.LATC2 = 1;
 
     // Call control loop update 
     chb_vloop_Update(&chb_vloop);
-    chb_iloop_Update(&chb_iloop);    
-    c4swbb_pwm_update(&c4swbb_2.pwm_dist);
+//    chb_iloop_Update(&chb_iloop);         // is called by voltage loop directly
+//    c4swbb_pwm_update(&c4swbb_2.pwm_dist); // is called by current loop directly
 
        
     // Capture additional analog inputs

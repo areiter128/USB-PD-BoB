@@ -49,8 +49,6 @@
 
 #include <xc.h>
 #include "spi2.h"
-#include "_root/generic/os_Globals.h"
-
 
 /**
  Section: File specific functions
@@ -104,8 +102,9 @@ void SPI2_Initialize (void)
     /****************************************************************************
     * Set the PPS
     ***************************************************************************/
-    smpsPPS_UnlockIO();
-    
+    __builtin_write_RPCON(0x0000); // unlock PPS on dsPIC33C
+//    __builtin_write_OSCCONL(OSCCON & 0xbf); // unlock PPS
+
     RPOR20bits.RP72R = 0x0008;   //RD8->SPI2:SDO2;
     
     RPINR22bits.SDI2R = 0x0039;   //RC9->SPI2:SDI2;
@@ -126,9 +125,9 @@ void SPI2_Initialize (void)
      */
     RPINR22bits.SCK2R = 56;   // SPI clock input mapped to RC8
             
-    
-    smpsPPS_LockIO();
-    
+    __builtin_write_RPCON(0x0800); // lock PPS on dsPIC33C
+//    __builtin_write_OSCCONL(OSCCON | 0x40); // lock   PPS
+
 }
 
 void SPI2_Exchange( uint8_t *pTransmitData, uint8_t *pReceiveData )

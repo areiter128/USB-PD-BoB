@@ -16,7 +16,7 @@
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
 
-Copyright ©  [2019] Microchip Technology Inc. and its subsidiaries.
+Copyright ©  [2019-2020] Microchip Technology Inc. and its subsidiaries.
 
 Subject to your compliance with these terms, you may use Microchip software and
 any derivatives exclusively with Microchip products. It is your responsibility
@@ -65,7 +65,7 @@ Function:
 Summary:
     Initialize the hardware interface(SPI/I2C) used for communicating with UPD350 part.
 Description:
-    PSF needs a Hardware interface from SOC either SPI or I2C to communicate with UPD350. UPD350 
+    PSF requires a Hardware interface from SOC(either SPI or I2C) to communicate with UPD350. UPD350 
     supports either I2C or SPI interface depending on UPD350 part used.  UPD350 A and C supports I2C
     interface and UPD350 B and D part supports SPI interface. 
     This Hook is to initialize the SOC's Hardware interface for communication. It is called 
@@ -104,7 +104,7 @@ Remarks:
 
 /*************************************************************************************************
 Function:
-    MCHP_PSF_HOOK_UPD_COMM_ENDIS(u8PortNum,u8EnDis)
+    MCHP_PSF_HOOK_UPD_COMM_ENABLE(u8PortNum,u8Enable)
 Summary:
     Enable or disables hardware interface(SPI/I2C) communication to the port's UPD350
 Description:
@@ -119,22 +119,23 @@ Conditions:
     None.
 Input:
     u8PortNum - Port number of the device. It takes value between 0 to (CONFIG_PD_PORT_COUNT-1).
-    u8EnDis - Parameter indicating whether to enable or disable the communication for the port. 
+    u8Enable - Parameter indicating whether to enable or disable the communication for the port. 
+               When u8Enable is 1 - Enable interface, 0 - Disable interface.
 Return:
     None.
 Example:
     <code>
-        #define MCHP_PSF_HOOK_UPD_COMM_ENDIS (u8PortNum,u8EnDis)\
-						hw_spi_drive_cs (u8PortNum, u8EnDis)
-        void hw_spi_drive_cs (UINT8 u8PortNum,UINT8 u8EnDis);
-        void hw_spi_drive_cs (UINT8 u8PortNum,UINT8 u8EnDis)
+        #define MCHP_PSF_HOOK_UPD_COMM_ENABLE (u8PortNum,u8Enable)\
+						hw_spi_drive_cs (u8PortNum, u8Enable)
+        void hw_spi_drive_cs (UINT8 u8PortNum,UINT8 u8Enable);
+        void hw_spi_drive_cs (UINT8 u8PortNum,UINT8 u8Enable)
         {
-            if (u8EnDis == TRUE)
+            if (u8Enable == TRUE)
             {
                 //Set pin level low for SOC's GPIO that is connected to the u8PortNum port's 
                 //UPD350 SPI CS pin
             }
-            else if(u8EnDis == FALSE)
+            else if(u8Enable == FALSE)
             {
                 //Set pin level high for SOC GPIO that is connected to the u8PortNum port's
                 //UPD350 SPI CS pin
@@ -142,16 +143,16 @@ Example:
         }
     </code>
     <code>
-        #define MCHP_PSF_HOOK_UPD_COMM_ENDIS(u8PortNum,u8EnDis)\
-							hw_port_i2cmux_routing(u8PortNum,u8EnDis)	
-        void hw_port_i2cmux_routing(u8PortNum,u8EnDis);
-        void hw_port_i2cmux_routing(u8PortNum,u8EnDis)
+        #define MCHP_PSF_HOOK_UPD_COMM_ENABLE(u8PortNum,u8Enable)\
+							hw_port_i2cmux_routing(u8PortNum,u8Enable)	
+        void hw_port_i2cmux_routing(u8PortNum,u8Enable);
+        void hw_port_i2cmux_routing(u8PortNum,u8Enable)
         {
-            if (u8EnDis == TRUE)
+            if (u8Enable == TRUE)
             {
                 //Route the I2C mux to the u8PortNum UPD350 Port 
             }
-            else if(u8EnDis == FALSE)
+            else if(u8Enable == FALSE)
             { 
                 //disable the I2C mux routing to the u8PortNum UPD350 Port
             }
@@ -160,7 +161,7 @@ Example:
 Remarks:
     User definition of this Hook function is mandatory for SPI Hardware interface                                           
 *************************************************************************************************/
-#define MCHP_PSF_HOOK_UPD_COMM_ENDIS(u8PortNum,u8EnDis) hw_spi_cs_set(u8PortNum, u8EnDis)
+#define MCHP_PSF_HOOK_UPD_COMM_ENABLE(u8PortNum,u8Enable) hw_spi_cs_set(u8PortNum, u8Enable)
 
 /*********************************************************************************************
 Function:
@@ -374,7 +375,7 @@ Function:
 Summary:
     Initializes the SOC GPIOs connected to the IRQ_N lines of ports' UPD350.
 Description:
-    PSF requires GPIO specific to each port for UPD350 interrupt detection via UPD350's IRQ_N lines.
+    PSF requires a GPIO specific to each port for UPD350 interrupt detection via UPD350's IRQ_N lines.
     IRQ_N is an active low signal. This Hook shall initialize the SOC GPIOs connected to the IRQ_N
     lines of UPD350s in the system for interrupt notification. It is recommended to configure SOC
     GPIOs interrupt in edge level detection with internal pull up since the UPD350 keeps the IRQ_N
@@ -424,7 +425,7 @@ Summary:
     Initializes the SOC GPIOs connected to the RESET_N lines of UPD350s
 Description:
     This hook initializes the SOC GPIOs connected to the RESET_N lines of Port's UPD350. It is 
-    recommended to connect a single GPIO to the reset line of all UPD350s. User can also have 
+    recommended to connect a single GPIO to the reset line of all UPD350s. User can also define a  
     separate GPIO for each port. As the UPD350 RESET_N is active low signal, SOC should initialize 
     the GPIO to be high by default. Define relevant function that has port number as argument 
     without return type.
@@ -465,7 +466,7 @@ Description:
     RESET_N pin of that UPD350. Since, RESET_N is active low signal, SOC GPIO should be driven low 
     for a while and then back to default high state. It is recommended to have common reset pin for 
     all ports. In such case user must drive the GPIO for UPD350 reset only when u8PortNum passed is 
-    '0' via this hook.Define relevant function that has port number as argument without return type.
+    '0' via this hook. Define relevant function that has port number as argument without return type.
 Conditions:
     None.
 Input:
@@ -502,10 +503,10 @@ Remarks:
 Summary:
     Disables the global interrupt.
 Description:
-    This hook is called when PSF enter into a critical section. It must provide an implementation
+    This hook is called when PSF enters into a critical section. It must provide an implementation
     to disable the interrupts globally. This hook implementation must be very short, otherwise 
-    response time to the interrupt will take longer time. Define relevant function that has no 
-    arguments without return type.
+    resposne time may be delayed and cause timing issues/conflicts. Define relevant function that 
+	has no arguments without return type.
 Conditions:
     None.
 Return:
@@ -530,10 +531,10 @@ Function:
 Summary:
     Enables the global interrupt.
 Description:
-    This hook is called by the PSF when exits from critical section. It must provide an 
+    This hook is called when PSF exits from critical section. It must provide an 
     implementation to enable the interrupts globally. This function must be very short, otherwise 
-    response time to the interrupt will take longer time. Define relevant function that has no 
-    arguments without return type.
+    response time to the interrupt may be delayed and cause timing issues/conflicts. Define 
+	relevant function that has no arguments without return type.
 Conditions:
     None.
 Return:
@@ -737,10 +738,10 @@ Description:
     switch used. Define relevant function that has UINT8,UINT8 arguments without return type.
 Conditions:
     MCHP_PSF_HOOK_PORTPWR_ENDIS_VBUSDISCH is called in ISR handler. Its implementation shall be very 
-    short, otherwise response time to the interrupt will take longer time. Passing of the Compliance
-    test "TD.4.2.1" (Source Connect Sink) in "USB_Type_C_Functional_Test_Specification" depends on 
-    the VBUS Discharge circuitry used. Typical VBUS Discharge time from any higher voltage to 0V 
-    should be around 10ms.
+    short, otherwise response time to the interrupt may be delayed and cause timing issues/conflicts.
+	Passing of the Compliance test "TD.4.2.1" (Source Connect Sink) in "USB_Type_C_Functional_Test_Specification" 
+	depends on the VBUS Discharge circuitry used. Typical VBUS Discharge time from any higher voltage 
+	to 0V should be around 10ms.
 Input:
     u8PortNum -  Port number of the device. It takes value between 0 to (CONFIG_PD_PORT_COUNT-1).
     u8EnableDisable -  Flag indicating whether to enable/disable VBUS Discharge mechanism.

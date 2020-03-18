@@ -11,7 +11,7 @@
     This file contains the function definitions for Policy Manager functions
  *******************************************************************************/
 /*******************************************************************************
-Copyright ©  [2019] Microchip Technology Inc. and its subsidiaries.
+Copyright ©  [2019-2020] Microchip Technology Inc. and its subsidiaries.
 
 Subject to your compliance with these terms, you may use Microchip software and
 any derivatives exclusively with Microchip products. It is your responsibility
@@ -237,9 +237,7 @@ UINT8 DPM_ValidateRequest(UINT8 u8PortNum, UINT16 u16Header, UINT8 *u8DataBuf)
     /* Get the Requested PDO object position from received buffer */
     u8SinkReqObjPos= ((u8DataBuf[INDEX_3]) & PE_REQUEST_OBJ_MASK) >> PE_REQUEST_OBJ_POS;
     
-   
-
-    /* UPD301-223 -> Get the Requested current value */
+    /* Get the Requested current value */
     u16SinkReqCurrVal = (UINT16)(((MAKE_UINT32_FROM_BYTES(u8DataBuf[INDEX_0], u8DataBuf[INDEX_1], 
             u8DataBuf[INDEX_2], u8DataBuf[INDEX_3])) & PE_REQUEST_OPR_CUR_MASK) >> PE_REQUEST_OPR_CUR_START_POS);
 	
@@ -308,7 +306,7 @@ void DPM_Get_Source_Capabilities(UINT8 u8PortNum, UINT8* u8pSrcPDOCnt, UINT32* p
         /* If E-Cable max current is 5A, pass the capabilities without change */
         if(gasDPM[u8PortNum].u16MaxCurrSupportedin10mA == DPM_CABLE_CURR_5A_UNIT)
         {
-            MCHP_PSF_HOOK_MEMCPY(&pu32DataObj[INDEX_0], &pu32SrcCap[INDEX_0],\
+            (void)MCHP_PSF_HOOK_MEMCPY(&pu32DataObj[INDEX_0], &pu32SrcCap[INDEX_0],\
                     ((*u8pSrcPDOCnt) * 4));
         }
         /* If E-Cable max current is 3A and PDO current value is more than 3A, 
@@ -379,7 +377,7 @@ void DPM_Get_Sink_Capabilities(UINT8 u8PortNum,UINT8 *u8pSinkPDOCnt, UINT32 * pu
     /*Get Sink Capability from Port Configuration Data Structure*/
     *u8pSinkPDOCnt = gasPortConfigurationData[u8PortNum].u8PDOCnt;
     
-        MCHP_PSF_HOOK_MEMCPY ( pu32DataObj, gasPortConfigurationData[u8PortNum].u32PDO, \
+        (void)MCHP_PSF_HOOK_MEMCPY ( pu32DataObj, gasPortConfigurationData[u8PortNum].u32PDO, \
                             (gasPortConfigurationData[u8PortNum].u8PDOCnt * 4));
 }
 
@@ -563,27 +561,27 @@ static void DPM_ClearPowerfaultFlags(UINT8 u8PortNum)
 void DPM_PowerFaultHandler(UINT8 u8PortNum)
 {
   	/* Incase detach reset the Power Fault handling variables*/
-	if (((gasTypeCcontrol[u8PortNum].u8TypeCState == TYPEC_UNATTACHED_SRC) &&
+    if (((gasTypeCcontrol[u8PortNum].u8TypeCState == TYPEC_UNATTACHED_SRC) &&
 		    (gasTypeCcontrol[u8PortNum].u8TypeCSubState == TYPEC_UNATTACHED_SRC_INIT_SS))||
 				 ((gasTypeCcontrol[u8PortNum].u8TypeCState == TYPEC_UNATTACHED_SNK) &&
 				   (gasTypeCcontrol[u8PortNum].u8TypeCSubState == TYPEC_UNATTACHED_SNK_INIT_SS)))
     {
 		/* Enable Fault PIO to detect OCS as it would have been disabled as part of
          Power fault handling*/
-		UPD_EnableFaultIn(u8PortNum);
+        UPD_EnableFaultIn(u8PortNum);
 		
 		/* Reset Wait for HardReset Complete bit*/
-		gasDPM[u8PortNum].u8HRCompleteWait = SET_TO_ZERO;
+        gasDPM[u8PortNum].u8HRCompleteWait = SET_TO_ZERO;
 		
 		/* Kill the timer*/
-		PDTimer_Kill (gasDPM[u8PortNum].u8VBUSPowerGoodTmrID);
+        PDTimer_Kill (gasDPM[u8PortNum].u8VBUSPowerGoodTmrID);
 		
 		/*Setting the u8VBUSPowerGoodTmrID to MAX_CONCURRENT_TIMERS to indicate that
     	TimerID does not hold any valid timer IDs anymore*/
-    	gasDPM[u8PortNum].u8VBUSPowerGoodTmrID = MAX_CONCURRENT_TIMERS;
+        gasDPM[u8PortNum].u8VBUSPowerGoodTmrID = MAX_CONCURRENT_TIMERS;
 		
 		/* Setting the power fault count to Zero */
-		gasDPM[u8PortNum].u8VBUSPowerFaultCount = SET_TO_ZERO;	
+        gasDPM[u8PortNum].u8VBUSPowerFaultCount = SET_TO_ZERO;	
         
         /*******Resetting the VCONN OCS related variables************/
         
@@ -591,58 +589,58 @@ void DPM_PowerFaultHandler(UINT8 u8PortNum)
         gasDPM[u8PortNum].u8VCONNGoodtoSupply = TRUE;
         
         /* Killing the VCONN power good timer*/
-		PDTimer_Kill (gasDPM[u8PortNum].u8VCONNPowerGoodTmrID);
+        PDTimer_Kill (gasDPM[u8PortNum].u8VCONNPowerGoodTmrID);
         
         /*Setting the u8VCONNPowerGoodTmrID to MAX_CONCURRENT_TIMERS to indicate that
     	TimerID does not hold any valid timer IDs anymore*/
-    	gasDPM[u8PortNum].u8VCONNPowerGoodTmrID = MAX_CONCURRENT_TIMERS;
+        gasDPM[u8PortNum].u8VCONNPowerGoodTmrID = MAX_CONCURRENT_TIMERS;
         
         /*Resetting the VCONN OCS fault count to Zero */
-		gasDPM[u8PortNum].u8VCONNPowerFaultCount = SET_TO_ZERO;
+        gasDPM[u8PortNum].u8VCONNPowerFaultCount = SET_TO_ZERO;
         
         /*ISR flag for OVP,UVP,OCP,VCONN OCS is cleared by disabling the interrupt*/
-		MCHP_PSF_HOOK_DISABLE_GLOBAL_INTERRUPT();
-		gasDPM[u8PortNum].u8PowerFaultISR = SET_TO_ZERO;
-    	MCHP_PSF_HOOK_ENABLE_GLOBAL_INTERRUPT();
+        MCHP_PSF_HOOK_DISABLE_GLOBAL_INTERRUPT();
+        gasDPM[u8PortNum].u8PowerFaultISR = SET_TO_ZERO;
+        MCHP_PSF_HOOK_ENABLE_GLOBAL_INTERRUPT();
         
-	}
+    }
 		
-	if(gasDPM[u8PortNum].u8HRCompleteWait) 
-	{ 
-		if((gasPolicy_Engine[u8PortNum].ePESubState == ePE_SRC_TRANSITION_TO_DEFAULT_POWER_ON_SS) ||
+    if(gasDPM[u8PortNum].u8HRCompleteWait) 
+    { 
+        if((gasPolicy_Engine[u8PortNum].ePESubState == ePE_SRC_TRANSITION_TO_DEFAULT_POWER_ON_SS) ||
 				 (gasPolicy_Engine[u8PortNum].ePEState == ePE_SNK_STARTUP))
-		{
+        {
             if(gasDPM[u8PortNum].u8VCONNPowerFaultCount >= CONFIG_MAX_VCONN_FAULT_COUNT)
             {            
                 /*Setting the VCONN Good to Supply Flag as False*/
-                 gasDPM[u8PortNum].u8VCONNGoodtoSupply = FALSE;
+                gasDPM[u8PortNum].u8VCONNGoodtoSupply = FALSE;
             }
-		    if (gasDPM[u8PortNum].u8VBUSPowerFaultCount >= CONFIG_MAX_VBUS_POWER_FAULT_COUNT)
+            if (gasDPM[u8PortNum].u8VBUSPowerFaultCount >= CONFIG_MAX_VBUS_POWER_FAULT_COUNT)
             {
 				/* Disable the receiver*/
-				PRL_EnableRx (u8PortNum, FALSE);
+                PRL_EnableRx (u8PortNum, FALSE);
 				
 				/* kill all the timers*/
-				PDTimer_KillPortTimers (u8PortNum);
+                PDTimer_KillPortTimers (u8PortNum);
 				
 				/* set the fault count to zero */
-		  		gasDPM[u8PortNum].u8VBUSPowerFaultCount = SET_TO_ZERO;
+                gasDPM[u8PortNum].u8VBUSPowerFaultCount = SET_TO_ZERO;
 				
-				DEBUG_PRINT_PORT_STR (u8PortNum, "PWR_FAULT: u8HRCompleteWait Resetted ");
+                DEBUG_PRINT_PORT_STR (u8PortNum, "PWR_FAULT: u8HRCompleteWait Resetted ");
 				
-				if (DPM_GET_CURRENT_POWER_ROLE(u8PortNum) == PD_ROLE_SOURCE)
-				{			
+                if (DPM_GET_CURRENT_POWER_ROLE(u8PortNum) == PD_ROLE_SOURCE)
+                {			
 					/* Assign an idle state wait for detach*/
-					gasTypeCcontrol[u8PortNum].u8TypeCSubState = TYPEC_ATTACHED_SRC_IDLE_SS;
-				}
-				else
-				{ 
+                    gasTypeCcontrol[u8PortNum].u8TypeCSubState = TYPEC_ATTACHED_SRC_IDLE_SS;
+                }
+                else
+                { 
 					/* Assign an idle state wait for detach*/
-					gasTypeCcontrol[u8PortNum].u8TypeCSubState = TYPEC_ATTACHED_SNK_IDLE_SS;
-				}
+                    gasTypeCcontrol[u8PortNum].u8TypeCSubState = TYPEC_ATTACHED_SNK_IDLE_SS;
+                }
 				/* Assign an idle state wait for detach*/
-				gasPolicy_Engine[u8PortNum].ePEState = ePE_INVALIDSTATE;
-				DEBUG_PRINT_PORT_STR (u8PortNum, "PWR_FAULT: Entered SRC/SNK Powered OFF state");
+                gasPolicy_Engine[u8PortNum].ePEState = ePE_INVALIDSTATE;
+                DEBUG_PRINT_PORT_STR (u8PortNum, "PWR_FAULT: Entered SRC/SNK Powered OFF state");
             }
             else
             {
@@ -651,17 +649,17 @@ void DPM_PowerFaultHandler(UINT8 u8PortNum)
                 UPD_EnableFaultIn(u8PortNum);
             }
 			/* Reset Wait for HardReset Complete bit*/
-			gasDPM[u8PortNum].u8HRCompleteWait = SET_TO_ZERO;
+            gasDPM[u8PortNum].u8HRCompleteWait = SET_TO_ZERO;
 			
-		}
-	}
-	if (gasDPM[u8PortNum].u8PowerFaultISR)
-	{
-	  	DEBUG_PRINT_PORT_STR(u8PortNum, "DPM Fault Handling");
+        }
+    }
+    if (gasDPM[u8PortNum].u8PowerFaultISR)
+    {
+        DEBUG_PRINT_PORT_STR(u8PortNum, "DPM Fault Handling");
         /*If VCONN OCS is present , kill the VCONN power good timer*/
         if(gasDPM[u8PortNum].u8PowerFaultISR & DPM_POWER_FAULT_VCONN_OCS)
         {
-            if(FALSE == MCHP_PSF_NOTIFY_CALL_BACK(u8PortNum, eMCHP_PSF_VCONN_PWR_FAULT))
+            if(FALSE == MCHP_PSF_NOTIFY_CALL_BACK(u8PortNum, (UINT8)eMCHP_PSF_VCONN_PWR_FAULT))
             {
                 /*Clear the Power fault flag and return*/
                 DPM_ClearPowerfaultFlags(u8PortNum);
@@ -670,7 +668,7 @@ void DPM_PowerFaultHandler(UINT8 u8PortNum)
             /*Kill the VCONN Power fault timer*/
             PDTimer_Kill (gasDPM[u8PortNum].u8VCONNPowerGoodTmrID);
         
-             /*Setting the u8VCONNPowerGoodTmrID to MAX_CONCURRENT_TIMERS to indicate that
+            /*Setting the u8VCONNPowerGoodTmrID to MAX_CONCURRENT_TIMERS to indicate that
             TimerID does not hold any valid timer IDs anymore*/
             gasDPM[u8PortNum].u8VCONNPowerGoodTmrID = MAX_CONCURRENT_TIMERS;
 			
@@ -678,13 +676,13 @@ void DPM_PowerFaultHandler(UINT8 u8PortNum)
         }
         if(gasDPM[u8PortNum].u8PowerFaultISR & ~DPM_POWER_FAULT_VCONN_OCS)
         { 
-            if(FALSE == MCHP_PSF_NOTIFY_CALL_BACK(u8PortNum, eMCHP_PSF_VBUS_PWR_FAULT))
+            if(FALSE == MCHP_PSF_NOTIFY_CALL_BACK(u8PortNum, (UINT8)eMCHP_PSF_VBUS_PWR_FAULT))
             {
                 /*Clear the Power fault flag and return*/
                 DPM_ClearPowerfaultFlags(u8PortNum);
                 return;
             }
-             /*Toggle DC_DC EN on VBUS fault to reset the DC-DC controller*/
+            /*Toggle DC_DC EN on VBUS fault to reset the DC-DC controller*/
             UPD_GPIOUpdateOutput(u8PortNum, gasUpdPioDcDcConfig[u8PortNum].u8DcDcEnPio, \
                 gasUpdPioDcDcConfig[u8PortNum].u8DcDcEnPioMode, (UINT8)UPD_GPIO_DE_ASSERT);
             #if (TRUE == INCLUDE_UPD_PIO_OVERRIDE_SUPPORT)
@@ -701,17 +699,17 @@ void DPM_PowerFaultHandler(UINT8 u8PortNum)
 			
             DEBUG_PRINT_PORT_STR (u8PortNum, "PWR_FAULT: VBUS Power Fault");
         }
-		if(PE_GET_PD_CONTRACT(u8PortNum) == PE_IMPLICIT_CONTRACT)
-		{
+        if(PE_GET_PD_CONTRACT(u8PortNum) == PE_IMPLICIT_CONTRACT)
+        {
 			/* Set it to Type C Error Recovery */
-		  	gasTypeCcontrol[u8PortNum].u8TypeCState = TYPEC_ERROR_RECOVERY;
-		  	gasTypeCcontrol[u8PortNum].u8TypeCSubState = TYPEC_ERROR_RECOVERY_ENTRY_SS;
+            gasTypeCcontrol[u8PortNum].u8TypeCState = TYPEC_ERROR_RECOVERY;
+            gasTypeCcontrol[u8PortNum].u8TypeCSubState = TYPEC_ERROR_RECOVERY_ENTRY_SS;
 						
 			/* Assign an idle state wait for detach*/
-			gasPolicy_Engine[u8PortNum].ePEState = ePE_INVALIDSTATE;
-		}
-		else
-		{          
+            gasPolicy_Engine[u8PortNum].ePEState = ePE_INVALIDSTATE;
+        }
+        else
+        {          
             if(gasDPM[u8PortNum].u8PowerFaultISR & DPM_POWER_FAULT_VCONN_OCS)
             {           
                 /*Increment the VCONN fault count*/
@@ -728,11 +726,11 @@ void DPM_PowerFaultHandler(UINT8 u8PortNum)
                 gasDPM[u8PortNum].u8VBUSPowerFaultCount++;            
             }
 			/* Send Hard reset*/
-			PE_SendHardResetMsg(u8PortNum);
+            PE_SendHardResetMsg(u8PortNum);
 			
 			/* Set Wait for HardReset Complete bit*/
-			gasDPM[u8PortNum].u8HRCompleteWait = gasDPM[u8PortNum].u8PowerFaultISR;
-		}
+            gasDPM[u8PortNum].u8HRCompleteWait = gasDPM[u8PortNum].u8PowerFaultISR;
+        }
         
         /* Enable DC_DC_EN to drive power*/
         UPD_GPIOUpdateOutput(u8PortNum, gasUpdPioDcDcConfig[u8PortNum].u8DcDcEnPio, \
@@ -745,7 +743,7 @@ void DPM_PowerFaultHandler(UINT8 u8PortNum)
             
 		/*Clear the Power fault flag*/
         DPM_ClearPowerfaultFlags(u8PortNum);
-	}
+    }
 }
 
 void DPM_VCONNPowerGood_TimerCB (UINT8 u8PortNum, UINT8 u8DummyVariable)

@@ -13,7 +13,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-Copyright ©  [2019] Microchip Technology Inc. and its subsidiaries.
+Copyright ©  [2019-2020] Microchip Technology Inc. and its subsidiaries.
 
 Subject to your compliance with these terms, you may use Microchip software and
 any derivatives exclusively with Microchip products. It is your responsibility
@@ -900,8 +900,8 @@ void PE_RunCommonStateMachine(UINT8 u8PortNum , UINT8 *pu8DataBuf , UINT8 u8SOPT
 
         case ePE_VCS_EVALUATE_SWAP:
         {
-            /*Transition directly to next state as UPD301A accepts VCONN Swap always*/
-            DEBUG_PRINT_PORT_STR (u8PortNum,"PE_VCS_EVALUATE_SWAP: Enterted the state\r\n");
+            /*Transition directly to next state as PSF accepts VCONN Swap always*/
+            DEBUG_PRINT_PORT_STR (u8PortNum,"PE_VCS_EVALUATE_SWAP: Entered the state\r\n");
 
 #if INCLUDE_POWER_FAULT_HANDLING
             
@@ -1441,12 +1441,12 @@ void PE_SubStateChangeAndTimeoutValidateCB(UINT8 u8PortNum, UINT8 u8PESubState)
     /* Set PE sub state to passed timeout sub state */
     gasPolicy_Engine[u8PortNum].ePESubState = (ePolicySubState) u8PESubState;
     
-    if (ePE_SRC_HARD_RESET_ENTRY_SS == u8PESubState)
+    if (ePE_SRC_HARD_RESET_ENTRY_SS == (ePolicySubState)u8PESubState)
     {
     	gasPolicy_Engine[u8PortNum].ePEState = ePE_SRC_HARD_RESET;
         
     }
-    else if (ePE_SNK_HARD_RESET_SEND_SS == u8PESubState)
+    else if (ePE_SNK_HARD_RESET_SEND_SS == (ePolicySubState)u8PESubState)
     {
          gasPolicy_Engine[u8PortNum].ePEState = ePE_SNK_HARD_RESET;
     }

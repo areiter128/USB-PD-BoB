@@ -42,7 +42,6 @@
 #include <string.h>
 #include "apl/resources/fdrv_FunctionPDStack.h"
 #include "apl/tasks/task_PDStack.h"
-#include "debug_uart.h"
 #include "apl/resources/debug_uart/smpsDebugUART.h"
 
 volatile FUNCTION_PD_STACK_CONFIG_t taskPDStack_config;
@@ -91,11 +90,7 @@ volatile uint16_t task_PDStack(void)
 
 volatile uint16_t init_taskPDStack(void)
 {
-//#if (PD_DEBUG_UART_ENABLE  == 1)  
     uint16_t reg_data_16;
-//#endif    
-    // Set up the secondary UART for use by the PD stack
-    //DEBUG_init();
     
     // Set RC2 as output for debugging
     TRISCbits.TRISC2 = 0;
@@ -104,13 +99,11 @@ volatile uint16_t init_taskPDStack(void)
     // Initialize the PSF stack.
     MchpPSF_Init();
     
-//#if (PD_DEBUG_UART_ENABLE  == 1)  
     LOG_PRINT("Init TASK PSF Stack initialization done\r\n");
-//#endif
+
     // Configure UPD350 gpio pins for functions used outside of the stack
     configure_upd350_gpio();
 
-//#if (PD_DEBUG_UART_ENABLE  == 1)  
     UPD_RegisterRead(0, 0x0004, (uint8_t *)&reg_data_16, 2);
     LOG_PRINT1("VID 1: %04X\r\n", reg_data_16);
     UPD_RegisterRead(0, 0x0006, (uint8_t *)&reg_data_16, 2);
@@ -119,12 +112,9 @@ volatile uint16_t init_taskPDStack(void)
     LOG_PRINT1("VID 2: %04X\r\n", reg_data_16);
     UPD_RegisterRead(1, 0x0006, (uint8_t *)&reg_data_16, 2);
     LOG_PRINT1("PID 2: %04X\r\n", reg_data_16);
-//#endif    
     // Set the flag in the structure to indicate that the stack has been initialized.
     taskPDStack_config.status.flags.enable = PDSTACK_ENABLED;
-    
-    //debug_uart_tx_flush();
-    
+ 
     return(true);
 }
 

@@ -12,7 +12,7 @@
  *******************************************************************************/
 
 /*******************************************************************************
-Copyright ©  [2019] Microchip Technology Inc. and its subsidiaries.
+Copyright ©  [2019-2020] Microchip Technology Inc. and its subsidiaries.
 
 Subject to your compliance with these terms, you may use Microchip software and
 any derivatives exclusively with Microchip products. It is your responsibility
@@ -70,7 +70,7 @@ UINT8 MchpPSF_Init(void)
     /* VBUS threshold correction factor */
     UPD_FindVBusCorrectionFactor();
     
-    #if CONFIG_HOOK_DEBUG_MSG
+    #ifdef CONFIG_HOOK_DEBUG_MSG
     /*Initialize debug hardware*/
     MCHP_PSF_HOOK_DEBUG_INIT();
     #endif

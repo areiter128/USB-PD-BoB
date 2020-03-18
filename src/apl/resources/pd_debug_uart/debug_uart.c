@@ -3,7 +3,6 @@
 #include <stdint.h>
 #include <string.h>
 #include "debug_uart.h"
-#include "_root/generic/os_Globals.h"
 
 #define UART_TX_BUFFER_LENGTH 1024       // This needs to be a power of 2 to make the
                                         // Mask work correctly
@@ -19,8 +18,6 @@ void DEBUG_init(void)
 {
     unsigned int i = 0;
 
-    smpsPPS_UnlockIO();
-
     // Set up the TX pin as an output
     PD_DEBUG_UART_TX_TRIS = 0;
     
@@ -31,8 +28,6 @@ void DEBUG_init(void)
 
     PD_DEBUG_UART_PPS_OUTPUT_REG = PD_DEBUG_UART_PPS_OUTPUT_SELECT;  
 
-    smpsPPS_LockIO();
-    
 #ifdef INCLUDE_DEBUG_UART_RX
     // Set up RX Pin as an input
     PD_DEBUG_UART_RX_TRIS = 1;    

@@ -30,10 +30,11 @@
 #include "PSF_Config.h"
 #include "psf_stdinc.h"
 
-#include "debug_uart.h"
+// Remove: #include "debug_uart.h"
 #include <libpic30.h>
 
-//#include "apl/resources/c4swbb_control.h"
+//#include "thermal_power_management.h"
+#include "apl/resources/power_control/c4swbb_control.h"
 #include "apl/tasks/task_PowerControl.h"
 
 #include "apl/tasks/task_PDStack.h"
@@ -135,9 +136,9 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage, uint16_
             p_port_instance->status.bits.autorun = false;
             p_port_instance->status.bits.enable = false;
             p_port_instance->status.bits.GO = 0;
-
+            /* Clear the enable pin for the port power switch */
+            UPD_GPIOSetClearOutput(u8PortNum, eUPD_PIO7, UPD_GPIO_CLEAR);
             port_led_off(u8PortNum);
-
             DEBUG_PRINT_PORT_STR (u8PortNum,"Drive VBUS: 0V\r\n");
             break;
 
@@ -149,9 +150,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage, uint16_
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, eUPD_PIO7, UPD_GPIO_SET);
-            
             port_led_on(u8PortNum);
-
             DEBUG_PRINT_PORT_STR (u8PortNum,"Drive VBUS: 5V\r\n");
             break;
 
@@ -163,9 +162,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage, uint16_
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, eUPD_PIO7, UPD_GPIO_SET);
-
             port_led_on(u8PortNum);
-
             DEBUG_PRINT_PORT_STR (u8PortNum,"Drive VBUS: 9V\r\n");
             break;
 
@@ -177,9 +174,7 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage, uint16_
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, eUPD_PIO7, UPD_GPIO_SET);
-
             port_led_on(u8PortNum);
-
             DEBUG_PRINT_PORT_STR (u8PortNum,"Drive VBUS: 15V\r\n");
             break;
 
@@ -191,15 +186,13 @@ void hw_portpower_driveVBUS(uint8_t u8PortNum, uint16_t u16VBUS_Voltage, uint16_
             p_port_instance->status.bits.GO = 1;
             /* Enable the port power switch */
             UPD_GPIOSetClearOutput(u8PortNum, eUPD_PIO7, UPD_GPIO_SET);
-
             port_led_on(u8PortNum);
-
             DEBUG_PRINT_PORT_STR (u8PortNum,"Drive VBUS: 20V\r\n");
             break;
 
         default:
-            DEBUG_PRINT_PORT_STR (u8PortNum,"Drive VBUS: Invalid Voltage Selection\r\n");
             port_led_off(u8PortNum);
+            DEBUG_PRINT_PORT_STR (u8PortNum,"Drive VBUS: Invalid Voltage Selection\r\n");
             break;
 
     }
@@ -235,7 +228,6 @@ void hw_portpower_enab_dis_VBUSDischarge(uint8_t u8PortNum, uint8_t u8EnableDisa
             // Enable the VBUS Discharge for "u8PortNum" Port
             // Set the discharge enable high
             UPD_GPIOSetClearOutput(u8PortNum, eUPD_PIO2, UPD_GPIO_SET);
-            DEBUG_PRINT_PORT_STR (u8PortNum,"ENABLE Discharge\r\n");
             break;
 
         }
@@ -514,12 +506,11 @@ void hook_policy_engine_pre_process(uint8_t u8PortNum, uint8_t *u8DataBuf, uint8
     
 }
 
-#ifdef EXCLUDE_UNUSED_HOOK_FUNCTIONS
 uint8_t hook_pdo_request_post_process_valid(uint8_t port_num, uint16_t max_current, uint8_t pdo_requested)
 {
-    return (check_power_budget(port_num, max_current, pdo_requested));
+    //return (check_power_budget(port_num, max_current, pdo_requested));
+    return(1);
 }
-#endif // EXCLUDE_UNUSED_HOOK_FUNCTIONS
 
 void hook_notify_pd_events_cb(uint8_t port_num, uint8_t event)
 {
@@ -558,7 +549,6 @@ uint16_t hook_function_get_temperature_in_c(void)
 
 void hook_debug_print_string (char *str)
 {
-//    DEBUG_print((char *)str);
     pd_stack_debug_string((char *)str);
     
 }
@@ -567,28 +557,24 @@ void hook_debug_u8(uint8_t u8val)
 {
     char temp_str[8];
     sprintf(temp_str, " 0x%02X ", u8val);
-    //DEBUG_print(temp_str);
     hook_debug_print_string(temp_str);
 }
 void hook_debug_u16(uint16_t u16val)
 {
     char temp_str[10];
     sprintf(temp_str, " 0x%04X ", u16val);
-    //DEBUG_print(temp_str);
     hook_debug_print_string(temp_str);
 }
 void hook_debug_u32(uint32_t u32val)
 {
     char temp_str[14];
     sprintf(temp_str, " 0x%08lX ", (uint32_t)u32val);
-    //DEBUG_print(temp_str);
     hook_debug_print_string(temp_str);
 }
 void hook_debug_i32(int32_t i32val)
 {
     char temp_str[15];
     sprintf(temp_str, " %ld ", i32val);
-    //DEBUG_print(temp_str);
     hook_debug_print_string(temp_str);
 }
 

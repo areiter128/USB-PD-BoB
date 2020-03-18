@@ -1,11 +1,11 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.0.77
-;  AGS Version: Assembly Generator Script v1.2.4 (11/08/19)
+;  SDK Version: z-Domain Control Loop Designer v0.9.1.81
+;  AGS Version: Assembly Generator Script v1.3.2 (01/17/2020)
 ;  Author:      M91406
-;  Date/Time:   01/08/2020 11:42:53 AM
+;  Date/Time:   02/21/2020 1:09:40 AM
 ; **********************************************************************************
-;  2P2Z Control Library File (Dual Bitshift-Scaliing Mode)
+;  2P2Z Control Library File (Dual Bitshift-Scaling Mode)
 ; **********************************************************************************
 	
 ;------------------------------------------------------------------------------
@@ -21,37 +21,43 @@
 ; Define status flags bit positions
 	.equ NPMZ16_STATUS_ENABLE,       15    ; bit position of the ENABLE control bit
 	.equ NPMZ16_STATUS_INVERT_INPUT, 14    ; bit position of the INVERT_INPUT control bit
+	.equ NPMZ16_STATUS_SWAP_SOURCE,  13    ; bit position of the SWAP_SOURCE control bit
+	.equ NPMZ16_STATUS_SWAP_TARGET,  12    ; bit position of the SWAP_TARGET control bit
 	.equ NPMZ16_STATUS_USAT,         1    ; bit position of the UPPER_SATURATION_FLAG status bit
 	.equ NPMZ16_STATUS_LSAT,         0    ; bit position of the LOWER_SATURATION_FLAG status bit
 	
 ;------------------------------------------------------------------------------
 ; Address offset declarations for data structure addressing
-	.equ offStatus,                 0    ; status word at address-offset=0
+	.equ offStatus,                 0    ; status word at address-offset = 0
 	.equ offSourceRegister,         2    ; pointer to source memory address
-	.equ offTargetRegister,         4    ; pointer to target memory address
-	.equ offControlReference,       6    ; pointer to control reference memory address
-	.equ offACoefficients,          8    ; pointer to A-coefficients array start address
-	.equ offBCoefficients,          10    ; pointer to B-coefficients array start address
-	.equ offControlHistory,         12    ; pointer to control history array start address
-	.equ offErrorHistory,           14    ; pointer to error history array start address
-	.equ offACoeffArraySize,        16    ; size of the A-coefficients array
-	.equ offBCoeffArraySize,        18    ; size of the B-coefficients array
-	.equ offCtrlHistArraySize,      20    ; size of the control history array
-	.equ offErrHistArraySize,       22    ; size of the error history array
-	.equ offPreShift,               24    ; value of input value normalization bit-shift scaler
-	.equ offPostShiftA,             26    ; value of A-term normalization bit-shift scaler
-	.equ offPostShiftB,             28    ; value of B-term normalization bit-shift scaler
-	.equ reserved_1,                30    ; (reserved)
-	.equ offInputOffset,            32    ; input source offset value
-	.equ offMinOutput,              34    ; minimum clamping value of control output
-	.equ offMaxOutput,              36    ; maximum clamping value of control output
-	.equ offADCTriggerARegister,    38    ; pointer to ADC trigger #1 register memory address
-	.equ offADCTriggerAOffset,      40    ; value of ADC trigger #1 offset
-	.equ offADCTriggerBRegister,    42    ; pointer to ADC trigger #2 register memory address
-	.equ offADCTriggerBOffset,      44    ; value of ADC trigger #2 offset
-	.equ offPtrControlInput,        46    ; pointer to external data buffer of most recent control input
-	.equ offPtrControlError,        48    ; pointer to external data buffer of most recent control error
-	.equ offPtrControlOutput,       50    ; pointer to external data buffer of most recent control output
+	.equ offAltSourceRegister,      4    ; pointer to alternate source memory address
+	.equ offTargetRegister,         6    ; pointer to target memory address
+	.equ offAltTargetRegister,      8    ; pointer to alternate target memory address
+	.equ offControlReference,       10    ; pointer to control reference memory address
+	.equ offACoefficients,          12    ; pointer to A-coefficients array start address
+	.equ offBCoefficients,          14    ; pointer to B-coefficients array start address
+	.equ offControlHistory,         16    ; pointer to control history array start address
+	.equ offErrorHistory,           18    ; pointer to error history array start address
+	.equ offACoeffArraySize,        20    ; size of the A-coefficients array
+	.equ offBCoeffArraySize,        22    ; size of the B-coefficients array
+	.equ offCtrlHistArraySize,      24    ; size of the control history array
+	.equ offErrHistArraySize,       26    ; size of the error history array
+	.equ offPreShift,               28    ; value of input value normalization bit-shift scaler
+	.equ offPostShiftA,             30    ; value of A-term normalization bit-shift scaler
+	.equ offPostShiftB,             32    ; value of B-term normalization bit-shift scaler
+	.equ reserved_1,                34    ; (reserved)
+	.equ offInputOffset,            36    ; input source offset value
+	.equ offMinOutput,              38    ; minimum clamping value of control output
+	.equ offMaxOutput,              40    ; maximum clamping value of control output
+	.equ offADCTriggerARegister,    42    ; pointer to ADC trigger #1 register memory address
+	.equ offADCTriggerAOffset,      44    ; value of ADC trigger #1 offset
+	.equ offADCTriggerBRegister,    46    ; pointer to ADC trigger #2 register memory address
+	.equ offADCTriggerBOffset,      48    ; value of ADC trigger #2 offset
+	.equ offPtrControlInput,        50    ; pointer to external data buffer of most recent control input
+	.equ offPtrControlError,        52    ; pointer to external data buffer of most recent control error
+	.equ offPtrControlOutput,       54    ; pointer to external data buffer of most recent control output
+	.equ offPtrCascadedFunction,    56    ; pointer to external, cascaded function which will be called from controller
+	.equ offPtrCascadedFunParam,    58    ; 16-bit wide function parameter or pointer to a parameter data structure of cascaded function
 	
 ;------------------------------------------------------------------------------
 ;local inclusions.
@@ -98,7 +104,7 @@ _chb_vloop_Update:    ; provide global scope to routine
 	mov [w0 + #offPtrControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
 	mov w1, [w2]    ; copy most recent controller input value to given data buffer target
 	mov [w0 + #offControlReference], w2    ; move pointer to control reference into working register
-	subr w1, [w2], w1    ; calculate error (= reference - input)
+	subr w1, [w2], w1    ; calculate error (=reference - input)
 	mov [w0 + #offPreShift], w2    ; move error input scaler into working register
 	sl w1, w2, w1    ; normalize error result to fractional number format
 	
@@ -138,24 +144,12 @@ _chb_vloop_Update:    ; provide global scope to routine
 ; Check for upper limit violation
 	mov [w0 + #offMaxOutput], w6    ; load upper limit value
 	cpslt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output < upper limit)
-	bra CHB_VLOOP_CLAMP_MAX_OVERRIDE    ; jump to override label if control output > upper limit
-	bclr w12, #NPMZ16_STATUS_USAT    ; clear upper limit saturation flag bit
-	bra CHB_VLOOP_CLAMP_MAX_EXIT    ; jump to exit
-	CHB_VLOOP_CLAMP_MAX_OVERRIDE:
 	mov w6, w4    ; override controller output
-	bset w12, #NPMZ16_STATUS_USAT    ; set upper limit saturation flag bit
-	CHB_VLOOP_CLAMP_MAX_EXIT:
 	
 ; Check for lower limit violation
 	mov [w0 + #offMinOutput], w6    ; load lower limit value
 	cpsgt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output > lower limit)
-	bra CHB_VLOOP_CLAMP_MIN_OVERRIDE    ; jump to override label if control output < lower limit
-	bclr w12, #NPMZ16_STATUS_LSAT    ; clear lower limit saturation flag bit
-	bra CHB_VLOOP_CLAMP_MIN_EXIT    ; jump to exit
-	CHB_VLOOP_CLAMP_MIN_OVERRIDE:
 	mov w6, w4    ; override controller output
-	bset w12, #NPMZ16_STATUS_LSAT    ; set lower limit saturation flag bit
-	CHB_VLOOP_CLAMP_MIN_EXIT:
 	
 ;------------------------------------------------------------------------------
 ; Write control output value to target
@@ -173,10 +167,6 @@ _chb_vloop_Update:    ; provide global scope to routine
 	mov w4, [w10]    ; add most recent control output to history
 	
 ;------------------------------------------------------------------------------
-; Update status flag bitfield
-	mov w12, [w0 + #offStatus]
-	
-;------------------------------------------------------------------------------
 ; Enable/Disable bypass branch target with dummy read of source buffer
 	goto CHB_VLOOP_EXIT_LOOP    ; when enabled, step over dummy read and go straight to EXIT
 	CHB_VLOOP_BYPASS_LOOP:    ; Enable/Disable bypass branch target to perform dummy read of source to clear the source buffer
@@ -185,6 +175,12 @@ _chb_vloop_Update:    ; provide global scope to routine
 	mov [w0 + #offPtrControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
 	mov w1, [w2]    ; copy most recent controller input value to given data buffer target
 	CHB_VLOOP_EXIT_LOOP:    ; Exit control loop branch target
+	
+;------------------------------------------------------------------------------
+; Call next function of cascade
+	mov [w0 + #offPtrCascadedFunction], w1    ; load functoin pointer
+	mov [w0 + #offPtrCascadedFunParam], w0    ; load single parameter or pointer to parameter data structure
+	call w1    ; call function
 	pop w12    ; restore working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------
