@@ -26,7 +26,6 @@
         </logicalFolder>
         <logicalFolder name="f1" displayName="Resources" projectFiles="true">
           <logicalFolder name="debug_uart" displayName="debug_uart" projectFiles="true">
-            <itemPath>../h/apl/resources/debug_uart/smpsDebugUART_UserCID.h</itemPath>
             <itemPath>../h/apl/resources/debug_uart/smpsDebugUART.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f3" displayName="pd_timer" projectFiles="true">
@@ -43,35 +42,36 @@
             <itemPath>../h/apl/resources/power_control/chb_vloop.h</itemPath>
             <itemPath>../h/apl/resources/power_control/npnz16b.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="spi2" projectFiles="true">
-            <itemPath>../src/apl/resources/spi2/spi2.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f1" displayName="Zeus_PD_stack" projectFiles="true">
-            <logicalFolder name="f1" displayName="include" projectFiles="true">
-              <itemPath>../src/apl/resources/zeus_stack/include/ProjectVersion.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/cfg_globals.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/debug.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/generic_defs.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/generic_timer.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/int_globals.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/policy_engine.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/policy_engine_fwup.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/policy_manager.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/protocol_layer.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/stdinc.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/typeC_control.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/upd_hw.h</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/include/upd_interrupts.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="pd" projectFiles="true">
-            </logicalFolder>
-            <logicalFolder name="f3" displayName="portable" projectFiles="true">
-              <logicalFolder name="f1" displayName="dsPIC" projectFiles="true">
-                <itemPath>../src/apl/resources/zeus_stack/portable/dsPIC/ZeusStackConfig.h</itemPath>
+          <logicalFolder name="PSF" displayName="PSF" projectFiles="true">
+            <logicalFolder name="f1" displayName="SOC_Portable" projectFiles="true">
+              <logicalFolder name="dsPIC" displayName="dsPIC" projectFiles="true">
+                <itemPath>../src/apl/resources/PSF/SOC_Portable/dsPIC/PSF_APIHook.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/SOC_Portable/dsPIC/PSF_Config.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/SOC_Portable/dsPIC/hook_functions.h</itemPath>
               </logicalFolder>
             </logicalFolder>
-            <itemPath>../src/apl/resources/zeus_stack/hook_functions.h</itemPath>
-            <itemPath>../src/apl/resources/zeus_stack/thermal_power_management.h</itemPath>
+            <logicalFolder name="Source" displayName="Source" projectFiles="true">
+              <logicalFolder name="f1" displayName="include" projectFiles="true">
+                <itemPath>../src/apl/resources/PSF/Source/include/ProjectVersion.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/cfg_globals.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/debug.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/generic_defs.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/int_globals.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/pd_timer.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/policy_engine.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/policy_engine_fwup.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/policy_manager.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/portpower_control.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/protocol_layer.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/psf_stdinc.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/typeC_control.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/upd_hw.h</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/include/upd_interrupts.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="spi2" projectFiles="true">
+            <itemPath>../src/apl/resources/spi2/spi2.h</itemPath>
           </logicalFolder>
           <itemPath>../h/apl/resources/fdrv_FunctionPDStack.h</itemPath>
         </logicalFolder>
@@ -159,34 +159,34 @@
             <itemPath>../src/apl/resources/power_control/chb_iloop_asm.s</itemPath>
             <itemPath>../src/apl/resources/power_control/chb_vloop_asm.s</itemPath>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="spi2" projectFiles="true">
-            <itemPath>../src/apl/resources/spi2/spi2.c</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f1" displayName="Zeus_PD_stack" projectFiles="true">
-            <logicalFolder name="f1" displayName="include" projectFiles="true">
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="pd" projectFiles="true">
-              <itemPath>../src/apl/resources/zeus_stack/pd/cfg_globals.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/debug.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/generic_timer.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/int_globals.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/pd_main.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/policy_engine.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/policy_engine_fwup.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/policy_engine_snk.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/policy_engine_src.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/policy_manager.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/protocol_layer.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/typeC_control.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/upd_hw.c</itemPath>
-              <itemPath>../src/apl/resources/zeus_stack/pd/upd_interrupts.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f3" displayName="portable" projectFiles="true">
-              <logicalFolder name="f1" displayName="dsPIC" projectFiles="true">
+          <logicalFolder name="PSF" displayName="PSF" projectFiles="true">
+            <logicalFolder name="f2" displayName="SOC_Portable" projectFiles="true">
+              <logicalFolder name="f1" displayName="dspic" projectFiles="true">
+                <itemPath>../src/apl/resources/PSF/SOC_Portable/dsPIC/hook_functions.c</itemPath>
               </logicalFolder>
             </logicalFolder>
-            <itemPath>../src/apl/resources/zeus_stack/hook_functions.c</itemPath>
-            <itemPath>../src/apl/resources/zeus_stack/thermal_power_management.c</itemPath>
+            <logicalFolder name="f1" displayName="Source" projectFiles="true">
+              <logicalFolder name="PD3_0" displayName="PD3_0" projectFiles="true">
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/cfg_globals.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/debug.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/int_globals.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/pd_main.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/pd_timer.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/policy_engine.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/policy_engine_fwup.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/policy_engine_snk.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/policy_engine_src.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/policy_manager.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/portpower_control.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/protocol_layer.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/typeC_control.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/upd_hw.c</itemPath>
+                <itemPath>../src/apl/resources/PSF/Source/PD3_0/upd_interrupts.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f3" displayName="spi2" projectFiles="true">
+            <itemPath>../src/apl/resources/spi2/spi2.c</itemPath>
           </logicalFolder>
         </logicalFolder>
         <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
@@ -258,16 +258,16 @@
     <conf name="00173_USB_PD_BOB_R21" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>dsPIC33CK128MP505</targetDevice>
+        <targetDevice>dsPIC33CK256MP505</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>noID</platformTool>
+        <platformTool>pk4hybrid</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.50</languageToolchainVersion>
+        <languageToolchainVersion>1.41</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.3.90"/>
+        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.2.66"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -429,7 +429,7 @@
       </C30-LD>
       <C30Global>
         <property key="common-include-directories"
-                  value="..\src\apl\resources\zeus_stack\include;..\src\apl\resources\zeus_stack\portable\dsPIC;..\src\apl\resources\pd_debug_uart"/>
+                  value="..\src\apl\resources\PSF\Source\include;..\src\apl\resources\PSF\SOC_Portable\dsPIC;..\src\apl\resources\pd_debug_uart"/>
         <property key="dual-boot-partition" value="0"/>
         <property key="fast-math" value="false"/>
         <property key="generic-16-bit" value="false"/>
@@ -437,7 +437,6 @@
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros"
                   value="__00173_USB_PD_BOB_R21__;__CODE_OPT_LEVEL_3__"/>
-        <property key="omit-pack-options" value="1"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>
@@ -495,8 +494,6 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UpdateOptions"
                   value="ToolFirmwareOption.UseLatest"/>
-        <property key="ToolFirmwareToolPack"
-                  value="Press to select which tool pack to use"/>
         <property key="communication.interface.jtag" value="2wire"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
@@ -534,10 +531,6 @@
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
-        <property key="toolpack.updateoptions"
-                  value="toolpack.updateoptions.uselatestoolpack"/>
-        <property key="toolpack.updateoptions.packversion"
-                  value="Press to select which tool pack to use"/>
         <property key="voltagevalue" value="3.25"/>
       </ICD4Tool>
       <PICkit3PlatformTool>
@@ -1241,16 +1234,16 @@
     <conf name="00173_USB_PD_BOB_R20" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>dsPIC33CK128MP505</targetDevice>
+        <targetDevice>dsPIC33CK256MP505</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>pk4hybrid</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.50</languageToolchainVersion>
+        <languageToolchainVersion>1.41</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.3.90"/>
+        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.2.66"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -1412,15 +1405,14 @@
       </C30-LD>
       <C30Global>
         <property key="common-include-directories"
-                  value="..\src\apl\resources\zeus_stack\include;..\src\apl\resources\zeus_stack\portable\dsPIC;..\src\apl\resources\pd_debug_uart"/>
+                  value="..\src\apl\resources\PSF\Source\include;..\src\apl\resources\PSF\SOC_Portable\dsPIC;..\src\apl\resources\pd_debug_uart"/>
         <property key="dual-boot-partition" value="0"/>
         <property key="fast-math" value="false"/>
         <property key="generic-16-bit" value="false"/>
         <property key="legacy-libc" value="true"/>
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros"
-                  value="__00173_USB_PD_BOB_R20__;__CODE_OPT_LEVEL_3__"/>
-        <property key="omit-pack-options" value="1"/>
+                  value="__00173_USB_PD_BOB_R20__;__CODE_OPT_LEVEL_3__;CONFIG_HOOK_DEBUG_MSG=1"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>
@@ -1478,8 +1470,6 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UpdateOptions"
                   value="ToolFirmwareOption.UseLatest"/>
-        <property key="ToolFirmwareToolPack"
-                  value="Press to select which tool pack to use"/>
         <property key="communication.interface.jtag" value="2wire"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
@@ -1517,10 +1507,6 @@
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
-        <property key="toolpack.updateoptions"
-                  value="toolpack.updateoptions.uselatestoolpack"/>
-        <property key="toolpack.updateoptions.packversion"
-                  value="Press to select which tool pack to use"/>
         <property key="voltagevalue" value="3.25"/>
       </ICD4Tool>
       <PICkit3PlatformTool>
@@ -2194,8 +2180,6 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-aeff"/>
         <property key="poweroptions.powerenable" value="false"/>
-        <property key="programmerToGoFilePath"
-                  value="C:/Users/m91169/To_backup/programmi1/UPD_bob2/Usb_PD_bob/usb_pd_bob.X/debug/00173_USB_PD_BOB_R20/usb_pd_bob_ptg"/>
         <property key="programmerToGoImageName" value="usb_pd_bob_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
@@ -2229,13 +2213,13 @@
         <targetDevice>dsPIC33CK256MP506</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>noID</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.50</languageToolchainVersion>
+        <languageToolchainVersion>1.41</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.3.90"/>
+        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.2.66"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -2405,7 +2389,6 @@
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros"
                   value="__MA330048_P33CK_R30_USB_PD_BOB__;__CODE_OPT_LEVEL_3__"/>
-        <property key="omit-pack-options" value="1"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>
@@ -2464,8 +2447,6 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UpdateOptions"
                   value="ToolFirmwareOption.UseLatest"/>
-        <property key="ToolFirmwareToolPack"
-                  value="Press to select which tool pack to use"/>
         <property key="communication.interface.jtag" value="2wire"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
@@ -2503,10 +2484,6 @@
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
-        <property key="toolpack.updateoptions"
-                  value="toolpack.updateoptions.uselatestoolpack"/>
-        <property key="toolpack.updateoptions.packversion"
-                  value="Press to select which tool pack to use"/>
         <property key="voltagevalue" value="3.25"/>
       </ICD4Tool>
       <PICkit3PlatformTool>
