@@ -261,13 +261,13 @@
         <targetDevice>dsPIC33CK256MP505</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>pk4hybrid</platformTool>
+        <platformTool>noID</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.41</languageToolchainVersion>
+        <languageToolchainVersion>1.50</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.2.66"/>
+        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.3.90"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -437,6 +437,7 @@
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros"
                   value="__00173_USB_PD_BOB_R21__;__CODE_OPT_LEVEL_3__"/>
+        <property key="omit-pack-options" value="1"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>
@@ -1185,6 +1186,8 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UpdateOptions"
                   value="ToolFirmwareOption.UseLatest"/>
+        <property key="ToolFirmwareToolPack"
+                  value="Press to select which tool pack to use"/>
         <property key="communication.activationmode" value="nohv"/>
         <property key="communication.interface" value=""/>
         <property key="communication.interface.jtag" value="2wire"/>
@@ -1226,8 +1229,13 @@
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
+        <property key="programoptionsedbg.eraseb4program" value="true"/>
         <property key="ptgProgramImage" value="true"/>
         <property key="ptgSendImage" value="true"/>
+        <property key="toolpack.updateoptions"
+                  value="toolpack.updateoptions.uselatestoolpack"/>
+        <property key="toolpack.updateoptions.packversion"
+                  value="Press to select which tool pack to use"/>
         <property key="voltagevalue" value="3.3"/>
       </pk4hybrid>
     </conf>
@@ -1237,13 +1245,13 @@
         <targetDevice>dsPIC33CK256MP505</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>pk4hybrid</platformTool>
+        <platformTool>noID</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.41</languageToolchainVersion>
+        <languageToolchainVersion>1.50</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.2.66"/>
+        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.3.90"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -1413,12 +1421,13 @@
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros"
                   value="__00173_USB_PD_BOB_R20__;__CODE_OPT_LEVEL_3__;CONFIG_HOOK_DEBUG_MSG=1"/>
+        <property key="omit-pack-options" value="1"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
-        <appendMe value="-std=gnu99 -finline-functions"/>
+        <appendMe value="-finline-functions"/>
       </C30Global>
       <ICD3PlatformTool>
         <property key="firmware.download.all" value="false"/>
@@ -2161,6 +2170,8 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UpdateOptions"
                   value="ToolFirmwareOption.UseLatest"/>
+        <property key="ToolFirmwareToolPack"
+                  value="Press to select which tool pack to use"/>
         <property key="communication.activationmode" value="nohv"/>
         <property key="communication.interface" value=""/>
         <property key="communication.interface.jtag" value="2wire"/>
@@ -2202,8 +2213,13 @@
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
+        <property key="programoptionsedbg.eraseb4program" value="true"/>
         <property key="ptgProgramImage" value="true"/>
         <property key="ptgSendImage" value="true"/>
+        <property key="toolpack.updateoptions"
+                  value="toolpack.updateoptions.uselatestoolpack"/>
+        <property key="toolpack.updateoptions.packversion"
+                  value="Press to select which tool pack to use"/>
         <property key="voltagevalue" value="3.3"/>
       </pk4hybrid>
     </conf>
@@ -2213,13 +2229,13 @@
         <targetDevice>dsPIC33CK256MP506</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>noID</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.41</languageToolchainVersion>
+        <languageToolchainVersion>1.50</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.2.66"/>
+        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.3.90"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -2389,6 +2405,7 @@
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros"
                   value="__MA330048_P33CK_R30_USB_PD_BOB__;__CODE_OPT_LEVEL_3__"/>
+        <property key="omit-pack-options" value="1"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>
@@ -2447,6 +2464,8 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UpdateOptions"
                   value="ToolFirmwareOption.UseLatest"/>
+        <property key="ToolFirmwareToolPack"
+                  value="Press to select which tool pack to use"/>
         <property key="communication.interface.jtag" value="2wire"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
@@ -2484,6 +2503,10 @@
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
+        <property key="toolpack.updateoptions"
+                  value="toolpack.updateoptions.uselatestoolpack"/>
+        <property key="toolpack.updateoptions.packversion"
+                  value="Press to select which tool pack to use"/>
         <property key="voltagevalue" value="3.25"/>
       </ICD4Tool>
       <PICkit3PlatformTool>
