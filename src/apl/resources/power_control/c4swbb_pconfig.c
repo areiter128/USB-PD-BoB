@@ -385,7 +385,7 @@ volatile uint16_t c4swbb_adc_module_initialize(void) {
     // The ADC channels configured here are covering sampling of input voltage, output voltage, 
     // output current and temperature of each converter. All other ADC configurations for other 
     // functions outside the power control scope need to be done elsewhere
-    
+
     // Load default ADC configuration
     admod_cfg.config.adon = ADCON1_ADON_ENABLED;
     admod_cfg.config.adsidl = ADCON1_ADSIDL_RUN;
