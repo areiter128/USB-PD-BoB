@@ -332,7 +332,7 @@
  * See also:
  * (none)
  * ***********************************************************************************************/
-#if __XC16_VERSION > 1041   // Example: v1.36 is represented by 1036
+#if __XC16_VERSION > 1050   // Example: v1.36 is represented by 1036
     #pragma message "=== The CPU Load Meter has not been tested with the recent compiler version ==="
     // If this message occurs in the output window, please verify the constants 
     // TASK_MGR_CPU_LOAD_NOMBLK by using the MPLAB X stopwatch (see comment above)
