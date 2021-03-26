@@ -933,7 +933,9 @@ Example:
 Remarks:
     User definition of this Hook function is mandatory when CONFIG_HOOK_DEBUG_MSG is declared as '1'.                  
 ***********************************************************************/  
+#if CONFIG_HOOK_DEBUG_MSG
 #define MCHP_PSF_HOOK_DEBUG_INIT()   
+#endif
 
 /*************************************************************************
 Function:
@@ -962,7 +964,9 @@ Example:
 Remarks:
     User definition of this Hook function is mandatory when CONFIG_HOOK_DEBUG_MSG is declared as '1'.             
 *************************************************************************/ 
+#if CONFIG_HOOK_DEBUG_MSG
 #define MCHP_PSF_HOOK_DEBUG_STRING(pcharBuf)	hook_debug_print_string(pcharBuf)	                                  
+#endif
 
 /**************************************************************************
 Function:
@@ -991,7 +995,9 @@ Example:
 Remarks:
     User definition of this Hook function is mandatory when CONFIG_HOOK_DEBUG_MSG is declared as '1'. 
 **************************************************************************/ 
+#if CONFIG_HOOK_DEBUG_MSG
 #define MCHP_PSF_HOOK_DEBUG_UINT8(u8Val)      hook_debug_u8(u8Val)        
+#endif
 
 /*************************************************************************
 Function:
@@ -1021,7 +1027,10 @@ Example:
 Remarks:
    User definition of this Hook function is mandatory when CONFIG_HOOK_DEBUG_MSG is declared as '1'. 
 *************************************************************************/ 
+#if CONFIG_HOOK_DEBUG_MSG
 #define MCHP_PSF_HOOK_DEBUG_UINT16(u16Val)  hook_debug_u16(u16Val)               
+#endif
+
 /*************************************************************************
 Function:
     MCHP_PSF_HOOK_DEBUG_UINT32(u32Val)
@@ -1049,7 +1058,9 @@ Example:
 Remarks:
     User definition of this Hook function is mandatory when CONFIG_HOOK_DEBUG_MSG is declared as '1'. 
 *************************************************************************/ 
+#if CONFIG_HOOK_DEBUG_MSG
 #define MCHP_PSF_HOOK_DEBUG_UINT32(u32Val)		  hook_debug_u32(u32Val)                      
+#endif
 
 /**************************************************************************
 Function:
@@ -1078,7 +1089,9 @@ Example:
 Remarks:
     User definition of this Hook function is mandatory when CONFIG_HOOK_DEBUG_MSG is declared as '1'. 
 **************************************************************************/ 
+#if CONFIG_HOOK_DEBUG_MSG
 #define MCHP_PSF_HOOK_DEBUG_INT32(i32Val)		  hook_debug_i32(i32Val)                
+#endif // end of CONFIG_HOOK_DEBUG_MSG
 
 // *****************************************************************************
 // *****************************************************************************

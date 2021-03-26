@@ -235,7 +235,7 @@ void TypeC_InitPort (UINT8 u8PortNum)
 void TypeC_RunStateMachine (UINT8 u8PortNum)
 {
 
-#ifdef CONFIG_HOOK_DEBUG_MSG
+#if CONFIG_HOOK_DEBUG_MSG
     UINT32 u32PDODebug = SET_TO_ZERO;
 #endif
         
@@ -373,7 +373,7 @@ void TypeC_RunStateMachine (UINT8 u8PortNum)
                     /*Check for VBUS Absence before moving to Attached SRC state */
                     if ((u8IntStsISR & TYPEC_VBUS_PRESENCE_MASK) == (TYPEC_VBUS_0V_PRES))
                     {
-#ifdef CONFIG_HOOK_DEBUG_MSG
+#if CONFIG_HOOK_DEBUG_MSG
                         u32PDODebug = 0;
                         DEBUG_PRINT_UINT32_BUF_STR( u8PortNum, "PDPWR", &u32PDODebug, 1, "\r\n");
 #endif                       
@@ -474,7 +474,7 @@ void TypeC_RunStateMachine (UINT8 u8PortNum)
                     if((u8IntStsISR & TYPEC_VBUS_PRESENCE_MASK) == (TYPEC_VBUS_5V_PRES))
                     {
                       
-#ifdef CONFIG_HOOK_DEBUG_MSG
+#if CONFIG_HOOK_DEBUG_MSG
                         switch((gasTypeCcontrol[u8PortNum].u8PortSts & TYPEC_CURR_RPVAL_MASK) >> TYPEC_CURR_RPVAL_POS)
                         {
                             case TYPEC_DFP_DEFAULT_CURRENT:
@@ -649,7 +649,7 @@ void TypeC_RunStateMachine (UINT8 u8PortNum)
             {
                 if((u8IntStsISR & TYPEC_VBUS_PRESENCE_MASK) == (TYPEC_VBUS_0V_PRES))
                 {
-#ifdef CONFIG_HOOK_DEBUG_MSG
+#if CONFIG_HOOK_DEBUG_MSG
                     u32PDODebug = 0;
                     DEBUG_PRINT_UINT32_BUF_STR( u8PortNum, "PDPWR", &u32PDODebug, 1, "\r\n");
 #endif
@@ -702,7 +702,7 @@ void TypeC_RunStateMachine (UINT8 u8PortNum)
                     if((u8IntStsISR & TYPEC_VBUS_PRESENCE_MASK) == (TYPEC_VBUS_0V_PRES))
                     {
                       
-#ifdef CONFIG_HOOK_DEBUG_MSG
+#if CONFIG_HOOK_DEBUG_MSG
                         u32PDODebug = 0;
                         DEBUG_PRINT_UINT32_BUF_STR( u8PortNum, "PDPWR", &u32PDODebug, 1, "\r\n");
 #endif 
@@ -803,7 +803,7 @@ void TypeC_RunStateMachine (UINT8 u8PortNum)
                     {
                         case TYPEC_DFP_DEFAULT_CURRENT:
                         {
-#ifdef CONFIG_HOOK_DEBUG_MSG
+#if CONFIG_HOOK_DEBUG_MSG
                             u32PDODebug = DPM_DEBUG_PDO_5V_9MA;
 #endif
                             gasDPM[u8PortNum].u16MaxCurrSupportedin10mA = 90;
@@ -812,7 +812,7 @@ void TypeC_RunStateMachine (UINT8 u8PortNum)
                         
                         case TYPEC_DFP_1A5_CURRENT:
                         {
-#ifdef CONFIG_HOOK_DEBUG_MSG
+#if CONFIG_HOOK_DEBUG_MSG
                             u32PDODebug = DPM_DEBUG_PDO_5V_1P5A;
 #endif
                             gasDPM[u8PortNum].u16MaxCurrSupportedin10mA = 150;
@@ -821,7 +821,7 @@ void TypeC_RunStateMachine (UINT8 u8PortNum)
                         
                         case TYPEC_DFP_3A0_CURRENT:
                         {
-#ifdef CONFIG_HOOK_DEBUG_MSG                          
+#if CONFIG_HOOK_DEBUG_MSG                          
                             u32PDODebug = DPM_DEBUG_PDO_5V_3A;
 #endif                            
                             gasDPM[u8PortNum].u16MaxCurrSupportedin10mA = 300;
@@ -836,7 +836,7 @@ void TypeC_RunStateMachine (UINT8 u8PortNum)
                  
                     DEBUG_PRINT_PORT_STR (u8PortNum,"TYPEC_ATTACHED_SNK: Entered"\
                                          "ATTACHED SNK State\r\n");
-#ifdef CONFIG_HOOK_DEBUG_MSG                    
+#if CONFIG_HOOK_DEBUG_MSG                    
                     DEBUG_PRINT_UINT32_BUF_STR( u8PortNum, "PDPWR", &u32PDODebug, 1, "\r\n");
 #endif                    
                     /*Source Attached in CC1 pin*/
@@ -1037,7 +1037,7 @@ void TypeC_RunStateMachine (UINT8 u8PortNum)
                 {
                     if(((u8IntStsISR & TYPEC_VBUS_PRESENCE_MASK) == TYPEC_VBUS_0V_PRES))
                     {
-                        #ifdef CONFIG_HOOK_DEBUG_MSG
+                        #if CONFIG_HOOK_DEBUG_MSG
                         u32PDODebug = 0;
                         DEBUG_PRINT_UINT32_BUF_STR( u8PortNum, "PDPWR", &u32PDODebug, 1, "\r\n");
                         #endif                   

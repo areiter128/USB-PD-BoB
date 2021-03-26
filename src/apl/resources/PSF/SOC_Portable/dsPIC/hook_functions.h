@@ -55,11 +55,13 @@ void hook_memcpy(uint8_t *dest, uint8_t *src, uint32_t cp_size);
 
 uint16_t hook_function_get_temperature_in_c(void);
 
+#if CONFIG_HOOK_DEBUG_MSG
 void hook_debug_print_string (char *str);
 void hook_debug_u8(uint8_t u8val);
 void hook_debug_u16(uint16_t u16val);
 void hook_debug_u32(uint32_t u32val);
 void hook_debug_i32(int32_t i32val);
+#endif
 
 /* define PORT*/
 #define PORT0 		0

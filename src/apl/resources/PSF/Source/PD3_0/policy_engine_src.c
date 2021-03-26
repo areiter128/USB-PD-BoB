@@ -70,7 +70,7 @@ void PE_SrcRunStateMachine(UINT8 u8PortNum , UINT8 *pu8DataBuf , UINT8 u8SOPType
 	/* Ra Presence Check */
     UINT8 u8RaPresence = FALSE;
 
-#ifdef CONFIG_HOOK_DEBUG_MSG    
+#if CONFIG_HOOK_DEBUG_MSG    
     /* Added for negotiated PDO debug message */
     UINT32 u32PDODebug = SET_TO_ZERO;
 #endif
@@ -458,7 +458,7 @@ void PE_SrcRunStateMachine(UINT8 u8PortNum , UINT8 *pu8DataBuf , UINT8 u8SOPType
                 {
                     DEBUG_PRINT_PORT_STR (u8PortNum,"PE_SRC_READY-ENTRY_SS\r\n");
                     
-#ifdef CONFIG_HOOK_DEBUG_MSG
+#if CONFIG_HOOK_DEBUG_MSG
                     u32PDODebug = gasDPM[u8PortNum].u32NegotiatedPDO;
                     DEBUG_PRINT_UINT32_BUF_STR( u8PortNum, "PDPWR", &u32PDODebug, 1, "\r\n");
 #endif
@@ -700,7 +700,7 @@ void PE_SrcRunStateMachine(UINT8 u8PortNum , UINT8 *pu8DataBuf , UINT8 u8SOPType
                                                                   u8PortNum,\
                                                                   (UINT8)SET_TO_ZERO);
                         
-#ifdef CONFIG_HOOK_DEBUG_MSG
+#if CONFIG_HOOK_DEBUG_MSG
                         u32PDODebug = 0;
                         DEBUG_PRINT_UINT32_BUF_STR( u8PortNum, "PDPWR", &u32PDODebug, 1, "\r\n");
 #endif
@@ -782,7 +782,7 @@ void PE_SrcRunStateMachine(UINT8 u8PortNum , UINT8 *pu8DataBuf , UINT8 u8SOPType
                     if(TYPEC_VBUS_5V == DPM_GetVBUSVoltage(u8PortNum))
                     {
                         DEBUG_PRINT_PORT_STR (u8PortNum,"PE_SRC_TRANSITION_TO_DEFAULT-EXIT_SS\r\n");
-#ifdef CONFIG_HOOK_DEBUG_MSG                        
+#if CONFIG_HOOK_DEBUG_MSG                        
                         switch((gasTypeCcontrol[u8PortNum].u8PortSts & TYPEC_CURR_RPVAL_MASK) >> TYPEC_CURR_RPVAL_POS)
                         {
                             case TYPEC_DFP_DEFAULT_CURRENT:
@@ -808,7 +808,7 @@ void PE_SrcRunStateMachine(UINT8 u8PortNum , UINT8 *pu8DataBuf , UINT8 u8SOPType
                         /*Kill the VBUS ON timer since Vsafe5V is reached*/
                         PE_KillPolicyEngineTimer (u8PortNum);
 
-#ifdef CONFIG_HOOK_DEBUG_MSG
+#if CONFIG_HOOK_DEBUG_MSG
                         DEBUG_PRINT_UINT32_BUF_STR( u8PortNum, "PDPWR", &u32PDODebug, 1, "\r\n");
 #endif
                         /* Inform Protocol Layer about Hard Reset Complete */

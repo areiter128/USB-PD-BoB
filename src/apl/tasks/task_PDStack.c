@@ -50,6 +50,7 @@ volatile SMPS_DGBUART_FRAME_t pd_stack_msg_frame;
 char pd_debug_string[64];
 // Private prototypes
 
+#if CONFIG_HOOK_DEBUG_MSG
 
 void pd_stack_debug_string(char *output_str)
 {
@@ -62,6 +63,8 @@ void pd_stack_debug_string(char *output_str)
         
     smpsDebugUART_SendFrame(&pd_stack_msg_frame);
 }
+
+#endif
 
 volatile uint16_t task_PDStack(void)
 {
@@ -99,19 +102,29 @@ volatile uint16_t init_taskPDStack(void)
     // Initialize the PSF stack.
     MchpPSF_Init();
     
+    #if CONFIG_HOOK_DEBUG_MSG
     LOG_PRINT("Init TASK PSF Stack initialization done\r\n");
-
+    #endif
+    
     // Configure UPD350 gpio pins for functions used outside of the stack
     configure_upd350_gpio();
 
     UPD_RegisterRead(0, 0x0004, (uint8_t *)&reg_data_16, 2);
+    #if CONFIG_HOOK_DEBUG_MSG
     LOG_PRINT1("VID 1: %04X\r\n", reg_data_16);
+    #endif
     UPD_RegisterRead(0, 0x0006, (uint8_t *)&reg_data_16, 2);
+    #if CONFIG_HOOK_DEBUG_MSG
     LOG_PRINT1("PID 1: %04X\r\n", reg_data_16);
+    #endif
     UPD_RegisterRead(1, 0x0004, (uint8_t *)&reg_data_16, 2);
+    #if CONFIG_HOOK_DEBUG_MSG
     LOG_PRINT1("VID 2: %04X\r\n", reg_data_16);
+    #endif
     UPD_RegisterRead(1, 0x0006, (uint8_t *)&reg_data_16, 2);
+    #if CONFIG_HOOK_DEBUG_MSG
     LOG_PRINT1("PID 2: %04X\r\n", reg_data_16);
+    #endif
     // Set the flag in the structure to indicate that the stack has been initialized.
     taskPDStack_config.status.flags.enable = PDSTACK_ENABLED;
  
