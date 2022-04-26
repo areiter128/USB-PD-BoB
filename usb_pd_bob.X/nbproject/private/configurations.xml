@@ -5,7 +5,7 @@
   <confs>
     <conf name="00173_USB_PD_BOB_R21" type="2">
       <platformToolSN>noToolString</platformToolSN>
-      <languageToolchainDir>C:\Program Files\Microchip\xc16\v1.50\bin</languageToolchainDir>
+      <languageToolchainDir>C:\Program Files\Microchip\xc16\v1.70\bin</languageToolchainDir>
       <mdbdebugger version="1">
         <placeholder1>place holder 1</placeholder1>
         <placeholder2>place holder 2</placeholder2>
@@ -22,8 +22,8 @@
       </runprofile>
     </conf>
     <conf name="00173_USB_PD_BOB_R20" type="2">
-      <platformToolSN>:=MPLABComm-USB-Microchip:=&lt;vid>04D8:=&lt;pid>9015:=&lt;rev>0100:=&lt;man>Microchip Technology Incorporated:=&lt;prod>MPLAB ICD 4:=&lt;sn>JIT172820609:=&lt;drv>x:=&lt;xpt>b:=end</platformToolSN>
-      <languageToolchainDir>C:\Program Files\Microchip\xc16\v1.50\bin</languageToolchainDir>
+      <platformToolSN>noToolString</platformToolSN>
+      <languageToolchainDir>C:\Program Files\Microchip\xc16\v1.70\bin</languageToolchainDir>
       <mdbdebugger version="1">
         <placeholder1>place holder 1</placeholder1>
         <placeholder2>place holder 2</placeholder2>
